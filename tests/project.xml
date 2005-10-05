@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<extend>../project.xml</extend>
+	<pomVersion>3</pomVersion>
+	<!-- ================================================================== -->
+	<!-- Standard project information                                       -->
+	<!-- ================================================================== -->
+	<id>persondirectorytests</id>
+	<artifactId>persondirectorytests</artifactId>
+	<name>persondirectorytests</name>
+	<groupId>ja-sig</groupId>
+	<currentVersion>1.0</currentVersion>
+	<inceptionYear>2005</inceptionYear>
+	 <dependencies>
+    <dependency>
+      <groupId>ja-sig</groupId>
+      <artifactId>persondirectory</artifactId>
+      <version>1.0</version>
+    </dependency>
+     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8</version>
+    </dependency>
+    </dependencies>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<unitTestSourceDirectory>src</unitTestSourceDirectory>
+		<unitTest>
+			<includes>
+				<include>**/*Test.java</include>
+			</includes>
+			<excludes>
+				<exclude>**/Abstract*Test.java</exclude>
+			</excludes>
+		</unitTest>
+		<defaultGoal/>
+	</build>
+</project>

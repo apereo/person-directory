@@ -93,7 +93,7 @@ http://maven.apache.org/maven-v3_0_0.xsd">
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-		<unitTestSourceDirectory>tests</unitTestSourceDirectory>
+		<unitTestSourceDirectory>tests/src</unitTestSourceDirectory>
 		<unitTest>
 			<includes>
 				<include>**/*Test.java</include>
