@@ -1,0 +1,2 @@
+Person Directory Information acquired from various sources (LDAP, XML File, etc....) through a common interface.
+The name of the project should have been in lower case but this became historical due to my request.
