@@ -4,7 +4,7 @@
 
   <goal name="build-jars">
     <!-- Any ant task, or jelly tags can go here thanks to jeez -->
-    <j:set var="goals" value="jar" />
+    <j:set var="goals" value="jar:install"	 />
     <u:tokenize var="goals" delim=",">${goals}</u:tokenize>
     <j:forEach items="${goals}" var="goal" indexVar="goalNumber">
       Now attaining goal number ${goalNumber}, which is ${goal}
