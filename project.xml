@@ -26,10 +26,10 @@ http://maven.apache.org/maven-v3_0_0.xsd">
 	</license>
 	<repository>
 		<connection>
-			scm:cvs:pserver:anonymous@www.uportal.org:/home/cvs/jasig/PersonDirectory
+			scm:cvs:pserver:anonymous@www.uportal.org:/home/cvs/jasig:PersonDirectory
 		</connection>
 		<developerConnection>
-			scm:cvs:pserver:localhost:/home/cvs/jasig/PersonDirectory
+			scm:cvs:pserver:localhost:/home/cvs/jasig:PersonDirectory
 		</developerConnection>
 		<url>http://www.uportal.org/cgi-bin/viewcvs.cgi/</url>
 	</repository>

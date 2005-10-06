@@ -1,10 +1,7 @@
 <project default="build-jars"
   xmlns:j="jelly:core"
   xmlns:u="jelly:util">
-
   <goal name="build-jars">
-    <!-- Any ant task, or jelly tags can go here thanks to jeez -->
-      <attainGoal name="multiproject:install" />
+      <attainGoal name="multiproject:install"/>
   </goal>
-
 </project>
