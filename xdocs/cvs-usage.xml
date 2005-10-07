@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<document url="http://www.uportal.org/index.xml">
+  
+  <properties>
+    <author email="erider@unicon.net">Ernest Rider</author>
+    <title>CVS Usage</title>
+  </properties>
+  
+  <body>
+    <section name="Person directory CVS checkout">
+      <p>
+		cvs -d pserver:anonymous@www.uportal.org:/home/cvs/jasig:PersonDirectory co PersonDirectory
+      </p>
+    </section>
+  </body>
+</document>
