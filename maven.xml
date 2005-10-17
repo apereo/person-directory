@@ -1,7 +1,0 @@
-<project default="build-jars"
-  xmlns:j="jelly:core"
-  xmlns:u="jelly:util">
-  <goal name="build-jars">
-      <attainGoal name="multiproject:install"/>
-  </goal>
-</project>

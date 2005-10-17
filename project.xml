@@ -1,108 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/3.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/3.0.0
-http://maven.apache.org/maven-v3_0_0.xsd">
-	<pomVersion>3</pomVersion>
-	<!-- ================================================================== -->
-	<!-- Standard project information                                       -->
-	<!-- ================================================================== -->
-	<id>persondirectory</id>
-	<artifactId>persondirectory</artifactId>
-	<name>persondirectory</name>
-	<groupId>ja-sig</groupId>
-	<currentVersion>1.0</currentVersion>
-	<inceptionYear>2005</inceptionYear>
-	<url>http://www.uportal.org</url>
-	<logo>http://www.ja-sig.org/images/jasig-head.gif</logo>
-	<issueTrackingUrl>
-		http://jasigch.princeton.edu:9000/jira/browse/UP
-	</issueTrackingUrl>
-	<license>
-		<name>Ja-Sig Collaborative License</name>
-		<url>http://www.uportal.org/license.html</url>
-		<distribution>manual</distribution>
-		<comments />
-	</license>
-	<repository>
-		<connection>
-			scm:cvs:pserver:anonymous@www.uportal.org:/home/cvs/jasig:PersonDirectory
-		</connection>
-		<developerConnection>
-			scm:cvs:pserver:localhost:/home/cvs/jasig:PersonDirectory
-		</developerConnection>
-		<url>http://www.uportal.org/cgi-bin/viewcvs.cgi/</url>
-	</repository>
-	<developers>
-		<developer>
-			<name>Ernest Rider</name>
-			<id>erider</id>
-			<email>erider@unicon.net</email>
-			<organization>UNICON</organization>
-		</developer>
-	</developers>
-	<dependencies>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.8</version>
-		</dependency>
-		<dependency>
-			<type>jar</type>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.0.4</version>
-		</dependency>
+<project>
+    <pomVersion>1</pomVersion>
+    <artifactId>person-directory</artifactId>
+    <name>PersonDirectory</name>
+    <groupId>person-directory</groupId>
+    <currentVersion>1.0.0-RC1</currentVersion>
+    <organization>
+        <name>JA-SIG</name>
+        <url>http://www.ja-sig.org</url>
+        <logo>http://www.ja-sig.org/images/jasig-head.gif</logo>
+    </organization>
+    <inceptionYear>2005</inceptionYear>
+    <package>org.jasig.portal.services.persondir</package>
+    <description>Provides a general interface for accessing attributes for a person. Has the capability of aggregating attributes from multiple data sources into a single view.</description>
+    <shortDescription>Person Attribute Lookup Service</shortDescription>
+    <issueTrackingUrl>https://clearinghouse.ja-sig.org/issues/browse/PERSONDIR</issueTrackingUrl>
+    <repository>
+        <connection>scm:cvs:pserver:anonymous@www.uportal.org:/home/cvs/jasig:PersonDirectory</connection>
+        <url>http://www.uportal.org/cvs.html</url>
+    </repository>
+    <mailingLists>
+        <mailingList>
+            <name>JA-SIG Portal</name>
+            <subscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-portal&amp;A=1</subscribe>
+            <unsubscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-portal&amp;A=1</unsubscribe>
+            <archive>http://list.unm.edu/archives/jasig-portal.html</archive>
+        </mailingList>
+        <mailingList>
+            <name>JA-SIG Developers</name>
+            <subscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-dev&amp;A=1</subscribe>
+            <unsubscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-dev&amp;A=1</unsubscribe>
+            <archive>http://list.unm.edu/archives/jasig-dev.html</archive>
+        </mailingList>
+    </mailingLists>
+    <developers>
+        <developer>
+            <name>Eric Dalquist</name>
+            <id>3</id>
+            <email>edalquist@unicon.net</email>
+            <organization>Unicon Inc.</organization>
+            <url>https://clearinghouse.ja-sig.org/wiki/display/~edalquist</url>
+            <timezone>PST</timezone>
+        </developer>
+        <developer>
+            <name>Andrew Petro</name>
+            <id>4</id>
+            <email>andrew.petro@yale.edu</email>
+            <organization>Yale University ITS</organization>
+            <url>https://clearinghouse.ja-sig.org/wiki/display/~awp9</url>
+            <timezone>CST</timezone>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Ernest Rider</name>
+            <email>erider@unicon.net</email>
+            <organization>Unicon Inc.</organization>
+            <url>http://www.unicon.net</url>
+            <timezone>MST</timezone>
+        </contributor>
+    </contributors>
+    <licenses>
+        <license>
+            <name>JA-SIG Collabrative Licence</name>
+            <url>http://www.uportal.org/license.html</url>
+        </license>
+    </licenses>
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.8</version>
+            <type>jar</type>
+            <url>http://logging.apache.org/log4j/docs/index.html</url>
+        </dependency>
         <dependency>
             <groupId>springframework</groupId>
             <artifactId>spring</artifactId>
-            <version>1.2.3</version>
-            <properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+            <version>1.2.5</version>
             <type>jar</type>
-            <url>http://www.springframework.org</url>
+            <url>http://www.springframework.org/</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
         </dependency>
-		<dependency>
-			<type>jar</type>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<dependency>
-			<type>jar</type>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>1.2.1</version>
-		</dependency>
-		<dependency>
-			<type>jar</type>
-			<groupId>commons-pool</groupId>
-			<artifactId>commons-pool</artifactId>
-			<version>1.2</version>
-		</dependency>
-		<dependency>
-			<type>jar</type>
-			<groupId>hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>1.7.2.2</version>
-			<!-- uPortal uses 1.7.2.4, but that version is
-			not available via Maven on ibiblio -->
-		</dependency>
-	</dependencies>
-
-	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<unitTestSourceDirectory>tests/src</unitTestSourceDirectory>
-		<unitTest>
-			<includes>
-				<include>**/*Test.java</include>
-			</includes>
-			<excludes>
-				<exclude>**/Abstract*Test.java</exclude>
-			</excludes>
-		</unitTest>
-		<defaultGoal/>
-	</build>
-
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.0.4</version>
+            <type>jar</type>
+            <url>http://jakarta.apache.org/commons/logging/</url>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.1</version>
+            <type>jar</type>
+            <url>http://jakarta.apache.org/commons/collections/</url>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.2.1</version>
+            <type>jar</type>
+            <url>http://jakarta.apache.org/commons/dbcp/</url>
+        </dependency>
+        <dependency>
+            <groupId>commons-pool</groupId>
+            <artifactId>commons-pool</artifactId>
+            <version>1.2</version>
+            <type>jar</type>
+            <url>http://jakarta.apache.org/commons/pool/</url>
+        </dependency>
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.7.2.2</version>
+            <type>jar</type>
+            <url>http://hsqldb.org/</url>
+        </dependency>
+    </dependencies>
+    <build>
+        <sourceDirectory>main/src/java</sourceDirectory>
+        <unitTestSourceDirectory>main/test/java</unitTestSourceDirectory>
+        <unitTest>
+            <includes>
+                <include>**/*Test.java</include>
+            </includes>
+            <excludes>
+                <exclude>**/Abstract*Test.java</exclude>
+            </excludes>
+            <resources>
+                <resource>
+                    <directory>main/test/resources</directory>
+                    <filtering>false</filtering>
+                </resource>
+            </resources>
+        </unitTest>
+        <resources>
+            <resource>
+                <directory>main/src/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
+    <reports>
+        <report>maven-junit-report-plugin</report>
+        <report>maven-javadoc-plugin</report>
+        <report>maven-faq-plugin</report>
+    </reports>
 </project>
+

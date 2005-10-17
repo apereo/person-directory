@@ -1,43 +1,30 @@
 <?xml version="1.0"?>
-<document url="http://www.uportal.org/index.xml">
+<document>
 	<properties>
 		<author email="erider@unicon.net">Ernest Rider</author>
-		<title>Overview of persondirectory adapters</title>
+		<title>Overview</title>
 	</properties>
 
 	<body>
 		<section name="Person Directory Library">
 			<p>
-				The person directory library allows retrieval of
-				registry attributes relating to users in uPortal.
-				<ul>
-					<li>LDAP</li>
-					<li>XML File</li>
-					<li>Databases through JDBC</li>
-				</ul>
+				The person directory service provides an interface for retrieving user
+				attributes. There are implementations of the interface which provide
+				easy access to attributes in both LDAP servers and relational database
+				services accessible via JDBC.
 			</p>
 			<p>
-				The person directory library interfaces
-				IPersonAttributeDAO with these various sources,
-				combinations of them, and specific adapters of the same
-				nature.
+				Other implemenations allow multiple data sources to be used for the
+				aggregation of a single set of user attributes.
 			</p>
-		</section>
-		<section name="Person Directory Dependencies">
 			<p>
-				Circa Java 1.4 there is no binding through the JNDI
-				interface to LDAP as a registry so we can use the
-				booster pack from SUN to integrate LDAP and JNDI.
-				<a
-					href="http://java.sun.com/products/jndi/downloads/index.html">
-					ldapbp.jar
-				</a>
-				found in the ./lib directory from the CVS module PersonDirectory.
-			</p>
+			    All of the PersonDirectory implemenations are designed to be easily
+			    configured using the <a href="http://www.springframework.org">Spring
+			    IoC framework</a>.
+		    </p>
 		</section>
 		<section name="News">
-			<p>Released persondirectory-1.0.jar.</p>
-			<p>No news is good news.</p>
+			<p>Working on 1.0.0-RC1 release.</p>
 		</section>
 	</body>
 </document>

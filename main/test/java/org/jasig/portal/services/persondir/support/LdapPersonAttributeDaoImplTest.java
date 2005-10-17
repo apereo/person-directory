@@ -35,16 +35,10 @@ public class LdapPersonAttributeDaoImplTest
      */
     protected void setUp() throws Exception {
         super.setUp();
-        //java.naming.factory.control
-        //java.naming.factory.object
-        //java.naming.factory.state
-        //com.sun.jndi.ldap.obj.expandGroup
-        
-        Hashtable env = new Hashtable();        
-        env.put(Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, "ldap://mrfrumble.its.yale.edu:389/o=yale.edu");       
-        ldapContext = (LdapContext) new InitialLdapContext(env,null);
-    //    this.ldapServer = new LdapServerImpl("name", "ldap://mrfrumble.its.yale.edu:389/o=yale.edu", null, "uid", null, null, null);
+        Hashtable env = new Hashtable();
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, "ldap://mrfrumble.its.yale.edu:389/o=yale.edu");
+        this.ldapContext = (LdapContext)new InitialLdapContext(env, null);
     }
 
     /*
@@ -52,8 +46,7 @@ public class LdapPersonAttributeDaoImplTest
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        
-      //  this.ldapServer = null;
+        this.ldapContext = null;
     }
 
     /**
