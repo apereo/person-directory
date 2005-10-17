@@ -11,93 +11,81 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.portal.services.persondir.IPersonAttributeDao;
-
 /**
  * Implements IPersonAttributeDao by looking up the specified user in a configured
  * Map.  The configured Map is a Map from String userids to Maps.  The Map
  * values are Maps from String user attribute names to user attribute values.
  * @version $Revision$ $Date$
  */
-public class ComplexStubPersonAttributeDao 
-    implements IPersonAttributeDao {
-
+public class ComplexStubPersonAttributeDao extends AbstractDefaultQueryPersonAttributeDao {
     /**
      * Map from userids to Maps.  The Map values are maps from
      * attribute names to attribute values.
      */
-    private final Map backingMap;
+    private Map backingMap;
     
     /**
-     * Lazily initialized Set of possible all attribute names that map to an attribute
+     * Set of possible all attribute names that map to an attribute
      * value for some user in our backing map.
      */
-    private Set possibleAttributeNames = null;
+    private Set possibleUserAttributeNames = null;
+    
+    public ComplexStubPersonAttributeDao() {
+        this.setDefaultAttributeName("uid");
+    }
     
     public ComplexStubPersonAttributeDao(Map backingMap) {
-        this.backingMap = Collections.unmodifiableMap(backingMap);
-    }
-    
-
-    
-    public Set getPossibleUserAttributeNames() {
-        if (this.possibleAttributeNames == null) {
-            initializePossibleAttributeNames();
-        }
-        return this.possibleAttributeNames;
-    }
-    
-    /**
-     * Compute the set of attribute names that map to a value for at least one
-     * user in our backing map and store it as the instance variable 
-     * possibleAttributeNames.
-     */
-    private synchronized void initializePossibleAttributeNames() {
-        // check again whether we need to run because the value may have
-        // been initialized after the logic check that decided to call this method
-        // but before the lock to enter this method was actually acquired.
-        if (this.possibleAttributeNames == null) {
-            /*
-             * Compute the union of the keysets of all the Sets that are values in our 
-             * backing map.
-             */
-            
-            Set possibleAttribNames = new HashSet();
-            
-            for (Iterator iter = this.backingMap.values().iterator(); iter.hasNext() ; ) {
-                Map attributeMapForSomeUser = (Map) iter.next();
-                possibleAttribNames.addAll(attributeMapForSomeUser.keySet());
-            }
-            
-            this.possibleAttributeNames = possibleAttribNames;
-        }
-    }
-    
-    
-    public Map getUserAttributes(final Map seed) {
-        if (seed == null) {
-            throw new IllegalArgumentException("Illegal to invoke getUserAttributes(Map) with a null argument.");
-        }
-        return (Map) this.backingMap.get(seed.get("uid"));
-
-    }
-    
-    public Map getUserAttributes(final String uid) {
-        if (uid == null) {
-            throw new IllegalArgumentException("Illegal to invoke getUserAttributes(String) with a null argument.");
-        }
-        
-        return (Map) this.backingMap.get(uid);
+        this();
+        this.setBackingMap(backingMap);
     }
     
     
     /**
-     * Get the Map backing this ComplexStubPersonAttributeDao.
-     * 
      * @return Returns the backingMap.
      */
     public Map getBackingMap() {
         return this.backingMap;
     }
+    /**
+     * @param backingMap The backingMap to set.
+     */
+    public synchronized void setBackingMap(Map backingMap) {
+        if (backingMap == null) {
+            this.backingMap = null;
+            this.possibleUserAttributeNames = Collections.EMPTY_SET;
+        }
+        else {
+            this.backingMap = Collections.unmodifiableMap(backingMap);
+            this.initializePossibleAttributeNames();
+        }
+    }
     
+    public Set getPossibleUserAttributeNames() {
+        return this.possibleUserAttributeNames;
+    }
+    
+    public Map getUserAttributes(final Map seed) {
+        if (seed == null) {
+            throw new IllegalArgumentException("Illegal to invoke getUserAttributes(Map) with a null argument.");
+        }
+
+        return (Map)this.backingMap.get(seed.get(this.getDefaultAttributeName()));
+    }
+
+
+    /**
+     * Compute the set of attribute names that map to a value for at least one
+     * user in our backing map and store it as the instance variable 
+     * possibleUserAttributeNames.
+     */
+    private void initializePossibleAttributeNames() {
+        final Set possibleAttribNames = new HashSet();
+        
+        for (Iterator iter = this.backingMap.values().iterator(); iter.hasNext() ; ) {
+            final Map attributeMapForSomeUser = (Map)iter.next();
+            possibleAttribNames.addAll(attributeMapForSomeUser.keySet());
+        }
+        
+        this.possibleUserAttributeNames = Collections.unmodifiableSet(possibleAttribNames);
+    }
 }
