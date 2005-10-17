@@ -35,20 +35,20 @@
     </mailingLists>
     <developers>
         <developer>
-            <name>Eric Dalquist</name>
-            <id>3</id>
-            <email>edalquist@unicon.net</email>
-            <organization>Unicon Inc.</organization>
-            <url>https://clearinghouse.ja-sig.org/wiki/display/~edalquist</url>
-            <timezone>PST</timezone>
-        </developer>
-        <developer>
             <name>Andrew Petro</name>
-            <id>4</id>
+            <id>1</id>
             <email>andrew.petro@yale.edu</email>
             <organization>Yale University ITS</organization>
             <url>https://clearinghouse.ja-sig.org/wiki/display/~awp9</url>
             <timezone>CST</timezone>
+        </developer>
+        <developer>
+            <name>Eric Dalquist</name>
+            <id>2</id>
+            <email>edalquist@unicon.net</email>
+            <organization>Unicon Inc.</organization>
+            <url>https://clearinghouse.ja-sig.org/wiki/display/~edalquist</url>
+            <timezone>PST</timezone>
         </developer>
     </developers>
     <contributors>
