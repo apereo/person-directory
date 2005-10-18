@@ -71,9 +71,6 @@
             <name>Ernest Rider</name>
             <email>erider@unicon.net</email>
             <organization>Unicon Inc.</organization>
-            <roles>
-                <role>Developer</role>
-            </roles>
             <url>http://www.unicon.net</url>
             <timezone>-7</timezone>
         </contributor>
@@ -177,6 +174,7 @@
         <report>maven-simian-plugin</report>
         <report>maven-tasklist-plugin</report>
         <report>maven-license-plugin</report>
+        <report>maven-clover-plugin</report>
     </reports>
 </project>
 
