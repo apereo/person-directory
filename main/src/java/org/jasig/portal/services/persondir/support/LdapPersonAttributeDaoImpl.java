@@ -23,12 +23,11 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
 
-import org.jasig.portal.services.persondir.IPersonAttributeDao;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 /**
- * LDAP implementation of {@link IPersonAttributeDao}. This is code copied from
+ * LDAP implementation of {@link org.jasig.portal.services.persondir.IPersonAttributeDao}. This is code copied from
  * uPortal 2.4 org.jasig.portal.services.PersonDirectory and made to
  * implement this DAO interface. Dependent upon JNDI.
  * 
