@@ -24,6 +24,7 @@ import org.jasig.portal.services.persondir.support.merger.NoncollidingAttributeA
 public class MergingPersonAttributeDaoImplTest 
     extends AbstractPersonAttributeDaoTest {
     
+    private StubPersonAttributeDao sourceNull;
     private StubPersonAttributeDao sourceOne;
     private StubPersonAttributeDao sourceTwo;
     private StubPersonAttributeDao collidesWithOne;
@@ -32,6 +33,8 @@ public class MergingPersonAttributeDaoImplTest
     private final String queryAttr = "ThisDoesntMatterForMockDaos";
         
     protected void setUp() {
+        this.sourceNull = new StubPersonAttributeDao();
+        
         this.sourceOne = new StubPersonAttributeDao();
         Map sourceOneMap = new HashMap();
         sourceOneMap.put("shirtColor", "blue");
@@ -68,6 +71,7 @@ public class MergingPersonAttributeDaoImplTest
         
         List attributeSources = new ArrayList();
         
+        attributeSources.add(this.sourceNull);
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
         
@@ -194,6 +198,19 @@ public class MergingPersonAttributeDaoImplTest
         
         Map result = impl.getUserAttributes(queryMap);
         assertEquals(this.oneAndTwo, result);
+    }
+    
+    public void testNoChildDaos() {
+        MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        Map queryMap = new HashMap();
+        queryMap.put(queryAttr, "awp9");
+        
+        try {
+            impl.getUserAttributes(queryMap);
+            fail("IllegalStateException should have been thrown");
+        }
+        catch (IllegalStateException ise) {
+        }
     }
     
     /**

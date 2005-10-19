@@ -247,23 +247,38 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      */
     public void testCollidingAdd() {
         Map testMap = new HashMap();
-        Map expectedMap = new HashMap();
+        
+        List phoneNumbers = new ArrayList();
+        phoneNumbers.add("555-1234");
+        phoneNumbers.add("555-4321");
+        testMap.put("phone", phoneNumbers);
+        
         List emailAddys = new ArrayList();
         emailAddys.add("andrew.petro@yale.edu");
         emailAddys.add("awp9@pantheon.yale.edu");
         
+        Map expectedMap = new HashMap();
         expectedMap.put("mail", "andrew.petro@yale.edu");
+        expectedMap.put("phone", new ArrayList(phoneNumbers));
         
         MultivaluedPersonAttributeUtils.addResult(testMap, "mail", "andrew.petro@yale.edu");
-        
         assertEquals(expectedMap, testMap);
         
         expectedMap.put("mail", emailAddys);
-        
         MultivaluedPersonAttributeUtils.addResult(testMap, "mail", "awp9@pantheon.yale.edu");
-        
+        assertEquals(expectedMap, testMap);
+
+        ((List)expectedMap.get("phone")).add("555-0000");
+        MultivaluedPersonAttributeUtils.addResult(testMap, "phone", "555-0000");
         assertEquals(expectedMap, testMap);
         
+        List moreNumbers = new ArrayList();
+        moreNumbers.add("555-3145");
+        moreNumbers.add("555-1337");
+        
+        ((List)expectedMap.get("phone")).addAll(moreNumbers);
+        MultivaluedPersonAttributeUtils.addResult(testMap, "phone", moreNumbers);
+        assertEquals(expectedMap, testMap);
     }
     
     /**

@@ -132,6 +132,20 @@
             <type>jar</type>
             <url>http://hsqldb.org/</url>
         </dependency>
+		<dependency>
+			<groupId>clover</groupId>
+			<artifactId>clover</artifactId>
+			<version>1.3.9</version>
+			<type>jar</type>
+			<url>http://www.cenqua.com/clover/</url>
+		</dependency>
+		<dependency>
+			<groupId>maven</groupId>
+			<artifactId>maven-clover-plugin</artifactId>
+			<version>1.10</version>
+			<type>plugin</type>
+			<url>http://maven.apache.org/reference/plugins/clover/</url>
+		</dependency>
     </dependencies>
     <build>
         <sourceDirectory>main/src/java</sourceDirectory>

@@ -16,7 +16,6 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.jasig.portal.rdbm.TransientDatasource;
-import org.jasig.portal.services.persondir.IPersonAttributeDao;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 /**
@@ -27,7 +26,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
  * @version $Revision$ $Date$
  */
 public class JdbcPersonAttributeDaoImplTest 
-    extends AbstractPersonAttributeDaoTest {
+    extends AbstractDefaultQueryPersonAttributeDaoTest {
     
     private DataSource testDataSource;
     
@@ -72,6 +71,15 @@ public class JdbcPersonAttributeDaoImplTest
         con.close();
         
         this.testDataSource = null;
+    }
+    
+    public void testNullAttributeList() {
+        try {
+            new JdbcPersonAttributeDaoImpl(testDataSource, null, "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
+            fail("IllegalArgumentException should have been thrown");
+        }
+        catch (IllegalArgumentException iae) {
+        }
     }
     
 
@@ -271,7 +279,7 @@ public class JdbcPersonAttributeDaoImplTest
         fail("JdbcPersonAttributeDao should have thrown IncorrectResultSizeDataAccessException for multiple results");
     }
 
-    protected IPersonAttributeDao getPersonAttributeDaoInstance() {
+    protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         final String queryAttr = "shirt";
         final List queryAttrList = new LinkedList();
         queryAttrList.add(queryAttr);

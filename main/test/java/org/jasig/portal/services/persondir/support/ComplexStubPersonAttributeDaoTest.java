@@ -10,17 +10,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.portal.services.persondir.IPersonAttributeDao;
-
-
 /**
  * Testcase for ComplexStubPersonAttributeDao.
  * @version $Revision$ $Date$
  */
 public class ComplexStubPersonAttributeDaoTest 
-    extends AbstractPersonAttributeDaoTest {
+    extends AbstractDefaultQueryPersonAttributeDaoTest {
 
-    private IPersonAttributeDao testInstance;
+    private ComplexStubPersonAttributeDao testInstance;
     private Map backingMap;
     
     
@@ -44,9 +41,7 @@ public class ComplexStubPersonAttributeDaoTest
         
         this.backingMap = bMap;
         
-        ComplexStubPersonAttributeDao stub = new ComplexStubPersonAttributeDao(this.backingMap);
-        
-        this.testInstance = stub;
+        this.testInstance = new ComplexStubPersonAttributeDao(this.backingMap);
         
         super.setUp();
     }
@@ -101,9 +96,8 @@ public class ComplexStubPersonAttributeDaoTest
         assertNull(this.testInstance.getUserAttributes("unknownUser"));
     }
 
-    protected IPersonAttributeDao getPersonAttributeDaoInstance() {
+    protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         return this.testInstance;
     }
-
 }
 

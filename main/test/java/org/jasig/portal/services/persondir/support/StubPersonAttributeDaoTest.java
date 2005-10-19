@@ -20,7 +20,7 @@ import org.jasig.portal.services.persondir.IPersonAttributeDao;
 public class StubPersonAttributeDaoTest 
     extends AbstractPersonAttributeDaoTest {
 
-    private IPersonAttributeDao testInstance;
+    private StubPersonAttributeDao testInstance;
     private Map backingMap;
     
     
@@ -31,10 +31,8 @@ public class StubPersonAttributeDaoTest
         
         this.backingMap = map;
         
-        StubPersonAttributeDao stub = new StubPersonAttributeDao();
-        stub.setBackingMap(map);
-        
-        this.testInstance = stub;
+        this.testInstance = new StubPersonAttributeDao();
+        this.testInstance.setBackingMap(map);
         
         super.setUp();
     }
@@ -64,6 +62,10 @@ public class StubPersonAttributeDaoTest
     public void testGetUserAttributesString() {
         assertSame(this.backingMap, this.testInstance.getUserAttributes("anyone"));
         assertEquals(this.backingMap, this.testInstance.getUserAttributes("wombat"));
+    }
+
+    public void testBackingMap() {
+        assertSame(this.backingMap, this.testInstance.getBackingMap());
     }
 
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {

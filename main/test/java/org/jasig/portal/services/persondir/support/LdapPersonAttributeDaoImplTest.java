@@ -17,8 +17,6 @@ import javax.naming.Context;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 
-import org.jasig.portal.services.persondir.IPersonAttributeDao;
-
 /**
  * Testcase for LdapPersonAttributeDao.
  * @author andrew.petro@yale.edu
@@ -26,7 +24,7 @@ import org.jasig.portal.services.persondir.IPersonAttributeDao;
  * @version $Revision$ $Date$
  */
 public class LdapPersonAttributeDaoImplTest 
-    extends AbstractPersonAttributeDaoTest {
+    extends AbstractDefaultQueryPersonAttributeDaoTest {
     
     LdapContext ldapContext;
     
@@ -172,7 +170,7 @@ public class LdapPersonAttributeDaoImplTest
         assertEquals(expectedAttributeNames, impl.getPossibleUserAttributeNames());
     }
 
-    protected IPersonAttributeDao getPersonAttributeDaoInstance() {
+    protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         final String queryAttr = "uid";
         final List queryAttrList = new LinkedList();
         queryAttrList.add(queryAttr);

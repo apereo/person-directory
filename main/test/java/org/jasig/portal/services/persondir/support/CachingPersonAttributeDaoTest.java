@@ -10,14 +10,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.portal.services.persondir.IPersonAttributeDao;
-
 
 /**
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
  * @version $Revision$
  */
-public class CachingPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
+public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAttributeDaoTest {
     private static final String defaultAttr = "uid"; 
 
     private ComplexStubPersonAttributeDao stubDao;
@@ -181,11 +179,7 @@ public class CachingPersonAttributeDaoTest extends AbstractPersonAttributeDaoTes
     }
 
 
-
-    /**
-     * @see org.jasig.portal.services.persondir.support.AbstractPersonAttributeDaoTest#getPersonAttributeDaoInstance()
-     */
-    protected IPersonAttributeDao getPersonAttributeDaoInstance() {
+    protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setDefaultAttributeName(defaultAttr);
