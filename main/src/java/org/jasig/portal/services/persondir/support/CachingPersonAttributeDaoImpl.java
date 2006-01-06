@@ -68,7 +68,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAtt
     /*
      * The IPersonAttributeDao to delegate cache misses to.
      */
-    private IPersonAttributeDao cachedPersonAttributesDao;
+    private IPersonAttributeDao cachedPersonAttributesDao = null;
     
     /*
      * The cache to store query results in.

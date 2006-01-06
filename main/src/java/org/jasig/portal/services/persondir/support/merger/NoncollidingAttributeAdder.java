@@ -31,10 +31,14 @@ public class NoncollidingAttributeAdder implements IAttributeMerger {
         if (toConsider == null)
             throw new IllegalArgumentException("toConsider argument illegally null.");
         
-        for (Iterator iter = toConsider.keySet().iterator(); iter.hasNext();){
-            String key = (String) iter.next();
-            if (! toModify.containsKey(key))
-                toModify.put(key, toConsider.get(key));
+        for (final Iterator iter = toConsider.entrySet().iterator(); iter.hasNext();){
+            final Map.Entry entry = (Map.Entry)iter.next();
+            
+            final String key = (String) entry.getKey();
+            
+            if (! toModify.containsKey(key)) {
+                toModify.put(key, entry.getValue());
+            }
         }
     
         return toModify;

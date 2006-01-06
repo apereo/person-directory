@@ -40,14 +40,15 @@ public class MultivaluedAttributeMerger implements IAttributeMerger {
         final Map sourceCopy = new HashMap(source);
         
         //Iterate through the dest Map
-        for (final Iterator destKeyItr = dest.keySet().iterator(); destKeyItr.hasNext();) {
-            final Object destKey = destKeyItr.next();
+        for (final Iterator destEntryItr = dest.entrySet().iterator(); destEntryItr.hasNext();) {
+            final Map.Entry destEntry = (Map.Entry)destEntryItr.next();
+            final Object destKey = destEntry.getKey();
             
             //If there is a corresponding entry in source
             if (sourceCopy.containsKey(destKey)) {
                 //Get the values
                 final Object sourceValue = sourceCopy.remove(destKey);
-                final Object destValue = dest.get(destKey);
+                final Object destValue = destEntry.getValue();
                 
                 //If they are both Lists merge them
                 if (destValue instanceof List && sourceValue instanceof List) {
