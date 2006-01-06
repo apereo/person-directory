@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="PersonDirectory" repository="PersonDirectory" href="http://www.uportal.org">
-    <title>Person Directory Service</title>
+    <title>JA-SIG Person Directory Service</title>
     <body>
         <links>
+            <item name="JA-SIG" href="http://www.ja-sig.org" />
             <item name="uPortal" href="http://www.uportal.org/"/>
         </links>
-        <menu name="PersonDirectory">
-            <item name="Examples" href="/examples.html"/>
+
+        <menu name="Examples">
+            <item name="Java Configuration" href="/examples/javaConfig.html"/>
+            <item name="Spring Configuration" href="/examples/springConfig.html"/>
+            <item name="WebService Configuration" href="/examples/webServiceConfig.html"/>
         </menu>
     </body>
 </project>

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<document url="http://www.uportal.org/index.xml">
+    <properties>
+        <author email="edalquist@unicon.net">Eric Dalquist</author>
+        <title>Java Configuration Example</title>
+    </properties>
+    
+    <body>
+        <section name="Overview">
+            <p>
+                A basic example configured using Java code. This is not
+                the recomended way to use a IPersonAttributeDao.
+            </p>
+        </section>
+        <section name="Configuring">
+            <source>
+final String queryAttr = "uid";
+
+//Create a new LdapPersonAttributeDaoImpl instance to use as the DAO.
+final LdapPersonAttributeDaoImpl ldapAttrDao = new LdapPersonAttributeDaoImpl();
+
+//Create attribute name mappings 
+final Map ldapAttribsToPortalAttribs = new HashMap();
+ldapAttribsToPortalAttribs.put("mail", "email");
+ldapAttrDao.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+
+//Create the LdapContext to connect to the LDAP server
+final Hashtable env = new Hashtable();
+env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+env.put(Context.PROVIDER_URL, "ldap://mrfrumble.its.yale.edu:389/o=yale.edu");
+final LdapContext ldapContext = new InitialLdapContext(env, null);
+ldapAttrDao.setLdapContext(ldapContext);
+
+//Create the List of attributes used in the query
+final List queryAttrList = new LinkedList();
+queryAttrList.add(queryAttr);
+ldapAttrDao.setQueryAttributes(queryAttrList);
+
+//Set the query to use
+ldapAttrDao.setQuery("(uid={0})");
+
+//The query map sets the attribute values to use when running the query
+final Map queryMap = new HashMap();
+queryMap.put(queryAttr, "awp9");
+
+//Execute the query against using the dao
+final Map resultAttributes = ldapAttrDao.getUserAttributes(queryMap);
+            </source>
+        </section>
+    </body>
+</document>

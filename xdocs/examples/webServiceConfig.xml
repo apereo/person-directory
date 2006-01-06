@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<document url="http://www.uportal.org/index.xml">
+    <properties>
+        <author email="edalquist@unicon.net">Eric Dalquist</author>
+        <title>WebService Configuration Example</title>
+    </properties>
+    
+    <body>
+        <section name="Overview">
+            <p>
+                Example configuration for exposing and consuming a configured IPersonAttributeDao
+                as a web service.
+            </p>
+        </section>
+        <section name="Configuring">
+            <b>TODO</b>
+        </section>
+    </body>
+</document>
