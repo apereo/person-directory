@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <property>
+        <title>Changes</title>
+    </property>
+    <body>
+        <release version="1.0.0-RC1" date="2005-12-01">
+            <action dev="edalquist" type="task" issue="PERSONDIR-3">
+                Mavenized PersonDirectory
+            </action>
+        </release>
+    </body>
+</document>

@@ -18,7 +18,7 @@
     <repository>
         <connection>scm:cvs:pserver:anonymous@www.uportal.org:/home/cvs/jasig:PersonDirectory</connection>
         <developerConnection>scm:cvs:pserver:${maven.username}@www.uportal.org:/home/cvs/jasig:PersonDirectory</developerConnection>
-        <url>http://www.uportal.org/cvs.html</url>
+        <url>http://www.uportal.org/cgi-bin/viewcvs.cgi/PersonDirectory/</url>
     </repository>
     <versions>
         <version>
@@ -139,10 +139,21 @@
             <type>jar</type>
             <url>http://www.cenqua.com/clover/</url>
         </dependency>
+        
+        <!--
+         | Plugin Dependencies
+         +-->
         <dependency>
             <groupId>maven</groupId>
             <artifactId>maven-clover-plugin</artifactId>
             <version>1.10</version>
+            <type>plugin</type>
+            <url>http://maven.apache.org/reference/plugins/clover/</url>
+        </dependency>
+        <dependency>
+            <groupId>maven-plugins</groupId>
+            <artifactId>maven-findbugs-plugin</artifactId>
+            <version>1.1</version>
             <type>plugin</type>
             <url>http://maven.apache.org/reference/plugins/clover/</url>
         </dependency>
@@ -178,18 +189,20 @@
         </resources>
     </build>
     <reports>
-        <report>maven-junit-report-plugin</report>
-        <report>maven-javadoc-plugin</report>
-        <report>maven-faq-plugin</report>
-        <report>maven-jdepend-plugin</report>
-        <report>maven-jxr-plugin</report>
-        <report>maven-pmd-plugin</report>
-        <report>maven-simian-plugin</report>
-        <report>maven-tasklist-plugin</report>
         <report>maven-license-plugin</report>
+        <report>maven-faq-plugin</report>
+        <report>maven-changes-plugin</report>
+        <report>maven-tasklist-plugin</report>
+        <report>maven-javadoc-plugin</report>
+        <report>maven-junit-report-plugin</report>
         <report>maven-clover-plugin</report>
+        <report>maven-findbugs-plugin</report>
+        <report>maven-simian-plugin</report>
+        <report>maven-pmd-plugin</report>
+        <report>maven-jdepend-plugin</report>
         <report>maven-changelog-plugin</report>
         <report>maven-developer-activity-plugin</report>
+        <report>maven-jxr-plugin</report>
     </reports>
 </project>
 

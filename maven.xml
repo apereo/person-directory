@@ -3,34 +3,30 @@
     xmlns:ant="jelly:ant"
     xmlns:util="jelly:util"
     xmlns:maven="jelly:maven"
-    xmlns:license="license">
+    xmlns:license="license"
+    xmlns:artifact="artifact">
 
 
-    <!-- ============== SITE ================== -->
-	<!--
-	 | Copies the site to the siteDir location, set by the cruiscontrol
-	 | nightly build process.
-	 +-->
+    <!--
+     | Copies the site to the siteDir location, set by the cruisecontrol
+     | nightly build process.
+     +-->
     <postGoal name="site">
         <j:if test="${not empty siteDir}">
-        <ant:copy todir="${siteDir}">
-            <ant:fileset dir="target/docs/">
-                <ant:include name="**" />
-            </ant:fileset>
-        </ant:copy>
+            <ant:copy todir="${siteDir}">
+                <ant:fileset dir="target/docs/">
+                    <ant:include name="**" />
+                </ant:fileset>
+            </ant:copy>
         </j:if>
     </postGoal>
    
-    <!-- ============== JAR ================== -->
-	<!--
-	 | The post goal currently creates a testframework jar along with the main JAR to
-	 | allow for base unit tests to be re-used.
-	 +-->
+    <!--
+     | The post goal currently creates a testframework jar along with the main
+     | JAR to allow for base unit tests to be re-used.
+     +-->
     <postGoal name="jar:jar">
-        <j:set var="finalName" value="${pom.getPluginContext('maven-jar-plugin').getVariable('maven.final.name')}"/>
-        <j:set var="finalVersion" value="${finalName.substring(17)}"/>
-        <j:set var="testfwkBase" value="${pom.artifactId}-testframework"/>
-        <j:set var="testfwkName" value="${testfwkBase}-${finalVersion}"/>
+        <j:set var="testfwkName" value="${pom.artifactId}-testframework-${pom.currentVersion}"/>
 
         <ant:jar jarfile="${maven.build.dir}/${testfwkName}.jar">
             <j:set var="licenseFileName">
@@ -48,10 +44,10 @@
                 <ant:attribute name="Package" value="${pom.package}"/>
                 <ant:attribute name="Build-Jdk" value="${java.version}"/>
                 <!-- added supplementary entries -->
-                <ant:attribute name="Extension-Name" value="Person Directory Test Framework"/>
+                <ant:attribute name="Extension-Name" value="${pom.name} Test Framework"/>
                 <ant:attribute name="Specification-Version" value="${pom.specificationVersion}"/>
                 <ant:attribute name="Specification-Vendor" value="${pom.organization.name}"/>
-                <ant:attribute name="Specification-Title" value="Person Directory Test Framework"/>
+                <ant:attribute name="Specification-Title" value="${pom.name} Test Framework"/>
                 <ant:attribute name="Implementation-Version" value="${pom.currentVersion}"/>
                 <ant:attribute name="Implementation-Vendor" value="${pom.organization.name}"/>
                 <ant:attribute name="Implementation-Vendor-Id" value="${pom.organization.identifier}"/>
