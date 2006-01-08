@@ -20,11 +20,18 @@ import org.jasig.portal.services.persondir.IPersonAttributeDao;
  * @since uPortal 2.5
  */
 public class StubPersonAttributeDao implements IPersonAttributeDao {
-    private Map backingMap;
+    private Map backingMap = null;
+    
+    public StubPersonAttributeDao() {
+    }
+    
+    public StubPersonAttributeDao(Map backingMap) {
+        this.setBackingMap(backingMap);
+    }
     
     public Set getPossibleUserAttributeNames() {
         if (this.backingMap == null) {
-            return null;
+            return Collections.EMPTY_SET;
         }
         
         return Collections.unmodifiableSet(this.backingMap.keySet());
@@ -59,7 +66,7 @@ public class StubPersonAttributeDao implements IPersonAttributeDao {
      * Set the Map which this stub object will return for all legal invocations of
      * attributesForUser().
      * 
-     * @param backingMap The backingMap to set.
+     * @param backingMap The backingMap to set, may not be null.
      */
     public void setBackingMap(final Map backingMap) {
         this.backingMap = backingMap;

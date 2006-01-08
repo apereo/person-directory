@@ -6,10 +6,11 @@
 package org.jasig.portal.services.persondir.support;
 
 import java.util.Map;
-
-import org.jasig.portal.services.persondir.IPersonAttributeDao;
+import java.util.Set;
 
 import junit.framework.TestCase;
+
+import org.jasig.portal.services.persondir.IPersonAttributeDao;
 
 /**
  * Test conformance to IPersonAttributeDao interface specified 
@@ -43,7 +44,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
             // good, as expected
             return;
         }
-        fail("Expected IllegalArgumentException on getUserAttributes(String null)");
+        fail("Expected IllegalArgumentException on getUserAttributes((Map)null)");
 
     }
     
@@ -61,7 +62,30 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
             // good, as expected
             return;
         }
-        fail("Expected IllegalArgumentException on getUserAttributes(String null)");
+        fail("Expected IllegalArgumentException on getUserAttributes((String)null)");
+    }
+    
+    /**
+     * Test that invocation of getPersonAttributeDaoInstance() is not
+     * null and immutable
+     */
+    public void testPossibleSetConstraints() {
+        IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        Set possibleNames = dao.getPossibleUserAttributeNames();
+        
+        if (possibleNames != null) {
+            try {
+                final int originalSize = possibleNames.size();
+                
+                final Object newObj = new Object();
+                possibleNames.add(newObj);
+                
+                assertEquals(originalSize, possibleNames.size());
+            }
+            catch (Exception e) {
+                //An exception may be thrown since the Set should be immutable.
+            }
+        }
     }
     
 }

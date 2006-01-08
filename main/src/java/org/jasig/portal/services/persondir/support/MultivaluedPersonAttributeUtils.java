@@ -42,8 +42,8 @@ public final class MultivaluedPersonAttributeUtils {
      * This method takes as its argument a {@link Map} that must have keys of 
      * type {@link String} and values of type {@link String} or {@link Set} of 
      * {@link String}s.  The argument must not be null and must have no null
-     * keys or null values.  It must contain no keys other than Strings and no
-     * values other than Strings or Sets of Strings.  This method will throw
+     * keys.  It must contain no keys other than Strings and no values other
+     * than Strings or Sets of Strings.  This method will throw
      * IllegalArgumentException if the method argument doesn't meet these 
      * requirements.
      * 
@@ -63,60 +63,60 @@ public final class MultivaluedPersonAttributeUtils {
             return Collections.EMPTY_MAP;
         }
         //do a defenisve copy of the map
-            final Map mappedAttributesBuilder = new HashMap();
+        final Map mappedAttributesBuilder = new HashMap();
+        
+        for (final Iterator sourceAttrNameItr = mapping.keySet().iterator(); sourceAttrNameItr.hasNext(); ) {
+            final Object key = sourceAttrNameItr.next();
             
-            for (final Iterator sourceAttrNameItr = mapping.keySet().iterator(); sourceAttrNameItr.hasNext(); ) {
-                final Object key = sourceAttrNameItr.next();
-                
-                //The key must exist
-                if (key == null) {
-                    throw new IllegalArgumentException("The map from attribute names to attributes must not have any null keys.");
-                }
-                
-                // the key must be of type String
-                if (! (key instanceof String)) {
-                    throw new IllegalArgumentException("The map from attribute names to attributes must only have String keys.  Encountered a key of class [" + key.getClass().getName() + "]");
-                }
-                
-                final String sourceAttrName = (String) key;
-                
-                        
-                final Object mappedAttribute = mapping.get(sourceAttrName);
-                
-                //mapping cannot be null
-                if (mappedAttribute == null)
-                    throw new IllegalArgumentException("Values in the map cannot be null. key='" + sourceAttrName + "'");
-                
-                //Create a single item set for the string mapping
-                if (mappedAttribute instanceof String) {
-                    final Set mappedSet = Collections.singleton(mappedAttribute);
-                    mappedAttributesBuilder.put(sourceAttrName, mappedSet);
-                }
-                //Create a defenisve copy of the mapped set & verify its contents are strings
-                else if (mappedAttribute instanceof Set) {
-                    final Set sourceSet = (Set)mappedAttribute;
-                    final Set mappedSet = new HashSet();
-                    
-                    for (final Iterator sourceSetItr = sourceSet.iterator(); sourceSetItr.hasNext(); ) {
-                        final Object mappedAttributeName = sourceSetItr.next();
-                        
-                        if (mappedAttributeName instanceof String) {
-                            mappedSet.add(mappedAttributeName);
-                        }
-                        else {
-                            throw new IllegalArgumentException("Invalid mapped type. key='" + sourceAttrName + "', value type='" + mappedAttribute.getClass().getName() + "', sub value type='" + mappedAttributeName.getClass().getName() + "'");
-                        }
-                    }
-                    
-                    mappedAttributesBuilder.put(sourceAttrName, Collections.unmodifiableSet(mappedSet));
-                }
-                //Not a valid type for the mapping
-                else {
-                    throw new IllegalArgumentException("Invalid mapped type. key='" + sourceAttrName + "', value type='" + mappedAttribute.getClass().getName() + "'");
-                }
+            //The key must exist
+            if (key == null) {
+                throw new IllegalArgumentException("The map from attribute names to attributes must not have any null keys.");
             }
             
-            return Collections.unmodifiableMap(mappedAttributesBuilder);
+            // the key must be of type String
+            if (! (key instanceof String)) {
+                throw new IllegalArgumentException("The map from attribute names to attributes must only have String keys.  Encountered a key of class [" + key.getClass().getName() + "]");
+            }
+            
+            final String sourceAttrName = (String) key;
+            
+                    
+            final Object mappedAttribute = mapping.get(sourceAttrName);
+            
+            //Create a mapping to null
+            if (mappedAttribute == null) {
+                mappedAttributesBuilder.put(sourceAttrName, null);
+            }
+            //Create a single item set for the string mapping
+            else if (mappedAttribute instanceof String) {
+                final Set mappedSet = Collections.singleton(mappedAttribute);
+                mappedAttributesBuilder.put(sourceAttrName, mappedSet);
+            }
+            //Create a defenisve copy of the mapped set & verify its contents are strings
+            else if (mappedAttribute instanceof Set) {
+                final Set sourceSet = (Set)mappedAttribute;
+                final Set mappedSet = new HashSet();
+                
+                for (final Iterator sourceSetItr = sourceSet.iterator(); sourceSetItr.hasNext(); ) {
+                    final Object mappedAttributeName = sourceSetItr.next();
+                    
+                    if (mappedAttributeName instanceof String) {
+                        mappedSet.add(mappedAttributeName);
+                    }
+                    else {
+                        throw new IllegalArgumentException("Invalid mapped type. key='" + sourceAttrName + "', value type='" + mappedAttribute.getClass().getName() + "', sub value type='" + mappedAttributeName.getClass().getName() + "'");
+                    }
+                }
+                
+                mappedAttributesBuilder.put(sourceAttrName, Collections.unmodifiableSet(mappedSet));
+            }
+            //Not a valid type for the mapping
+            else {
+                throw new IllegalArgumentException("Invalid mapped type. key='" + sourceAttrName + "', value type='" + mappedAttribute.getClass().getName() + "'");
+            }
+        }
+        
+        return Collections.unmodifiableMap(mappedAttributesBuilder);
     }
     
     /**

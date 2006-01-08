@@ -51,7 +51,7 @@ public class JdbcPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAttrib
     /**
      * {@link List} of attributes to use in the query.
      */
-    private List queryAttributes = Collections.EMPTY_LIST;
+    private final List queryAttributes;
     
     /**
      * The {@link MappingSqlQuery} to use to get attributes.
@@ -143,21 +143,24 @@ public class JdbcPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAttrib
      * The passed {@link Map} must have keys of type {@link String} and values
      * of type {@link String} or a {@link Set} of {@link String}.
      * 
-     * @param columnsToAttributesMap {@link Map} from column names to attribute names.
+     * @param columnsToAttributesMap {@link Map} from column names to attribute names, may not be null.
      * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
      * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
      */
     public void setColumnsToAttributes(final Map columnsToAttributesMap) {
-        if (columnsToAttributesMap != null) {
-            this.attributeMappings = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(columnsToAttributesMap);
-            final Collection userAttributeCol = MultivaluedPersonAttributeUtils.flattenCollection(this.attributeMappings.values()); 
-            
-            this.userAttributes = Collections.unmodifiableSet(new HashSet(userAttributeCol));
+        if (columnsToAttributesMap == null) {
+            throw new IllegalArgumentException("columnsToAttributesMap may not be null");
         }
-        else {
-            this.attributeMappings = null;
-            this.userAttributes = Collections.EMPTY_SET;
+        
+        this.attributeMappings = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(columnsToAttributesMap);
+        
+        if (this.attributeMappings.containsKey("")) {
+            throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
         }
+        
+        final Collection userAttributeCol = MultivaluedPersonAttributeUtils.flattenCollection(this.attributeMappings.values()); 
+        
+        this.userAttributes = Collections.unmodifiableSet(new HashSet(userAttributeCol));
     }
     
     public String toString() {
@@ -186,13 +189,10 @@ public class JdbcPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAttrib
         public PersonAttributeMappingQuery(final DataSource ds, final String sql) {
             super(ds, sql);
             
-            //Assume to parameters needed if the query attribute list is null
-            if (queryAttributes != null) {
-                //Configures the SQL parameters, everything is assumed to be VARCHAR
-                for (final Iterator attrNames = queryAttributes.iterator(); attrNames.hasNext(); ) {
-                    final String attrName = (String)attrNames.next();
-                    this.declareParameter(new SqlParameter(attrName, Types.VARCHAR));
-                }
+            //Configures the SQL parameters, everything is assumed to be VARCHAR
+            for (final Iterator attrNames = queryAttributes.iterator(); attrNames.hasNext(); ) {
+                final String attrName = (String)attrNames.next();
+                this.declareParameter(new SqlParameter(attrName, Types.VARCHAR));
             }
 
             //One time compilation of the query

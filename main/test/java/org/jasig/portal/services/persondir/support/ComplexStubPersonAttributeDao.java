@@ -31,7 +31,6 @@ public class ComplexStubPersonAttributeDao extends AbstractDefaultQueryPersonAtt
     private Set possibleUserAttributeNames = null;
     
     public ComplexStubPersonAttributeDao() {
-        this.setDefaultAttributeName("uid");
     }
     
     public ComplexStubPersonAttributeDao(Map backingMap) {

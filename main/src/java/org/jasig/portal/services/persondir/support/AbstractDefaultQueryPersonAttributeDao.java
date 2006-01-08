@@ -61,7 +61,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDao implements IPersonA
      * Returns the attribute set by {@link #setDefaultAttributeName(String)} or
      * if it has not been called the default value "uid" is returned.
      * 
-     * @return The default single string query attribute
+     * @return The default single string query attribute, will never be null.
      */
     public final String getDefaultAttributeName() {
         return this.defaultAttribute;
@@ -76,7 +76,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDao implements IPersonA
      */
     public final void setDefaultAttributeName(final String name) {
         if (name == null)
-            throw new IllegalArgumentException("The default attribute name must be null");
+            throw new IllegalArgumentException("The default attribute name may not be null");
 
         this.defaultAttribute = name;
     }

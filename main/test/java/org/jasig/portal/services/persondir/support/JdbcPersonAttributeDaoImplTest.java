@@ -6,6 +6,7 @@
 package org.jasig.portal.services.persondir.support;
 
 import java.sql.Connection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -17,6 +18,7 @@ import javax.sql.DataSource;
 
 import org.jasig.portal.rdbm.TransientDatasource;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.jdbc.BadSqlGrammarException;
 
 /**
  * Test the {@link JdbcPersonAttributeDaoImpl} against a dummy DataSource.
@@ -79,6 +81,7 @@ public class JdbcPersonAttributeDaoImplTest
             fail("IllegalArgumentException should have been thrown");
         }
         catch (IllegalArgumentException iae) {
+            //expected
         }
     }
     
@@ -146,6 +149,111 @@ public class JdbcPersonAttributeDaoImplTest
        assertEquals("blue", attribs.get("dressShirtColor"));
        assertNull(attribs.get("shirt_color"));
        assertEquals("Andrew", attribs.get("firstName"));
+   }
+
+   /**
+    * Test for a query with a single attribute
+    */
+   public void testInvalidColumnName() {
+       final String queryAttr = "uid";
+       final List queryAttrList = new LinkedList();
+       queryAttrList.add(queryAttr);
+
+       JdbcPersonAttributeDaoImpl impl = 
+           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+               "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
+
+       impl.setDefaultAttributeName(queryAttr);
+       
+       Map columnsToAttributes = new HashMap();
+       columnsToAttributes.put("name", "firstName");
+
+       columnsToAttributes.put("emai", "emailAddress");
+       impl.setColumnsToAttributes(columnsToAttributes);
+
+       try {
+           impl.getUserAttributes("awp9");
+           fail("BadSqlGrammarException expected with invalid attribute mapping key");
+       }
+       catch (BadSqlGrammarException bsge) {
+           //expected
+       }
+   }
+   
+   /**
+    * Test for a query with a single attribute
+    */
+   public void testSetNullAttributeMapping() {
+       final String queryAttr = "uid";
+       final List queryAttrList = new LinkedList();
+       queryAttrList.add(queryAttr);
+
+       JdbcPersonAttributeDaoImpl impl = 
+           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+               "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
+
+       impl.setDefaultAttributeName(queryAttr);
+       
+       Map columnsToAttributes = new HashMap();
+       columnsToAttributes.put("name", "firstName");
+
+       Set emailAttributeNames = new HashSet();
+       emailAttributeNames.add("email");
+       emailAttributeNames.add("emailAddress");
+       columnsToAttributes.put("email", emailAttributeNames);
+       columnsToAttributes.put("shirt_color", null);
+       impl.setColumnsToAttributes(columnsToAttributes);
+
+       Map attribs = impl.getUserAttributes("awp9");
+       assertEquals("andrew.petro@yale.edu", attribs.get("email"));
+       assertEquals("andrew.petro@yale.edu", attribs.get("emailAddress"));
+       assertEquals("blue", attribs.get("shirt_color"));
+       assertEquals("Andrew", attribs.get("firstName"));
+   }
+
+   /**
+    * Test for a query with a single attribute
+    */
+   public void testSetNullAttributeName() {
+       final String queryAttr = "uid";
+       final List queryAttrList = new LinkedList();
+       queryAttrList.add(queryAttr);
+
+       JdbcPersonAttributeDaoImpl impl = 
+           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+               "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
+
+       Map columnsToAttributes = new HashMap();
+       columnsToAttributes.put("", "dressShirtColor");
+       
+       try {
+           impl.setColumnsToAttributes(columnsToAttributes);
+           fail("IllegalArgumentException if the ColumnsToAttributes Map has an empty Key");
+       }
+       catch (IllegalArgumentException iae) {
+           //expected
+       }
+   }
+   
+   /**
+    * Test for a query with a single attribute
+    */
+   public void testSetEmptyAttributeMapping() {
+       final String queryAttr = "uid";
+       final List queryAttrList = new LinkedList();
+       queryAttrList.add(queryAttr);
+
+       JdbcPersonAttributeDaoImpl impl = 
+           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+               "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
+
+       try {
+           impl.setColumnsToAttributes(null);
+           fail("setColumnsToAttributes(null) should throw IllegalArgumentException");
+       }
+       catch (IllegalArgumentException iae) {
+           //Expected;
+       }
    }
    
    
@@ -277,6 +385,27 @@ public class JdbcPersonAttributeDaoImplTest
         }
         
         fail("JdbcPersonAttributeDao should have thrown IncorrectResultSizeDataAccessException for multiple results");
+    }
+    
+    public void testProperties() {
+        final String queryAttr = "shirt";
+        final List queryAttrList = new LinkedList();
+        queryAttrList.add(queryAttr);
+
+        JdbcPersonAttributeDaoImpl impl = 
+            new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+                "SELECT netid, name, email FROM user_table WHERE shirt_color = ?");
+        
+        Map columnsToAttributes = new HashMap();
+        columnsToAttributes.put("netid", "uid");
+        columnsToAttributes.put("name", "firstName");
+        
+        Map expectedColumnsToAttributes = new HashMap();
+        expectedColumnsToAttributes.put("netid", Collections.singleton("uid"));
+        expectedColumnsToAttributes.put("name", Collections.singleton("firstName"));
+
+        impl.setColumnsToAttributes(columnsToAttributes);
+        assertEquals(expectedColumnsToAttributes, impl.getColumnsToAttributes());
     }
 
     protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {

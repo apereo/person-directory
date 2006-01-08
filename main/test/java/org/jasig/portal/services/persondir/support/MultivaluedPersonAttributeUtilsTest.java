@@ -66,13 +66,13 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         nullKeyMap.put("A", "B");
         nullKeyMap.put("wombat", null);
         
-        try {
-            MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
-        } catch (IllegalArgumentException iae) {
-            // good
-            return;
-        }
-        fail("Should have rejected map argument containing null value.");
+        final Map attrMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
+        
+        final Map expected = new HashMap();
+        expected.put("A", Collections.singleton("B"));
+        expected.put("wombat", null);
+        
+        assertEquals(expected, attrMapping);
     }
     
     /**

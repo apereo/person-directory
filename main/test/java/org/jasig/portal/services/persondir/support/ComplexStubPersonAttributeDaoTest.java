@@ -77,7 +77,7 @@ public class ComplexStubPersonAttributeDaoTest
      */
     public void testGetUserAttributesMap() {
         Map awp9Key = new HashMap();
-        awp9Key.put("uid", "awp9");
+        awp9Key.put("username", "awp9");
         assertEquals(this.backingMap.get("awp9"), this.testInstance.getUserAttributes(awp9Key));
         
         Map unknownUserKey = new HashMap();

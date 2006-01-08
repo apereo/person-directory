@@ -25,6 +25,10 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAttrib
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
     public Map getUserAttributes(final Map seed) {
+        if (seed == null) {
+            throw new IllegalArgumentException("seed may not be null");
+        }
+
         return new HashMap(seed);
     }
 

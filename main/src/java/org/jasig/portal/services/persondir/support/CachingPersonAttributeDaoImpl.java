@@ -80,7 +80,6 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAtt
      */
     private Set cacheKeyAttributes = null;
     
-    
     /**
      * @return Returns the cachedPersonAttributesDao.
      */
@@ -228,11 +227,9 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAtt
         if (this.cacheKeyAttributes == null || this.cacheKeyAttributes.size() == 0) {
             final String defaultAttrName = this.getDefaultAttributeName();
             
-            if (defaultAttrName == null) {
-                throw new IllegalStateException("Both 'defaultAttrName' and 'cacheKeyAttributes' properties may not be null.");
+            if (querySeed.containsKey(defaultAttrName)) {
+                cacheKey.put(defaultAttrName, querySeed.get(defaultAttrName));
             }
-            
-            cacheKey.put(defaultAttrName, querySeed.get(defaultAttrName));
             
             if (log.isDebugEnabled()) {
                 log.debug("Created cacheKey='" + cacheKey + "' from query='" + querySeed + "' using default attribute='" + defaultAttrName + "'");
@@ -241,7 +238,10 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAtt
         else {
             for (final Iterator attrItr = this.cacheKeyAttributes.iterator(); attrItr.hasNext();) {
                 final String attr = (String)attrItr.next();
-                cacheKey.put(attr, querySeed.get(attr));
+                
+                if (querySeed.containsKey(attr)) {
+                    cacheKey.put(attr, querySeed.get(attr));
+                }
             }
             
             if (log.isDebugEnabled()) {

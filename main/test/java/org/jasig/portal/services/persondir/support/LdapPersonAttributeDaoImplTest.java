@@ -5,6 +5,7 @@
 
 package org.jasig.portal.services.persondir.support;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -47,6 +48,31 @@ public class LdapPersonAttributeDaoImplTest
         this.ldapContext = null;
     }
 
+    public void testNotFoundQuery() {
+        final String queryAttr = "uid";
+        final List queryAttrList = new LinkedList();
+        queryAttrList.add(queryAttr);
+        
+        LdapPersonAttributeDaoImpl impl = new LdapPersonAttributeDaoImpl();
+        
+        Map ldapAttribsToPortalAttribs = new HashMap();
+        ldapAttribsToPortalAttribs.put("mail", "email");
+        
+        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        
+        impl.setLdapContext(ldapContext);
+        
+        impl.setQuery("(uid={0})");
+        
+        impl.setQueryAttributes(queryAttrList);
+        
+        Map queryMap = new HashMap();
+        queryMap.put(queryAttr, "unknown");
+        
+        Map attribs = impl.getUserAttributes(queryMap);
+        assertNull(attribs);
+    }
+
     /**
      * Test for a query with a single attribute. 
      * 
@@ -76,6 +102,56 @@ public class LdapPersonAttributeDaoImplTest
         
         Map attribs = impl.getUserAttributes(queryMap);
         assertEquals("andrew.petro@yale.edu", attribs.get("email"));
+    }
+
+    public void testInvalidAttrMap() {
+        final String queryAttr = "uid";
+        final List queryAttrList = new LinkedList();
+        queryAttrList.add(queryAttr);
+        
+        LdapPersonAttributeDaoImpl impl = new LdapPersonAttributeDaoImpl();
+        
+        Map ldapAttribsToPortalAttribs = new HashMap();
+        ldapAttribsToPortalAttribs.put("email", "email");
+        
+        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        
+        impl.setLdapContext(ldapContext);
+        
+        impl.setQuery("(uid={0})");
+        
+        impl.setQueryAttributes(queryAttrList);
+        
+        Map queryMap = new HashMap();
+        queryMap.put(queryAttr, "awp9");
+        
+        Map attribs = impl.getUserAttributes(queryMap);
+        assertNull(attribs.get("email"));
+    }
+
+    public void testDefaultAttrMap() {
+        final String queryAttr = "uid";
+        final List queryAttrList = new LinkedList();
+        queryAttrList.add(queryAttr);
+        
+        LdapPersonAttributeDaoImpl impl = new LdapPersonAttributeDaoImpl();
+        
+        Map ldapAttribsToPortalAttribs = new HashMap();
+        ldapAttribsToPortalAttribs.put("mail", null);
+        
+        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        
+        impl.setLdapContext(ldapContext);
+        
+        impl.setQuery("(uid={0})");
+        
+        impl.setQueryAttributes(queryAttrList);
+        
+        Map queryMap = new HashMap();
+        queryMap.put(queryAttr, "awp9");
+        
+        Map attribs = impl.getUserAttributes(queryMap);
+        assertEquals("andrew.petro@yale.edu", attribs.get("mail"));
     }
     
     /**
@@ -168,6 +244,118 @@ public class LdapPersonAttributeDaoImplTest
         expectedAttributeNames.add("dressShirtColor");
         
         assertEquals(expectedAttributeNames, impl.getPossibleUserAttributeNames());
+    }
+    
+    public void testProperties() {
+        LdapPersonAttributeDaoImpl impl = new LdapPersonAttributeDaoImpl();
+        
+        assertEquals("", impl.getBaseDN());
+        impl.setBaseDN("BaseDN");
+        assertEquals("BaseDN", impl.getBaseDN());
+        impl.setBaseDN(null);
+        assertEquals("", impl.getBaseDN());
+        
+        
+        assertEquals(Collections.EMPTY_MAP, impl.getLdapAttributesToPortalAttributes());
+        
+        Map attrMap = new HashMap();
+        attrMap.put("mail", "email");
+        impl.setLdapAttributesToPortalAttributes(attrMap);
+        
+        Map expectedAttrMap = new HashMap(attrMap);
+        expectedAttrMap.put("mail", Collections.singleton("email"));
+        assertEquals(expectedAttrMap, impl.getLdapAttributesToPortalAttributes());
+        
+        
+        assertNull(impl.getLdapContext());
+        impl.setLdapContext(ldapContext);
+        assertEquals(ldapContext, impl.getLdapContext());
+        
+        
+        impl.setLdapAttributesToPortalAttributes(null);
+        assertEquals(Collections.EMPTY_SET, impl.getPossibleUserAttributeNames());
+        impl.setLdapAttributesToPortalAttributes(attrMap);
+        assertEquals(Collections.singleton("email"), impl.getPossibleUserAttributeNames());
+        
+        
+        assertNull(impl.getQuery());
+        impl.setQuery("QueryString");
+        assertEquals("QueryString", impl.getQuery());
+        
+        
+        assertEquals(Collections.EMPTY_LIST, impl.getQueryAttributes());
+        impl.setQueryAttributes(Collections.singletonList("QAttr"));
+        assertEquals(Collections.singletonList("QAttr"), impl.getQueryAttributes());
+        
+        
+        assertEquals(0, impl.getTimeLimit());
+        impl.setTimeLimit(1337);
+        assertEquals(1337, impl.getTimeLimit());
+    }
+    
+    public void testToString() {
+        final String queryAttr1 = "uid";
+        final String queryAttr2 = "alias";
+        final List queryAttrList = new LinkedList();
+        queryAttrList.add(queryAttr1);
+        queryAttrList.add(queryAttr2);
+        
+        LdapPersonAttributeDaoImpl impl = new LdapPersonAttributeDaoImpl();
+        
+        Map ldapAttribsToPortalAttribs = new HashMap();
+        ldapAttribsToPortalAttribs.put("mail", "email");
+        
+        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        
+        impl.setLdapContext(ldapContext);
+        
+        impl.setQuery("(&(uid={0})(alias={1}))");
+        
+        impl.setQueryAttributes(queryAttrList);
+        
+        StringBuffer expected = new StringBuffer();
+        expected.append(impl.getClass().getName());
+        expected.append("@");
+        expected.append(Integer.toHexString(impl.hashCode()));
+        expected.append("[ldapContext=");
+        expected.append(ldapContext.getClass().getName());
+        expected.append("@");
+        expected.append(Integer.toHexString(ldapContext.hashCode()));
+        expected.append(", timeLimit=0, baseDN=, query=(&(uid={0})(alias={1})), queryAttributes=[uid, alias], ldapAttributesToPortalAttributes={mail=[email]}]");
+        
+        String result = impl.toString();
+        assertEquals(expected.toString(), result);
+    }
+    
+    /**
+     * Test proper reporting of declared attribute names.
+     */
+    public void testNullContext() {
+        LdapPersonAttributeDaoImpl impl = new LdapPersonAttributeDaoImpl();
+        impl.setLdapContext(ldapContext);
+        
+        try {
+            impl.getUserAttributes(Collections.singletonMap("dummy", "seed"));
+            fail("IllegalStateException should have been thrown with no query configured");
+        }
+        catch (IllegalStateException ise) {
+            //expected
+        }
+    }
+    
+    /**
+     * Test proper reporting of declared attribute names.
+     */
+    public void testNullQuery() {
+        LdapPersonAttributeDaoImpl impl = new LdapPersonAttributeDaoImpl();
+        
+        try {
+            impl.getUserAttributes(Collections.singletonMap("dummy", "seed"));
+            fail("IllegalStateException should have been thrown with no context configured");
+        }
+        catch (IllegalStateException ise) {
+            //expected
+        }
     }
 
     protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {

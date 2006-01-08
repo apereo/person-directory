@@ -100,11 +100,6 @@ public class LdapPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAttrib
 		}
 
 		try {
-
-			if (this.ldapContext == null) {
-				throw new IllegalStateException("No LdapContext specified.");
-			}
-
 			// Search for the userid in the usercontext subtree of the directory
 			// Use the uidquery substituting username for {0}, {1}, ...
 			final SearchControls sc = new SearchControls();

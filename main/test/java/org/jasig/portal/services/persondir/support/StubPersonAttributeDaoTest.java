@@ -5,6 +5,7 @@
 
 package org.jasig.portal.services.persondir.support;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class StubPersonAttributeDaoTest
         assertEquals(expectedAttributeNames, possibleAttributeNames);
         
         StubPersonAttributeDao nullBacking = new StubPersonAttributeDao();
-        assertNull(nullBacking.getPossibleUserAttributeNames());
+        assertEquals(Collections.EMPTY_SET, nullBacking.getPossibleUserAttributeNames());
     }
 
     public void testGetUserAttributesMap() {

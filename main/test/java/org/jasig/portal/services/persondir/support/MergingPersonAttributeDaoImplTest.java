@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jasig.portal.services.persondir.IPersonAttributeDao;
+import org.jasig.portal.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.jasig.portal.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.jasig.portal.services.persondir.support.merger.NoncollidingAttributeAdder;
 
@@ -22,7 +23,7 @@ import org.jasig.portal.services.persondir.support.merger.NoncollidingAttributeA
  * @version $Revision$ $Date$
  */
 public class MergingPersonAttributeDaoImplTest 
-    extends AbstractPersonAttributeDaoTest {
+    extends AbstractAggregatingDefaultQueryPersonAttributeDaoTest {
     
     private StubPersonAttributeDao sourceNull;
     private StubPersonAttributeDao sourceOne;
@@ -65,6 +66,29 @@ public class MergingPersonAttributeDaoImplTest
     }
     
     /**
+     * @see org.jasig.portal.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao()
+     */
+    protected AbstractAggregatingDefaultQueryPersonAttributeDao getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao() {
+        List attributeSources = new ArrayList();
+        
+        attributeSources.add(this.sourceOne);
+        attributeSources.add(this.sourceTwo);
+        
+        final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        impl.setPersonAttributeDaos(attributeSources);
+        
+        return impl;
+    }
+
+    /**
+     * @see org.jasig.portal.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao()
+     */
+    protected AbstractAggregatingDefaultQueryPersonAttributeDao getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao() {
+        return new MergingPersonAttributeDaoImpl();
+    }
+
+
+    /**
      * Test basic usage to merge attributes from a couple of sources.
      */
     public void testBasics() {
@@ -73,6 +97,7 @@ public class MergingPersonAttributeDaoImplTest
         
         attributeSources.add(this.sourceNull);
         attributeSources.add(this.sourceOne);
+        attributeSources.add(this.sourceNull);
         attributeSources.add(this.sourceTwo);
         
         MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
@@ -214,34 +239,6 @@ public class MergingPersonAttributeDaoImplTest
     }
     
     /**
-     * A mock, test implementation of ThrowingPersonAttributeDao which always
-     * throws a RuntimeException.
-     */
-    private class ThrowingPersonAttributeDao implements IPersonAttributeDao {
-
-    	/**
-    	 * @throws RuntimeException always
-    	 */
-        public Map getUserAttributes(String uid) {
-            throw new RuntimeException("ThrowingPersonAttributeDao always throws");
-        }
-        
-        /**
-         * @throws RuntimeException always
-         */
-        public Map getUserAttributes(Map queryMap) {
-            throw new RuntimeException("ThrowingPersonAttributeDao always throws");
-        }
-
-        /**
-         * @throws RuntimeException always
-         */
-        public Set getPossibleUserAttributeNames() {
-            throw new RuntimeException("ThrowingPersonAttributeDao always throws");
-        }
-    }
-    
-    /**
      * A mock, test implementation of IPersonAttributeDao which throws a 
      * RuntimeExcedption for the attribute getting methods and returns null
      * for the getPossibleUserAttributeNames() method.
@@ -269,17 +266,4 @@ public class MergingPersonAttributeDaoImplTest
             return null;
         }
     }
-
-    protected IPersonAttributeDao getPersonAttributeDaoInstance() {
-        List attributeSources = new ArrayList();
-        
-        attributeSources.add(this.sourceOne);
-        attributeSources.add(this.sourceTwo);
-        
-        MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
-        impl.setPersonAttributeDaos(attributeSources);
-        
-        return impl;
-    }
-    
 }
