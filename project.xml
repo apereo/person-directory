@@ -4,7 +4,7 @@
     <artifactId>person-directory</artifactId>
     <name>PersonDirectory</name>
     <groupId>person-directory</groupId>
-    <currentVersion>1.0.0-RC1</currentVersion>
+    <currentVersion>1.0.0-RC2</currentVersion>
     <organization>
         <name>Java Architectures Special Interest Group</name>
         <url>http://www.ja-sig.org</url>
@@ -18,13 +18,23 @@
     <repository>
         <connection>scm:cvs:pserver:anonymous@www.uportal.org:/home/cvs/jasig:PersonDirectory</connection>
         <developerConnection>scm:cvs:pserver:${maven.username}@www.uportal.org:/home/cvs/jasig:PersonDirectory</developerConnection>
-        <url>http://www.uportal.org/cgi-bin/viewcvs.cgi/PersonDirectory/</url>
+        <url>http://developer.ja-sig.org/source/viewrep/jasig/PersonDirectory/</url>
     </repository>
     <versions>
         <version>
             <id>1.0.0-RC1</id>
             <name>1.0.0-RC1</name>
             <tag>rel-1-0-0-RC1</tag>
+        </version>
+        <version>
+            <id>1.0.0-RC2</id>
+            <name>1.0.0-RC2</name>
+            <tag>rel-1-0-0-RC2</tag>
+        </version>
+        <version>
+            <id>1.0.0</id>
+            <name>1.0.0</name>
+            <tag>rel-1-0-0</tag>
         </version>
     </versions>
     <mailingLists>
@@ -139,7 +149,6 @@
             <type>jar</type>
             <url>http://www.cenqua.com/clover/</url>
         </dependency>
-        
         <!--
          | Plugin Dependencies
          +-->
@@ -151,7 +160,7 @@
             <url>http://maven.apache.org/reference/plugins/clover/</url>
         </dependency>
         <dependency>
-        	<groupId>maven-plugins</groupId>
+            <groupId>maven-plugins</groupId>
             <artifactId>maven-findbugs-plugin</artifactId>
             <version>0.9.2</version>
             <type>plugin</type>
@@ -199,9 +208,10 @@
         <report>maven-simian-plugin</report>
         <report>maven-pmd-plugin</report>
         <report>maven-jdepend-plugin</report>
-        <report>maven-changelog-plugin</report>
-        <report>maven-developer-activity-plugin</report>
+        <!--<report>maven-changelog-plugin</report>-->
+        <!--<report>maven-developer-activity-plugin</report>-->
         <report>maven-jxr-plugin</report>
+        <!--<report>maven-jdiff-plugin</report>-->
     </reports>
 </project>
 

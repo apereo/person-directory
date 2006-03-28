@@ -1,28 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <classpath>
-  <classpathentry excluding="" kind="src" path="main/src/java">
-  </classpathentry>
-  <classpathentry output="target/test-classes" kind="src" path="main/test/java">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar">
-  </classpathentry>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/springframework/jars/spring-1.2.5.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-3.1.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-dbcp/jars/commons-dbcp-1.2.1.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-pool/jars/commons-pool-1.2.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/hsqldb/jars/hsqldb-1.7.2.2.jar">
-  </classpathentry>
-  <classpathentry kind="output" path="target/classes">
-  </classpathentry>
+	<classpathentry kind="src" path="main/src/java"/>
+	<classpathentry output="target/test-classes" kind="src" path="main/test/java"/>
+	<classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JDK1.4_NOJAXP"/>
+	<classpathentry kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
+	<classpathentry sourcepath="/LIBRARIES/spring-framework-1.2.6/src" kind="var" path="MAVEN_REPO/springframework/jars/spring-1.2.5.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-3.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-dbcp/jars/commons-dbcp-1.2.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-pool/jars/commons-pool-1.2.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/hsqldb/jars/hsqldb-1.7.2.2.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -55,6 +55,7 @@
     
             <ant:fileset dir="${maven.test.dest}">
                 <ant:include name="**/Abstract*Test.class"/>
+                <ant:include name="**/mock/**/*.class"/>
             </ant:fileset>
         </ant:jar>
     </postGoal>

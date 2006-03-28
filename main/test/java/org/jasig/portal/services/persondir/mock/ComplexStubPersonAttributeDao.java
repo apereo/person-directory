@@ -3,13 +3,15 @@
 *  available online at http://www.uportal.org/license.html
 */
 
-package org.jasig.portal.services.persondir.support;
+package org.jasig.portal.services.persondir.mock;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import org.jasig.portal.services.persondir.support.AbstractDefaultQueryPersonAttributeDao;
 
 /**
  * Implements IPersonAttributeDao by looking up the specified user in a configured

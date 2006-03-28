@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jasig.portal.services.persondir.mock.ComplexStubPersonAttributeDao;
 import org.jasig.portal.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.jasig.portal.services.persondir.support.merger.MultivaluedAttributeMerger;
 
