@@ -8,15 +8,13 @@ package org.jasig.portal.services.persondir.support;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.naming.Context;
-import javax.naming.ldap.InitialLdapContext;
-import javax.naming.ldap.LdapContext;
+import net.sf.ldaptemplate.support.LdapContextSource;
+
 
 /**
  * Testcase for LdapPersonAttributeDao.
@@ -27,17 +25,18 @@ import javax.naming.ldap.LdapContext;
 public class LdapPersonAttributeDaoImplTest 
     extends AbstractDefaultQueryPersonAttributeDaoTest {
     
-    LdapContext ldapContext;
+//    LdapContext ldapContext;
+    LdapContextSource contextSource;
     
     /*
      * @see TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
-        Hashtable env = new Hashtable();
-        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, "ldap://mrfrumble.its.yale.edu:389/o=yale.edu");
-        this.ldapContext = new InitialLdapContext(env, null);
+        this.contextSource = new LdapContextSource();
+        this.contextSource.setUrl("ldap://mrfrumble.its.yale.edu:389");
+        this.contextSource.setBase("o=yale.edu");
+        this.contextSource.afterPropertiesSet();
     }
 
     /*
@@ -45,7 +44,7 @@ public class LdapPersonAttributeDaoImplTest
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        this.ldapContext = null;
+        this.contextSource = null;
     }
 
     public void testNotFoundQuery() {
@@ -60,7 +59,7 @@ public class LdapPersonAttributeDaoImplTest
         
         impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
         
-        impl.setLdapContext(ldapContext);
+        impl.setContextSource(this.contextSource);
         
         impl.setQuery("(uid={0})");
         
@@ -91,7 +90,7 @@ public class LdapPersonAttributeDaoImplTest
         
         impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
         
-        impl.setLdapContext(ldapContext);
+        impl.setContextSource(this.contextSource);
         
         impl.setQuery("(uid={0})");
         
@@ -116,7 +115,7 @@ public class LdapPersonAttributeDaoImplTest
         
         impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
         
-        impl.setLdapContext(ldapContext);
+        impl.setContextSource(this.contextSource);
         
         impl.setQuery("(uid={0})");
         
@@ -141,7 +140,7 @@ public class LdapPersonAttributeDaoImplTest
         
         impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
         
-        impl.setLdapContext(ldapContext);
+        impl.setContextSource(this.contextSource);
         
         impl.setQuery("(uid={0})");
         
@@ -172,7 +171,7 @@ public class LdapPersonAttributeDaoImplTest
         
         impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
         
-        impl.setLdapContext(ldapContext);
+        impl.setContextSource(this.contextSource);
         
         impl.setQuery("(&(uid={0})(alias={1}))");
         
@@ -205,7 +204,7 @@ public class LdapPersonAttributeDaoImplTest
         
         impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
         
-        impl.setLdapContext(ldapContext);
+        impl.setContextSource(this.contextSource);
         
         impl.setQuery("(&(uid={0})(alias={1}))");
         
@@ -267,9 +266,9 @@ public class LdapPersonAttributeDaoImplTest
         assertEquals(expectedAttrMap, impl.getLdapAttributesToPortalAttributes());
         
         
-        assertNull(impl.getLdapContext());
-        impl.setLdapContext(ldapContext);
-        assertEquals(ldapContext, impl.getLdapContext());
+        assertNull(impl.getContextSource());
+        impl.setContextSource(this.contextSource);
+        assertEquals(contextSource, impl.getContextSource());
         
         
         impl.setLdapAttributesToPortalAttributes(null);
@@ -307,7 +306,7 @@ public class LdapPersonAttributeDaoImplTest
         
         impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
         
-        impl.setLdapContext(ldapContext);
+        impl.setContextSource(this.contextSource);
         
         impl.setQuery("(&(uid={0})(alias={1}))");
         
@@ -317,10 +316,10 @@ public class LdapPersonAttributeDaoImplTest
         expected.append(impl.getClass().getName());
         expected.append("@");
         expected.append(Integer.toHexString(impl.hashCode()));
-        expected.append("[ldapContext=");
-        expected.append(ldapContext.getClass().getName());
+        expected.append("[contextSource=");
+        expected.append(contextSource.getClass().getName());
         expected.append("@");
-        expected.append(Integer.toHexString(ldapContext.hashCode()));
+        expected.append(Integer.toHexString(contextSource.hashCode()));
         expected.append(", timeLimit=0, baseDN=, query=(&(uid={0})(alias={1})), queryAttributes=[uid, alias], ldapAttributesToPortalAttributes={mail=[email]}]");
         
         String result = impl.toString();
@@ -332,7 +331,7 @@ public class LdapPersonAttributeDaoImplTest
      */
     public void testNullContext() {
         LdapPersonAttributeDaoImpl impl = new LdapPersonAttributeDaoImpl();
-        impl.setLdapContext(ldapContext);
+        impl.setContextSource(this.contextSource);
         
         try {
             impl.getUserAttributes(Collections.singletonMap("dummy", "seed"));
@@ -370,7 +369,7 @@ public class LdapPersonAttributeDaoImplTest
         
         impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
         
-        impl.setLdapContext(ldapContext);
+        impl.setContextSource(this.contextSource);
         
         impl.setQuery("(uid={0})");
         

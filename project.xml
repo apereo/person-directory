@@ -26,6 +26,7 @@
             <name>1.0.0-RC1</name>
             <tag>rel-1-0-0-RC1</tag>
         </version>
+        <!--
         <version>
             <id>1.0.0-RC2</id>
             <name>1.0.0-RC2</name>
@@ -36,6 +37,7 @@
             <name>1.0.0</name>
             <tag>rel-1-0-0</tag>
         </version>
+        -->
     </versions>
     <mailingLists>
         <mailingList>
@@ -136,12 +138,31 @@
             <url>http://jakarta.apache.org/commons/pool/</url>
         </dependency>
         <dependency>
+        	<groupId>net.sf.ldaptemplate</groupId>
+            <artifactId>ldaptemplate</artifactId>
+            <version>1.0-rc2</version>
+            <type>jar</type>
+            <url>http://ldaptemplate.sourceforge.net/</url>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.1</version>
+            <type>jar</type>
+        </dependency>
+        <!--
+         | Testing Dependencies
+         +-->
+        <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>1.7.2.2</version>
             <type>jar</type>
             <url>http://hsqldb.org/</url>
         </dependency>
+        <!--
+         | Plugin Dependencies
+         +-->
         <dependency>
             <groupId>clover</groupId>
             <artifactId>clover</artifactId>
@@ -149,9 +170,6 @@
             <type>jar</type>
             <url>http://www.cenqua.com/clover/</url>
         </dependency>
-        <!--
-         | Plugin Dependencies
-         +-->
         <dependency>
             <groupId>maven</groupId>
             <artifactId>maven-clover-plugin</artifactId>
