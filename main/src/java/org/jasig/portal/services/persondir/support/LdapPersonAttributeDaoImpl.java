@@ -107,11 +107,11 @@ public class LdapPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAttrib
 		if (this.query == null)
 			throw new IllegalStateException("query is null");
 
-		// Ensure the data needed to run the query is avalable
-		if (!((queryAttributes != null && seed.keySet().containsAll(queryAttributes)) || 
-            (queryAttributes == null && seed.containsKey(this.getDefaultAttributeName())))) {
-			return null;
-		}
+        //Ensure the data needed to run the query is avalable
+        if (!((this.queryAttributes != null && seed.keySet().containsAll(this.queryAttributes)) || 
+              (this.queryAttributes == null && seed.containsKey(this.getDefaultAttributeName())))) {
+            return null;
+        }
 
 		// Can't just to a toArray here since the order of the keys in the Map
 		// may not match the order of the keys in the List and it is important to

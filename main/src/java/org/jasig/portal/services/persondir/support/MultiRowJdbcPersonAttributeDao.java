@@ -7,8 +7,6 @@ package org.jasig.portal.services.persondir.support;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +18,6 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 /**
@@ -80,7 +77,7 @@ import org.springframework.jdbc.object.MappingSqlQuery;
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
-public class MultiRowJdbcPersonAttributeDao extends AbstractDefaultQueryPersonAttributeDao {
+public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeDao {
     /**
      * {@link Map} from stored names to attribute names.
      * Keys are Strings, Values are null, Strings or List of Strings 
@@ -99,38 +96,17 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractDefaultQueryPersonAt
     private Set userAttributes = Collections.EMPTY_SET;
     
     /**
-     * {@link List} of attributes to use in the query.
-     */
-    private final List queryAttributes;
-    
-    /**
      * The {@link MappingSqlQuery} to use to get attributes.
      */
     private PersonAttributeMappingQuery query;
 
 
     /**
-     * Create the DAO, configured with the needed query information.
-     * 
-     * @param ds The {@link DataSource} to run the queries against.
-     * @param attrList The list of arguments for the query.
-     * @param sql The SQL query to run.
+     * @see AbstractJdbcPersonAttributeDao#AbstractJdbcPersonAttributeDao(DataSource, List, String)
      */
-    public MultiRowJdbcPersonAttributeDao(final DataSource ds, final List attrList, final String sql) {
-        if (super.log.isTraceEnabled()) {
-        	log.trace("entering JdbcPersonAttributeDaoImpl(" + ds + ", " + attrList + ", " + sql + ")");
-        }
-    	if (attrList == null)
-            throw new IllegalArgumentException("attrList cannot be null");
-        
-        //Defensive copy of the query attribute list
-        List defensiveCopy = new ArrayList(attrList);
-        this.queryAttributes = Collections.unmodifiableList(defensiveCopy);
-        
+    public MultiRowJdbcPersonAttributeDao(DataSource ds, List attrList, String sql) {
+        super(ds, attrList, sql);
         this.query = new PersonAttributeMappingQuery(ds, sql);
-        if (log.isTraceEnabled()) {
-        	log.trace("Constructed " + this);
-        }
     }
 
 
@@ -140,28 +116,9 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractDefaultQueryPersonAt
      * 
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    public Map getUserAttributes(final Map seed) {
-        if (seed == null)
-            throw new IllegalArgumentException("The query seed Map cannot be null.");
-        
-        //Ensure the data needed to run the query is avalable
-        if (!((this.queryAttributes != null && seed.keySet().containsAll(queryAttributes)) || (queryAttributes == null && seed.containsKey(this.getDefaultAttributeName())))) {
-            return null;
-        }
-        
-        //Can't just to a toArray here since the order of the keys in the Map
-        //may not match the order of the keys in the List and it is important to
-        //the query.
-        Object[] args = new Object[this.queryAttributes.size()];
-        
-        for (int index = 0; index < args.length; index++) {
-            final String attrName = (String)this.queryAttributes.get(index);
-            args[index] = seed.get(attrName);
-        }
-            
-        final List queryResults = this.query.execute(args);
+    public Map parseAttributeMapFromResults(final List queryResults) {
         final Map results = new HashMap();
-        
+
         for (final Iterator rowItr = queryResults.iterator(); rowItr.hasNext();) {
             final Map rowResult = (Map)rowItr.next();
             
@@ -185,6 +142,13 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractDefaultQueryPersonAt
         }
         
         return results;
+    }
+    
+    /**
+     * @see org.jasig.portal.services.persondir.support.AbstractJdbcPersonAttributeDao#getAttributeQuery()
+     */
+    protected AbstractPersonAttributeMappingQuery getAttributeQuery() {
+        return this.query;
     }
     
     /* 
@@ -253,9 +217,8 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractDefaultQueryPersonAt
     
     public String toString() {
     	StringBuffer sb = new StringBuffer();
-    	sb.append("JdbcPersonAttributeDaoImpl ");
+    	sb.append("MultiRowJdbcPersonAttributeDao ");
     	sb.append("query=").append(this.query);
-    	sb.append(" queryAttributes=").append(this.queryAttributes);
     	sb.append(" attributeMappings=").append(this.attributeNameMappings);
     	return sb.toString();
     }
@@ -265,28 +228,14 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractDefaultQueryPersonAt
      * of yielding a ResultSet with zero or one rows, which it maps
      * to null or to a Map from uPortal attribute names to values.
      */
-    private class PersonAttributeMappingQuery extends MappingSqlQuery {
+    private class PersonAttributeMappingQuery extends AbstractPersonAttributeMappingQuery {
         /**
-         * Instantiate the query, providing a DataSource against which the query
-         * will run and the SQL representing the query, which should take exactly
-         * one parameter: the unique ID of the user.
-         * 
-         * @param ds The data source to use for running the query against.
-         * @param sql The SQL to run against the data source.
+         * @see AbstractPersonAttributeMappingQuery#AbstractPersonAttributeMappingQuery(DataSource, String)
          */
-        public PersonAttributeMappingQuery(final DataSource ds, final String sql) {
+        public PersonAttributeMappingQuery(DataSource ds, String sql) {
             super(ds, sql);
-            
-            //Configures the SQL parameters, everything is assumed to be VARCHAR
-            for (final Iterator attrNames = queryAttributes.iterator(); attrNames.hasNext(); ) {
-                final String attrName = (String)attrNames.next();
-                this.declareParameter(new SqlParameter(attrName, Types.VARCHAR));
-            }
-
-            //One time compilation of the query
-            this.compile();
         }
-        
+
         /**
          * How attribute name mapping works:
          * If the column is mapped use the mapped name(s)<br>
@@ -346,14 +295,6 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractDefaultQueryPersonAt
                     throw sqle;
                 }
             }
-        }
-        
-        
-        public String toString() {
-        	StringBuffer sb = new StringBuffer();
-        	sb.append(this.getClass().getName());
-        	sb.append(" SQL=[").append(super.getSql()).append("]");
-        	return sb.toString();
         }
     }
 }
