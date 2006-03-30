@@ -22,9 +22,17 @@
 			    configured using the <a href="http://www.springframework.org">Spring
 			    IoC framework</a>.
 		    </p>
+			<p>
+				This Maven generated site is targeted towards development of Person
+				Directory. For documentation on the available DAO implementations and
+				example configurations please view the 
+				<a href="http://www.ja-sig.org/wiki/display/UPC/PersonDirectory">PersonDirectory</a>
+				page on the JA-SIG Wiki.
+			</p>
 		</section>
 		<section name="News">
-			<p>Working on 1.0.0-RC1 release.</p>
+			<p>2006.03.30 - Working on the 1.0.0 release.</p>
+			<p>2005.10.17 - Working on the 1.0.0-RC1 release.</p>
 		</section>
 	</body>
 </document>

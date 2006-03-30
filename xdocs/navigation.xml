@@ -6,11 +6,5 @@
             <item name="JA-SIG" href="http://www.ja-sig.org" />
             <item name="uPortal" href="http://www.uportal.org/"/>
         </links>
-
-        <menu name="Examples">
-            <item name="Java Configuration" href="/examples/javaConfig.html"/>
-            <item name="Spring Configuration" href="/examples/springConfig.html"/>
-            <item name="WebService Configuration" href="/examples/webServiceConfig.html"/>
-        </menu>
     </body>
 </project>

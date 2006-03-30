@@ -22,11 +22,10 @@
              </question>
              <answer>
                  <p>
-                     Use the IPersonAttributeDao interface in your code to run queries for user attributes.
-                     In your configuration (Spring, factories, etc...) specify the IPersonAttibuteDao
-                     implementation(s) you want to use. There are implemenetations for retrieving attributes
-                     from JDBC and LDAP data stores by default along with utility implementations for merging
-                     attributes from multiple sources.
+                     This Maven generated site is targeted towards development of Person Directory. For
+                     documentation on the available DAO implementations and example configurations please
+                     view the <a href="http://www.ja-sig.org/wiki/display/UPC/PersonDirectory">PersonDirectory</a>
+                     page on the JA-SIG Wiki.
                  </p>
              </answer>
          </faq>
