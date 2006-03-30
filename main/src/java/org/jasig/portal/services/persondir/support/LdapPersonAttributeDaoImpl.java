@@ -207,21 +207,4 @@ public class LdapPersonAttributeDaoImpl extends AbstractQueryPersonAttributeDao 
         this.contextSource = contextSource;
         this.ldapTemplate = new LdapTemplate(this.contextSource);
     }
-
-    /**
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append(super.toString());
-        sb.append("[");
-        sb.append("contextSource=").append(this.contextSource);
-        sb.append(", timeLimit=").append(this.timeLimit);
-        sb.append(", baseDN=").append(this.baseDN);
-        sb.append(", query=").append(this.query);
-        sb.append(", ldapAttributesToPortalAttributes=").append(this.getLdapAttributesToPortalAttributes());
-        sb.append("]");
-
-        return sb.toString();
-    }
 }

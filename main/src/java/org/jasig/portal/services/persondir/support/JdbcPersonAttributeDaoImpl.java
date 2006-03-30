@@ -126,14 +126,6 @@ public class JdbcPersonAttributeDaoImpl extends AbstractJdbcPersonAttributeDao {
         
         this.userAttributes = Collections.unmodifiableSet(new HashSet(userAttributeCol));
     }
-    
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("JdbcPersonAttributeDaoImpl ");
-        sb.append("query=").append(this.query);
-        sb.append(" attributeMappings=").append(this.attributeMappings);
-        return sb.toString();
-    }
 
     /**
      * An object which will execute a SQL query with the expectation

@@ -292,40 +292,6 @@ public class LdapPersonAttributeDaoImplTest
         assertEquals(1337, impl.getTimeLimit());
     }
     
-    public void testToString() {
-        final String queryAttr1 = "uid";
-        final String queryAttr2 = "alias";
-        final List queryAttrList = new LinkedList();
-        queryAttrList.add(queryAttr1);
-        queryAttrList.add(queryAttr2);
-        
-        LdapPersonAttributeDaoImpl impl = new LdapPersonAttributeDaoImpl();
-        
-        Map ldapAttribsToPortalAttribs = new HashMap();
-        ldapAttribsToPortalAttribs.put("mail", "email");
-        
-        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
-        
-        impl.setContextSource(this.contextSource);
-        
-        impl.setQuery("(&(uid={0})(alias={1}))");
-        
-        impl.setQueryAttributes(queryAttrList);
-        
-        StringBuffer expected = new StringBuffer();
-        expected.append(impl.getClass().getName());
-        expected.append("@");
-        expected.append(Integer.toHexString(impl.hashCode()));
-        expected.append("[contextSource=");
-        expected.append(contextSource.getClass().getName());
-        expected.append("@");
-        expected.append(Integer.toHexString(contextSource.hashCode()));
-        expected.append(", timeLimit=0, baseDN=, query=(&(uid={0})(alias={1})), ldapAttributesToPortalAttributes={mail=[email]}]");
-        //queryAttributes=[uid, alias], 
-        String result = impl.toString();
-        assertEquals(expected.toString(), result);
-    }
-    
     /**
      * Test proper reporting of declared attribute names.
      */

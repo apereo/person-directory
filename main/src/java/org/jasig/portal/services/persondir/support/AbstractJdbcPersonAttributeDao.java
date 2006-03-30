@@ -81,14 +81,6 @@ public abstract class AbstractJdbcPersonAttributeDao extends AbstractQueryPerson
         final Map userAttributes = this.parseAttributeMapFromResults(queryResults);
         return userAttributes;
     }
-
-    
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("AbstractJdbcPersonAttributeDao ");
-        sb.append("query=").append(this.getAttributeQuery());
-        return sb.toString();
-    }
     
 
 
@@ -118,13 +110,6 @@ public abstract class AbstractJdbcPersonAttributeDao extends AbstractQueryPerson
 
             //One time compilation of the query
             this.compile();
-        }
-        
-        public String toString() {
-            StringBuffer sb = new StringBuffer();
-            sb.append(this.getClass().getName());
-            sb.append(" SQL=[").append(super.getSql()).append("]");
-            return sb.toString();
         }
     }
 }

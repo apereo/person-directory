@@ -212,16 +212,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         
         this.nameValueColumnMappings = mappings;
     }
-    
-    
-    
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("MultiRowJdbcPersonAttributeDao ");
-        sb.append("query=").append(this.query);
-        sb.append(" attributeMappings=").append(this.attributeNameMappings);
-        return sb.toString();
-    }
+
 
     /**
      * An object which will execute a SQL query with the expectation
