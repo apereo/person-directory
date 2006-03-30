@@ -59,4 +59,38 @@
             </ant:fileset>
         </ant:jar>
     </postGoal>
+    
+    <postGoal name="clean:clean">
+    	<ant:delete dir="${dist.dir}" />
+    </postGoal>
+
+    <!--
+     | Goal for generating release files for the PersonDirectory library
+     +-->
+    <goal name="pd:release">
+        <attainGoal name="site" />
+        <attainGoal name="jar" />
+        
+        <ant:fileset id="targetReleaseFiles" dir="${maven.build.dir}">
+        	<ant:include name="docs/**" />
+        	<ant:include name="*.jar" />
+        </ant:fileset>
+        <ant:fileset id="baseReleaseFiles" dir=".">
+        	<ant:include name="LICENSE.txt" />
+        	<ant:include name="README.txt" />
+        </ant:fileset>
+        
+        <ant:mkdir dir="${dist.dir}"/>
+        <ant:zip zipfile="${dist.dir}/${release.zip}">
+            <ant:zipfileset refid="targetReleaseFiles" prefix="${release.path}" />
+            <ant:zipfileset refid="baseReleaseFiles" prefix="${release.path}" />
+        </ant:zip>
+
+        <ant:checksum file="${dist.dir}/${release.zip}" algorithm="MD5" />
+
+        <j:if test="${not empty artifactsDir}">
+            <copy todir="${artifactsDir}" file="${dist.dir}/${release.zip}" />
+            <copy todir="${artifactsDir}" file="${dist.dir}/${release.zip}.MD5" />
+        </j:if>
+    </goal>
 </project>

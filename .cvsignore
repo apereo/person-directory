@@ -1,2 +1,5 @@
 target
 build.properties
+dist
+HEAD.xml
+rel-1-0-0-RC1.xml
