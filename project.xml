@@ -77,13 +77,23 @@
             <url>http://www.ja-sig.org/wiki/display/~edalquist</url>
             <timezone>-8</timezone>
         </developer>
+        <developer>
+            <name>Scott Battaglia</name>
+            <id>sbattaglia</id>
+            <email>scott_battaglia@rutgers.edu</email>
+            <organization>Rutgers</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <url>http://www.ja-sig.org/wiki/display/~battags</url>
+            <timezone>-5</timezone>
+        </developer>
     </developers>
     <contributors>
         <contributor>
             <name>Ernest Rider</name>
             <email>erider@unicon.net</email>
             <organization>Unicon Inc.</organization>
-            <url>http://www.unicon.net</url>
             <timezone>-7</timezone>
         </contributor>
     </contributors>
