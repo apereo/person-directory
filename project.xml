@@ -14,10 +14,10 @@
     <package>org.jasig.portal.services.persondir</package>
     <description>Provides a general interface for accessing attributes for a person. Has the capability of aggregating attributes from multiple data sources into a single view.</description>
     <shortDescription>Person Attribute Lookup Service</shortDescription>
-    <issueTrackingUrl>https://clearinghouse.ja-sig.org/issues/browse/PERSONDIR</issueTrackingUrl>
+    <issueTrackingUrl>http://www.ja-sig.org/issues/browse/PERSONDIR</issueTrackingUrl>
     <repository>
-        <connection>scm:cvs:pserver:anonymous@www.uportal.org:/home/cvs/jasig:PersonDirectory</connection>
-        <developerConnection>scm:cvs:pserver:${maven.username}@www.uportal.org:/home/cvs/jasig:PersonDirectory</developerConnection>
+        <connection>scm:cvs:pserver:anonymous@developer.ja-sig.org:/home/cvs/jasig:PersonDirectory</connection>
+        <developerConnection>scm:cvs:pserver:${maven.username}@developer.ja-sig.org:/home/cvs/jasig:PersonDirectory</developerConnection>
         <url>http://developer.ja-sig.org/source/viewrep/jasig/PersonDirectory/</url>
     </repository>
     <versions>
@@ -62,7 +62,7 @@
             <roles>
                 <role>Developer</role>
             </roles>
-            <url>https://clearinghouse.ja-sig.org/wiki/display/~awp9</url>
+            <url>http://www.ja-sig.org/wiki/display/~awp9</url>
             <timezone>-6</timezone>
         </developer>
         <developer>
@@ -74,7 +74,7 @@
                 <role>Project Admin</role>
                 <role>Developer</role>
             </roles>
-            <url>https://clearinghouse.ja-sig.org/wiki/display/~edalquist</url>
+            <url>http://www.ja-sig.org/wiki/display/~edalquist</url>
             <timezone>-8</timezone>
         </developer>
     </developers>
