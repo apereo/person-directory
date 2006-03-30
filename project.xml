@@ -26,12 +26,12 @@
             <name>1.0.0-RC1</name>
             <tag>rel-1-0-0-RC1</tag>
         </version>
-        <!--
         <version>
             <id>1.0.0-RC2</id>
             <name>1.0.0-RC2</name>
             <tag>rel-1-0-0-RC2</tag>
         </version>
+        <!--
         <version>
             <id>1.0.0</id>
             <name>1.0.0</name>
