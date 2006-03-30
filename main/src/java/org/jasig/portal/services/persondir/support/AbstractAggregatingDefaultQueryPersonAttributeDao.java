@@ -6,9 +6,11 @@
 package org.jasig.portal.services.persondir.support;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jasig.portal.services.persondir.IPersonAttributeDao;
@@ -39,6 +41,76 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * individual DAOs.
      */
     protected boolean recoverExceptions = true;
+    
+
+    
+    /**
+     * Iterates through the configured {@link java.util.List} of {@link IPersonAttributeDao}
+     * instances. The results from each DAO are merged into the result {@link Map}
+     * by the configured {@link org.jasig.portal.services.persondir.support.merger.IAttributeMerger}. 
+     * 
+     * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     */
+    public final Map getUserAttributes(final Map seed) {
+        //Ensure the arguements and state are valid
+        if (seed == null)
+            throw new IllegalArgumentException("The query seed Map cannot be null.");
+        
+        if (this.personAttributeDaos == null)
+            throw new IllegalStateException("No IPersonAttributeDaos have been specified.");
+        
+        //Initialize null, so that if none of the sub-DAOs find the user null is returned appropriately
+        Map resultAttributes = null;
+        
+        //TODO fix this comment - Denotes that this is the first time we are running a query and the seed should be used
+        boolean isFirstQuery = true;
+        
+        //Iterate through the configured IPersonAttributeDaos, querying each.
+        for (final Iterator iter = this.personAttributeDaos.iterator(); iter.hasNext();) {
+            final IPersonAttributeDao currentlyConsidering = (IPersonAttributeDao)iter.next();
+            
+            Map currentAttributes = new HashMap();
+            try {
+                currentAttributes = this.getAttributesFromDao(seed, isFirstQuery, currentlyConsidering, resultAttributes);
+                isFirstQuery = false;
+            }
+            catch (final RuntimeException rte) {
+                final String msg = "Exception thrown by DAO: " + currentlyConsidering;
+
+                if (this.recoverExceptions) {
+                    log.warn("Recovering From " + msg, rte);
+                }
+                else {
+                    log.error(msg, rte);
+                    throw rte;
+                }
+            }
+
+            if (resultAttributes == null) {
+                //If this is the first valid result set just use it.
+                resultAttributes = currentAttributes;
+            }
+            else if (currentAttributes != null) {
+                //Perform the appropriate attribute attrMerger
+                resultAttributes = this.attrMerger.mergeAttributes(resultAttributes, currentAttributes);
+            }
+        }
+        
+        return resultAttributes;
+    }
+    
+    /**
+     * Call to execute the appropriate query on the current {@link IPersonAttributeDao}. Provides extra information
+     * beyond the seed for the state of the query chain and previous results.
+     * 
+     * @param seed The seed for the original query.
+     * @param isFirstQuery If this is the first query, this will stay true until a call to this method returns (does not throw an exception).
+     * @param currentlyConsidering The IPersonAttributeDao to execute the query on.
+     * @param resultAttributes The Map of results from all previous queries, may be null.
+     * @return The results from the call to the DAO, follows the same rules as {@link IPersonAttributeDao#getUserAttributes(Map)}.
+     */
+    protected abstract Map getAttributesFromDao(final Map seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Map resultAttributes);
+    
     
     /**
      * This implementation is not always correct.
