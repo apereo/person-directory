@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.portal.services.persondir.support.AbstractDefaultQueryPersonAttributeDao;
+import org.jasig.portal.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 
 /**
  * Implements IPersonAttributeDao by looking up the specified user in a configured
@@ -19,7 +19,7 @@ import org.jasig.portal.services.persondir.support.AbstractDefaultQueryPersonAtt
  * values are Maps from String user attribute names to user attribute values.
  * @version $Revision$ $Date$
  */
-public class ComplexStubPersonAttributeDao extends AbstractDefaultQueryPersonAttributeDao {
+public class ComplexStubPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     /**
      * Map from userids to Maps.  The Map values are maps from
      * attribute names to attribute values.

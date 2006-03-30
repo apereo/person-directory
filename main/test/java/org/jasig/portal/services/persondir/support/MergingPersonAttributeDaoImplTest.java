@@ -245,9 +245,9 @@ public class MergingPersonAttributeDaoImplTest
      */
     private class NullAttribNamesPersonAttributeDao implements IPersonAttributeDao {
 
-    	/**
-    	 * @throws RuntimeException Always.
-    	 */
+        /**
+         * @throws RuntimeException Always.
+         */
         public Map getUserAttributes(String uid) {
             throw new RuntimeException("NullAttribNamesPersonAttributeDao always throws");
         }

@@ -17,7 +17,7 @@ import java.util.Set;
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
-public class EchoPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAttributeDao {
+public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao {
 
     /**
      * Returns a duplicate of the seed it is passed.

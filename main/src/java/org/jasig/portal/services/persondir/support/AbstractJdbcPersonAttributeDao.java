@@ -24,13 +24,7 @@ import org.springframework.jdbc.object.MappingSqlQuery;
  * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  * @version $Revision$
  */
-public abstract class AbstractJdbcPersonAttributeDao extends AbstractDefaultQueryPersonAttributeDao {
-    
-    /**
-     * {@link List} of attributes to use in the query.
-     */
-    private final List queryAttributes;
-    
+public abstract class AbstractJdbcPersonAttributeDao extends AbstractQueryPersonAttributeDao {
     
     /***
      * Create the DAO, configured with the needed query information.
@@ -48,7 +42,8 @@ public abstract class AbstractJdbcPersonAttributeDao extends AbstractDefaultQuer
 
         //Defensive copy of the query attribute list
         final List defensiveCopy = new ArrayList(attrList);
-        this.queryAttributes = Collections.unmodifiableList(defensiveCopy);
+        final List queryAttributes = Collections.unmodifiableList(defensiveCopy);
+        this.setQueryAttributes(queryAttributes);
 
         if (log.isTraceEnabled()) {
             log.trace("Constructed " + this);
@@ -62,7 +57,7 @@ public abstract class AbstractJdbcPersonAttributeDao extends AbstractDefaultQuer
      * and passes it to the implementing the class for parsing into the returned user attribute Map.
      * 
      * @param queryResults Results from the query done using the {@link AbstractPersonAttributeMappingQuery} returned by {@link #getAttributeQuery()}
-     * @return The return value must follow the same rules as {@link org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(Map)} 
+     * @return The results of the query, as specified by {@link org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(Map)} 
      */
     protected abstract Map parseAttributeMapFromResults(final List queryResults);
     
@@ -73,36 +68,14 @@ public abstract class AbstractJdbcPersonAttributeDao extends AbstractDefaultQuer
 
 
     /***
-     * Checks the seed for being null.<br>
-     * Ensures the seed contains the attributes needed to run the query, returns null if they aren't available.<br>
-     * Compiles the Object[] of arguments.<br>
      * Gets the query from the {@link #getAttributeQuery()} method.<br>
      * Runs the query.<br>
      * Calls {@link #parseAttributeMapFromResults(List)} with the query results.<br>
      * Returns results from {@link #parseAttributeMapFromResults(List)} link.<br>
      *
-     * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     * @see org.jasig.portal.services.persondir.support.AbstractQueryPersonAttributeDao#getUserAttributesIfNeeded(java.lang.Object[])
      */
-    public final Map getUserAttributes(final Map seed) {
-        if (seed == null)
-            throw new IllegalArgumentException("The query seed Map cannot be null.");
-
-        //Ensure the data needed to run the query is avalable
-        if (!((this.queryAttributes != null && seed.keySet().containsAll(this.queryAttributes)) ||
-              (this.queryAttributes == null && seed.containsKey(this.getDefaultAttributeName())))) {
-            return null;
-        }
-
-        //Can't just to a toArray here since the order of the keys in the Map
-        //may not match the order of the keys in the List and it is important to
-        //the query.
-        final Object[] args = new Object[this.queryAttributes.size()];
-
-        for (int index = 0; index < args.length; index++) {
-            final String attrName = (String)this.queryAttributes.get(index);
-            args[index] = seed.get(attrName);
-        }
-
+    protected Map getUserAttributesIfNeeded(final Object[] args) {
         final AbstractPersonAttributeMappingQuery query = this.getAttributeQuery();
         final List queryResults = query.execute(args);
         final Map userAttributes = this.parseAttributeMapFromResults(queryResults);
@@ -114,7 +87,6 @@ public abstract class AbstractJdbcPersonAttributeDao extends AbstractDefaultQuer
         StringBuffer sb = new StringBuffer();
         sb.append("AbstractJdbcPersonAttributeDao ");
         sb.append("query=").append(this.getAttributeQuery());
-        sb.append(" queryAttributes=").append(this.queryAttributes);
         return sb.toString();
     }
     
@@ -138,6 +110,7 @@ public abstract class AbstractJdbcPersonAttributeDao extends AbstractDefaultQuer
             super(ds, sql);
             
             //Configures the SQL parameters, everything is assumed to be VARCHAR
+            final List queryAttributes = AbstractJdbcPersonAttributeDao.this.getQueryAttributes();
             for (final Iterator attrNames = queryAttributes.iterator(); attrNames.hasNext(); ) {
                 final String attrName = (String)attrNames.next();
                 this.declareParameter(new SqlParameter(attrName, Types.VARCHAR));

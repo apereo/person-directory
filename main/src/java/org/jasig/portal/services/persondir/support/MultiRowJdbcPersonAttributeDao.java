@@ -216,11 +216,11 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     
     
     public String toString() {
-    	StringBuffer sb = new StringBuffer();
-    	sb.append("MultiRowJdbcPersonAttributeDao ");
-    	sb.append("query=").append(this.query);
-    	sb.append(" attributeMappings=").append(this.attributeNameMappings);
-    	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        sb.append("MultiRowJdbcPersonAttributeDao ");
+        sb.append("query=").append(this.query);
+        sb.append(" attributeMappings=").append(this.attributeNameMappings);
+        return sb.toString();
     }
 
     /**
@@ -259,7 +259,8 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
 
 
         /**
-         * TODO comment
+         * Tries to get the attributes specified for the column, determin the
+         * mapping for the column and add it to the rowResults {@link Map}.
          * 
          * @param rs The {@link ResultSet} to get the attribute value from.
          * @param nameColumn The name of the column to get the attribute name from.

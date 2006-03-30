@@ -27,7 +27,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
     /**
      * @see org.jasig.portal.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest#getAbstractDefaultQueryPersonAttributeDao()
      */
-    protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
+    protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         return this.getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao();
     }
 

@@ -12,7 +12,7 @@ import java.util.Set;
 import org.jasig.portal.services.persondir.IPersonAttributeDao;
 
 /**
- * Provides base tests for classes that implement AbstractDefaultQueryPersonAttributeDao.
+ * Provides base tests for classes that implement AbstractDefaultAttributePersonAttributeDao.
  * 
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
  * @version $Revision$
@@ -25,10 +25,10 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         return this.getAbstractDefaultQueryPersonAttributeDao();
     }
     
-    protected abstract AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao();
+    protected abstract AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao();
 
     public void testNullDefaultAttributeName() {
-        AbstractDefaultQueryPersonAttributeDao dao = getAbstractDefaultQueryPersonAttributeDao();
+        AbstractDefaultAttributePersonAttributeDao dao = getAbstractDefaultQueryPersonAttributeDao();
         try {
             dao.setDefaultAttributeName(null);
             fail("Expected IllegalArgumentException on setDefaultAttributeName(null)");
@@ -39,13 +39,13 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
     }
     
     public void testDefaultAttributeName() {
-        AbstractDefaultQueryPersonAttributeDao dao = getAbstractDefaultQueryPersonAttributeDao();
+        AbstractDefaultAttributePersonAttributeDao dao = getAbstractDefaultQueryPersonAttributeDao();
         dao.setDefaultAttributeName("TestAttrName");
         assertEquals("TestAttrName", dao.getDefaultAttributeName());
     }
     
     public void testGetAttributesByString() {
-        AbstractDefaultQueryPersonAttributeDao dao = new SimpleDefaultQueryPersonAttributeDao();
+        AbstractDefaultAttributePersonAttributeDao dao = new SimpleDefaultQueryPersonAttributeDao();
         dao.setDefaultAttributeName("TestAttrName");
         Map expected = new HashMap();
         expected.put("TestAttrName", "edalquist");
@@ -53,7 +53,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         assertEquals(expected, dao.getUserAttributes("edalquist"));
     }
     
-    private class SimpleDefaultQueryPersonAttributeDao extends AbstractDefaultQueryPersonAttributeDao {
+    private class SimpleDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
         /**
          * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
          */

@@ -11,9 +11,9 @@ import org.jasig.portal.services.persondir.IPersonAttributeDao;
  */
 public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
 
-	/**
-	 * @throws RuntimeException always
-	 */
+    /**
+     * @throws RuntimeException always
+     */
     public Map getUserAttributes(String uid) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }

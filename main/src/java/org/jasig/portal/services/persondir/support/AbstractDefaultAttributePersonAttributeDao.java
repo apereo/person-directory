@@ -23,12 +23,12 @@ import org.jasig.portal.services.persondir.IPersonAttributeDao;
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
-public abstract class AbstractDefaultQueryPersonAttributeDao implements IPersonAttributeDao {
+public abstract class AbstractDefaultAttributePersonAttributeDao implements IPersonAttributeDao {
     protected final Log log = LogFactory.getLog(getClass());
     
     /**
-	 * Defaults attribute to use for a simple query
-	 */
+     * Defaults attribute to use for a simple query
+     */
     private String defaultAttribute = "username";
     
     

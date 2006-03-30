@@ -98,7 +98,7 @@ public class ComplexStubPersonAttributeDaoTest
         assertNull(this.testInstance.getUserAttributes("unknownUser"));
     }
 
-    protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
+    protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         return this.testInstance;
     }
 }

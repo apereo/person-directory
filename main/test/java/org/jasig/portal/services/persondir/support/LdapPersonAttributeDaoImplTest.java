@@ -320,8 +320,8 @@ public class LdapPersonAttributeDaoImplTest
         expected.append(contextSource.getClass().getName());
         expected.append("@");
         expected.append(Integer.toHexString(contextSource.hashCode()));
-        expected.append(", timeLimit=0, baseDN=, query=(&(uid={0})(alias={1})), queryAttributes=[uid, alias], ldapAttributesToPortalAttributes={mail=[email]}]");
-        
+        expected.append(", timeLimit=0, baseDN=, query=(&(uid={0})(alias={1})), ldapAttributesToPortalAttributes={mail=[email]}]");
+        //queryAttributes=[uid, alias], 
         String result = impl.toString();
         assertEquals(expected.toString(), result);
     }
@@ -357,7 +357,7 @@ public class LdapPersonAttributeDaoImplTest
         }
     }
 
-    protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
+    protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         final String queryAttr = "uid";
         final List queryAttrList = new LinkedList();
         queryAttrList.add(queryAttr);

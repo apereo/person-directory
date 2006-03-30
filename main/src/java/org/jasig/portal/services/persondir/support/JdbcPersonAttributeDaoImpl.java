@@ -128,11 +128,11 @@ public class JdbcPersonAttributeDaoImpl extends AbstractJdbcPersonAttributeDao {
     }
     
     public String toString() {
-    	StringBuffer sb = new StringBuffer();
-    	sb.append("JdbcPersonAttributeDaoImpl ");
-    	sb.append("query=").append(this.query);
-    	sb.append(" attributeMappings=").append(this.attributeMappings);
-    	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        sb.append("JdbcPersonAttributeDaoImpl ");
+        sb.append("query=").append(this.query);
+        sb.append(" attributeMappings=").append(this.attributeMappings);
+        return sb.toString();
     }
 
     /**

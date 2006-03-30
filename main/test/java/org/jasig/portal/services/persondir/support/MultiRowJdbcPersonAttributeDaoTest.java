@@ -435,7 +435,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         
     }
 
-    protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
+    protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         final String queryAttr = "shirt";
         final List queryAttrList = new LinkedList();
         queryAttrList.add(queryAttr);

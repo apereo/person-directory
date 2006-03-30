@@ -61,7 +61,7 @@ import org.jasig.portal.services.persondir.IPersonAttributeDao;
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
  * @version $Id
  */
-public class CachingPersonAttributeDaoImpl extends AbstractDefaultQueryPersonAttributeDao {
+public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao {
     private long queries = 0;
     private long misses = 0;
     

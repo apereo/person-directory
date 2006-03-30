@@ -53,12 +53,12 @@ public class JdbcPersonAttributeDaoImplTest
                                  "VALUES ('edalquist', 'Eric', 'edalquist@unicon.net', 'blue')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-				                "(netid, name, email, shirt_color) " +
-				                "VALUES ('atest', 'Andrew', 'andrew.test@test.net', 'red')").execute();
+                                "(netid, name, email, shirt_color) " +
+                                "VALUES ('atest', 'Andrew', 'andrew.test@test.net', 'red')").execute();
         
         con.prepareStatement("INSERT INTO user_table " +
-				                "(netid, name, email, shirt_color) " +
-				                "VALUES ('susan', 'Susan', 'susan.test@test.net', null)").execute();
+                                "(netid, name, email, shirt_color) " +
+                                "VALUES ('susan', 'Susan', 'susan.test@test.net', null)").execute();
         
         con.close();
     }
@@ -409,7 +409,7 @@ public class JdbcPersonAttributeDaoImplTest
         assertEquals(expectedColumnsToAttributes, impl.getColumnsToAttributes());
     }
 
-    protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
+    protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         final String queryAttr = "shirt";
         final List queryAttrList = new LinkedList();
         queryAttrList.add(queryAttr);

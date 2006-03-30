@@ -346,7 +346,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
 
 
-    protected AbstractDefaultQueryPersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
+    protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setDefaultAttributeName(defaultAttr);

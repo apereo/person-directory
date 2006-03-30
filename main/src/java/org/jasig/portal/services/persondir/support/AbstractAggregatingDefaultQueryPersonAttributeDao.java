@@ -23,7 +23,7 @@ import org.jasig.portal.services.persondir.support.merger.MultivaluedAttributeMe
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
  * @version $Revision$
  */
-public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends AbstractDefaultQueryPersonAttributeDao {
+public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     /**
      * A List of child IPersonAttributeDao instances which we will poll in order.
      */
