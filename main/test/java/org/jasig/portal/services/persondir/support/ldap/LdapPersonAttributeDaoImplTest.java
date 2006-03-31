@@ -3,7 +3,7 @@
 *  available online at http://www.uportal.org/license.html
 */
 
-package org.jasig.portal.services.persondir.support;
+package org.jasig.portal.services.persondir.support.ldap;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,6 +15,9 @@ import java.util.Set;
 
 import net.sf.ldaptemplate.support.LdapContextSource;
 
+import org.jasig.portal.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
+import org.jasig.portal.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
+
 
 /**
  * Testcase for LdapPersonAttributeDao.
@@ -25,7 +28,6 @@ import net.sf.ldaptemplate.support.LdapContextSource;
 public class LdapPersonAttributeDaoImplTest 
     extends AbstractDefaultQueryPersonAttributeDaoTest {
     
-//    LdapContext ldapContext;
     LdapContextSource contextSource;
     
     /*

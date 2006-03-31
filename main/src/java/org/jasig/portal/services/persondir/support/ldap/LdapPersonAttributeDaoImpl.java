@@ -3,7 +3,7 @@
  *  available online at http://www.uportal.org/license.html
  */
 
-package org.jasig.portal.services.persondir.support;
+package org.jasig.portal.services.persondir.support.ldap;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -19,8 +19,8 @@ import net.sf.ldaptemplate.ContextSource;
 import net.sf.ldaptemplate.LdapTemplate;
 import net.sf.ldaptemplate.SearchExecutor;
 
-import org.jasig.portal.services.persondir.support.ldap.PersonAttributesMapper;
-import org.jasig.portal.services.persondir.support.ldap.QuerySearchExecutor;
+import org.jasig.portal.services.persondir.support.AbstractQueryPersonAttributeDao;
+import org.jasig.portal.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.springframework.dao.support.DataAccessUtils;
 
 /**

@@ -21,7 +21,7 @@ import net.sf.ldaptemplate.SearchExecutor;
  * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  * @version $Revision$
  */
-public class QuerySearchExecutor implements SearchExecutor {
+class QuerySearchExecutor implements SearchExecutor {
     final String baseDn;
     final String query;
     final Object[] args;

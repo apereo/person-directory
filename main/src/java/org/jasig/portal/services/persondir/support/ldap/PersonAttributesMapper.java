@@ -28,15 +28,15 @@ import net.sf.ldaptemplate.AttributesMapper;
  * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  * @version $Revision$
  */
-public class PersonAttributesMapper implements AttributesMapper {
+class PersonAttributesMapper implements AttributesMapper {
     private final Map ldapAttributesToPortalAttributes;
     
     /**
      * Create a mapper with the ldap to portal attribute mappings. Please read the
-     * documentation for {@link org.jasig.portal.services.persondir.support.LdapPersonAttributeDaoImpl#setLdapAttributesToPortalAttributes(Map)}
+     * documentation for {@link org.jasig.portal.services.persondir.support.ldap.LdapPersonAttributeDaoImpl#setLdapAttributesToPortalAttributes(Map)}
      * 
      * @param ldapAttributesToPortalAttributes Map of ldap to portal attributes.
-     * @see org.jasig.portal.services.persondir.support.LdapPersonAttributeDaoImpl#setLdapAttributesToPortalAttributes(Map)
+     * @see org.jasig.portal.services.persondir.support.ldap.LdapPersonAttributeDaoImpl#setLdapAttributesToPortalAttributes(Map)
      */
     public PersonAttributesMapper(Map ldapAttributesToPortalAttributes) {
         if (ldapAttributesToPortalAttributes == null) {
