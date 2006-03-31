@@ -3,7 +3,7 @@
 *  available online at http://www.uportal.org/license.html
 */
 
-package org.jasig.portal.services.persondir.support;
+package org.jasig.portal.services.persondir.support.jdbc;
 
 import java.sql.Connection;
 import java.util.Collections;
@@ -17,11 +17,13 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.jasig.portal.rdbm.TransientDatasource;
+import org.jasig.portal.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
+import org.jasig.portal.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 
 /**
- * Test the {@link JdbcPersonAttributeDaoImpl} against a dummy DataSource.
+ * Test the {@link SingleRowJdbcPersonAttributeDao} against a dummy DataSource.
  * 
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
@@ -78,7 +80,7 @@ public class JdbcPersonAttributeDaoImplTest
     
     public void testNullAttributeList() {
         try {
-            new JdbcPersonAttributeDaoImpl(testDataSource, null, "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
+            new SingleRowJdbcPersonAttributeDao(testDataSource, null, "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
             fail("IllegalArgumentException should have been thrown");
         }
         catch (IllegalArgumentException iae) {
@@ -96,8 +98,8 @@ public class JdbcPersonAttributeDaoImplTest
        final List queryAttrList = new LinkedList();
        queryAttrList.add(queryAttr);
 
-       JdbcPersonAttributeDaoImpl impl = 
-           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+       SingleRowJdbcPersonAttributeDao impl = 
+           new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
        
        Map columnsToAttributes = new HashMap();
@@ -128,8 +130,8 @@ public class JdbcPersonAttributeDaoImplTest
        final List queryAttrList = new LinkedList();
        queryAttrList.add(queryAttr);
 
-       JdbcPersonAttributeDaoImpl impl = 
-           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+       SingleRowJdbcPersonAttributeDao impl = 
+           new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
 
        impl.setDefaultAttributeName(queryAttr);
@@ -160,8 +162,8 @@ public class JdbcPersonAttributeDaoImplTest
        final List queryAttrList = new LinkedList();
        queryAttrList.add(queryAttr);
 
-       JdbcPersonAttributeDaoImpl impl = 
-           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+       SingleRowJdbcPersonAttributeDao impl = 
+           new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
 
        impl.setDefaultAttributeName(queryAttr);
@@ -189,8 +191,8 @@ public class JdbcPersonAttributeDaoImplTest
        final List queryAttrList = new LinkedList();
        queryAttrList.add(queryAttr);
 
-       JdbcPersonAttributeDaoImpl impl = 
-           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+       SingleRowJdbcPersonAttributeDao impl = 
+           new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
 
        impl.setDefaultAttributeName(queryAttr);
@@ -220,8 +222,8 @@ public class JdbcPersonAttributeDaoImplTest
        final List queryAttrList = new LinkedList();
        queryAttrList.add(queryAttr);
 
-       JdbcPersonAttributeDaoImpl impl = 
-           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+       SingleRowJdbcPersonAttributeDao impl = 
+           new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
 
        Map columnsToAttributes = new HashMap();
@@ -244,8 +246,8 @@ public class JdbcPersonAttributeDaoImplTest
        final List queryAttrList = new LinkedList();
        queryAttrList.add(queryAttr);
 
-       JdbcPersonAttributeDaoImpl impl = 
-           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+       SingleRowJdbcPersonAttributeDao impl = 
+           new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
 
        try {
@@ -266,8 +268,8 @@ public class JdbcPersonAttributeDaoImplTest
        final List queryAttrList = new LinkedList();
        queryAttrList.add(queryAttr);
 
-       JdbcPersonAttributeDaoImpl impl = 
-           new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+       SingleRowJdbcPersonAttributeDao impl = 
+           new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
 
        impl.setDefaultAttributeName(queryAttr);
@@ -294,8 +296,8 @@ public class JdbcPersonAttributeDaoImplTest
         queryAttrList.add(queryAttr1);
         queryAttrList.add(queryAttr2);
 
-        JdbcPersonAttributeDaoImpl impl = 
-            new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+        SingleRowJdbcPersonAttributeDao impl = 
+            new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                 "SELECT name, email FROM user_table WHERE netid = ? AND shirt_color = ?");
 
         Map columnsToAttributes = new HashMap();
@@ -330,8 +332,8 @@ public class JdbcPersonAttributeDaoImplTest
         queryAttrList.add(queryAttr1);
         queryAttrList.add(queryAttr2);
 
-        JdbcPersonAttributeDaoImpl impl = 
-            new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+        SingleRowJdbcPersonAttributeDao impl = 
+            new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                 "SELECT name, email FROM user_table WHERE netid = ? AND shirt_color = ?");
 
         Map columnsToAttributes = new HashMap();
@@ -359,8 +361,8 @@ public class JdbcPersonAttributeDaoImplTest
         final List queryAttrList = new LinkedList();
         queryAttrList.add(queryAttr);
 
-        JdbcPersonAttributeDaoImpl impl = 
-            new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+        SingleRowJdbcPersonAttributeDao impl = 
+            new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                 "SELECT netid, name, email FROM user_table WHERE shirt_color = ?");
 
         Map columnsToAttributes = new HashMap();
@@ -393,8 +395,8 @@ public class JdbcPersonAttributeDaoImplTest
         final List queryAttrList = new LinkedList();
         queryAttrList.add(queryAttr);
 
-        JdbcPersonAttributeDaoImpl impl = 
-            new JdbcPersonAttributeDaoImpl(testDataSource, queryAttrList,
+        SingleRowJdbcPersonAttributeDao impl = 
+            new SingleRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                 "SELECT netid, name, email FROM user_table WHERE shirt_color = ?");
         
         Map columnsToAttributes = new HashMap();
@@ -413,8 +415,8 @@ public class JdbcPersonAttributeDaoImplTest
         final String queryAttr = "shirt";
         final List queryAttrList = new LinkedList();
         queryAttrList.add(queryAttr);
-        JdbcPersonAttributeDaoImpl impl = 
-            new JdbcPersonAttributeDaoImpl(this.testDataSource, queryAttrList,
+        SingleRowJdbcPersonAttributeDao impl = 
+            new SingleRowJdbcPersonAttributeDao(this.testDataSource, queryAttrList,
                 "SELECT netid, name, email FROM user_table WHERE shirt_color = ?");
 
         return impl;

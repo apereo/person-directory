@@ -3,10 +3,8 @@
 *  available online at http://www.uportal.org/license.html
 */
 
-package org.jasig.portal.services.persondir.support;
+package org.jasig.portal.services.persondir.support.jdbc;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,6 +16,7 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.jasig.portal.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
 /**
@@ -26,7 +25,7 @@ import org.springframework.jdbc.object.MappingSqlQuery;
  * pairs. <br>
  * 
  * This class expects 1-N row results for a query, with each row containing 1-N name
- * value attribute mappings. This contrasts {@link org.jasig.portal.services.persondir.support.JdbcPersonAttributeDaoImpl}
+ * value attribute mappings. This contrasts {@link org.jasig.portal.services.persondir.support.jdbc.SingleRowJdbcPersonAttributeDao}
  * which expects a single row result for a user query. <br>
  * 
  *<br>
@@ -98,7 +97,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     /**
      * The {@link MappingSqlQuery} to use to get attributes.
      */
-    private PersonAttributeMappingQuery query;
+    private MultiRowPersonAttributeMappingQuery query;
 
 
     /**
@@ -106,7 +105,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      */
     public MultiRowJdbcPersonAttributeDao(DataSource ds, List attrList, String sql) {
         super(ds, attrList, sql);
-        this.query = new PersonAttributeMappingQuery(ds, sql);
+        this.query = new MultiRowPersonAttributeMappingQuery(ds, sql, this);
     }
 
 
@@ -145,7 +144,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     }
     
     /**
-     * @see org.jasig.portal.services.persondir.support.AbstractJdbcPersonAttributeDao#getAttributeQuery()
+     * @see org.jasig.portal.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#getAttributeQuery()
      */
     protected AbstractPersonAttributeMappingQuery getAttributeQuery() {
         return this.query;
@@ -211,82 +210,5 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         }
         
         this.nameValueColumnMappings = mappings;
-    }
-
-
-    /**
-     * An object which will execute a SQL query with the expectation
-     * of yielding a ResultSet with zero or one rows, which it maps
-     * to null or to a Map from uPortal attribute names to values.
-     */
-    private class PersonAttributeMappingQuery extends AbstractPersonAttributeMappingQuery {
-        /**
-         * @see AbstractPersonAttributeMappingQuery#AbstractPersonAttributeMappingQuery(DataSource, String)
-         */
-        public PersonAttributeMappingQuery(DataSource ds, String sql) {
-            super(ds, sql);
-        }
-
-        /**
-         * How attribute name mapping works:
-         * If the column is mapped use the mapped name(s)<br>
-         * If the column is listed and not mapped use the column name<br>
-         * 
-         * @see org.springframework.jdbc.object.MappingSqlQuery#mapRow(java.sql.ResultSet, int)
-         */
-        protected Object mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-            final Map rowResults = new HashMap();
-            
-            //Iterates through any mapped columns that did appear in the column list from the result set
-            final Set colNames = MultiRowJdbcPersonAttributeDao.this.nameValueColumnMappings.keySet();
-            for (final Iterator columnNameItr = colNames.iterator(); columnNameItr.hasNext(); ) {
-                final String columnName = (String)columnNameItr.next();
-                
-                this.addMappedAttributes(rs, columnName, rowResults);
-            }
-
-            return rowResults;
-        }
-
-
-        /**
-         * Tries to get the attributes specified for the column, determin the
-         * mapping for the column and add it to the rowResults {@link Map}.
-         * 
-         * @param rs The {@link ResultSet} to get the attribute value from.
-         * @param nameColumn The name of the column to get the attribute name from.
-         * @param rowResults The {@link Map} to add the mapped attribute to.
-         * @throws SQLException If there is a problem retrieving the value from the {@link ResultSet}.
-         */
-        private void addMappedAttributes(final ResultSet rs, final String nameColumn, final Map rowResults) throws SQLException {
-            if (nameColumn == null || nameColumn.length() <= 0)
-                throw new IllegalArgumentException("columnName cannot be null and must have length >= 0");
-            
-            //Get the attribute name from the name column
-            final String attributeName;
-            try {
-                attributeName = rs.getString(nameColumn);
-            }
-            catch (SQLException sqle) {
-                super.logger.error("Was unable to read attribute for column [" + nameColumn + "]");
-                throw sqle;
-            }
-            
-            //Get the associated attribute values from the value columns
-            final Set valueCols = (Set)MultiRowJdbcPersonAttributeDao.this.nameValueColumnMappings.get(nameColumn);
-            for (final Iterator valueColItr = valueCols.iterator(); valueColItr.hasNext();) {
-                final String valueColumn = (String)valueColItr.next();
-                
-                //Get the each value from the database adding it to the result set
-                try {
-                    final String attributeValue = rs.getString(valueColumn);
-                    MultivaluedPersonAttributeUtils.addResult(rowResults, attributeName, attributeValue);
-                }
-                catch (SQLException sqle) {
-                    super.logger.error("Was unable to read attribute for column [" + valueColumn + "]");
-                    throw sqle;
-                }
-            }
-        }
     }
 }

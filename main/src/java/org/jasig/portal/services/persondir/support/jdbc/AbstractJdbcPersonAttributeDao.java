@@ -3,19 +3,16 @@
 *  available online at http://www.uportal.org/license.html
 */
 
-package org.jasig.portal.services.persondir.support;
+package org.jasig.portal.services.persondir.support.jdbc;
 
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.MappingSqlQuery;
+import org.jasig.portal.services.persondir.support.AbstractQueryPersonAttributeDao;
 
 /**
  * Provides basic implementations for configuring query attributes, ensuring queries have the needed
@@ -80,36 +77,5 @@ public abstract class AbstractJdbcPersonAttributeDao extends AbstractQueryPerson
         final List queryResults = query.execute(args);
         final Map userAttributes = this.parseAttributeMapFromResults(queryResults);
         return userAttributes;
-    }
-    
-
-
-    /**
-     * An object which will execute a SQL query with the expectation
-     * of yielding a ResultSet with zero or one rows, which it maps
-     * to null or to a Map from uPortal attribute names to values.
-     */
-    protected abstract class AbstractPersonAttributeMappingQuery extends MappingSqlQuery {
-        /**
-         * Instantiate the query, providing a DataSource against which the query
-         * will run and the SQL representing the query, which should take exactly
-         * one parameter: the unique ID of the user.
-         * 
-         * @param ds The data source to use for running the query against.
-         * @param sql The SQL to run against the data source.
-         */
-        public AbstractPersonAttributeMappingQuery(final DataSource ds, final String sql) {
-            super(ds, sql);
-            
-            //Configures the SQL parameters, everything is assumed to be VARCHAR
-            final List queryAttributes = AbstractJdbcPersonAttributeDao.this.getQueryAttributes();
-            for (final Iterator attrNames = queryAttributes.iterator(); attrNames.hasNext(); ) {
-                final String attrName = (String)attrNames.next();
-                this.declareParameter(new SqlParameter(attrName, Types.VARCHAR));
-            }
-
-            //One time compilation of the query
-            this.compile();
-        }
     }
 }

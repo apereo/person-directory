@@ -3,7 +3,7 @@
 *  available online at http://www.uportal.org/license.html
 */
 
-package org.jasig.portal.services.persondir.support;
+package org.jasig.portal.services.persondir.support.jdbc;
 
 import java.sql.Connection;
 import java.util.Collections;
@@ -17,6 +17,8 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.jasig.portal.rdbm.TransientDatasource;
+import org.jasig.portal.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
+import org.jasig.portal.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
 import org.springframework.jdbc.BadSqlGrammarException;
 
 /**
