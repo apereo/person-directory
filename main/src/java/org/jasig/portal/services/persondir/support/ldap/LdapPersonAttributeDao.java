@@ -36,7 +36,7 @@ import org.springframework.dao.support.DataAccessUtils;
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
-public class LdapPersonAttributeDaoImpl extends AbstractQueryPersonAttributeDao {
+public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
     /**
      * Time limit, in milliseconds, for LDAP query. Zero means wait
      * indefinitely.
@@ -79,7 +79,7 @@ public class LdapPersonAttributeDaoImpl extends AbstractQueryPersonAttributeDao 
     final private SearchControls searchControls;
     
     
-    public LdapPersonAttributeDaoImpl() {
+    public LdapPersonAttributeDao() {
         this.searchControls = new SearchControls();
         this.searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
     }

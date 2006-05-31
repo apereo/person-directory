@@ -29,7 +29,7 @@ import org.springframework.jdbc.BadSqlGrammarException;
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
  * @version $Revision$ $Date$
  */
-public class JdbcPersonAttributeDaoImplTest 
+public class JdbcPersonAttributeDaoTest 
     extends AbstractDefaultQueryPersonAttributeDaoTest {
     
     private DataSource testDataSource;

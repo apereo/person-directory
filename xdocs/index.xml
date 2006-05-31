@@ -31,7 +31,11 @@
 			</p>
 		</section>
 		<section name="News">
-			<p>2006.03.31 - Started work on the 1.0.0 release.</p>
+			<p>
+				2006.03.31 - Stopped on 1.0.0 and started on an RC3 due to some issues
+				discovered when doing integration with uP2.
+			</p>
+			<p>2006.03.30 - Started work on the 1.0.0 release.</p>
 			<p>2006.03.30 - Cut the 1.0.0-RC2 release.</p>
 			<p>2005.??.?? - Cut the 1.0.0-RC1 release.</p>
 			<p>2005.10.17 - Working on the 1.0.0-RC1 release.</p>

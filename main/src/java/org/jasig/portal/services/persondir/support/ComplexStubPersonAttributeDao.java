@@ -3,7 +3,7 @@
 *  available online at http://www.uportal.org/license.html
 */
 
-package org.jasig.portal.services.persondir.mock;
+package org.jasig.portal.services.persondir.support;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.portal.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 
 /**
  * Implements IPersonAttributeDao by looking up the specified user in a configured
@@ -70,7 +69,9 @@ public class ComplexStubPersonAttributeDao extends AbstractDefaultAttributePerso
             throw new IllegalArgumentException("Illegal to invoke getUserAttributes(Map) with a null argument.");
         }
 
-        return (Map)this.backingMap.get(seed.get(this.getDefaultAttributeName()));
+        final String defaultAttrName = this.getDefaultAttributeName();
+        final String seedValue = (String)seed.get(defaultAttrName);
+        return (Map)this.backingMap.get(seedValue);
     }
 
 

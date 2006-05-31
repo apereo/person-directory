@@ -4,7 +4,7 @@
     <artifactId>person-directory</artifactId>
     <name>PersonDirectory</name>
     <groupId>person-directory</groupId>
-    <currentVersion>1.0.0-RC2</currentVersion>
+    <currentVersion>1.0.0-RC3</currentVersion>
     <organization>
         <name>Java Architectures Special Interest Group</name>
         <url>http://www.ja-sig.org</url>
@@ -30,6 +30,11 @@
             <id>1.0.0-RC2</id>
             <name>1.0.0-RC2</name>
             <tag>rel-1-0-0-RC2</tag>
+        </version>
+        <version>
+            <id>1.0.0-RC3</id>
+            <name>1.0.0-RC3</name>
+            <tag>rel-1-0-0-RC3</tag>
         </version>
         <!--
         <version>

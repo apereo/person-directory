@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.portal.services.persondir.mock.ComplexStubPersonAttributeDao;
 
 /**
  * Testcase for ComplexStubPersonAttributeDao.
