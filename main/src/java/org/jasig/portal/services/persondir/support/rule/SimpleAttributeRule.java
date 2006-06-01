@@ -1,7 +1,7 @@
 package org.jasig.portal.services.persondir.support.rule;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,13 +10,14 @@ import java.util.Set;
  * Sets a specified attribute to a specified value when a specified seed value 
  * matches a specified pattern.
  */
-public final class SimpleAttributeRule extends AttributeRule {
+public final class SimpleAttributeRule implements AttributeRule {
 
     // Instance Members.
     private final String whenKey;
     private final String whenPattern;
     private final String setKey;
     private final String setValue;
+    private final Set possibleAttributeNames;
 
     /*
      * Public API.
@@ -48,7 +49,8 @@ public final class SimpleAttributeRule extends AttributeRule {
         this.whenPattern = whenPattern;
         this.setKey = setKey;
         this.setValue = setValue;
-
+        
+        this.possibleAttributeNames = Collections.singleton(this.setKey);
     }
 
     public boolean appliesTo(Map userInfo) {
@@ -117,11 +119,7 @@ public final class SimpleAttributeRule extends AttributeRule {
     }
 
     public Set getPossibleUserAttributeNames() {
-
-        Set rslt = new HashSet();
-        rslt.add(setKey);
-        return rslt;
-
+        return this.possibleAttributeNames;
     }
 
 }
