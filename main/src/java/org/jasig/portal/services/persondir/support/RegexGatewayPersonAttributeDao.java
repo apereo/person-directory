@@ -1,13 +1,9 @@
 package org.jasig.portal.services.persondir.support;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.jasig.portal.services.persondir.IPersonAttributeDao;
 
@@ -17,10 +13,9 @@ import org.jasig.portal.services.persondir.IPersonAttributeDao;
  * instance of <code>RegexGatewayPersonAttributeDao</code> is backed by another
  * DAO instance that implements the desired behavior should there be a match.
  */
-public final class RegexGatewayPersonAttributeDao implements IPersonAttributeDao {
+public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
 
     // Instance Members.
-    private final String attributeName;
     private final String pattern;
     private final IPersonAttributeDao enclosed;
 
@@ -46,15 +41,14 @@ public final class RegexGatewayPersonAttributeDao implements IPersonAttributeDao
         }
 
         // Instance Members.
-        this.attributeName = attributeName;
+        this.setDefaultAttributeName(attributeName);
         this.pattern = pattern;
         this.enclosed = enclosed;
 
         // PersonDirectory won't stop for anything... we need decent logging.
-        Log log = LogFactory.getLog(this.getClass());
         if (log.isDebugEnabled()) {
             log.debug("RegexGatewayPersonAttributeDao --> <init>");
-            log.debug("RegexGatewayPersonAttributeDao --> this.attributeName="+this.attributeName);
+            log.debug("RegexGatewayPersonAttributeDao --> this.getDefaultAttributeName()="+this.getDefaultAttributeName());
             log.debug("RegexGatewayPersonAttributeDao --> this.pattern="+this.pattern);
         }
 
@@ -68,6 +62,7 @@ public final class RegexGatewayPersonAttributeDao implements IPersonAttributeDao
             throw new IllegalArgumentException(msg);
         }
 
+        final String attributeName = this.getDefaultAttributeName();
         Object value = seed.get(attributeName);
         if (value == null) {
             // Contract for IPersonAttributeDao says return null where "user doesn't exist."
@@ -105,7 +100,6 @@ public final class RegexGatewayPersonAttributeDao implements IPersonAttributeDao
         }
 
         // Log the result of the comparison...
-        Log log = LogFactory.getLog(this.getClass());
         if (log.isDebugEnabled()) {
             String matches = null;
             if (proceed) {
@@ -136,20 +130,6 @@ public final class RegexGatewayPersonAttributeDao implements IPersonAttributeDao
         }
 
         return rslt;
-
-    }
-
-    public Map getUserAttributes(final String attributeValue) {
-
-        // Assertions.
-        if (attributeValue == null) {
-            String msg = "Argument 'attributeValue' cannot be null.";
-            throw new IllegalArgumentException(msg);
-        }
-
-        Map seed = new HashMap();
-        seed.put(attributeName, attributeValue);
-        return getUserAttributes(seed);
 
     }
 

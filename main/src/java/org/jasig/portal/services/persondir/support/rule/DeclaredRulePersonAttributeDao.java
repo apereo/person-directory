@@ -1,15 +1,11 @@
 package org.jasig.portal.services.persondir.support.rule;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.jasig.portal.services.persondir.IPersonAttributeDao;
+import org.jasig.portal.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 
 /**
  * Implementation of uPortal's <code>IPersonAttributeDao</code> that evaluates
@@ -17,10 +13,9 @@ import org.jasig.portal.services.persondir.IPersonAttributeDao;
  * many rules as you like, but this DAO will apply <b>at most</b> one rule, the
  * first that triggers.
  */
-public final class DeclaredRulePersonAttributeDao implements IPersonAttributeDao {
+public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
 
     // Instance Members.
-    private final String attributeName;
     private final AttributeRule[] rules;
 
     /*
@@ -44,23 +39,21 @@ public final class DeclaredRulePersonAttributeDao implements IPersonAttributeDao
         }
 
         // PersonDirectory won't stop for anything... we need decent logging.
-        Log log2 = LogFactory.getLog(this.getClass());
-        if (log2.isDebugEnabled()) {
-            log2.debug("DeclaredRulePersonAttributeDao --> <init>");
-            log2.debug("DeclaredRulePersonAttributeDao --> attributeName="+attributeName);
-            log2.debug("DeclaredRulePersonAttributeDao --> rules.size()="+rules.size());
-            log2.debug("DeclaredRulePersonAttributeDao --> rules.get(0).getClass().getName()="+rules.get(0).getClass().getName());
+        if (log.isDebugEnabled()) {
+            log.debug("DeclaredRulePersonAttributeDao --> <init>");
+            log.debug("DeclaredRulePersonAttributeDao --> attributeName="+attributeName);
+            log.debug("DeclaredRulePersonAttributeDao --> rules.size()="+rules.size());
+            log.debug("DeclaredRulePersonAttributeDao --> rules.get(0).getClass().getName()="+rules.get(0).getClass().getName());
         }
 
         // Instance Members.
-        this.attributeName = attributeName;
+        this.setDefaultAttributeName(attributeName);
         this.rules = (AttributeRule[]) rules.toArray(new AttributeRule[rules.size()]);
 
         // PersonDirectory won't stop for anything... we need decent logging.
-        Log log = LogFactory.getLog(this.getClass());
         if (log.isDebugEnabled()) {
             log.debug("DeclaredRulePersonAttributeDao --> <init>");
-            log.debug("DeclaredRulePersonAttributeDao --> this.attributeName="+this.attributeName);
+            log.debug("DeclaredRulePersonAttributeDao --> this.getDefaultAttributeName()="+this.getDefaultAttributeName());
             log.debug("DeclaredRulePersonAttributeDao --> this.rules.length="+this.rules.length);
         }
 
@@ -86,20 +79,6 @@ public final class DeclaredRulePersonAttributeDao implements IPersonAttributeDao
         }
 
         return rslt;
-
-    }
-
-    public Map getUserAttributes(final String attributeValue) {
-
-        // Assertions.
-        if (attributeValue == null) {
-            String msg = "Argument 'attributeValue' cannot be null.";
-            throw new IllegalArgumentException(msg);
-        }
-
-        Map seed = new HashMap();
-        seed.put(attributeName, attributeValue);
-        return getUserAttributes(seed);
 
     }
 
