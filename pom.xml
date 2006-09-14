@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.jasig</groupId>
+    <artifactId>PersonDirectory</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.0-RC3</version>
+    
+    <name>Person Directory</name>
+    <description>Provides a general interface for accessing attributes for a person. Has the capability of aggregating attributes from multiple data sources into a single view.</description>
+    <url>http://developer.ja-sig.org/projects/persondirectory/</url>
+    <organization>
+        <name>Java Architectures Special Interest Group</name>
+        <url>http://www.ja-sig.org</url>
+    </organization>
+    <inceptionYear>2005</inceptionYear>
+    <issueManagement>
+        <url>http://www.ja-sig.org/issues/browse/PERSONDIR</url>
+        <system>Jira</system>
+    </issueManagement>
+    <scm>
+        <url>http://developer.ja-sig.org/source/viewrep/jasig/PersonDirectory/</url>
+        <developerConnection>scm:cvs:pserver:${maven.username}@developer.ja-sig.org:/home/cvs/jasig:PersonDirectory</developerConnection>
+        <connection>scm:cvs:pserver:anonymous@developer.ja-sig.org:/home/cvs/jasig:PersonDirectory</connection>
+        <tag>1.0.0-RC3</tag>
+    </scm>
+    <mailingLists>
+        <mailingList>
+            <name>JA-SIG Portal</name>
+            <subscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-portal&amp;A=1</subscribe>
+            <unsubscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-portal&amp;A=1</unsubscribe>
+            <archive>http://list.unm.edu/archives/jasig-portal.html</archive>
+        </mailingList>
+        <mailingList>
+            <name>JA-SIG Developers</name>
+            <subscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-dev&amp;A=1</subscribe>
+            <unsubscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-dev&amp;A=1</unsubscribe>
+            <archive>http://list.unm.edu/archives/jasig-dev.html</archive>
+        </mailingList>
+    </mailingLists>
+    <developers>
+        <developer>
+            <name>Andrew Petro</name>
+            <id>awp9</id>
+            <email>andrew.petro@yale.edu</email>
+            <organization>Unicon Inc.</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <url>http://www.ja-sig.org/wiki/display/~awp9</url>
+            <timezone>-7</timezone>
+        </developer>
+        <developer>
+            <name>Eric Dalquist</name>
+            <id>edalquist</id>
+            <email>eric.dalquist@doit.wisc.edu</email>
+            <organization>UW - Madison</organization>
+            <roles>
+                <role>Project Admin</role>
+                <role>Developer</role>
+            </roles>
+            <url>http://www.ja-sig.org/wiki/display/~edalquist</url>
+            <timezone>-6</timezone>
+        </developer>
+        <developer>
+            <name>Scott Battaglia</name>
+            <id>sbattaglia</id>
+            <email>scott_battaglia@rutgers.edu</email>
+            <organization>Rutgers</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <url>http://www.ja-sig.org/wiki/display/~battags</url>
+            <timezone>-5</timezone>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Ernest Rider</name>
+            <email>erider@unicon.net</email>
+            <organization>Unicon Inc.</organization>
+            <timezone>-7</timezone>
+        </contributor>
+    </contributors>
+    <licenses>
+        <license>
+            <name>JA-SIG Collabrative Licence</name>
+            <url>http://www.uportal.org/license.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <dependencies>
+        <!--
+         | Run Time Dependencies
+         +-->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>logkit</groupId>
+                    <artifactId>logkit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>avalon-framework</groupId>
+                    <artifactId>avalon-framework</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.0-rc3</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.sf.ldaptemplate</groupId>
+            <artifactId>ldaptemplate</artifactId>
+            <version>1.0.2</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-dao</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.1</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        
+        
+        <!--
+         | Test Dependencies
+         +-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.2</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.2</version>
+            <type>jar</type>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xerces</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.4</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <sourceDirectory>main/src/java</sourceDirectory>
+        <testSourceDirectory>main/test/java</testSourceDirectory>
+        <testResources>
+            <testResource>
+                <directory>main/test/resources</directory>
+            </testResource>
+        </testResources>
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>surefire-report-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jxr-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>
