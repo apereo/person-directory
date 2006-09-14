@@ -83,7 +83,7 @@ public class LdapPersonAttributeDaoTest
     /**
      * Test for a query with a single attribute. 
      * 
-     * This testcase will cease to work on that fateful day when Andrew
+     * This testcase will cease to work on that fateful day when Susan
      * no longer appears in Yale University LDAP.
      */
     public void testSingleAttrQuery() {
@@ -105,11 +105,11 @@ public class LdapPersonAttributeDaoTest
         impl.setQueryAttributes(queryAttrList);
         
         Map queryMap = new HashMap();
-        queryMap.put(queryAttr, "awp9");
+        queryMap.put(queryAttr, "susan");
 
         try {
             Map attribs = impl.getUserAttributes(queryMap);
-            assertEquals("andrew.petro@yale.edu", attribs.get("email"));
+            assertEquals("susan.bramhall@yale.edu", attribs.get("email"));
         }
         catch (DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -135,7 +135,7 @@ public class LdapPersonAttributeDaoTest
         impl.setQueryAttributes(queryAttrList);
         
         Map queryMap = new HashMap();
-        queryMap.put(queryAttr, "awp9");
+        queryMap.put(queryAttr, "susan");
         
         try {
             Map attribs = impl.getUserAttributes(queryMap);
@@ -165,11 +165,11 @@ public class LdapPersonAttributeDaoTest
         impl.setQueryAttributes(queryAttrList);
         
         Map queryMap = new HashMap();
-        queryMap.put(queryAttr, "awp9");
+        queryMap.put(queryAttr, "susan");
         
         try {
             Map attribs = impl.getUserAttributes(queryMap);
-            assertEquals("andrew.petro@yale.edu", attribs.get("mail"));
+            assertEquals("susan.bramhall@yale.edu", attribs.get("mail"));
         }
         catch (DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -201,13 +201,13 @@ public class LdapPersonAttributeDaoTest
         impl.setQueryAttributes(queryAttrList);
         
         Map queryMap = new HashMap();
-        queryMap.put(queryAttr1, "awp9");
-        queryMap.put(queryAttr2, "andrew.petro");
+        queryMap.put(queryAttr1, "susan");
+        queryMap.put(queryAttr2, "susan.bramhall");
         queryMap.put("email", "edalquist@unicon.net");
         
         try {
             Map attribs = impl.getUserAttributes(queryMap);
-            assertEquals("andrew.petro@yale.edu", attribs.get("email"));
+            assertEquals("susan.bramhall@yale.edu", attribs.get("email"));
         }
         catch (DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -239,7 +239,7 @@ public class LdapPersonAttributeDaoTest
         impl.setQueryAttributes(queryAttrList);
         
         Map queryMap = new HashMap();
-        queryMap.put(queryAttr1, "awp9");
+        queryMap.put(queryAttr1, "susan");
         queryMap.put("email", "edalquist@unicon.net");
         
         Map attribs = impl.getUserAttributes(queryMap);
