@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Person Directory">
+    <bannerLeft>
+        <name>JA-SIG</name>
+        <src>http://www.ja-sig.org/images/jasig-head.gif</src>
+    </bannerLeft>
+    <bannerRight>
+        <name>Person Directory</name>
+        <href>http://developer.ja-sig.org/projects/persondirectory/</href>
+    </bannerRight>
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-default-skin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </skin>
+    <publishDate format="dd MMM yyyy"/>
+    <body>
+        <links>
+            <item name="JA-SIG" href="http://www.ja-sig.org/"/>
+            <item name="uPortal" href="http://www.uportal.org/"/>
+        </links>
+        
+        <menu name="Quick Links">
+            <item name="What is Person Directory" href="/about.html"/>
+            <item name="FAQ" href="/faq.html"/>
+        </menu>
+
+        ${reports}
+    </body>
+</project>

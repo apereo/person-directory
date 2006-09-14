@@ -3,3 +3,7 @@ build.properties
 dist
 HEAD.xml
 rel-*-*-*.xml
+cobertura.ser
+.wtpmodules
+surefire.properties
+surefire-classloader.properties

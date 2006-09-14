@@ -26,6 +26,20 @@
         <connection>scm:cvs:pserver:anonymous@developer.ja-sig.org:/home/cvs/jasig:PersonDirectory</connection>
         <tag>1.0.0-RC3</tag>
     </scm>
+    <distributionManagement>
+        <repository>
+            <id>jasig-repository</id>
+            <name>JA-SIG Maven2 Repository</name>
+            <url>scp://developer.ja-sig.org/jasig/htdocs/developer/maven2</url>
+        </repository>
+    </distributionManagement>
+    <repositories>
+        <repository>
+            <id>jasig-repository</id>
+            <name>JA-SIG Maven2 Repository</name>
+            <url>http://developer.ja-sig.org/maven2</url>
+        </repository>
+    </repositories>
     <mailingLists>
         <mailingList>
             <name>JA-SIG Portal</name>
@@ -98,7 +112,7 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.1</version>
+            <version>[1.1,)</version>
             <type>jar</type>
             <scope>compile</scope>
             <exclusions>
@@ -137,10 +151,6 @@
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>commons-lang</groupId>
-                    <artifactId>commons-lang</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-beans</artifactId>
                 </exclusion>
@@ -162,7 +172,7 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.1</version>
+            <version>[2.1,)</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -211,6 +221,19 @@
                 <directory>main/test/resources</directory>
             </testResource>
         </testResources>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
     <reporting>
         <plugins>
@@ -225,6 +248,37 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jxr-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <targetjdk>1.4</targetjdk>
+                    <format>xml</format>
+                    <linkXref>true</linkXref>
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <minimumTokens>100</minimumTokens>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>changelog-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </reporting>
