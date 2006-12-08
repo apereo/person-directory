@@ -9,7 +9,7 @@
              </question>
              <answer>
                  <p>
-                     Person Directory requires <a href="http://maven.apache.org/using/index.html">Maven</a>
+                     Person Directory requires <a href="http://maven.apache.org/using/index.html">Maven 2</a>
                      to build. Once you have Maven use the <source>maven jar</source> command
                      to build the JAR. 
                  </p>
