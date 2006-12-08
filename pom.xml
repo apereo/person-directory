@@ -21,9 +21,9 @@
         <system>Jira</system>
     </issueManagement>
     <scm>
-        <url>http://developer.ja-sig.org/source/viewrep/jasig/PersonDirectory/</url>
-        <developerConnection>scm:cvs:pserver:${maven.username}@developer.ja-sig.org:/home/cvs/jasig:PersonDirectory</developerConnection>
-        <connection>scm:cvs:pserver:anonymous@developer.ja-sig.org:/home/cvs/jasig:PersonDirectory</connection>
+        <url>http://developer.ja-sig.org/source/changelog/jasigsvn/person-directory</url>
+        <developerConnection>scm:svn:https://${maven.username}@developer.ja-sig.org/svn/person-directory/</developerConnection>
+        <connection>scm:svn:https://developer.ja-sig.org/svn/person-directory/</connection>
         <tag>1.0.0-RC3</tag>
     </scm>
     <distributionManagement>
@@ -138,7 +138,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
-            <version>2.0-rc3</version>
+            <version>2.0.1</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -191,7 +191,7 @@
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
-            <version>1.2</version>
+            <version>1.2.1</version>
             <type>jar</type>
             <scope>test</scope>
             <exclusions>
@@ -208,20 +208,21 @@
         <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>1.8.0.4</version>
+            <version>1.8.0.7</version>
             <type>jar</type>
             <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
-        <sourceDirectory>main/src/java</sourceDirectory>
-        <testSourceDirectory>main/test/java</testSourceDirectory>
-        <testResources>
-            <testResource>
-                <directory>main/test/resources</directory>
-            </testResource>
-        </testResources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.4</source>
+                    <target>1.4</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
