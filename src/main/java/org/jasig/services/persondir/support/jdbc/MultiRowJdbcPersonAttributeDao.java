@@ -50,26 +50,17 @@ import org.springframework.jdbc.object.MappingSqlQuery;
  *         <td valign="top">{@link java.util.Collections#EMPTY_MAP}</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">userInfoCache</td>
+ *         <td align="right" valign="top">nameValueColumnMappings</td>
  *         <td>
- *             The {@link java.util.Map} to use for result caching. This class does no cache
- *             maintenence. It is assumed the underlying Map implementation will ensure the cache
- *             is in a good state at all times.
+ *             The {@link Map} of columns from a name column to value columns. Keys are Strings,
+ *             Values are Strings or {@link java.util.List} of Strings 
  *         </td>
  *         <td valign="top">Yes</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">cacheKeyAttributes</td>
- *         <td>
- *             A Set of attribute names to use when building the cache key. The default
- *             implementation generates the key as a Map of attributeNames to values retrieved
- *             from the seed for the query. Zero length sets are treaded as null.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">null</td>
+ *         <td valign="top">{@link java.util.Collections#EMPTY_MAP}</td>
  *     </tr>
  * </table>
+ * 
+ * TODO should this get possible attribute values from the DB?
  * 
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
