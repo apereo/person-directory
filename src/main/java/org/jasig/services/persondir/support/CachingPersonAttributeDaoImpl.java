@@ -54,6 +54,15 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  *         <td valign="top">No</td>
  *         <td valign="top">null</td>
  *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">cacheNullResults</td>
+ *         <td>
+ *             If the wrapped IPersonAttributeDao returns null for the query should that null
+ *             value be stored in the cache. 
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">false</td>
+ *     </tr>
  * </table>
  * 
  * 
@@ -79,6 +88,11 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * The set of attributes to use to generate the cache key.
      */
     private Set cacheKeyAttributes = null;
+    
+    /*
+     * If null resutls should be cached
+     */
+    private boolean cacheNullResults = false;
     
     /**
      * @return Returns the cachedPersonAttributesDao.
@@ -127,6 +141,19 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         this.userInfoCache = userInfoCache;
     }
     
+    /**
+     * @return the cacheNullResults
+     */
+    public boolean isCacheNullResults() {
+        return this.cacheNullResults;
+    }
+    /**
+     * @param cacheNullResults the cacheNullResults to set
+     */
+    public void setCacheNullResults(boolean cacheNullResults) {
+        this.cacheNullResults = cacheNullResults;
+    }
+
     /**
      * @return Returns the number of cache misses.
      */
@@ -180,7 +207,9 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         
             final Map queryResults = this.cachedPersonAttributesDao.getUserAttributes(seed);
         
-            this.userInfoCache.put(cacheKey, queryResults);
+            if (this.cacheNullResults || queryResults != null) {
+                this.userInfoCache.put(cacheKey, queryResults);
+            }
             
             if (log.isDebugEnabled()) {
                 log.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache. key='" + cacheKey + "', results='" + queryResults + "'");

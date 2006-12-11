@@ -141,6 +141,16 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         
         result = dao.getUserAttributes("nobody");
         assertNull(result);
+        assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
+        
+        result = dao.getUserAttributes("edalquist");
+        this.validateUser1(result);
+        assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
+        
+        //Enable null result caching
+        dao.setCacheNullResults(true);
+        result = dao.getUserAttributes("nobody");
+        assertNull(result);
         assertEquals("Incorrect number of items in cache", 2, cacheMap.size());
         
         result = dao.getUserAttributes("edalquist");
@@ -202,12 +212,12 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         
         result = dao.getUserAttributes(queryMap2);
         assertNull(result);
-        assertEquals("Incorrect number of items in cache", 2, cacheMap.size());
+        assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
         
         
         result = dao.getUserAttributes(queryMap1);
         this.validateUser1(result);
-        assertEquals("Incorrect number of items in cache", 2, cacheMap.size());
+        assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
     }
     
     public void testPropertyConstraints() {
