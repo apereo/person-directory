@@ -62,7 +62,8 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
                 this.log.debug("Constructing argument name array from the defaultAttributeName");
             }
 
-            args = new Object[] { this.getDefaultAttributeName() };
+            final String attrName = this.getDefaultAttributeName();
+            args = new Object[] { seed.get(attrName) };
         }
         //The data needed to run the query isn't in the seed, null is returned
         else {
