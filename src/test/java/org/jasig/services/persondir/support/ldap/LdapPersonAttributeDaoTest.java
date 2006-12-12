@@ -310,7 +310,7 @@ public class LdapPersonAttributeDaoTest
         assertEquals("QueryString", impl.getQuery());
         
         
-        assertEquals(Collections.EMPTY_LIST, impl.getQueryAttributes());
+        assertNull(impl.getQueryAttributes());
         impl.setQueryAttributes(Collections.singletonList("QAttr"));
         assertEquals(Collections.singletonList("QAttr"), impl.getQueryAttributes());
         
@@ -328,7 +328,7 @@ public class LdapPersonAttributeDaoTest
         impl.setContextSource(this.contextSource);
         
         try {
-            impl.getUserAttributes(Collections.singletonMap("dummy", "seed"));
+            impl.getUserAttributes(Collections.singletonMap("username", "seed"));
             fail("IllegalStateException should have been thrown with no query configured");
         }
         catch (IllegalStateException ise) {
@@ -343,7 +343,7 @@ public class LdapPersonAttributeDaoTest
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         try {
-            impl.getUserAttributes(Collections.singletonMap("dummy", "seed"));
+            impl.getUserAttributes(Collections.singletonMap("username", "seed"));
             fail("IllegalStateException should have been thrown with no context configured");
         }
         catch (IllegalStateException ise) {

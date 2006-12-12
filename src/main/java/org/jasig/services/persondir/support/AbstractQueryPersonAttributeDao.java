@@ -24,7 +24,7 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
      * List of names of uPortal attributes the values of which will be used, in
      * order, to populate the parameters of the LDAP query.
      */
-    private List queryAttributes = Collections.EMPTY_LIST;
+    private List queryAttributes = null;
 
     
     /**
@@ -38,20 +38,39 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
         // Checks to make sure the argument & state is valid
         if (seed == null)
             throw new IllegalArgumentException("The query seed Map cannot be null.");
+        
+        final Object[] args;
+        
+        //The queryAttributes are configured and the seed contains all of the needed attributes
+        if (this.queryAttributes != null && seed.keySet().containsAll(this.queryAttributes)) {
+            if (this.log.isDebugEnabled()) {
+                this.log.debug("Constructing argument name array from the queryAttributes List");
+            }
 
-        //Ensure the data needed to run the query is avalable
-        if (!((this.queryAttributes != null && seed.keySet().containsAll(this.queryAttributes)) || 
-              (this.queryAttributes == null && seed.containsKey(this.getDefaultAttributeName())))) {
-            return null;
+            // Can't just to a toArray here since the order of the keys in the Map
+            // may not match the order of the keys in the List and it is important to
+            // the query.
+            args = new Object[this.queryAttributes.size()];
+            for (int index = 0; index < args.length; index++) {
+                final String attrName = (String) this.queryAttributes.get(index);
+                args[index] = seed.get(attrName);
+            }
         }
+        //No queryAttributes are configured but the seed contains the default attribute
+        else if (this.queryAttributes == null && seed.containsKey(this.getDefaultAttributeName())) {
+            if (this.log.isDebugEnabled()) {
+                this.log.debug("Constructing argument name array from the defaultAttributeName");
+            }
 
-        // Can't just to a toArray here since the order of the keys in the Map
-        // may not match the order of the keys in the List and it is important to
-        // the query.
-        final Object[] args = new Object[this.queryAttributes.size()];
-        for (int index = 0; index < args.length; index++) {
-            final String attrName = (String) this.queryAttributes.get(index);
-            args[index] = seed.get(attrName);
+            args = new Object[] { this.getDefaultAttributeName() };
+        }
+        //The data needed to run the query isn't in the seed, null is returned
+        else {
+            if (this.log.isDebugEnabled()) {
+                this.log.debug("The seed does not contain the required information to run the query, returning null.");
+            }
+            
+            return null;
         }
 
         return this.getUserAttributesIfNeeded(args);
