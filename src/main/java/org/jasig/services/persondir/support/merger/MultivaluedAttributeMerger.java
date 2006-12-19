@@ -33,9 +33,9 @@ public class MultivaluedAttributeMerger implements IAttributeMerger {
      */
     public Map mergeAttributes(final Map dest, final Map source) {
         if (dest == null)
-            throw new IllegalArgumentException("toModify cannot be null");
+            throw new IllegalArgumentException("dest cannot be null");
         if (source == null)
-            throw new IllegalArgumentException("toConsider cannot be null");
+            throw new IllegalArgumentException("source cannot be null");
         
         final Map sourceCopy = new HashMap(source);
         

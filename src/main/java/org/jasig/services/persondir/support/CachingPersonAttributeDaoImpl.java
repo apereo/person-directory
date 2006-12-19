@@ -5,11 +5,14 @@
 package org.jasig.services.persondir.support;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jasig.services.persondir.IPersonAttributeDao;
 
 /**
@@ -63,6 +66,16 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  *         <td valign="top">No</td>
  *         <td valign="top">false</td>
  *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">nullResultsObject</td>
+ *         <td>
+ *             If cacheNullResults is set to true this value is stored in the cache for any
+ *             query that returns null. This is used as a flag so the same query will return
+ *             null from the cache by seeing this value
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">{@link CachingPersonAttributeDaoImpl#NULL_RESULTS_OBJECT}</td>
+ *     </tr>
  * </table>
  * 
  * 
@@ -71,6 +84,10 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  * @version $Id
  */
 public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao {
+    protected static final Map NULL_RESULTS_OBJECT = Collections.singletonMap(CachingPersonAttributeDaoImpl.class.getName() + "UNIQUE_NULL_RESULTS_MAP", new Integer(CachingPersonAttributeDaoImpl.class.hashCode()));
+    
+    protected Log statsLogger = LogFactory.getLog(this.getClass().getName() + ".statistics");
+
     private long queries = 0;
     private long misses = 0;
     
@@ -93,6 +110,11 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * If null resutls should be cached
      */
     private boolean cacheNullResults = false;
+    
+    /*
+     * The Object that should be stored in the cache if cacheNullResults is true
+     */
+    private Map nullResultsObject = NULL_RESULTS_OBJECT;
     
     /**
      * @return Returns the cachedPersonAttributesDao.
@@ -153,7 +175,25 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     public void setCacheNullResults(boolean cacheNullResults) {
         this.cacheNullResults = cacheNullResults;
     }
+    
+    /**
+     * @return the nullResultsObject
+     */
+    public Map getNullResultsObject() {
+        return this.nullResultsObject;
+    }
+    /**
+     * @param nullResultsObject the nullResultsObject to set
+     */
+    public void setNullResultsObject(Map nullResultsObject) {
+        if (nullResultsObject == null) {
+            throw new IllegalArgumentException("nullResultsObject may not be null");
+        }
 
+        this.nullResultsObject = nullResultsObject;
+    }
+    
+    
     /**
      * @return Returns the number of cache misses.
      */
@@ -191,15 +231,20 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         final Object cacheKey = this.getCacheKey(seed);
         
         if (cacheKey != null) {
-            final Map cacheResults = (Map)this.userInfoCache.get(cacheKey);
+            Map cacheResults = (Map)this.userInfoCache.get(cacheKey);
             if (cacheResults != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Retrieved query from cache. key='" + cacheKey + "', results='" + cacheResults + "'");
+                //If the returned object is the null results object, set the cache results to null
+                if (this.nullResultsObject.equals(cacheResults)) {
+                    cacheResults = null;
+                }
+                
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Retrieved query from cache. key='" + cacheKey + "', results='" + cacheResults + "'");
                 }
                     
                 this.queries++;
-                if (log.isDebugEnabled()) {
-                    log.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
+                if (statsLogger.isDebugEnabled()) {
+                    statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
                 }
                 
                 return cacheResults;
@@ -207,29 +252,32 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         
             final Map queryResults = this.cachedPersonAttributesDao.getUserAttributes(seed);
         
-            if (this.cacheNullResults || queryResults != null) {
+            if (queryResults != null) {
                 this.userInfoCache.put(cacheKey, queryResults);
             }
+            else if (this.cacheNullResults) {
+                this.userInfoCache.put(cacheKey, this.nullResultsObject);
+            }
             
-            if (log.isDebugEnabled()) {
-                log.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache. key='" + cacheKey + "', results='" + queryResults + "'");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache. key='" + cacheKey + "', results='" + queryResults + "'");
             }
             
             this.queries++;
             this.misses++;
-            if (log.isDebugEnabled()) {
-                log.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
+            if (statsLogger.isDebugEnabled()) {
+                statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
             }
 
             return queryResults;
         }
         else {
-            log.warn("No cache key generated, caching disabled for this query. query='" + seed + "', cacheKeyAttributes=" + this.cacheKeyAttributes + "', defaultAttributeName='" + this.getDefaultAttributeName() + "'");
+            logger.warn("No cache key generated, caching disabled for this query. query='" + seed + "', cacheKeyAttributes=" + this.cacheKeyAttributes + "', defaultAttributeName='" + this.getDefaultAttributeName() + "'");
 
             this.queries++;
             this.misses++;
-            if (log.isDebugEnabled()) {
-                log.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
+            if (statsLogger.isDebugEnabled()) {
+                statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
             }
             
             return this.cachedPersonAttributesDao.getUserAttributes(seed);
@@ -260,8 +308,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
                 cacheKey.put(defaultAttrName, querySeed.get(defaultAttrName));
             }
             
-            if (log.isDebugEnabled()) {
-                log.debug("Created cacheKey='" + cacheKey + "' from query='" + querySeed + "' using default attribute='" + defaultAttrName + "'");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Created cacheKey='" + cacheKey + "' from query='" + querySeed + "' using default attribute='" + defaultAttrName + "'");
             }
         }
         else {
@@ -273,8 +321,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
                 }
             }
             
-            if (log.isDebugEnabled()) {
-                log.debug("Created cacheKey='" + cacheKey + "' from query='" + querySeed + "' using attributes='" + this.cacheKeyAttributes + "'");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Created cacheKey='" + cacheKey + "' from query='" + querySeed + "' using attributes='" + this.cacheKeyAttributes + "'");
             }
         }
         

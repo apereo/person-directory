@@ -22,6 +22,46 @@ import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
  * Provides a base set of implementations and properties for IPersonAttributeDao
  * implementations that aggregate results from a sub List of IPersonAttributeDaos.
  * 
+ * <br>
+ * <br>
+ * Configuration:
+ * <table border="1">
+ *     <tr>
+ *         <th align="left">Property</th>
+ *         <th align="left">Description</th>
+ *         <th align="left">Required</th>
+ *         <th align="left">Default</th>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">personAttributeDaos</td>
+ *         <td>
+ *             A {@link List} of {@link IPersonAttributeDao}s to aggregate attributes from.
+ *         </td>
+ *         <td valign="top">Yes</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">attrMerger</td>
+ *         <td>
+ *             A {@link IAttributeMerger} strategy to use for merging the attributes from
+ *             the {@link List} of {@link IPersonAttributeDao}s.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">{@link MultivaluedAttributeMerger}</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">recoverExceptions</td>
+ *         <td>
+ *             Sets the action to be taken if one of the {@link IPersonAttributeDao}s in the
+ *             {@link List} fails with a {@link RuntimeException}. If set to true a warn level
+ *             log message and stack trace will be logged. If set to false an error level
+ *             message and stack trace will be logged and the exception will re-thrown. 
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">true</td>
+ *     </tr>
+ * </table>
+ * 
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
  * @version $Revision$
  */
@@ -37,7 +77,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     protected IAttributeMerger attrMerger = new MultivaluedAttributeMerger();
     
     /**
-     * True if we should catch, log, and ignore Throwables propogated by
+     * True if we should catch, logger, and ignore Throwables propogated by
      * individual DAOs.
      */
     protected boolean recoverExceptions = true;
@@ -62,7 +102,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         //Initialize null, so that if none of the sub-DAOs find the user null is returned appropriately
         Map resultAttributes = null;
         
-        //TODO fix this comment - Denotes that this is the first time we are running a query and the seed should be used
+        //Denotes that this is the first time we are running a query and the original seed should be used
         boolean isFirstQuery = true;
         
         //Iterate through the configured IPersonAttributeDaos, querying each.
@@ -71,17 +111,18 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             
             Map currentAttributes = new HashMap();
             try {
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Getting attributes for seed='" + seed + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='" + currentlyConsidering + "', resultAttributes='" + resultAttributes + "'");
+                }
                 currentAttributes = this.getAttributesFromDao(seed, isFirstQuery, currentlyConsidering, resultAttributes);
                 isFirstQuery = false;
             }
             catch (final RuntimeException rte) {
-                final String msg = "Exception thrown by DAO: " + currentlyConsidering;
-
                 if (this.recoverExceptions) {
-                    log.warn("Recovering From " + msg, rte);
+                    this.logger.warn("Recovering From Exception thrown by '" + currentlyConsidering + "'", rte);
                 }
                 else {
-                    log.error(msg, rte);
+                    this.logger.error("Failing From Exception thrown by '" + currentlyConsidering + "'", rte);
                     throw rte;
                 }
             }
@@ -131,16 +172,17 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             
             Set currentDaoAttrNames = null;
             try {
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Getting possible attribute names from '" + currentDao + "'");
+                }
                 currentDaoAttrNames = currentDao.getPossibleUserAttributeNames();
             }
             catch (final RuntimeException rte) {
-                final String msg = "Exception thrown by DAO: " + currentDao;
-
                 if (this.recoverExceptions) {
-                    log.warn(msg + ", ignoring this DAO and continuing.", rte);
+                    this.logger.warn("Recovering From Exception thrown by '" + currentDao + "'", rte);
                 }
                 else {
-                    log.error(msg + ", failing.", rte);
+                    this.logger.error("Failing From Exception thrown by '" + currentDao + "'", rte);
                     throw rte;
                 }
             }

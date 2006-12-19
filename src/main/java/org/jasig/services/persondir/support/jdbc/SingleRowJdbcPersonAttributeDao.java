@@ -24,7 +24,28 @@ import org.springframework.jdbc.object.MappingSqlQuery;
  * to attribute names. <br>
  * You must set a Map from column names to attribute names and only column names
  * appearing as keys in that map will be used.
+ * 
  * <br>
+ * <br>
+ * Configuration:
+ * <table border="1">
+ *     <tr>
+ *         <th align="left">Property</th>
+ *         <th align="left">Description</th>
+ *         <th align="left">Required</th>
+ *         <th align="left">Default</th>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">columnsToAttributes</td>
+ *         <td>
+ *             The {@link Map} of {@link String} columns names to {@link String} or {@link Set}s
+ *             of {@link String}s to use as attribute names in the returned Map. If a column name
+ *             is not in the map the column name will be used in as the returned attribute name.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">{@link java.util.Collections#EMPTY_MAP}</td>
+ *     </tr>
+ * </table>
  * 
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
@@ -49,11 +70,23 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
         
 
     /**
-     * @see AbstractJdbcPersonAttributeDao#AbstractJdbcPersonAttributeDao(DataSource, List, String)
+     * Creates a new MultiRowJdbcPersonAttributeDao specifying the DataSource and SQL to use.
+     * 
+     * @param ds The DataSource to get connections from for executing queries, may not be null.
+     * @param attrList Sets the query attribute list to pass to {@link AbstractJdbcPersonAttributeDao#setQueryAttributes(List)} and {@link SingleRowPersonAttributeMappingQuery#SingleRowPersonAttributeMappingQuery(DataSource, String, List, SingleRowJdbcPersonAttributeDao)}
+     * @param sql The SQL to execute for user attributes, may not be null.
      */
     public SingleRowJdbcPersonAttributeDao(DataSource ds, List attrList, String sql) {
-        super(ds, attrList, sql);
-        this.query = new SingleRowPersonAttributeMappingQuery(ds, sql, this);
+        if (ds == null) {
+            throw new IllegalArgumentException("DataSource can not be null");
+        }
+        if (sql == null) {
+            throw new IllegalArgumentException("The sql can not be null");
+        }
+
+        this.setQueryAttributes(attrList);
+        final List queryAttributes = this.getQueryAttributes();
+        this.query = new SingleRowPersonAttributeMappingQuery(ds, sql, queryAttributes, this);
     }
 
     /**

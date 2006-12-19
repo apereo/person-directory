@@ -13,11 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.ldaptemplate.support.LdapContextSource;
-
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.ldap.support.LdapContextSource;
 
 
 /**
@@ -110,6 +109,46 @@ public class LdapPersonAttributeDaoTest
         try {
             Map attribs = impl.getUserAttributes(queryMap);
             assertEquals("susan.bramhall@yale.edu", attribs.get("email"));
+        }
+        catch (DataAccessResourceFailureException darfe) {
+            //OK, No net connection
+        }
+    }
+
+    /**
+     * Test for a query with a single attribute. 
+     * 
+     * This testcase will cease to work on that fateful day when Susan
+     * no longer appears in Yale University LDAP.
+     */
+    public void testMultipleMappings() {
+        final String queryAttr = "uid";
+        final List queryAttrList = new LinkedList();
+        queryAttrList.add(queryAttr);
+        
+        LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
+        
+        Map ldapAttribsToPortalAttribs = new HashMap();
+        Set portalAttributes = new HashSet();
+        portalAttributes.add("email");
+        portalAttributes.add("work.email");
+        ldapAttribsToPortalAttribs.put("mail", portalAttributes);
+        
+        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        
+        impl.setContextSource(this.contextSource);
+        
+        impl.setQuery("(uid={0})");
+        
+        impl.setQueryAttributes(queryAttrList);
+        
+        Map queryMap = new HashMap();
+        queryMap.put(queryAttr, "susan");
+
+        try {
+            Map attribs = impl.getUserAttributes(queryMap);
+            assertEquals("susan.bramhall@yale.edu", attribs.get("email"));
+            assertEquals("susan.bramhall@yale.edu", attribs.get("work.email"));
         }
         catch (DataAccessResourceFailureException darfe) {
             //OK, No net connection

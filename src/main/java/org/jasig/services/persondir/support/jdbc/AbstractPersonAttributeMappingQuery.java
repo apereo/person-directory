@@ -14,7 +14,7 @@ import org.springframework.jdbc.object.MappingSqlQuery;
  * of yielding a ResultSet with zero or one rows, which it maps
  * to null or to a Map from uPortal attribute names to values.
  */
-abstract class AbstractPersonAttributeMappingQuery extends MappingSqlQuery {
+public abstract class AbstractPersonAttributeMappingQuery extends MappingSqlQuery {
 
     /**
      * Instantiate the query, providing a DataSource against which the query
@@ -27,17 +27,12 @@ abstract class AbstractPersonAttributeMappingQuery extends MappingSqlQuery {
      * 
      * @param ds The data source to use for running the query against.
      * @param sql The SQL to run against the data source.
-     * @param abstractJdbcPersonAttributeDao The parent AbstractJdbcPersonAttributeDao to get configuration from.
+     * @param queryAttributes The List of query attributes to declare bind variables for
      */
-    public AbstractPersonAttributeMappingQuery(final DataSource ds, final String sql, final AbstractJdbcPersonAttributeDao abstractJdbcPersonAttributeDao) {
+    public AbstractPersonAttributeMappingQuery(final DataSource ds, final String sql, final List queryAttributes) {
         super(ds, sql);
         
-        if (abstractJdbcPersonAttributeDao == null) {
-            throw new IllegalArgumentException("abstractJdbcPersonAttributeDao may not be null");
-        }
-        
         //Configures the SQL parameters, everything is assumed to be VARCHAR
-        final List queryAttributes = abstractJdbcPersonAttributeDao.getQueryAttributes();
         for (final Iterator attrNames = queryAttributes.iterator(); attrNames.hasNext(); ) {
             final String attrName = (String)attrNames.next();
             this.declareParameter(new SqlParameter(attrName, Types.VARCHAR));

@@ -14,22 +14,74 @@ import java.util.Set;
 
 import javax.naming.directory.SearchControls;
 
-import net.sf.ldaptemplate.CollectingSearchResultCallbackHandler;
-import net.sf.ldaptemplate.ContextSource;
-import net.sf.ldaptemplate.LdapTemplate;
-import net.sf.ldaptemplate.SearchExecutor;
-
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.ldap.CollectingNameClassPairCallbackHandler;
+import org.springframework.ldap.ContextSource;
+import org.springframework.ldap.LdapTemplate;
+import org.springframework.ldap.SearchExecutor;
 
 /**
- * LDAP implementation of {@link org.jasig.portal.services.persondir.IPersonAttributeDao}. This is code copied from
- * uPortal 2.4 org.jasig.portal.services.PersonDirectory and made to
- * implement this DAO interface. Dependent upon JNDI.
+ * LDAP implementation of {@link org.jasig.portal.services.persondir.IPersonAttributeDao}.
  * 
- * In the case of multi valued attributes, now stores a
- * {@link java.util.ArrayList} rather than a {@link java.util.Vector}.
+ * In the case of multi valued attributes a {@link java.util.List} is set as the value.
+ * 
+ * <br>
+ * <br>
+ * Configuration:
+ * <table border="1">
+ *     <tr>
+ *         <th align="left">Property</th>
+ *         <th align="left">Description</th>
+ *         <th align="left">Required</th>
+ *         <th align="left">Default</th>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">timeLimit</td>
+ *         <td>
+ *             Sets a time limit for LDAP Query execution time. See {@link SearchControls#setTimeLimit(int)}
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">0</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">ldapAttributesToPortalAttributes</td>
+ *         <td>
+ *             The {@link Map} of {@link String} ldap attribute names to {@link String} or
+ *             {@link Set}s of {@link String}s to use as attribute names in the returned Map.
+ *             If a ldap attribute name is not in the map the ldap attribute name will be
+ *             used in as the returned attribute name.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">{@link Collections.EMPTY_MAP}</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">query</td>
+ *         <td>
+ *             The LDAP filter query to use when finding the user attributes.
+ *         </td>
+ *         <td valign="top">Yes</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">baseDN</td>
+ *         <td>
+ *             The base DistinguishedName to use when executing the query filter.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">""</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">contextSource</td>
+ *         <td>
+ *             A {@link ContextSource} from the Spring-LDAP framework. Provides a DataSource
+ *             style object that this DAO can retrieve LDAP connections from.
+ *         </td>
+ *         <td valign="top">Yes</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ * </table>
  * 
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
@@ -99,11 +151,11 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
             throw new IllegalStateException("query is null");
 
         final SearchExecutor se = new QuerySearchExecutor(this.baseDN, this.query, args, this.searchControls);
-        final CollectingSearchResultCallbackHandler srch = this.ldapTemplate.new AttributesMapperCallbackHandler(this.attributesMapper);
+        final CollectingNameClassPairCallbackHandler attributesMapperCallbackHandler = this.ldapTemplate.new AttributesMapperCallbackHandler(this.attributesMapper);
         
-        this.ldapTemplate.search(se, srch);
+        this.ldapTemplate.search(se, attributesMapperCallbackHandler);
         
-        final List results = srch.getList();
+        final List results = attributesMapperCallbackHandler.getList();
         return (Map)DataAccessUtils.uniqueResult(results);
     }
 

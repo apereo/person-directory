@@ -19,12 +19,34 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  * {@link IPersonAttributeDao#getUserAttributes(Map)} using a configurable
  * default attribute name.
  * 
+ * <br>
+ * <br>
+ * Configuration:
+ * <table border="1">
+ *     <tr>
+ *         <th align="left">Property</th>
+ *         <th align="left">Description</th>
+ *         <th align="left">Required</th>
+ *         <th align="left">Default</th>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">defaultAttribute</td>
+ *         <td>
+ *             The attribute to use for the key in the {@link Map} passed to {@link IPersonAttributeDao#getUserAttributes(Map)}
+ *             when {@link #getUserAttributes(String)} is called. The value is the uid passed
+ *             to the method.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">"username"</td>
+ *     </tr>
+ * </table>
+ * 
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
 public abstract class AbstractDefaultAttributePersonAttributeDao implements IPersonAttributeDao {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());
     
     /**
      * Defaults attribute to use for a simple query
@@ -46,14 +68,17 @@ public abstract class AbstractDefaultAttributePersonAttributeDao implements IPer
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.lang.String)
      */
     public final Map getUserAttributes(final String uid) {
-        
         if (uid == null) {
             throw new IllegalArgumentException("Illegal to invoke getUserAttributes(String) with null argument.");
         }
         
         final Map seed = Collections.singletonMap(this.getDefaultAttributeName(), uid);
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Created seed map='" + seed + "' for uid='" + uid + "'");
+        }
         
-        return this.getUserAttributes(seed);
+        final Map userAttributes = this.getUserAttributes(seed);
+        return userAttributes;
     }
 
     

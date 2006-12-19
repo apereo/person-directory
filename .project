@@ -1,5 +1,5 @@
 <projectDescription>
-  <name>PersonDirectory</name>
+  <name>person-directory</name>
   <comment>Provides a general interface for accessing attributes for a person. Has the capability of aggregating attributes from multiple data sources into a single view.</comment>
   <projects/>
   <buildSpec>

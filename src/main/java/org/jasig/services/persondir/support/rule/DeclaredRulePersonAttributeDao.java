@@ -1,5 +1,8 @@
 package org.jasig.services.persondir.support.rule;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,66 +15,103 @@ import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttrib
  * person directory information based on configurable rules.  You may chain as 
  * many rules as you like, but this DAO will apply <b>at most</b> one rule, the
  * first that triggers.
+ * 
+ * <br>
+ * <br>
+ * Configuration:
+ * <table border="1">
+ *     <tr>
+ *         <th align="left">Property</th>
+ *         <th align="left">Description</th>
+ *         <th align="left">Required</th>
+ *         <th align="left">Default</th>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">rules</td>
+ *         <td>
+ *             The array of {@link AttributeRule}s to use when 
+ *         </td>
+ *         <td valign="top">Yes</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ * </table>
  */
 public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
 
-    // Instance Members.
-    private final AttributeRule[] rules;
-
-    /*
-     * Public API.
+    /**
+     * List of {@link AttributeRule} objects.
      */
+    private List rules;
 
+
+    /**
+     * Creates a new DeclaredRulePersonAttributeDao specifying the attributeName to pass to
+     * {@link #setDefaultAttributeName(String)} and the {@link List} of {@link AttributeRule}s
+     * to pass to {@link #setRules(AttributeRule[])}
+     * 
+     * @param attributeName
+     * @param rules
+     */
     public DeclaredRulePersonAttributeDao(String attributeName, List rules) {
-
-        // Assertions.
-        if (attributeName == null) {
-            String msg = "Argument 'attributeName' cannot be null.";
-            throw new IllegalArgumentException(msg);
-        }
-        if (rules == null) {
-            String msg = "Argument 'rules' cannot be null.";
-            throw new IllegalArgumentException(msg);
-        }
-        if (rules.size() == 0) {
-            String msg = "Argument 'rules' must contain at least one element.";
-            throw new IllegalArgumentException(msg);
-        }
-
         // PersonDirectory won't stop for anything... we need decent logging.
-        if (log.isDebugEnabled()) {
-            log.debug("DeclaredRulePersonAttributeDao --> <init>");
-            log.debug("DeclaredRulePersonAttributeDao --> attributeName="+attributeName);
-            log.debug("DeclaredRulePersonAttributeDao --> rules.size()="+rules.size());
-            log.debug("DeclaredRulePersonAttributeDao --> rules.get(0).getClass().getName()="+rules.get(0).getClass().getName());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Creating DeclaredRulePersonAttributeDao with attributeName='" + attributeName + "' and rules='" + rules + "'");
         }
 
         // Instance Members.
         this.setDefaultAttributeName(attributeName);
-        this.rules = (AttributeRule[]) rules.toArray(new AttributeRule[rules.size()]);
+        this.setRules(rules);
 
         // PersonDirectory won't stop for anything... we need decent logging.
-        if (log.isDebugEnabled()) {
-            log.debug("DeclaredRulePersonAttributeDao --> <init>");
-            log.debug("DeclaredRulePersonAttributeDao --> this.getDefaultAttributeName()="+this.getDefaultAttributeName());
-            log.debug("DeclaredRulePersonAttributeDao --> this.rules.length="+this.rules.length);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Created DeclaredRulePersonAttributeDao with attributeName='" + attributeName + "' and rules='" + rules + "'");
+        }
+    }
+    
+    /**
+     * @return the rules
+     */
+    public List getRules() {
+        return this.rules;
+    }
+    /**
+     * @param rules the rules to set
+     */
+    public void setRules(List rules) {
+        if (rules == null) {
+            throw new IllegalArgumentException("Argument 'rules' cannot be null.");
+        }
+        if (rules.size() < 1) {
+            throw new IllegalArgumentException("Argument 'rules' must contain at least one element.");
         }
 
+        this.rules = Collections.unmodifiableList(new ArrayList(rules));
     }
 
-    public Map getUserAttributes(final Map seed) {
 
+    /*
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     */
+    public Map getUserAttributes(final Map seed) {
         // Assertions.
         if (seed == null) {
-            String msg = "Argument 'seed' cannot be null.";
-            throw new IllegalArgumentException(msg);
+            throw new IllegalArgumentException("Argument 'seed' cannot be null.");
+        }
+        if (rules == null) {
+            throw new IllegalStateException("rules array cannot be null.");
+        }
+        if (rules.size() < 1) {
+            throw new IllegalStateException("rules array must contain at least one element.");
         }
 
         Map rslt = null;    // default (contract of IPersonAttributeDao)
 
-        for (int i=0; i < rules.length; i++) {
-            AttributeRule r = rules[i];
+        for (final Iterator rulesItr = rules.iterator(); rulesItr.hasNext();) {
+            final AttributeRule r = (AttributeRule)rulesItr.next();
             if (r.appliesTo(seed)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Evaluating rule='" + r + "' from the rules List");
+                }
 
             	rslt = r.evaluate(seed);
                 break;  // We promise to apply at most one rule...
@@ -79,18 +119,22 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
         }
 
         return rslt;
-
     }
 
+    /**
+     * Aggregates the results of calling {@link AttributeRule#getPossibleUserAttributeNames()}
+     * on each {@link AttributeRule} instance in the rules array.
+     * 
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
+     */
     public Set getPossibleUserAttributeNames() {
-
         Set rslt = new TreeSet();
-        for (int i=0; i < rules.length; i++) {
-            rslt.addAll(rules[i].getPossibleUserAttributeNames());
+        for (final Iterator rulesItr = rules.iterator(); rulesItr.hasNext();) {
+            final AttributeRule r = (AttributeRule)rulesItr.next();
+            rslt.addAll(r.getPossibleUserAttributeNames());
         }
 
         return rslt;
-
     }
 
 }

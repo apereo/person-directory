@@ -22,13 +22,42 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 /**
  * An {@link org.jasig.portal.services.persondir.IPersonAttributeDao}
  * implementation that maps attribute names and values from name and value column
- * pairs. <br>
+ * pairs. This is usefull if user attributes are stored in a table like:<br>
+ * <table border="1">
+ *  <tr>
+ *      <th>USER_NM</th>
+ *      <th>ATTR_NM</th>
+ *      <th>ATTR_VL</th>
+ *  </tr>
+ *  <tr>
+ *      <td>jstudent</td>
+ *      <td>name.given</td>
+ *      <td>joe</td>
+ *  </tr>
+ *  <tr>
+ *      <td>jstudent</td>
+ *      <td>name.family</td>
+ *      <td>student</td>
+ *  </tr>
+ *  <tr>
+ *      <td>badvisor</td>
+ *      <td>name.given</td>
+ *      <td>bob</td>
+ *  </tr>
+ *  <tr>
+ *      <td>badvisor</td>
+ *      <td>name.family</td>
+ *      <td>advisor</td>
+ *  </tr>
+ * </table>
  * 
- * This class expects 1-N row results for a query, with each row containing 1-N name
+ * <br>
+ * 
+ * This class expects 1 to N row results for a query, with each row containing 1 to N name
  * value attribute mappings. This contrasts {@link org.jasig.portal.services.persondir.support.jdbc.SingleRowJdbcPersonAttributeDao}
  * which expects a single row result for a user query. <br>
  * 
- *<br>
+ * <br>
  * <br>
  * Configuration:
  * <table border="1">
@@ -44,9 +73,10 @@ import org.springframework.jdbc.object.MappingSqlQuery;
  *             Maps attribute names as defined in the database to attribute names to be exposed
  *             to the client code. The keys of the Map must be Strings, the values may be
  *             <code>null</code>, String or a Set of Strings. The keySet of this Map is returned
- *             as  
+ *             as the possibleUserAttributeNames property. If an attribute name is not in
+ *             the map the attribute name will be used in as the returned attribute name.
  *         </td>
- *         <td valign="top">Yes</td>
+ *         <td valign="top">No</td>
  *         <td valign="top">{@link java.util.Collections#EMPTY_MAP}</td>
  *     </tr>
  *     <tr>
@@ -56,11 +86,9 @@ import org.springframework.jdbc.object.MappingSqlQuery;
  *             Values are Strings or {@link java.util.List} of Strings 
  *         </td>
  *         <td valign="top">Yes</td>
- *         <td valign="top">{@link java.util.Collections#EMPTY_MAP}</td>
+ *         <td valign="top">null</td>
  *     </tr>
  * </table>
- * 
- * TODO should this get possible attribute values from the DB?
  * 
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
@@ -78,7 +106,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      * {@link Map} of columns from a name column to value columns.
      * Keys are Strings, Values are Strings or Lost of Strings 
      */
-    private Map nameValueColumnMappings = Collections.EMPTY_MAP;
+    private Map nameValueColumnMappings = null;
     
     /**
      * {@link Set} of attributes that may be provided for a user.
@@ -88,17 +116,28 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     /**
      * The {@link MappingSqlQuery} to use to get attributes.
      */
-    private MultiRowPersonAttributeMappingQuery query;
-
+    private final MultiRowPersonAttributeMappingQuery query;
 
     /**
-     * @see AbstractJdbcPersonAttributeDao#AbstractJdbcPersonAttributeDao(DataSource, List, String)
+     * Creates a new MultiRowJdbcPersonAttributeDao specifying the DataSource and SQL to use.
+     * 
+     * @param ds The DataSource to get connections from for executing queries, may not be null.
+     * @param attrList Sets the query attribute list to pass to {@link AbstractJdbcPersonAttributeDao#setQueryAttributes(List)} and {@link MultiRowPersonAttributeMappingQuery#MultiRowPersonAttributeMappingQuery(DataSource, String, List, MultiRowJdbcPersonAttributeDao)}
+     * @param sql The SQL to execute for user attributes, may not be null.
      */
     public MultiRowJdbcPersonAttributeDao(DataSource ds, List attrList, String sql) {
-        super(ds, attrList, sql);
-        this.query = new MultiRowPersonAttributeMappingQuery(ds, sql, this);
-    }
+        if (ds == null) {
+            throw new IllegalArgumentException("DataSource can not be null");
+        }
+        if (sql == null) {
+            throw new IllegalArgumentException("The sql can not be null");
+        }
 
+        this.setQueryAttributes(attrList);
+        final List queryAttributes = this.getQueryAttributes();
+        this.query = new MultiRowPersonAttributeMappingQuery(ds, sql, queryAttributes, this);
+    }
+    
 
     /**
      * Returned {@link Map} will have values of {@link String} or a
@@ -109,26 +148,43 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     public Map parseAttributeMapFromResults(final List queryResults) {
         final Map results = new HashMap();
 
+        //Iterate through the List of results, each item should be equal to a row from the ResultSet
         for (final Iterator rowItr = queryResults.iterator(); rowItr.hasNext();) {
             final Map rowResult = (Map)rowItr.next();
             
+            //Iterate through the name/value(s) pairs for each row Map
             for (final Iterator resultItr = rowResult.entrySet().iterator(); resultItr.hasNext();) {
                 final Map.Entry entry = (Map.Entry)resultItr.next();
                 final String srcAttrName = (String)entry.getKey();
                 
-                final Set upAttrNames = (Set)this.attributeNameMappings.get(srcAttrName);
+                //Get the Set of portal user attribute names the value(s) should be stored under.
+                final Set portalAttrNames = (Set)this.attributeNameMappings.get(srcAttrName);
                 
-                //TODO restriction on null passthrough
-                if (upAttrNames == null) {
+                //If no portal user attribute names are mapped add the value(s) with the attribute name from the result set
+                if (portalAttrNames == null) {
+                    if (this.logger.isDebugEnabled()) {
+                        this.logger.debug("Adding un-mapped attribute '" + srcAttrName + "'");
+                    }
+                    
                     MultivaluedPersonAttributeUtils.addResult(results, srcAttrName, entry.getValue());
                 }
                 else {
-                    for (final Iterator upAttrNameItr = upAttrNames.iterator(); upAttrNameItr.hasNext();) {
-                        final String upAttrName = (String)upAttrNameItr.next();
-                        MultivaluedPersonAttributeUtils.addResult(results, upAttrName, entry.getValue());
+                    //For each mapped portlet attribute name store the value(s)
+                    for (final Iterator upAttrNameItr = portalAttrNames.iterator(); upAttrNameItr.hasNext();) {
+                        final String portalAttrName = (String)upAttrNameItr.next();
+                        
+                        if (this.logger.isDebugEnabled()) {
+                            this.logger.debug("Adding mapped attribute '" + portalAttrName + "' for source attribute '" + srcAttrName + "'");
+                        }
+
+                        MultivaluedPersonAttributeUtils.addResult(results, portalAttrName, entry.getValue());
                     }
                 }
             }
+        }
+        
+        if (this.logger.isInfoEnabled()) {
+            this.logger.info("Mapped " + results.size() + " portal attributes from " + queryResults.size() + " source attributes");
         }
         
         return results;
@@ -159,8 +215,6 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     }
 
     /**
-     * TODO
-     * <br>
      * The passed {@link Map} must have keys of type {@link String} and values
      * of type {@link String} or a {@link Set} of {@link String}.
      * 
@@ -185,21 +239,31 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     }
 
 
+    /**
+     * @return The Map of name column to value column(s). 
+     */
     public Map getNameValueColumnMappings() {
         return this.nameValueColumnMappings;
     }
     
+    /**
+     * The {@link Map} of columns from a name column to value columns. Keys are Strings,
+     * Values are Strings or {@link java.util.List} of Strings.
+     * 
+     * @param nameValueColumnMap The Map of name column to value column(s). 
+     */
     public void setNameValueColumnMappings(final Map nameValueColumnMap) {
         if (nameValueColumnMap == null) {
-            throw new IllegalArgumentException("nameValueColumnMap may not be null");
+            this.nameValueColumnMappings = null;
         }
-        
-        final Map mappings = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nameValueColumnMap);
-        
-        if (mappings.containsValue(null)) {
-            throw new IllegalArgumentException("nameValueColumnMap may not have null values");
+        else {
+            final Map mappings = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nameValueColumnMap);
+            
+            if (mappings.containsValue(null)) {
+                throw new IllegalArgumentException("nameValueColumnMap may not have null values");
+            }
+            
+            this.nameValueColumnMappings = mappings;
         }
-        
-        this.nameValueColumnMappings = mappings;
     }
 }

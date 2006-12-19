@@ -5,50 +5,38 @@
 
 package org.jasig.services.persondir.support.jdbc;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import javax.sql.DataSource;
 
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 
 /**
- * Provides basic implementations for configuring query attributes, ensuring queries have the needed
- * attributes to execute, run the query via an abstract MappingSqlQuery stub.
+ * Provides common logic for executing a JDBC based attribute query.
  * 
+ * <br>
+ * <br>
+ * Configuration:
+ * <table border="1">
+ *     <tr>
+ *         <th align="left">Property</th>
+ *         <th align="left">Description</th>
+ *         <th align="left">Required</th>
+ *         <th align="left">Default</th>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">queryAttributes</td>
+ *         <td>
+ *             This class overrides the {@link AbstractQueryPersonAttributeDao#setQueryAttributes(List)} requiring
+ *             a non-null List and enforcing that it can only be set once.
+ *         </td>
+ *         <td valign="top">Yes</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ * </table>
  * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  * @version $Revision$
  */
 public abstract class AbstractJdbcPersonAttributeDao extends AbstractQueryPersonAttributeDao {
-    
-    /***
-     * Create the DAO, configured with the needed query information.
-     *
-     * @param ds The {@link DataSource} to run the queries against.
-     * @param attrList The list of arguments for the query.
-     * @param sql The SQL query to run.
-     */
-    public AbstractJdbcPersonAttributeDao(final DataSource ds, final List attrList, final String sql) {
-        if (super.log.isTraceEnabled()) {
-            log.trace("entering AbstractJdbcPersonAttributeDao(" + ds + ", " + attrList + ", " + sql + ")");
-        }
-        if (attrList == null)
-            throw new IllegalArgumentException("attrList cannot be null");
-
-        //Defensive copy of the query attribute list
-        final List defensiveCopy = new ArrayList(attrList);
-        final List queryAttributes = Collections.unmodifiableList(defensiveCopy);
-        this.setQueryAttributes(queryAttributes);
-
-        if (log.isTraceEnabled()) {
-            log.trace("Constructed " + this);
-        }
-    }
-    
-
-    
     /**
      * Takes the {@link List} from the {@link AbstractPersonAttributeMappingQuery} implementation
      * and passes it to the implementing the class for parsing into the returned user attribute Map.
@@ -72,10 +60,27 @@ public abstract class AbstractJdbcPersonAttributeDao extends AbstractQueryPerson
      *
      * @see org.jasig.portal.services.persondir.support.AbstractQueryPersonAttributeDao#getUserAttributesIfNeeded(java.lang.Object[])
      */
-    protected Map getUserAttributesIfNeeded(final Object[] args) {
+    protected final Map getUserAttributesIfNeeded(final Object[] args) {
         final AbstractPersonAttributeMappingQuery query = this.getAttributeQuery();
         final List queryResults = query.execute(args);
         final Map userAttributes = this.parseAttributeMapFromResults(queryResults);
         return userAttributes;
+    }
+
+    /**
+     * JDBC DAOs require a non-null queryAttribute list. This setter also only allows the queryAttributes List to be
+     * set once.
+     * 
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#setQueryAttributes(java.util.List)
+     */
+    public void setQueryAttributes(List queryAttributes) {
+        if (queryAttributes == null) {
+            throw new IllegalArgumentException("queryAttributes may not be null");
+        }
+        if (this.getQueryAttributes() != null) {
+            throw new IllegalStateException("The queryAttributes List is already set, it may not be changed.");
+        }
+        
+        super.setQueryAttributes(queryAttributes);
     }
 }

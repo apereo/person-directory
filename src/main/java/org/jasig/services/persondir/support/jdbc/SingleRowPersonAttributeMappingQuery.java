@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,10 +26,10 @@ class SingleRowPersonAttributeMappingQuery extends AbstractPersonAttributeMappin
 
 
     /**
-     * @see AbstractPersonAttributeMappingQuery#AbstractPersonAttributeMappingQuery(DataSource, String, AbstractJdbcPersonAttributeDao)
+     * @see AbstractPersonAttributeMappingQuery#AbstractPersonAttributeMappingQuery(DataSource, String, List)
      */
-    public SingleRowPersonAttributeMappingQuery(DataSource ds, String sql, SingleRowJdbcPersonAttributeDao parentSingleRowPersonAttributeDao) {
-        super(ds, sql, parentSingleRowPersonAttributeDao);
+    public SingleRowPersonAttributeMappingQuery(DataSource ds, String sql, List queryAttributes, SingleRowJdbcPersonAttributeDao parentSingleRowPersonAttributeDao) {
+        super(ds, sql, queryAttributes);
         
         if (parentSingleRowPersonAttributeDao == null) {
             throw new IllegalArgumentException("parentSingleRowPersonAttributeDao may not be null");
@@ -88,12 +89,21 @@ class SingleRowPersonAttributeMappingQuery extends AbstractPersonAttributeMappin
         Set attributeNames = (Set)attributeMappings.get(columnName);
         
         //No mapping was found, just use the column name
-        if (attributeNames == null)
+        if (attributeNames == null) {
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("No mapped attribute name for column='" + columnName + "', defaulting to the column name.");
+            }
+            
             attributeNames = Collections.singleton(columnName);
+        }
         
         //Run through the mapped attribute names
         for (final Iterator attrNameItr = attributeNames.iterator(); attrNameItr.hasNext();){
             final String attributeName = (String)attrNameItr.next();
+            
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Adding mapped attribute '" + attributeName + "' for source column '" + columnName + "'");
+            }
 
             MultivaluedPersonAttributeUtils.addResult(rowResults, attributeName, attributeValue);
         }

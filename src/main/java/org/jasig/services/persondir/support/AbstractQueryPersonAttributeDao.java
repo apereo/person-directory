@@ -15,6 +15,31 @@ import java.util.Map;
  * perform a query. Ensures the nessesary attributes to run the query exist on the seed and
  * organizes the values into an argument array.
  * 
+ * <br>
+ * <br>
+ * Configuration:
+ * <table border="1">
+ *     <tr>
+ *         <th align="left">Property</th>
+ *         <th align="left">Description</th>
+ *         <th align="left">Required</th>
+ *         <th align="left">Default</th>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">queryAttributes</td>
+ *         <td>
+ *             A {@link List} of {@link String} attribute names whos values should be used
+ *             when executing the
+ *             query via {@link #getUserAttributesIfNeeded(Object[])}. If this {@link List} is set all of the names it contains must be in
+ *             the keySet of the seed passed to {@link #getUserAttributes(Map)} or null will
+ *             be returned. If the {@link List} is left null the {@link #getDefaultAttributeName()}
+ *             will be used as the single argument when calling {@link #getUserAttributesIfNeeded(Object[])}
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ * </table>
+ * 
  * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
  * @version $Revision$
  */
@@ -43,8 +68,8 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
         
         //The queryAttributes are configured and the seed contains all of the needed attributes
         if (this.queryAttributes != null && seed.keySet().containsAll(this.queryAttributes)) {
-            if (this.log.isDebugEnabled()) {
-                this.log.debug("Constructing argument name array from the queryAttributes List");
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Constructing argument name array from the queryAttributes List");
             }
 
             // Can't just to a toArray here since the order of the keys in the Map
@@ -58,8 +83,8 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
         }
         //No queryAttributes are configured but the seed contains the default attribute
         else if (this.queryAttributes == null && seed.containsKey(this.getDefaultAttributeName())) {
-            if (this.log.isDebugEnabled()) {
-                this.log.debug("Constructing argument name array from the defaultAttributeName");
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Constructing argument name array from the defaultAttributeName");
             }
 
             final String attrName = this.getDefaultAttributeName();
@@ -67,8 +92,8 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
         }
         //The data needed to run the query isn't in the seed, null is returned
         else {
-            if (this.log.isDebugEnabled()) {
-                this.log.debug("The seed does not contain the required information to run the query, returning null.");
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("The seed does not contain the required information to run the query, returning null.");
             }
             
             return null;
@@ -99,6 +124,7 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
      * @param queryAttributes The queryAttributes to set.
      */
     public void setQueryAttributes(List queryAttributes) {
+        //Create an unmodifiable defensive copy
         this.queryAttributes = Collections.unmodifiableList(new LinkedList(queryAttributes));
     }
 }

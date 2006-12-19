@@ -16,10 +16,10 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
-
-
-import net.sf.ldaptemplate.AttributesMapper;
+import org.springframework.ldap.AttributesMapper;
 
 /**
  * Provides {@link net.sf.ldaptemplate.AttributesMapper} for use with a {@link net.sf.ldaptemplate.LdapTemplate}
@@ -29,6 +29,8 @@ import net.sf.ldaptemplate.AttributesMapper;
  * @version $Revision$
  */
 class PersonAttributesMapper implements AttributesMapper {
+    protected final Log logger = LogFactory.getLog(this.getClass());
+    
     private final Map ldapAttributesToPortalAttributes;
     
     /**
@@ -71,26 +73,41 @@ class PersonAttributesMapper implements AttributesMapper {
 
             // The attribute exists
             if (attribute != null) {
-                for (final NamingEnumeration attrValueEnum = attribute.getAll(); attrValueEnum.hasMore();) {
+                // See if the ldap attribute is mapped
+                Set attributeNames = (Set)this.ldapAttributesToPortalAttributes.get(ldapAttributeName);
+
+                // No mapping was found, just use the ldap attribute name
+                if (attributeNames == null) {
+                    attributeNames = Collections.singleton(ldapAttributeName);
+                }
+                
+                int valueCount = 0;
+                for (final NamingEnumeration attrValueEnum = attribute.getAll(); attrValueEnum.hasMore(); valueCount++) {
                     Object attributeValue = attrValueEnum.next();
 
                     // Convert everything except byte[] to String
                     if (!(attributeValue instanceof byte[])) {
+                        if (this.logger.isWarnEnabled()) {
+                            this.logger.warn("Converting value " + valueCount + " of LDAP attribute '" + ldapAttributeName + "' from byte[] to String");
+                        }
+                        
                         attributeValue = attributeValue.toString();
                     }
 
-                    // See if the ldap attribute is mapped
-                    Set attributeNames = (Set)this.ldapAttributesToPortalAttributes.get(ldapAttributeName);
-
-                    // No mapping was found, just use the ldap attribute name
-                    if (attributeNames == null)
-                        attributeNames = Collections.singleton(ldapAttributeName);
-
                     // Run through the mapped attribute names
-                    for (final Iterator attrNameItr = attributeNames .iterator(); attrNameItr.hasNext();) {
+                    for (final Iterator attrNameItr = attributeNames.iterator(); attrNameItr.hasNext();) {
                         final String attributeName = (String) attrNameItr .next();
-
+                        
                         MultivaluedPersonAttributeUtils.addResult(rowResults, attributeName, attributeValue);
+                    }
+                }
+                
+                if (this.logger.isDebugEnabled()) {
+                    if (this.ldapAttributesToPortalAttributes.containsKey(ldapAttributeName)) {
+                        this.logger.debug("Added " + valueCount + " attributes under mapped names '" + attributeNames + "' for source attribute '" + ldapAttributeName + "'");
+                    }
+                    else {
+                        this.logger.debug("Added " + valueCount + " attributes for source attribute '" + ldapAttributeName + "'");
                     }
                 }
             }

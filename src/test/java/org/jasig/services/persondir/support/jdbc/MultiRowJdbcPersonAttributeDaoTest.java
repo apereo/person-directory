@@ -417,14 +417,9 @@ public class MultiRowJdbcPersonAttributeDaoTest
         assertEquals(expectedColumnsToAttributes, impl.getAttributeNameMappings());
         
         
-        assertEquals(Collections.EMPTY_MAP, impl.getNameValueColumnMappings());
-        try {
-            impl.setNameValueColumnMappings(null);
-            fail("setNameValueColumnMappings(null) should result in an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae) {
-            //Expected
-        }
+        assertEquals(null, impl.getNameValueColumnMappings());
+        impl.setNameValueColumnMappings(null);
+        assertEquals(null, impl.getNameValueColumnMappings());
         try {
             impl.setNameValueColumnMappings(Collections.singletonMap("NullValueKey", null));
             fail("setNameValueColumnMappings(Collections.singletonMap(\"NullValueKey\", null)) should result in an IllegalArgumentException");

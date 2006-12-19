@@ -15,6 +15,25 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  * A stub IPersonAttributeDao to be used for testing.
  * Backed by a single Map which this implementation will always return.
  * 
+ * <br>
+ * <br>
+ * Configuration:
+ * <table border="1">
+ *     <tr>
+ *         <th align="left">Property</th>
+ *         <th align="left">Description</th>
+ *         <th align="left">Required</th>
+ *         <th align="left">Default</th>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">backingMap</td>
+ *         <td>
+ *             This Map will always be returned for any query.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ * </table>
  * @author andrew.petro@yale.edu
  * @version $Revision$ $Date$
  * @since uPortal 2.5

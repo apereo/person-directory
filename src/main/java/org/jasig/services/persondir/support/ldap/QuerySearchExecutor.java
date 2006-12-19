@@ -11,8 +11,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 
 import org.apache.commons.lang.ArrayUtils;
-
-import net.sf.ldaptemplate.SearchExecutor;
+import org.springframework.ldap.SearchExecutor;
 
 /**
  * Executes a LDAP search using the {@link javax.naming.directory.DirContext#search(java.lang.String, java.lang.String, java.lang.Object[], javax.naming.directory.SearchControls)}
@@ -22,10 +21,10 @@ import net.sf.ldaptemplate.SearchExecutor;
  * @version $Revision$
  */
 class QuerySearchExecutor implements SearchExecutor {
-    final String baseDn;
-    final String query;
-    final Object[] args;
-    final SearchControls controls;
+    private final String baseDn;
+    private final String query;
+    private final Object[] args;
+    private final SearchControls controls;
     
     /**
      * Creates a new query search executor with the parameters for the call to 

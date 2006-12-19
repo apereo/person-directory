@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,10 +25,10 @@ class MultiRowPersonAttributeMappingQuery extends AbstractPersonAttributeMapping
 
 
     /**
-     * @see AbstractPersonAttributeMappingQuery#AbstractPersonAttributeMappingQuery(DataSource, String, AbstractJdbcPersonAttributeDao)
+     * @see AbstractPersonAttributeMappingQuery#AbstractPersonAttributeMappingQuery(DataSource, String, List)
      */
-    public MultiRowPersonAttributeMappingQuery(DataSource ds, String sql, MultiRowJdbcPersonAttributeDao parentMultiRowPersonAttributeDao) {
-        super(ds, sql, parentMultiRowPersonAttributeDao);
+    public MultiRowPersonAttributeMappingQuery(DataSource ds, String sql, List queryAttributes, MultiRowJdbcPersonAttributeDao parentMultiRowPersonAttributeDao) {
+        super(ds, sql, queryAttributes);
         
         if (parentMultiRowPersonAttributeDao == null) {
             throw new IllegalArgumentException("parentMultiRowPersonAttributeDao may not be null");
@@ -48,6 +49,10 @@ class MultiRowPersonAttributeMappingQuery extends AbstractPersonAttributeMapping
         
         //Iterates through any mapped columns that did appear in the column list from the result set
         final Map nameValueColumnMappings = this.parentMultiRowPersonAttributeDao.getNameValueColumnMappings();
+        if (nameValueColumnMappings == null) {
+            throw new IllegalStateException("Property nameValueColumnMappings on MultiRowJdbcPersonAttributeDao='" + this.parentMultiRowPersonAttributeDao + "' can not be null");
+        }
+
         final Set colNames = nameValueColumnMappings.keySet();
         for (final Iterator columnNameItr = colNames.iterator(); columnNameItr.hasNext(); ) {
             final String columnName = (String)columnNameItr.next();
@@ -97,6 +102,10 @@ class MultiRowPersonAttributeMappingQuery extends AbstractPersonAttributeMapping
                 super.logger.error("Was unable to read attribute for column [" + valueColumn + "]");
                 throw sqle;
             }
+        }
+        
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Retrieved " + valueCols.size() + " values for name column '" + nameColumn + "'");
         }
     }
 }
