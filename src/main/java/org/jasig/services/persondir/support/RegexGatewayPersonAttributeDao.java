@@ -227,7 +227,9 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
                     value = (String)valueItr.next();
                 }
                 catch (ClassCastException cce) {
-                    throw new IllegalArgumentException("RegexGatewayPersonAttributeDao can only accept seeds who's values are String or List of String. Attribute '" + attributeName + "' has a non-String value.", cce);
+                    final IllegalArgumentException iae = new IllegalArgumentException("RegexGatewayPersonAttributeDao can only accept seeds who's values are String or List of String. Attribute '" + attributeName + "' has a non-String value.");
+                    iae.initCause(cce);
+                    throw iae;
                 }
                 
                 //Check if the value matches the pattern
