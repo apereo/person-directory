@@ -1,28 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-  <name>person-directory</name>
-  <comment>Provides a general interface for accessing attributes for a person. Has the capability of aggregating attributes from multiple data sources into a single view.</comment>
-  <projects/>
-  <buildSpec>
-    <buildCommand>
-      <name>org.eclipse.jdt.core.javabuilder</name>
-      <arguments/>
-    </buildCommand>
-    <buildCommand>
-      <name>org.eclipse.wst.common.modulecore.ComponentStructuralBuilder</name>
-      <arguments/>
-    </buildCommand>
-    <buildCommand>
-      <name>org.eclipse.wst.validation.validationbuilder</name>
-      <arguments/>
-    </buildCommand>
-    <buildCommand>
-      <name>org.eclipse.wst.common.modulecore.ComponentStructuralBuilderDependencyResolver</name>
-      <arguments/>
-    </buildCommand>
-  </buildSpec>
-  <natures>
-    <nature>org.eclipse.jdt.core.javanature</nature>
-    <nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
-    <nature>org.eclipse.wst.common.modulecore.ModuleCoreNature</nature>
-  </natures>
+	<name>PersonDirectory</name>
+	<comment>Provides a general interface for accessing attributes for a person. Has the capability of aggregating attributes from multiple data sources into a single view.</comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.wst.common.modulecore.ComponentStructuralBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.wst.validation.validationbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.wst.common.modulecore.ComponentStructuralBuilderDependencyResolver</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.maven.ide.eclipse.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.maven.ide.eclipse.maven2Nature</nature>
+		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
+		<nature>org.eclipse.wst.common.modulecore.ModuleCoreNature</nature>
+	</natures>
 </projectDescription>
