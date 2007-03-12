@@ -27,13 +27,27 @@
         <tag>1.0.0</tag>
     </scm>
     <distributionManagement>
+        <site>
+            <id>developer.jasig</id>
+            <url>scp://developer.ja-sig.org/jasig/htdocs/developer/projects/persondirectory</url>
+        </site>
+        <repository>
+            <id>developer.jasig</id>
+            <name>JA-SIG Maven 2 Repository</name>
+            <url>scp://developer.ja-sig.org/jasig/htdocs/developer/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>developer.jasig</id>
+            <name>JA-SIG Maven 2 Repository (Snapshots and Test Builds)</name>
+            <url>scp://developer.ja-sig.org/jasig/htdocs/developer/maven2-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <repositories>
         <repository>
             <id>jasig-repository</id>
             <name>JA-SIG Maven2 Repository</name>
-            <url>scp://developer.ja-sig.org/jasig/htdocs/developer/maven2</url>
+            <url>http://developer.ja-sig.org/maven2-snapshot-repository</url>
         </repository>
-    </distributionManagement>
-    <repositories>
         <repository>
             <id>jasig-repository</id>
             <name>JA-SIG Maven2 Repository</name>
@@ -165,6 +179,7 @@
             <version>2.0.3</version>
             <type>jar</type>
             <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -219,6 +234,7 @@
             <version>1.0</version>
             <type>jar</type>
             <scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
 
 
@@ -281,6 +297,30 @@
                     <execution>
                         <goals>
                             <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
