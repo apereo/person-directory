@@ -17,10 +17,11 @@ import javax.naming.directory.SearchControls;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.ldap.CollectingNameClassPairCallbackHandler;
-import org.springframework.ldap.ContextSource;
-import org.springframework.ldap.LdapTemplate;
-import org.springframework.ldap.SearchExecutor;
+import org.springframework.ldap.core.AttributesMapperCallbackHandler;
+import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.SearchExecutor;
 
 /**
  * LDAP implementation of {@link org.jasig.portal.services.persondir.IPersonAttributeDao}.
@@ -151,7 +152,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
             throw new IllegalStateException("query is null");
 
         final SearchExecutor se = new QuerySearchExecutor(this.baseDN, this.query, args, this.searchControls);
-        final CollectingNameClassPairCallbackHandler attributesMapperCallbackHandler = this.ldapTemplate.new AttributesMapperCallbackHandler(this.attributesMapper);
+        final CollectingNameClassPairCallbackHandler attributesMapperCallbackHandler = new AttributesMapperCallbackHandler(this.attributesMapper);
         
         this.ldapTemplate.search(se, attributesMapperCallbackHandler);
         

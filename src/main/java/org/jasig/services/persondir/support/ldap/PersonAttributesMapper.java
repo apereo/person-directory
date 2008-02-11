@@ -19,7 +19,7 @@ import javax.naming.directory.Attributes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
-import org.springframework.ldap.AttributesMapper;
+import org.springframework.ldap.core.AttributesMapper;
 
 /**
  * Provides {@link net.sf.ldaptemplate.AttributesMapper} for use with a {@link net.sf.ldaptemplate.LdapTemplate}

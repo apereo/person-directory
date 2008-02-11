@@ -16,7 +16,7 @@ import java.util.Set;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.ldap.support.LdapContextSource;
+import org.springframework.ldap.core.support.LdapContextSource;
 
 
 /**

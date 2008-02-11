@@ -11,7 +11,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.springframework.ldap.SearchExecutor;
+import org.springframework.ldap.core.SearchExecutor;
 
 /**
  * Executes a LDAP search using the {@link javax.naming.directory.DirContext#search(java.lang.String, java.lang.String, java.lang.Object[], javax.naming.directory.SearchControls)}
