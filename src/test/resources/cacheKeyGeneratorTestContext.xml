@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+    
+    <bean id="personAttributeDao" class="org.springmodules.cache.interceptor.proxy.CacheProxyFactoryBean">
+        <property name="cacheProviderFacade" ref="cacheProviderFacade" />
+        <property name="cacheKeyGenerator" ref="cacheKeyGenerator" />
+        <property name="target" ref="personAttributeDaoTarget" />
+        <property name="cachingModels">
+            <props>
+                <prop key="get*">cacheName=testCache</prop>
+            </props>
+        </property>
+        <property name="flushingModels">
+            <props>
+                <prop key="update*">cacheNames=testCache</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="cacheProviderFacade" class="org.jasig.services.persondir.mock.MapCacheProviderFacade" />
+    
+    <bean id="cacheKeyGenerator" class="org.jasig.services.persondir.support.AttributeBasedCacheKeyGenerator">
+        <property name="defaultAttributeName" value="userName" />
+        <property name="cacheKeyAttributes">
+            <set>
+                <value>userName</value>
+                <value>uid</value>
+            </set>
+        </property>
+    </bean>
+    
+    <bean id="personAttributeDaoTarget" class="org.jasig.services.persondir.support.ComplexStubPersonAttributeDao">
+        <property name="defaultAttributeName" value="userName" />
+        <property name="backingMap"> <!-- Map<String, Map<String, List<Object>>> -->
+            <map>
+                <entry key="edalquist">
+                    <map>
+                        <entry key="firstName">
+                            <list><value>Eric</value></list>
+                        </entry>
+                        <entry key="lastName">
+                            <list><value>Dalquist</value></list>
+                        </entry>
+                        <entry key="email">
+                            <list><value>e.d@foo.bar</value><value>ed@work.edu</value></list>
+                        </entry>
+                    </map>
+                </entry>
+                <entry key="joeuser">
+                    <map>
+                        <entry key="firstName">
+                            <list><value>Joe</value></list>
+                        </entry>
+                        <entry key="lastName">
+                            <list><value>User</value></list>
+                        </entry>
+                        <entry key="phone">
+                            <list><value>123.456.7890</value><value>098.765.4321</value></list>
+                        </entry>
+                    </map>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
+    
+    <!--
+
+    <bean id="portletDefinitionDao" class="org.jasig.portal.portlet.dao.jpa.JpaPortletDefinitionDao">
+    </bean>
+    
+    <bean id="portletEntityDao" class="org.jasig.portal.portlet.dao.jpa.JpaPortletEntityDao">
+        <property name="portletDefinitionDao" ref="portletDefinitionDao" />
+    </bean>
+
+
+    
+    <aop:config>
+        <aop:aspect ref="threadContextClassLoaderAspect">
+            <aop:pointcut id="hibernateDaoExecution" 
+                expression="execution(* org.jasig.portal.portlet.dao.jpa.*.*(..))"/>
+
+            <aop:around pointcut-ref="hibernateDaoExecution" method="doThreadContextClassLoaderUpdate"/>
+        </aop:aspect>
+    </aop:config>
+    
+    <bean id="threadContextClassLoaderAspect" class="org.jasig.portal.portlet.dao.jpa.ThreadContextClassLoaderAspect" />
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="PortalDb" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+    </bean>
+
+     Adapater that can inject a cacheProvider into the hibernate entity manager 
+    <bean id="jpaVendorAdapter" class="org.jasig.portal.spring.orm.jpa.HibernateJpaVendorAdapter">
+        <property name="databasePlatform" value="${hibernate.dialect}" />
+        <property name="cacheProvider" ref="cacheProvider" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+    
+    
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+    
+    <bean id="rdbmPropertiesPlacholder" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:/properties/rdbm.properties" />
+    </bean>
+    -->
+</beans>

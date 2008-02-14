@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>PersonDirectory</name>
+	<name>PersonDirectory_trunk</name>
 	<comment>Provides a general interface for accessing attributes for a person. Has the capability of aggregating attributes from multiple data sources into a single view.</comment>
 	<projects>
 	</projects>
@@ -15,8 +15,14 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.springframework.ide.eclipse.core.springbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.springframework.ide.eclipse.core.springnature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.maven.ide.eclipse.maven2Nature</nature>
 	</natures>
