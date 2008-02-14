@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faqs title="Frequently Asked Questions">
+     <part id="general">
+         <title>General</title>
+         
+         <faq id="how-to-build">
+             <question>
+                 How do I build the JAR?
+             </question>
+             <answer>
+                 <p>
+                     Person Directory requires <a href="http://maven.apache.org/using/index.html">Maven 2</a>
+                     to build. Once you have Maven use the <source>mvn jar</source> command
+                     to build the JAR. 
+                 </p>
+             </answer>
+         </faq>
+         
+         <faq id="how-to-use">
+             <question>
+                 How do I use the Person Directory service?
+             </question>
+             <answer>
+                 <p>
+                     This Maven generated site is targeted towards development of Person Directory. For
+                     documentation on the available DAO implementations and example configurations please
+                     view the <a href="http://www.ja-sig.org/wiki/display/UPC/PersonDirectory">PersonDirectory</a>
+                     page on the JA-SIG Wiki.
+                 </p>
+             </answer>
+         </faq>
+     </part>
+</faqs>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<author email="erider@unicon.net">Ernest Rider</author>
+		<title>Overview</title>
+	</properties>
+
+	<body>
+		<section name="Person Directory Library">
+			<p>
+				The person directory service provides an interface for retrieving user
+				attributes. There are implementations of the interface which provide
+				easy access to attributes in both LDAP servers and relational database
+				services accessible via JDBC.
+			</p>
+			<p>
+				Other implemenations allow multiple data sources to be used for the
+				aggregation of a single set of user attributes.
+			</p>
+			<p>
+			    All of the PersonDirectory implemenations are designed to be easily
+			    configured using the <a href="http://www.springframework.org">Spring
+			    IoC framework</a>.
+		    </p>
+			<p>
+				This Maven generated site is targeted towards development of Person
+				Directory. For documentation on the available DAO implementations and
+				example configurations please view the 
+				<a href="http://www.ja-sig.org/wiki/display/UPC/PersonDirectory">PersonDirectory</a>
+				page on the JA-SIG Wiki.
+			</p>
+		</section>
+	</body>
+</document>

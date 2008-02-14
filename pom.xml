@@ -10,8 +10,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jasig.service</groupId>
-    <artifactId>person-directory</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>person-directory-parent</artifactId>
+    <packaging>pom</packaging>
     <version>1.1.0-SNAPSHOT</version>
 
     <licenses>
@@ -22,8 +22,8 @@
         </license>
     </licenses>
 
-    <name>Person Directory</name>
-    <description>Provides a general interface for accessing attributes for a person. Has the capability of aggregating attributes from multiple data sources into a single view.</description>
+    <name>Person Directory Parent</name>
+    <description>Parent project for the API and Impl packages.</description>
     <issueManagement>
         <url>http://www.ja-sig.org/issues/browse/PERSONDIR</url>
         <system>Jira</system>
@@ -98,332 +98,107 @@
             <timezone>-7</timezone>
         </contributor>
     </contributors>
-    <dependencies>
-        <!--
-         | Run Time Dependencies
-         +-->
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
+    
+    <properties>
+        <!-- Project Dependency Version Properties -->
+        <commons-collections.version>3.2</commons-collections.version>
+        <commons-dbcp.version>1.2.1</commons-dbcp.version>
+        <commons-lang.version>2.3</commons-lang.version>
+        <commons-logging.version>1.1.1</commons-logging.version>
+        <hsqldb.version>1.8.0.7</hsqldb.version>
+        <junit.version>4.2</junit.version>
+        <log4j.version>1.2.14</log4j.version>
+        <spring-ldap.version>1.2.1</spring-ldap.version>
+        <spring-modules.version>0.8a</spring-modules.version>
+        <springframework.version>2.5.1</springframework.version>
+        
+        <!-- Maven Plugin Dependency Version Properties -->
+        <changelog-maven-plugin.version>2.0-beta-1</changelog-maven-plugin.version>
+        <cobertura-maven-plugin.version>2.2</cobertura-maven-plugin.version>
+        <findbugs-maven-plugin.version>1.1</findbugs-maven-plugin.version>
+        <jdepend-maven-plugin.version>2.0-beta-1</jdepend-maven-plugin.version>
+        <jxr-maven-plugin.version>2.0-beta-1</jxr-maven-plugin.version>
+        <maven-compiler-plugin.version>2.0.2</maven-compiler-plugin.version>
+        <maven-ear-plugin.version>2.3.1</maven-ear-plugin.version>
+        <maven-jar-plugin.version>2.1</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>2.2</maven-javadoc-plugin.version>
+        <maven-pmd-plugin.version>2.2</maven-pmd-plugin.version>
+        <maven-project-info-reports-plugin.version>2.0.1</maven-project-info-reports-plugin.version>
+        <maven-site-plugin.version>2.0-beta-5</maven-site-plugin.version>
+        <maven-source-plugin.version>2.0.4</maven-source-plugin.version>
+        <maven-surefire-plugin.version>2.3.1</maven-surefire-plugin.version>
+        <maven-war-plugin.version>2.1-alpha-1</maven-war-plugin.version>
+        <surefire-report-maven-plugin.version>2.0-beta-1</surefire-report-maven-plugin.version>
+        <taglist-maven-plugin.version>2.0</taglist-maven-plugin.version>
+    </properties>
+    
+    <modules>
+        <module>person-directory-api</module>
+        <module>person-directory-impl</module>
+    </modules>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>2.5.1</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>2.5.1</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>2.5.1</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>2.5.1</version>
-            <type>jar</type>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-         <dependency>
-            <groupId>org.springframework.ldap</groupId>
-            <artifactId>spring-ldap</artifactId>
-            <version>1.2.1</version>
-            <type>jar</type>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springmodules</groupId>
-            <artifactId>spring-modules-cache</artifactId>
-            <version>0.8a</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>gigaspaces</groupId>
-                    <artifactId>gigaspaces-ce</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jini</groupId>
-                    <artifactId>jsk-lib</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jini</groupId>
-                    <artifactId>jsk-platform</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jini</groupId>
-                    <artifactId>mahalo</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jini</groupId>
-                    <artifactId>reggie</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jini</groupId>
-                    <artifactId>start</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jini</groupId>
-                    <artifactId>boot</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jini</groupId>
-                    <artifactId>webster</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-attributes</groupId>
-                    <artifactId>commons-attributes-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-attributes</groupId>
-                    <artifactId>commons-attributes-compiler</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-lang</groupId>
-                    <artifactId>commons-lang</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-collections</groupId>
-                    <artifactId>commons-collections</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>cglib</groupId>
-                    <artifactId>cglib-nodep</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jboss</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jboss</groupId>
-                    <artifactId>jboss-cache</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jboss</groupId>
-                    <artifactId>jboss-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jboss</groupId>
-                    <artifactId>jboss-jmx</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jboss</groupId>
-                    <artifactId>jboss-minimal</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jboss</groupId>
-                    <artifactId>jboss-system</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jcs</groupId>
-                    <artifactId>jcs</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jgroups</groupId>
-                    <artifactId>jgroups-all</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>geronimo-spec</groupId>
-                    <artifactId>geronimo-spec-jta</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xpp3</groupId>
-                    <artifactId>xpp3_min</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xjavadoc</groupId>
-                    <artifactId>xjavadoc</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>ehcache</groupId>
-                    <artifactId>ehcache</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>opensymphony</groupId>
-                    <artifactId>oscache</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>concurrent</groupId>
-                    <artifactId>concurrent</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xstream</groupId>
-                    <artifactId>xstream</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.3</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        
-        <!--
-         | Runtime Dependencies
-         +-->
-
-        <!--
-         | Test Dependencies
-         +-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.2</version>
-            <type>jar</type>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.2.1</version>
-            <type>jar</type>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>xml-apis</groupId>
-                    <artifactId>xml-apis</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xerces</groupId>
-                    <artifactId>xerces</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
-        <dependency>
-            <groupId>hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>1.8.0.7</version>
-            <type>jar</type>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
-            <type>jar</type>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>2.5.1</version>
-            <type>jar</type>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>2.5.1</version>
-            <type>jar</type>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>1.5</source>
+                        <target>1.5</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
+
+
+
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven-project-info-reports-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>surefire-report-maven-plugin</artifactId>
+                <version>${surefire-report-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jxr-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <links>
-                        <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-                        <link>http://static.springframework.org/spring-ldap/docs/1.2.1/api/spring-ldap/</link>
-                        <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
-                        <link>http://jakarta.apache.org/commons/logging/commons-logging-1.1/apidocs/</link>
-                    </links>
-                </configuration>
+                <version>${jxr-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.0</version>
+                <version>${cobertura-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven-pmd-plugin.version}</version>
                 <configuration>
                     <linkXref>true</linkXref>
                     <sourceEncoding>utf-8</sourceEncoding>
@@ -434,15 +209,72 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>changelog-maven-plugin</artifactId>
+                <version>${changelog-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
+                <version>${taglist-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <source>1.5</source>
+                    <aggregate>true</aggregate>
+                    <links>
+                        <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+                        <link>http://static.springframework.org/spring-ldap/docs/1.2.1/api/spring-ldap/</link>
+                        <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
+                        <link>http://jakarta.apache.org/commons/logging/commons-logging-1.1/apidocs/</link>
+                    </links>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+                <version>${jdepend-maven-plugin.version}</version>
             </plugin>
         </plugins>
     </reporting>
+    
+    <profiles>
+        <profile>
+            <id>javadoc-uml</id>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                        <configuration>
+                            <source>1.5</source>
+                            <aggregate>true</aggregate>
+                            <links>
+                                <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+                                <link>http://static.springframework.org/spring-ldap/docs/1.2.1/api/spring-ldap/</link>
+                                <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
+                                <link>http://jakarta.apache.org/commons/logging/commons-logging-1.1/apidocs/</link>
+                            </links>
+                            <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
+                            <docletArtifact>
+                                <groupId>gr.spinellis</groupId>
+                                <artifactId>UmlGraph</artifactId>
+                                <version>4.6</version>
+                            </docletArtifact>
+                            <additionalparam>
+                                -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify -postfixpackage -nodefontsize 9 -nodefontpackagesize 7
+                            </additionalparam>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+    </profiles>
 </project>

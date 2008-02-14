@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Person Directory">
     <bannerLeft>
-        <name>Person Directory</name>
-        <href>http://developer.ja-sig.org/projects/persondirectory/</href>
-    </bannerLeft>
-    <bannerRight>
         <name>JA-SIG</name>
         <src>http://www.ja-sig.org/images/jasig-head.gif</src>
-        <href>http://www.ja-sig.org</href>
+    </bannerLeft>
+    <bannerRight>
+        <name>Person Directory</name>
+        <href>http://developer.ja-sig.org/projects/persondirectory/</href>
     </bannerRight>
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-default-skin</artifactId>
+        <version>1.0</version>
+    </skin>
     <publishDate format="dd MMM yyyy"/>
     <body>
         <links>
@@ -20,7 +24,7 @@
             <item name="What is Person Directory" href="/about.html"/>
             <item name="FAQ" href="/faq.html"/>
         </menu>
-        <menu ref="modules" />
-        <menu ref="reports" />
+
+        ${reports}
     </body>
 </project>

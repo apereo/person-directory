@@ -3,7 +3,7 @@
 *  available online at http://www.uportal.org/license.html
 */
 
-package org.jasig.services.persondir.support;
+package org.jasig.services.persondir;
 
 import java.util.List;
 import java.util.Map;
@@ -11,12 +11,10 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.jasig.services.persondir.IPersonAttributeDao;
-
 /**
  * Test conformance to IPersonAttributeDao interface specified 
  * IllegalArgumentException throwing for illegal invocations of interface methods.
- * @version $Revision$ $Date$
+ * @version $Revision: 43106 $ $Date: 2008-02-14 11:22:40 -0600 (Thu, 14 Feb 2008) $
  */
 public abstract class AbstractPersonAttributeDaoTest extends TestCase {
     

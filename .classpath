@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/test/java"/>
-	<classpathentry excluding="**" kind="src" output="src/test/resources" path="src/test/resources"/>
+	<classpathentry kind="src" path="person-directory-api/src/main/java"/>
+	<classpathentry kind="src" path="person-directory-impl/src/main/java"/>
+	<classpathentry kind="src" path="person-directory-impl/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="person-directory-impl/src/test/resources" path="person-directory-impl/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER/modules"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
