@@ -6,6 +6,7 @@
 package org.jasig.services.persondir.support;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ import java.util.Set;
 /**
  * Simply returns the seed it is passed.
  * 
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
@@ -24,12 +25,12 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
      * @return a Map equal to but not the same reference as the seed.
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    public Map getUserAttributes(final Map seed) {
+    public Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed) {
         if (seed == null) {
             throw new IllegalArgumentException("seed may not be null");
         }
 
-        return new HashMap(seed);
+        return new HashMap<String, List<Object>>(seed);
     }
 
     /**
@@ -37,7 +38,7 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
      * @return null
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
-    public Set getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames() {
         return null;
     }
 

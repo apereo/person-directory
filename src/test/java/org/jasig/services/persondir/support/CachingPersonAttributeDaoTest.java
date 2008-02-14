@@ -5,16 +5,20 @@
 
 package org.jasig.services.persondir.support;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.jasig.services.persondir.util.Util;
 
 
 
 /**
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$
  */
 public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAttributeDaoTest {
@@ -25,26 +29,27 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     /**
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         this.stubDao = new ComplexStubPersonAttributeDao();
         
         super.setUp();
         
-        Map daoBackingMap = new HashMap();
+        Map<String, Map<String, List<Object>>> daoBackingMap = new HashMap<String, Map<String, List<Object>>>();
         
-        Map user1 = new HashMap();
-        user1.put("phone", "777-7777");
-        user1.put("displayName", "Display Name");
+        Map<String, List<Object>> user1 = new HashMap<String, List<Object>>();
+        user1.put("phone", Util.list("777-7777"));
+        user1.put("displayName", Util.list("Display Name"));
         daoBackingMap.put("edalquist", user1);
         
-        Map user2 = new HashMap();
-        user2.put("phone", "888-8888");
-        user2.put("displayName", "");
+        Map<String, List<Object>> user2 = new HashMap<String, List<Object>>();
+        user2.put("phone", Util.list("888-8888"));
+        user2.put("displayName", Util.list(""));
         daoBackingMap.put("awp9", user2);
         
-        Map user3 = new HashMap();
-        user3.put("phone", "666-6666");
-        user3.put("givenName", "Howard");
+        Map<String, List<Object>> user3 = new HashMap<String, List<Object>>();
+        user3.put("phone", Util.list("666-6666"));
+        user3.put("givenName", Util.list("Howard"));
         daoBackingMap.put("erider", user3);
         
         
@@ -54,21 +59,22 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         super.setUp();
     }
     
-    private void validateUser1(Map attrs) {
+    private void validateUser1(Map<String, List<Object>> attrs) {
         assertNotNull("Attribute Map for User1 May not be null", attrs);
-        assertEquals("777-7777", attrs.get("phone"));
-        assertEquals("Display Name", attrs.get("displayName"));
+        assertEquals(Util.list("777-7777"), attrs.get("phone"));
+        assertEquals(Util.list("Display Name"), attrs.get("displayName"));
     }
     
-    private void validateUser2(Map attrs) {
+    private void validateUser2(Map<String, List<Object>> attrs) {
         assertNotNull("Attribute Map for User2 May not be null", attrs);
-        assertEquals("888-8888", attrs.get("phone"));
-        assertEquals("", attrs.get("displayName"));
+        assertEquals(Util.list("888-8888"), attrs.get("phone"));
+        assertEquals(Util.list(""), attrs.get("displayName"));
     }
 
     /**
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         this.stubDao = null;
         
@@ -80,12 +86,12 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setDefaultAttributeName(defaultAttr);
-        dao.setUserInfoCache(new HashMap());
+        dao.setUserInfoCache(new HashMap<Serializable, Map<String, List<Object>>>());
         
         assertEquals("Query count incorrect", 0, dao.getQueries());
         assertEquals("Miss count incorrect", 0, dao.getMisses());
         
-        Map result = dao.getUserAttributes("edalquist");
+        Map<String, List<Object>> result = dao.getUserAttributes("edalquist");
         this.validateUser1(result);
         assertEquals("Query count incorrect", 1, dao.getQueries());
         assertEquals("Miss count incorrect", 1, dao.getMisses());
@@ -122,7 +128,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
     
     public void testCaching() {
-        Map cacheMap = new HashMap();
+        Map<Serializable, Map<String, List<Object>>> cacheMap = new HashMap<Serializable, Map<String, List<Object>>>();
         
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
@@ -131,7 +137,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        Map result = dao.getUserAttributes("edalquist");
+        Map<String, List<Object>> result = dao.getUserAttributes("edalquist");
         this.validateUser1(result);
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
         
@@ -158,10 +164,10 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         assertEquals("Incorrect number of items in cache", 2, cacheMap.size());
         
         
-        Map queryMap = new HashMap();
-        queryMap.put(defaultAttr, "edalquist");
-        queryMap.put("name.first", "Eric");
-        queryMap.put("name.last", "Dalquist");
+        Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        queryMap.put(defaultAttr, Util.list("edalquist"));
+        queryMap.put("name.first", Util.list("Eric"));
+        queryMap.put("name.last", Util.list("Dalquist"));
         
         result = dao.getUserAttributes(queryMap);
         this.validateUser1(result);
@@ -171,9 +177,9 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
     
     public void testMulipleAttributeKeys() {
-        Map cacheMap = new HashMap();
+        Map<Serializable, Map<String, List<Object>>> cacheMap = new HashMap<Serializable, Map<String, List<Object>>>();
         
-        Set keyAttrs = new HashSet();
+        Set<String> keyAttrs = new HashSet<String>();
         keyAttrs.add("name.first");
         keyAttrs.add("name.last");
         
@@ -184,7 +190,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        Map result = dao.getUserAttributes("edalquist");
+        Map<String, List<Object>> result = dao.getUserAttributes("edalquist");
         assertNull(result);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
@@ -196,19 +202,19 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         assertNull(result);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        Map queryMap1 = new HashMap();
-        queryMap1.put(defaultAttr, "edalquist");
-        queryMap1.put("name.first", "Eric");
-        queryMap1.put("name.last", "Dalquist");
+        Map<String, List<Object>> queryMap1 = new HashMap<String, List<Object>>();
+        queryMap1.put(defaultAttr, Util.list("edalquist"));
+        queryMap1.put("name.first", Util.list("Eric"));
+        queryMap1.put("name.last", Util.list("Dalquist"));
         
         result = dao.getUserAttributes(queryMap1);
         this.validateUser1(result);
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
         
         
-        Map queryMap2 = new HashMap();
-        queryMap2.put("name.first", "John");
-        queryMap2.put("name.last", "Doe");
+        Map<String, List<Object>> queryMap2 = new HashMap<String, List<Object>>();
+        queryMap2.put("name.first", Util.list("John"));
+        queryMap2.put("name.last", Util.list("Doe"));
         
         result = dao.getUserAttributes(queryMap2);
         assertNull(result);
@@ -236,10 +242,10 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         
         dao.setCacheKeyAttributes(null);
         assertNull(dao.getCacheKeyAttributes());
-        final Set keyAttrs = new HashSet();
+        final Set<String> keyAttrs = new HashSet<String>();
         keyAttrs.add("name.first");
         keyAttrs.add("name.last");
-        final Set expectedAttrs = new HashSet(keyAttrs);
+        final Set<String> expectedAttrs = new HashSet<String>(keyAttrs);
         dao.setCacheKeyAttributes(keyAttrs);
         assertEquals(expectedAttrs, dao.getCacheKeyAttributes());
         
@@ -251,12 +257,13 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         catch (IllegalArgumentException iae) {
             //expected
         }
-        final Map cacheMap = new HashMap();
-        final Map expectedcacheMap = new HashMap(cacheMap);
+        final Map<Serializable, Map<String, List<Object>>> cacheMap = new HashMap<Serializable, Map<String, List<Object>>>();
+        final Map<Serializable, Map<String, List<Object>>> expectedcacheMap = new HashMap<Serializable, Map<String, List<Object>>>(cacheMap);
         dao.setUserInfoCache(cacheMap);
         assertEquals(expectedcacheMap, dao.getUserInfoCache());
     }
     
+    @SuppressWarnings("unchecked")
     public void testUninitializedDao() {
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         try {
@@ -278,7 +285,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         }
         
         dao = new CachingPersonAttributeDaoImpl();
-        dao.setUserInfoCache(new HashMap());
+        dao.setUserInfoCache(new HashMap<Serializable, Map<String, List<Object>>>());
         try {
             dao.getUserAttributes(Collections.EMPTY_MAP);
             fail("Calling getUserAttributes(Map) with no initialization should result in an IllegalStateException");
@@ -289,7 +296,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
     
     public void testNullCacheKeyInSeed() {
-        Map cacheMap = new HashMap();
+        Map<Serializable, Map<String, List<Object>>> cacheMap = new HashMap<Serializable, Map<String, List<Object>>>();
         
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
@@ -298,27 +305,27 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        Map results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, "edalquist"));
+        Map<String, List<Object>> results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")));
         this.validateUser1(results);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, "edalquist"));
+        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")));
         this.validateUser1(results);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, "nobody"));
+        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, Util.list("nobody")));
         assertNull(results);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, "edalquist"));
+        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")));
         this.validateUser1(results);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
         
-        Map queryMap = new HashMap();
-        queryMap.put(defaultAttr, "edalquist");
-        queryMap.put("name.first", "Eric");
-        queryMap.put("name.last", "Dalquist");
+        Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        queryMap.put(defaultAttr, Util.list("edalquist"));
+        queryMap.put("name.first", Util.list("Eric"));
+        queryMap.put("name.last", Util.list("Dalquist"));
         
         results = dao.getUserAttributes(queryMap);
         this.validateUser1(results);
@@ -332,19 +339,19 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, "edalquist"));
+        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")));
         this.validateUser1(results);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, "edalquist"));
+        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")));
         this.validateUser1(results);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, "nobody"));
+        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, Util.list("nobody")));
         assertNull(results);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, "edalquist"));
+        results = dao.getUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")));
         this.validateUser1(results);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
@@ -355,11 +362,12 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
 
 
+    @Override
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setDefaultAttributeName(defaultAttr);
-        dao.setUserInfoCache(new HashMap());
+        dao.setUserInfoCache(new HashMap<Serializable, Map<String, List<Object>>>());
         
         return dao;
     }

@@ -8,11 +8,9 @@ package org.jasig.services.persondir.support;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.jasig.services.persondir.IPersonAttributeDao;
 
 
 /**
@@ -50,13 +48,13 @@ public class ComplexStubPersonAttributeDao extends AbstractDefaultAttributePerso
      * Map from userids to Maps.  The Map values are maps from
      * attribute names to attribute values.
      */
-    private Map backingMap = Collections.EMPTY_MAP;
+    private Map<String, Map<String, List<Object>>> backingMap = Collections.emptyMap();
     
     /*
      * Set of possible all attribute names that map to an attribute
      * value for some user in our backing map.
      */
-    private Set possibleUserAttributeNames = Collections.EMPTY_SET;
+    private Set<String> possibleUserAttributeNames = Collections.emptySet();
     
     /**
      * Creates a new, empty, dao.
@@ -68,7 +66,7 @@ public class ComplexStubPersonAttributeDao extends AbstractDefaultAttributePerso
      * Creates a new DAO with the specified backing map.
      * @param backingMap The backingMap to call {@link #setBackingMap(Map)} with.
      */
-    public ComplexStubPersonAttributeDao(Map backingMap) {
+    public ComplexStubPersonAttributeDao(Map<String, Map<String, List<Object>>> backingMap) {
         this.setBackingMap(backingMap);
     }
     
@@ -76,41 +74,47 @@ public class ComplexStubPersonAttributeDao extends AbstractDefaultAttributePerso
     /**
      * @return Returns the backingMap.
      */
-    public Map getBackingMap() {
+    public Map<String, Map<String, List<Object>>> getBackingMap() {
         return this.backingMap;
     }
     /**
      * @param backingMap The backingMap to set.
      */
-    public void setBackingMap(Map backingMap) {
+    public void setBackingMap(Map<String, Map<String, List<Object>>> backingMap) {
         if (backingMap == null) {
-            this.backingMap = Collections.EMPTY_MAP;
-            this.possibleUserAttributeNames = Collections.EMPTY_SET;
+            this.backingMap = Collections.emptyMap();
+            this.possibleUserAttributeNames = Collections.emptySet();
         }
         else {
-            this.backingMap = Collections.unmodifiableMap(new HashMap(backingMap));
+            this.backingMap = Collections.unmodifiableMap(new HashMap<String, Map<String, List<Object>>>(backingMap));
             this.initializePossibleAttributeNames();
         }
     }
     
-    /*
+    
+    /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
-    public Set getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames() {
         return this.possibleUserAttributeNames;
     }
     
-    /*
+    /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    public Map getUserAttributes(final Map seed) {
+    public Map<String, List<Object>> getUserAttributes(Map<String, List<Object>> seed) {
         if (seed == null) {
             throw new IllegalArgumentException("Illegal to invoke getUserAttributes(Map) with a null argument.");
         }
 
         final String defaultAttrName = this.getDefaultAttributeName();
-        final String seedValue = (String)seed.get(defaultAttrName);
-        return (Map)this.backingMap.get(seedValue);
+        final List<Object> seedValues = seed.get(defaultAttrName);
+        if (seedValues == null) {
+            return null;
+        }
+
+        final String seedValue =  String.valueOf(seedValues.get(0));
+        return this.backingMap.get(seedValue);
     }
 
     /**
@@ -119,13 +123,14 @@ public class ComplexStubPersonAttributeDao extends AbstractDefaultAttributePerso
      * possibleUserAttributeNames.
      */
     private void initializePossibleAttributeNames() {
-        final Set possibleAttribNames = new HashSet();
+        final Set<String> possibleAttribNames = new HashSet<String>();
         
-        for (final Iterator iter = this.backingMap.values().iterator(); iter.hasNext(); ) {
-            final Map attributeMapForSomeUser = (Map)iter.next();
-            possibleAttribNames.addAll(attributeMapForSomeUser.keySet());
+        for (final Map<String, List<Object>> attributeMapForSomeUser : this.backingMap.values()) {
+            final Set<String> keySet = attributeMapForSomeUser.keySet();
+            possibleAttribNames.addAll(keySet);
         }
         
         this.possibleUserAttributeNames = Collections.unmodifiableSet(possibleAttribNames);
     }
 }
+

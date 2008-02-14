@@ -5,43 +5,38 @@
 
 package org.jasig.services.persondir.support.merger;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.Validate;
 
 /**
  * Merger which implements accumulation of Map entries such that entries once
  * established are individually immutable.
+ * 
  * @author andrew.petro@yale.edu
  * @version $Revision$ $Date$
  */
 public class NoncollidingAttributeAdder implements IAttributeMerger {
 
     /**
-     * For entries in toConsider the keys of which are not keys in toModify, 
-     * adds the entry to toModify and returns toModify.
-     * @param toModify - base Map the entries of which are considered here
-     * to be immutable.
-     * @param toConsider - Map to merge into toModify for all noncolliding keys.
-     * @return toModify with entries the intersection of our method arguments,
-     * with preference given to toModify's existing entries for all key collisions.
+     * Please note that the <code>toModify</code> map is modified.
+     * 
+     * @see org.jasig.portal.services.persondir.support.merger.IAttributeMerger#mergeAttributes(java.util.Map, java.util.Map)
      */
-    public Map mergeAttributes(Map toModify, Map toConsider) {
-        if (toModify == null)
-            throw new IllegalArgumentException("toModify argument illegally null.");
-        if (toConsider == null)
-            throw new IllegalArgumentException("toConsider argument illegally null.");
-        
-        for (final Iterator iter = toConsider.entrySet().iterator(); iter.hasNext();){
-            final Map.Entry entry = (Map.Entry)iter.next();
-            
-            final String key = (String) entry.getKey();
-            
-            if (! toModify.containsKey(key)) {
-                toModify.put(key, entry.getValue());
+    public Map<String, List<Object>> mergeAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider) {
+        Validate.notNull(toModify, "toModify cannot be null");
+        Validate.notNull(toConsider, "toConsider cannot be null");
+
+        for (final Map.Entry<String, List<Object>> sourceEntry : toConsider.entrySet()) {
+            final String sourceKey = sourceEntry.getKey();
+
+            if (!toModify.containsKey(sourceKey)) {
+                final List<Object> sourceValue = sourceEntry.getValue();
+                toModify.put(sourceKey, sourceValue);
             }
         }
-    
+
         return toModify;
     }
-
 }

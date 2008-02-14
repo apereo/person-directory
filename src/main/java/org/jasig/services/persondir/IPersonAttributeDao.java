@@ -5,6 +5,7 @@
 
 package org.jasig.services.persondir;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import java.util.Set;
  * values.
  * 
  * @author andrew.petro@yale.edu
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
@@ -24,13 +25,6 @@ public interface IPersonAttributeDao {
      * Obtains a mutable {@link Map} from attribute names to values for
      * the given query seed which is an immutable Map. The values may be mutable objects but it is
      * recommended that they be immutable.<br>
-     * 
-     * For the returned {@link Map}; Keys must be {@link String}, Values
-     * can be any {@link Object}, they are typically {@link String}s.<br>
-     * 
-     * Values may also be multi-valued, in this case they are of type
-     * {@link java.util.List} and the list contents are the values of the
-     * attribute.<br>
      * 
      * This method returns according to the following rules:<br>
      * <ul>
@@ -51,7 +45,7 @@ public interface IPersonAttributeDao {
      * @return Map from attribute names to values
      * @throws IllegalArgumentException If <code>seed</code> is <code>null.</code>
      */
-    public Map getUserAttributes(final Map seed);
+    public Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed);
 
 
     /**
@@ -64,7 +58,7 @@ public interface IPersonAttributeDao {
      * @return Map from attribute names to values
      * @see #getUserAttributes(Map)
      */
-    public Map getUserAttributes(final String uid);
+    public Map<String, List<Object>> getUserAttributes(final String uid);
 
 
     /**
@@ -78,5 +72,5 @@ public interface IPersonAttributeDao {
      * 
      * @return A {link Set} of possible attribute names for user queries.
      */
-    public Set getPossibleUserAttributeNames();
+    public Set<String> getPossibleUserAttributeNames();
 }

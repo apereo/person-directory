@@ -9,6 +9,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.ldap.core.SearchExecutor;
@@ -17,7 +18,7 @@ import org.springframework.ldap.core.SearchExecutor;
  * Executes a LDAP search using the {@link javax.naming.directory.DirContext#search(java.lang.String, java.lang.String, java.lang.Object[], javax.naming.directory.SearchControls)}
  * method.
  * 
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist 
  * @version $Revision$
  */
 class QuerySearchExecutor implements SearchExecutor {
@@ -54,7 +55,7 @@ class QuerySearchExecutor implements SearchExecutor {
      * @see javax.naming.directory.DirContext#search(java.lang.String, java.lang.String, java.lang.Object[], javax.naming.directory.SearchControls)
      * @see net.sf.ldaptemplate.SearchExecutor#executeSearch(javax.naming.directory.DirContext)
      */
-    public NamingEnumeration executeSearch(DirContext ctx) throws NamingException {
+    public NamingEnumeration<SearchResult> executeSearch(DirContext ctx) throws NamingException {
         return ctx.search(this.baseDn, this.query, this.args, this.controls);
     }
 }

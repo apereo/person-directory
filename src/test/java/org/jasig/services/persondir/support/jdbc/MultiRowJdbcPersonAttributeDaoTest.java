@@ -19,13 +19,14 @@ import javax.sql.DataSource;
 import org.jasig.rdbm.TransientDatasource;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
+import org.jasig.services.persondir.util.Util;
 import org.springframework.jdbc.BadSqlGrammarException;
 
 /**
  * Test the {@link MultiRowJdbcPersonAttributeDao} against a dummy DataSource.
  * 
  * @author andrew.petro@yale.edu
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$ $Date$
  */
 public class MultiRowJdbcPersonAttributeDaoTest 
@@ -33,6 +34,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
     
     private DataSource testDataSource;
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         
@@ -87,6 +89,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         con.close();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         
@@ -117,30 +120,30 @@ public class MultiRowJdbcPersonAttributeDaoTest
     */
    public void testPossibleUserAttributeNames() {
        final String queryAttr = "uid";
-       final List queryAttrList = new LinkedList();
+       final List<String> queryAttrList = new LinkedList<String>();
        queryAttrList.add(queryAttr);
 
        MultiRowJdbcPersonAttributeDao impl = 
            new MultiRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                "SELECT attr_name, attr_val FROM user_table WHERE netid = ?");
        
-       Map columnsToAttributes = new HashMap();
+       Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
        columnsToAttributes.put("name", "firstName");
 
-       Set emailAttributeNames = new HashSet();
+       Set<String> emailAttributeNames = new HashSet<String>();
        emailAttributeNames.add("email");
        emailAttributeNames.add("emailAddress");
        columnsToAttributes.put("email", emailAttributeNames);
        columnsToAttributes.put("shirt_color", "dressShirtColor");
        impl.setAttributeNameMappings(columnsToAttributes);
 
-       Set expectedAttributeNames = new HashSet();
+       Set<String> expectedAttributeNames = new HashSet<String>();
        expectedAttributeNames.add("firstName");
        expectedAttributeNames.add("email");
        expectedAttributeNames.add("emailAddress");
        expectedAttributeNames.add("dressShirtColor");
        
-       Set attributeNames = impl.getPossibleUserAttributeNames();
+       Set<String> attributeNames = impl.getPossibleUserAttributeNames();
        assertEquals(attributeNames, expectedAttributeNames);
    }
 
@@ -149,7 +152,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
     */
    public void testSingleAttrQuery() {
        final String queryAttr = "uid";
-       final List queryAttrList = new LinkedList();
+       final List<String> queryAttrList = new LinkedList<String>();
        queryAttrList.add(queryAttr);
 
        MultiRowJdbcPersonAttributeDao impl = 
@@ -158,9 +161,9 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
        impl.setDefaultAttributeName(queryAttr);
        
-       Map columnsToAttributes = new HashMap();
+       Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
        columnsToAttributes.put("name", "firstName");
-       Set emailAttributeNames = new HashSet();
+       Set<String> emailAttributeNames = new HashSet<String>();
        emailAttributeNames.add("email");
        emailAttributeNames.add("emailAddress");
        columnsToAttributes.put("email", emailAttributeNames);
@@ -170,16 +173,13 @@ public class MultiRowJdbcPersonAttributeDaoTest
        
        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
        
-       
-       
-       
 
-       Map attribs = impl.getUserAttributes("awp9");
-       assertEquals("andrew.petro@yale.edu", attribs.get("email"));
-       assertEquals("andrew.petro@yale.edu", attribs.get("emailAddress"));
-       assertEquals("blue", attribs.get("dressShirtColor"));
+       Map<String, List<Object>> attribs = impl.getUserAttributes("awp9");
+       assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
+       assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
+       assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
        assertNull(attribs.get("shirt_color"));
-       assertEquals("Andrew", attribs.get("firstName"));
+       assertEquals(Util.list("Andrew"), attribs.get("firstName"));
    }
 
    /**
@@ -187,7 +187,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
     */
    public void testInvalidColumnName() {
        final String queryAttr = "uid";
-       final List queryAttrList = new LinkedList();
+       final List<String> queryAttrList = new LinkedList<String>();
        queryAttrList.add(queryAttr);
 
        MultiRowJdbcPersonAttributeDao impl = 
@@ -196,7 +196,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
        impl.setDefaultAttributeName(queryAttr);
        
-       Map columnsToAttributes = new HashMap();
+       Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
        columnsToAttributes.put("name", "firstName");
 
        columnsToAttributes.put("email", "emailAddress");
@@ -229,7 +229,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
     */
    public void testSetNullAttributeMapping() {
        final String queryAttr = "uid";
-       final List queryAttrList = new LinkedList();
+       final List<String> queryAttrList = new LinkedList<String>();
        queryAttrList.add(queryAttr);
 
        MultiRowJdbcPersonAttributeDao impl = 
@@ -238,10 +238,10 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
        impl.setDefaultAttributeName(queryAttr);
        
-       Map columnsToAttributes = new HashMap();
+       Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
        columnsToAttributes.put("name", "firstName");
 
-       Set emailAttributeNames = new HashSet();
+       Set<String> emailAttributeNames = new HashSet<String>();
        emailAttributeNames.add("email");
        emailAttributeNames.add("emailAddress");
        columnsToAttributes.put("email", emailAttributeNames);
@@ -250,11 +250,11 @@ public class MultiRowJdbcPersonAttributeDaoTest
        
        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-       Map attribs = impl.getUserAttributes("awp9");
-       assertEquals("andrew.petro@yale.edu", attribs.get("email"));
-       assertEquals("andrew.petro@yale.edu", attribs.get("emailAddress"));
-       assertEquals("blue", attribs.get("shirt_color"));
-       assertEquals("Andrew", attribs.get("firstName"));
+       Map<String, List<Object>> attribs = impl.getUserAttributes("awp9");
+       assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
+       assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
+       assertEquals(Util.list("blue"), attribs.get("shirt_color"));
+       assertEquals(Util.list("Andrew"), attribs.get("firstName"));
    }
 
    /**
@@ -262,14 +262,14 @@ public class MultiRowJdbcPersonAttributeDaoTest
     */
    public void testSetNullAttributeName() {
        final String queryAttr = "uid";
-       final List queryAttrList = new LinkedList();
+       final List<String> queryAttrList = new LinkedList<String>();
        queryAttrList.add(queryAttr);
 
        MultiRowJdbcPersonAttributeDao impl = 
            new MultiRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                "SELECT attr_name, attr_val FROM user_table WHERE netid = ?");
 
-       Map columnsToAttributes = new HashMap();
+       Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
        columnsToAttributes.put("", "dressShirtColor");
        
        try {
@@ -286,7 +286,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
     */
    public void testSetEmptyAttributeMapping() {
        final String queryAttr = "uid";
-       final List queryAttrList = new LinkedList();
+       final List<String> queryAttrList = new LinkedList<String>();
        queryAttrList.add(queryAttr);
 
        MultiRowJdbcPersonAttributeDao impl = 
@@ -308,7 +308,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
     */
    public void testNullAttrQuery() {
        final String queryAttr = "uid";
-       final List queryAttrList = new LinkedList();
+       final List<String> queryAttrList = new LinkedList<String>();
        queryAttrList.add(queryAttr);
 
        MultiRowJdbcPersonAttributeDao impl = 
@@ -317,16 +317,16 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
        impl.setDefaultAttributeName(queryAttr);
        
-       Map columnsToAttributes = new HashMap();
+       Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
        columnsToAttributes.put("name", "firstName");
        columnsToAttributes.put("shirt_color", "dressShirtColor");
        impl.setAttributeNameMappings(columnsToAttributes);
        
        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-       Map attribs = impl.getUserAttributes("susan");
-       assertNull(attribs.get("dressShirtColor"));
-       assertEquals("Susan", attribs.get("firstName"));
+       Map<String, List<Object>> attribs = impl.getUserAttributes("susan");
+       assertEquals(Collections.singletonList(null), attribs.get("dressShirtColor"));
+       assertEquals(Util.list("Susan"), attribs.get("firstName"));
    }
    
    
@@ -337,7 +337,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
     public void testMultiAttrQuery() {
         final String queryAttr1 = "uid";
         final String queryAttr2 = "shirtColor";
-        final List queryAttrList = new LinkedList();
+        final List<String> queryAttrList = new LinkedList<String>();
         queryAttrList.add(queryAttr1);
         queryAttrList.add(queryAttr2);
 
@@ -345,19 +345,19 @@ public class MultiRowJdbcPersonAttributeDaoTest
             new MultiRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                 "SELECT attr_name, attr_val FROM user_table WHERE netid = ? AND attr_val = ?");
 
-        Map columnsToAttributes = new HashMap();
+        Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
         columnsToAttributes.put("shirt_color", "color");
         impl.setAttributeNameMappings(columnsToAttributes);
         
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-        Map queryMap = new HashMap();
-        queryMap.put(queryAttr1, "awp9");
-        queryMap.put(queryAttr2, "blue");
-        queryMap.put("Name", "John");
+        Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        queryMap.put(queryAttr1, Util.list("awp9"));
+        queryMap.put(queryAttr2, Util.list("blue"));
+        queryMap.put("Name",Util.list("John"));
 
-        Map attribs = impl.getUserAttributes(queryMap);
-        assertEquals("blue", attribs.get("color"));
+        Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+        assertEquals(Util.list("blue"), attribs.get("color"));
     }
 
     
@@ -368,7 +368,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
     public void testInsufficientAttrQuery() {
         final String queryAttr1 = "uid";
         final String queryAttr2 = "shirtColor";
-        final List queryAttrList = new LinkedList();
+        final List<String> queryAttrList = new LinkedList<String>();
         queryAttrList.add(queryAttr1);
         queryAttrList.add(queryAttr2);
 
@@ -376,10 +376,10 @@ public class MultiRowJdbcPersonAttributeDaoTest
             new MultiRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                 "SELECT name, email FROM user_table WHERE netid = ? AND shirt_color = ?");
 
-        Map columnsToAttributes = new HashMap();
+        Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
         columnsToAttributes.put("name", "firstName");
 
-        Set emailAttributeNames = new HashSet();
+        Set<String> emailAttributeNames = new HashSet<String>();
         emailAttributeNames.add("email");
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
@@ -387,28 +387,28 @@ public class MultiRowJdbcPersonAttributeDaoTest
         
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-        Map queryMap = new HashMap();
-        queryMap.put(queryAttr1, "awp9");
-        queryMap.put("Name", "John");
+        Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        queryMap.put(queryAttr1, Util.list("awp9"));
+        queryMap.put("Name", Util.list("John"));
 
-        Map attribs = impl.getUserAttributes(queryMap);
+        Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
         assertNull(attribs);
     }
     
     public void testProperties() {
         final String queryAttr = "shirt";
-        final List queryAttrList = new LinkedList();
+        final List<String> queryAttrList = new LinkedList<String>();
         queryAttrList.add(queryAttr);
 
         MultiRowJdbcPersonAttributeDao impl = 
             new MultiRowJdbcPersonAttributeDao(testDataSource, queryAttrList,
                 "SELECT netid, name, email FROM user_table WHERE shirt_color = ?");
         
-        Map columnsToAttributes = new HashMap();
+        Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
         columnsToAttributes.put("netid", "uid");
         columnsToAttributes.put("name", "firstName");
         
-        Map expectedColumnsToAttributes = new HashMap();
+        Map<String, Object> expectedColumnsToAttributes = new HashMap<String, Object>();
         expectedColumnsToAttributes.put("netid", Collections.singleton("uid"));
         expectedColumnsToAttributes.put("name", Collections.singleton("firstName"));
 
@@ -432,9 +432,10 @@ public class MultiRowJdbcPersonAttributeDaoTest
         
     }
 
+    @Override
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         final String queryAttr = "shirt";
-        final List queryAttrList = new LinkedList();
+        final List<String> queryAttrList = new LinkedList<String>();
         queryAttrList.add(queryAttr);
         MultiRowJdbcPersonAttributeDao impl = 
             new MultiRowJdbcPersonAttributeDao(this.testDataSource, queryAttrList,

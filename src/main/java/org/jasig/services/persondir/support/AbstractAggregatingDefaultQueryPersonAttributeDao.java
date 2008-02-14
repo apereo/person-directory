@@ -8,14 +8,15 @@ package org.jasig.services.persondir.support;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.support.merger.IAttributeMerger;
 import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
+import org.springframework.beans.factory.annotation.Required;
 
 
 /**
@@ -62,14 +63,14 @@ import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
  *     </tr>
  * </table>
  * 
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$
  */
 public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     /**
      * A List of child IPersonAttributeDao instances which we will poll in order.
      */
-    protected List personAttributeDaos;
+    protected List<IPersonAttributeDao> personAttributeDaos;
     
     /**
      * Strategy for merging together the results from successive PersonAttributeDaos.
@@ -91,31 +92,29 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * 
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    public final Map getUserAttributes(final Map seed) {
-        //Ensure the arguements and state are valid
-        if (seed == null)
-            throw new IllegalArgumentException("The query seed Map cannot be null.");
+    public Map<String, List<Object>> getUserAttributes(Map<String, List<Object>> seed) {
+        Validate.notNull(seed, "seed may not be null.");
         
-        if (this.personAttributeDaos == null)
-            throw new IllegalStateException("No IPersonAttributeDaos have been specified.");
-        
+        if (this.personAttributeDaos == null) {
+            throw new IllegalStateException("personAttributeDaos property must be set");
+        }
+
         //Initialize null, so that if none of the sub-DAOs find the user null is returned appropriately
-        Map resultAttributes = null;
+        Map<String, List<Object>> resultAttributes = null;
         
         //Denotes that this is the first time we are running a query and the original seed should be used
         boolean isFirstQuery = true;
         
         //Iterate through the configured IPersonAttributeDaos, querying each.
-        for (final Iterator iter = this.personAttributeDaos.iterator(); iter.hasNext();) {
-            final IPersonAttributeDao currentlyConsidering = (IPersonAttributeDao)iter.next();
-            
-            Map currentAttributes = new HashMap();
+        for (final IPersonAttributeDao currentlyConsidering : this.personAttributeDaos) {
+            Map<String, List<Object>> currentAttributes = new HashMap<String, List<Object>>();
             try {
-                if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Getting attributes for seed='" + seed + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='" + currentlyConsidering + "', resultAttributes='" + resultAttributes + "'");
-                }
                 currentAttributes = this.getAttributesFromDao(seed, isFirstQuery, currentlyConsidering, resultAttributes);
                 isFirstQuery = false;
+
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Retrieved attributes='" + currentAttributes + "' for seed='" + seed + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='" + currentlyConsidering + "', resultAttributes='" + resultAttributes + "'");
+                }
             }
             catch (final RuntimeException rte) {
                 if (this.recoverExceptions) {
@@ -137,6 +136,10 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             }
         }
         
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Aggregated attributes '" + resultAttributes + "' for seed='" + seed + "'");
+        }
+        
         return resultAttributes;
     }
     
@@ -150,7 +153,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * @param resultAttributes The Map of results from all previous queries, may be null.
      * @return The results from the call to the DAO, follows the same rules as {@link IPersonAttributeDao#getUserAttributes(Map)}.
      */
-    protected abstract Map getAttributesFromDao(final Map seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Map resultAttributes);
+    protected abstract Map<String, List<Object>> getAttributesFromDao(final Map<String, List<Object>> seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Map<String, List<Object>> resultAttributes);
     
     
     /**
@@ -164,18 +167,17 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * 
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
-    public Set getPossibleUserAttributeNames() {
-        final Set attrNames = new HashSet();
+    public final Set<String> getPossibleUserAttributeNames() {
+        final Set<String> attrNames = new HashSet<String>();
         
-        for (final Iterator iter = this.personAttributeDaos.iterator(); iter.hasNext();) {
-            final IPersonAttributeDao currentDao = (IPersonAttributeDao)iter.next();
-            
-            Set currentDaoAttrNames = null;
+        for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
+            Set<String> currentDaoAttrNames = null;
             try {
-                if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Getting possible attribute names from '" + currentDao + "'");
-                }
                 currentDaoAttrNames = currentDao.getPossibleUserAttributeNames();
+                
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Retrieved possible attribute names '" + currentDaoAttrNames + "' from '" + currentDao + "'");
+                }
             }
             catch (final RuntimeException rte) {
                 if (this.recoverExceptions) {
@@ -187,8 +189,13 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                 }
             }
             
-            if (currentDaoAttrNames != null)
+            if (currentDaoAttrNames != null) {
                 attrNames.addAll(currentDaoAttrNames);
+            }
+        }
+        
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Aggregated possible attribute names '" + attrNames + "'");
         }
         
         return Collections.unmodifiableSet(attrNames);
@@ -199,10 +206,9 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * 
      * @return Returns the attrMerger.
      */
-    public IAttributeMerger getMerger() {
+    public final IAttributeMerger getMerger() {
         return this.attrMerger;
     }
-    
     /**
      * Set the strategy whereby we accumulate attributes from the results of 
      * polling our delegates.
@@ -210,33 +216,28 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * @param merger The attrMerger to set.
      * @throws IllegalArgumentException If merger is <code>null</code>.
      */
-    public void setMerger(final IAttributeMerger merger) {
-        if (merger == null)
-            throw new IllegalArgumentException("The merger cannot be null");
-            
+    public final void setMerger(final IAttributeMerger merger) {
+        Validate.notNull(merger, "The IAttributeMerger cannot be null");
         this.attrMerger = merger;
     }
-    
     
     /**
      * Get an unmodifiable {@link List} of delegates which we will poll for attributes.
      * 
      * @return Returns the personAttributeDaos.
      */
-    public List getPersonAttributeDaos() {
+    public final List<IPersonAttributeDao> getPersonAttributeDaos() {
         return this.personAttributeDaos;
     }
-    
     /**
      * Set the {@link List} of delegates which we will poll for attributes.
      * 
      * @param daos The personAttributeDaos to set.
      * @throws IllegalArgumentException If daos is <code>null</code>.
      */
-    public void setPersonAttributeDaos(final List daos) {
-        if (daos == null)
-            throw new IllegalArgumentException("The dao list cannot be null");
-            
+    @Required
+    public final void setPersonAttributeDaos(final List<IPersonAttributeDao> daos) {
+        Validate.notNull(daos, "The IPersonAttributeDao List cannot be null");
         this.personAttributeDaos = Collections.unmodifiableList(daos);
     }
     
@@ -246,10 +247,9 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * 
      * @return true if will recover exceptions, false otherwise
      */
-    public boolean isRecoverExceptions() {
+    public final boolean isRecoverExceptions() {
         return this.recoverExceptions;
     }
-    
     /**
      * Set to true if you would like this class to swallow RuntimeExceptions
      * thrown by its delegates.  This allows it to recover if a particular attribute
@@ -260,7 +260,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * 
      * @param recover whether you would like exceptions recovered internally
      */
-    public void setRecoverExceptions(boolean recover) {
+    public final void setRecoverExceptions(boolean recover) {
         this.recoverExceptions = recover;
     }
 }

@@ -5,21 +5,22 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.Validate;
+
 
 
 /**
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
@@ -57,31 +58,20 @@ public final class MultivaluedPersonAttributeUtils {
      * @return a Map from String to Set of Strings
      * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
      */
-    public static Map parseAttributeToAttributeMapping(final Map mapping) {
+    @SuppressWarnings("unchecked")
+    public static Map<String, Set<String>> parseAttributeToAttributeMapping(final Map<String, ? extends Object> mapping) {
         //null is assumed to be an empty map
         if (mapping == null) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
-        //do a defenisve copy of the map
-        final Map mappedAttributesBuilder = new HashMap();
         
-        for (final Iterator sourceAttrNameItr = mapping.keySet().iterator(); sourceAttrNameItr.hasNext(); ) {
-            final Object key = sourceAttrNameItr.next();
+        final Map<String, Set<String>> mappedAttributesBuilder = new HashMap<String, Set<String>>();
+        
+        for (final Map.Entry<String, ? extends Object> mappingEntry : mapping.entrySet()) {
+            final String sourceAttrName = mappingEntry.getKey();
+            Validate.notNull(sourceAttrName, "attribute name can not be null in Map");
             
-            //The key must exist
-            if (key == null) {
-                throw new IllegalArgumentException("The map from attribute names to attributes must not have any null keys.");
-            }
-            
-            // the key must be of type String
-            if (! (key instanceof String)) {
-                throw new IllegalArgumentException("The map from attribute names to attributes must only have String keys.  Encountered a key of class [" + key.getClass().getName() + "]");
-            }
-            
-            final String sourceAttrName = (String) key;
-            
-                    
-            final Object mappedAttribute = mapping.get(sourceAttrName);
+            final Object mappedAttribute = mappingEntry.getValue();
             
             //Create a mapping to null
             if (mappedAttribute == null) {
@@ -89,25 +79,17 @@ public final class MultivaluedPersonAttributeUtils {
             }
             //Create a single item set for the string mapping
             else if (mappedAttribute instanceof String) {
-                final Set mappedSet = Collections.singleton(mappedAttribute);
+                final Set<String> mappedSet = Collections.singleton((String)mappedAttribute);
                 mappedAttributesBuilder.put(sourceAttrName, mappedSet);
             }
             //Create a defenisve copy of the mapped set & verify its contents are strings
             else if (mappedAttribute instanceof Set) {
-                final Set sourceSet = (Set)mappedAttribute;
-                final Set mappedSet = new HashSet();
+                final Set<String> sourceSet = (Set<String>)mappedAttribute;
                 
-                for (final Iterator sourceSetItr = sourceSet.iterator(); sourceSetItr.hasNext(); ) {
-                    final Object mappedAttributeName = sourceSetItr.next();
-                    
-                    if (mappedAttributeName instanceof String) {
-                        mappedSet.add(mappedAttributeName);
-                    }
-                    else {
-                        throw new IllegalArgumentException("Invalid mapped type. key='" + sourceAttrName + "', value type='" + mappedAttribute.getClass().getName() + "', sub value type='" + mappedAttributeName.getClass().getName() + "'");
-                    }
-                }
+                //Verify the collection only contains strings.
+                CollectionUtils.typedCollection(sourceSet, String.class);
                 
+                final Set<String> mappedSet = new HashSet<String>(sourceSet);
                 mappedAttributesBuilder.put(sourceAttrName, Collections.unmodifiableSet(mappedSet));
             }
             //Not a valid type for the mapping
@@ -133,67 +115,27 @@ public final class MultivaluedPersonAttributeUtils {
      * @param value The value to add for the key.
      * @throws IllegalArgumentException if any argument is null
      */
-    public static void addResult(final Map results, final Object key, final Object value) {
+    @SuppressWarnings("unchecked")
+    public static <K, V> void addResult(final Map<K, List<V>> results, final K key, final Object value) {
+        Validate.notNull(results, "Cannot add a result to a null map.");
+        Validate.notNull(key, "Cannot add a result with a null key.");
         
-        if (results == null) {
-            throw new IllegalArgumentException("Cannot add a result to a null map.");
-        }
-        
-        if (key == null) {
-            throw new IllegalArgumentException("Cannot add a result with a null key.");
-        }
-        
+        // don't put null values into the Map.
         if (value == null) {
-            return; /* don't put null values into the Map. */
+            return; 
         }
         
-        final Object currentValue = results.get(key);
-
-        //Key doesn't have a value yet, add the value 
+        List<V> currentValue = results.get(key);
         if (currentValue == null) {
-            results.put(key, value);
+            currentValue = new LinkedList<V>();
+            results.put(key, currentValue);
         }
-        //Set of values
-        else if (value instanceof List) {
-            final List newValues = (List)value;
-            
-            //Key exists with List, add to it
-            if (currentValue instanceof List) {
-                final List values = (List)currentValue;
-                
-                values.addAll(newValues);
-
-                results.put(key, values);
-            }
-            //Key exists with a single value, create a List
-            else {
-                final List values = new ArrayList(newValues.size() + 1);
-
-                values.add(currentValue);
-                values.addAll(newValues);
-                
-                results.put(key, values);
-            }
+        
+        if (value instanceof List) {
+            currentValue.addAll((List<V>)value);
         }
-        //Standard value
         else {
-            //Key exists with List, add to it
-            if (currentValue instanceof List) {
-                final List values = (List)currentValue;
-                
-                values.add(value);
-
-                results.put(key, values);
-            }
-            //Key exists with a single value, create a List
-            else {
-                final List values = new ArrayList(2);
-                
-                values.add(currentValue);
-                values.add(value);
-                
-                results.put(key, values);
-            }
+            currentValue.add((V)value);
         }
     }
     
@@ -204,26 +146,22 @@ public final class MultivaluedPersonAttributeUtils {
      * @param source The {@link Collection} to flatten.
      * @return A flattened {@link Collection} that contains all entries from all levels of <code>source</code>.
      */
-    public static Collection flattenCollection(final Collection source) {
+    @SuppressWarnings("unchecked")
+    public static <T> Collection<T> flattenCollection(final Collection<? extends Object> source) {
+        Validate.notNull(source, "Cannot flatten a null collection.");
         
-        if (source == null) {
-            throw new IllegalArgumentException("Cannot flatten a null collection.");
-        }
+        final Collection<T> result = new LinkedList<T>();
         
-        final Collection result = new LinkedList();
-        
-        for (final Iterator setItr = source.iterator(); setItr.hasNext();) {
-            final Object value = setItr.next();
-            
+        for (final Object value : source) {
             if (value instanceof Collection) {
-                final Collection flatCollection = flattenCollection((Collection)value);
-                result.addAll(flatCollection);
+                final Collection<Object> flatCollection = flattenCollection((Collection<Object>)value);
+                result.addAll((Collection<T>)flatCollection);
             }
             else {
-                result.add(value);
+                result.add((T)value);
             }   
         }
-        
+
         return result;
     }
     

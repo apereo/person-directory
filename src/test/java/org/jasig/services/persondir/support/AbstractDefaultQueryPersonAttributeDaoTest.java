@@ -6,21 +6,24 @@
 package org.jasig.services.persondir.support;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.util.Util;
 
 /**
  * Provides base tests for classes that implement AbstractDefaultAttributePersonAttributeDao.
  * 
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$
  */
 public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
     /**
      * @see org.jasig.portal.services.persondir.support.AbstractPersonAttributeDaoTest#getPersonAttributeDaoInstance()
      */
+    @Override
     protected final IPersonAttributeDao getPersonAttributeDaoInstance() {
         return this.getAbstractDefaultQueryPersonAttributeDao();
     }
@@ -47,8 +50,8 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
     public void testGetAttributesByString() {
         AbstractDefaultAttributePersonAttributeDao dao = new SimpleDefaultQueryPersonAttributeDao();
         dao.setDefaultAttributeName("TestAttrName");
-        Map expected = new HashMap();
-        expected.put("TestAttrName", "edalquist");
+        Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        expected.put("TestAttrName", Util.list("edalquist"));
         
         assertEquals(expected, dao.getUserAttributes("edalquist"));
     }
@@ -57,14 +60,14 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         /**
          * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
          */
-        public Set getPossibleUserAttributeNames() {
+        public Set<String> getPossibleUserAttributeNames() {
             return null;
         }
 
         /**
          * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
          */
-        public Map getUserAttributes(Map seed) {
+        public Map<String, List<Object>> getUserAttributes(Map<String, List<Object>> seed) {
             return seed;
         }
     }

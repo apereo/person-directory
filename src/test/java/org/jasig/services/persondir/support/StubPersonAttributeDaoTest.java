@@ -8,10 +8,12 @@ package org.jasig.services.persondir.support;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.util.Util;
 
 
 /**
@@ -22,13 +24,14 @@ public class StubPersonAttributeDaoTest
     extends AbstractPersonAttributeDaoTest {
 
     private StubPersonAttributeDao testInstance;
-    private Map backingMap;
+    private Map<String, List<Object>> backingMap;
     
     
+    @Override
     protected void setUp() throws Exception {
-        Map map = new HashMap();
-        map.put("shirtColor", "blue");
-        map.put("phone", "777-7777");
+        Map<String, List<Object>> map = new HashMap<String, List<Object>>();
+        map.put("shirtColor", Util.list("blue"));
+        map.put("phone", Util.list("777-7777"));
         
         this.backingMap = map;
         
@@ -44,10 +47,10 @@ public class StubPersonAttributeDaoTest
      * possible attribute names.
      */
     public void testGetPossibleUserAttributeNames() {
-        HashSet expectedAttributeNames = new HashSet();
+        Set<String> expectedAttributeNames = new HashSet<String>();
         expectedAttributeNames.add("shirtColor");
         expectedAttributeNames.add("phone");
-        Set possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
+        Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
         assertEquals(expectedAttributeNames, possibleAttributeNames);
         
         StubPersonAttributeDao nullBacking = new StubPersonAttributeDao();
@@ -55,8 +58,8 @@ public class StubPersonAttributeDaoTest
     }
 
     public void testGetUserAttributesMap() {
-        assertSame(this.backingMap, this.testInstance.getUserAttributes(new HashMap()));
-        assertEquals(this.backingMap, this.testInstance.getUserAttributes(new HashMap()));
+        assertSame(this.backingMap, this.testInstance.getUserAttributes(new HashMap<String, List<Object>>()));
+        assertEquals(this.backingMap, this.testInstance.getUserAttributes(new HashMap<String, List<Object>>()));
 
     }
 
@@ -69,6 +72,7 @@ public class StubPersonAttributeDaoTest
         assertSame(this.backingMap, this.testInstance.getBackingMap());
     }
 
+    @Override
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {
         return this.testInstance;
     }

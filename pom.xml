@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.jasig</groupId>
         <artifactId>jasig-parent</artifactId>
-        <version>1</version>
+        <version>6</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jasig.service</groupId>
     <artifactId>person-directory</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.1</version>
+    <version>1.1.0-SNAPSHOT</version>
 
     <name>Person Directory</name>
     <description>Provides a general interface for accessing attributes for a person. Has the capability of aggregating attributes from multiple data sources into a single view.</description>
@@ -24,7 +24,6 @@
         <url>http://developer.ja-sig.org/source/changelog/jasigsvn/person-directory</url>
         <developerConnection>scm:svn:https://${maven.username}@developer.ja-sig.org/svn/person-directory/</developerConnection>
         <connection>scm:svn:https://developer.ja-sig.org/svn/person-directory/</connection>
-        <tag>1.0.1</tag>
     </scm>
     <repositories>
         <repository>
@@ -102,7 +101,15 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
-        
+        <!-- 
+        <dependency>
+            <groupId>net.sourceforge.collections</groupId>
+            <artifactId>collections-generic</artifactId>
+            <version>4.01</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -138,7 +145,7 @@
 
          <dependency>
             <groupId>org.springframework.ldap</groupId>
-            <artifactId>spring-ldap-tiger</artifactId>
+            <artifactId>spring-ldap</artifactId>
             <version>1.2.1</version>
             <type>jar</type>
             <scope>compile</scope>

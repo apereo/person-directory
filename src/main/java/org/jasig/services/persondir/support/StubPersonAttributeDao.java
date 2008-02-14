@@ -6,6 +6,7 @@
 package org.jasig.services.persondir.support;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,55 +40,54 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  * @since uPortal 2.5
  */
 public class StubPersonAttributeDao implements IPersonAttributeDao {
-    private Map backingMap = null;
-    
+    private Map<String, List<Object>> backingMap = null;
+
     public StubPersonAttributeDao() {
     }
-    
-    public StubPersonAttributeDao(Map backingMap) {
+
+    public StubPersonAttributeDao(Map<String, List<Object>> backingMap) {
         this.setBackingMap(backingMap);
     }
-    
-    public Set getPossibleUserAttributeNames() {
+
+    public Set<String> getPossibleUserAttributeNames() {
         if (this.backingMap == null) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
-        
+
         return Collections.unmodifiableSet(this.backingMap.keySet());
     }
-    
-    public Map getUserAttributes(final Map seed) {
+
+    public Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed) {
         if (seed == null) {
             throw new IllegalArgumentException("Illegal to invoke getUserAttributes(Map) with a null argument.");
         }
         return this.backingMap;
     }
-    
-    public Map getUserAttributes(final String uid) {
+
+    public Map<String, List<Object>> getUserAttributes(final String uid) {
         if (uid == null) {
             throw new IllegalArgumentException("Illegal to invoke getUserAttributes(String) with a null argument.");
         }
         return this.backingMap;
     }
-    
-    
+
     /**
      * Get the Map which this stub object will return for all legal invocations of
      * attributesForUser()
      * 
      * @return Returns the backingMap.
      */
-    public Map getBackingMap() {
+    public Map<String, List<Object>> getBackingMap() {
         return this.backingMap;
     }
-    
+
     /**
      * Set the Map which this stub object will return for all legal invocations of
      * attributesForUser().
      * 
      * @param backingMap The backingMap to set, may not be null.
      */
-    public void setBackingMap(final Map backingMap) {
+    public void setBackingMap(final Map<String, List<Object>> backingMap) {
         this.backingMap = backingMap;
     }
 }

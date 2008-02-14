@@ -5,32 +5,31 @@
 
 package org.jasig.services.persondir.support.merger;
 
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.Validate;
 
 /**
  * Attribute merge strategy whereby considered attributes over-write
  * previously set values for attributes with colliding names.
+ * 
  * @author andrew.petro@yale.edu
  * @version $Revision$ $Date$
  */
-public class ReplacingAttributeAdder 
-    implements IAttributeMerger {
+public class ReplacingAttributeAdder implements IAttributeMerger {
 
     /**
-     * Simply puts all the values in toConsider into toModify and returns toModify.
-     * This means that for keys in both toConsider and toModify, the
-     * value in toConsider will be controlling.
-     * @param toModify - the Map we are to modify
-     * @param toConsider - the Map we are to consider in modifying toModify
-     * @return the result of toModify.putAll(toConsider)
+     * Please note that the <code>toModify</code> map is modified.
+     * 
+     * @see org.jasig.portal.services.persondir.support.merger.IAttributeMerger#mergeAttributes(java.util.Map, java.util.Map)
      */
-    public Map mergeAttributes(Map toModify, Map toConsider) {
-        if (toModify == null)
-            throw new IllegalArgumentException("toModify illegally null");
-        if (toConsider == null)
-            throw new IllegalArgumentException("toConsider illegally null");
+    public Map<String, List<Object>> mergeAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider) {
+        Validate.notNull(toModify, "toModify cannot be null");
+        Validate.notNull(toConsider, "toConsider cannot be null");
         
         toModify.putAll(toConsider);
+        
         return toModify;
     }
 }

@@ -5,11 +5,11 @@
 
 package org.jasig.services.persondir.support.merger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.Validate;
 
 
 /**
@@ -21,76 +21,34 @@ import java.util.Map;
  *  <li>If both maps have a single value a {@link List} is created from the two.</li>
  * </ul>
  * 
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$ $Date$
  */
 public class MultivaluedAttributeMerger implements IAttributeMerger {
 
     /**
-     * Please note that the <code>dest</code> map is modified.
+     * Please note that the <code>toModify</code> map is modified.
      * 
      * @see org.jasig.portal.services.persondir.support.merger.IAttributeMerger#mergeAttributes(java.util.Map, java.util.Map)
      */
-    public Map mergeAttributes(final Map dest, final Map source) {
-        if (dest == null)
-            throw new IllegalArgumentException("dest cannot be null");
-        if (source == null)
-            throw new IllegalArgumentException("source cannot be null");
+    public Map<String, List<Object>> mergeAttributes(final Map<String, List<Object>> toModify, final Map<String, List<Object>> toConsider) {
+        Validate.notNull(toModify, "toModify cannot be null");
+        Validate.notNull(toConsider, "toConsider cannot be null");
         
-        final Map sourceCopy = new HashMap(source);
-        
-        //Iterate through the dest Map
-        for (final Iterator destEntryItr = dest.entrySet().iterator(); destEntryItr.hasNext();) {
-            final Map.Entry destEntry = (Map.Entry)destEntryItr.next();
-            final Object destKey = destEntry.getKey();
+        for (final Map.Entry<String, List<Object>> sourceEntry : toConsider.entrySet()) {
+            final String sourceKey = sourceEntry.getKey();
             
-            //If there is a corresponding entry in source
-            if (sourceCopy.containsKey(destKey)) {
-                //Get the values
-                final Object sourceValue = sourceCopy.remove(destKey);
-                final Object destValue = destEntry.getValue();
-                
-                //If they are both Lists merge them
-                if (destValue instanceof List && sourceValue instanceof List) {
-                    final List destList = (List)destValue;
-                    final List sourceList = (List)sourceValue;
-                    
-                    destList.addAll(sourceList);
-                    
-                    dest.put(destKey, destList);
-                }
-                //If dest value is a List add the source value to it
-                else if (destValue instanceof List) {
-                    final List destList = (List)destValue;
-                    
-                    destList.add(sourceValue);
-                    
-                    dest.put(destKey, destList);
-                }
-                //If the source value is a List add the dest value to it
-                else if (sourceValue instanceof List) {
-                    final List sourceList = (List)sourceValue;
-                    
-                    sourceList.add(0, destValue);
-                    
-                    dest.put(destKey, sourceList);
-                }
-                //Neither are a List, create a new List
-                else {
-                    final List newList = new ArrayList(2);
-                    
-                    newList.add(destValue);
-                    newList.add(sourceValue);
-                    
-                    dest.put(destKey, newList);
-                }
+            List<Object> destList = toModify.get(sourceKey);
+            if (destList == null) {
+                destList = new LinkedList<Object>();
+                toModify.put(sourceKey, destList);
             }
+            
+            final List<Object> sourceValue = sourceEntry.getValue();
+            destList.addAll(sourceValue);
         }
         
-        //Add the remaining items from source to dest
-        dest.putAll(sourceCopy);
-        
-        return dest;
+        return toModify;
     }
 
 }

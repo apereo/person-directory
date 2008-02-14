@@ -7,6 +7,7 @@ package org.jasig.services.persondir.support;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 /**
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist 
  * @version $Revision$
  */
 public class AbstractQueryPersonAttributeDaoTest extends TestCase {
@@ -24,6 +25,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     /**
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         this.testQueryPersonAttributeDao = new TestQueryPersonAttributeDao();
     }
@@ -31,68 +33,69 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     /**
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         this.testQueryPersonAttributeDao = null;
     }
     
     public void testDefaultAttributeNameUsage() {
         this.testQueryPersonAttributeDao.getUserAttributes("eric");
-        final Object[] args = this.testQueryPersonAttributeDao.getArgs();
-        final Object[] expectedArgs = new Object[] { "eric" };
+        final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
         
         //Do asList for an easy comparison
-        assertEquals(Arrays.asList(expectedArgs), Arrays.asList(args));
+        assertEquals(Collections.singletonList(Collections.singletonList("eric")), args);
     }
     
     public void testInsuffcientSeed() {
-        final List queryAttributes = new ArrayList();
+        final List<String> queryAttributes = new ArrayList<String>();
         queryAttributes.add("userid");
         
         this.testQueryPersonAttributeDao.setQueryAttributes(queryAttributes);
         this.testQueryPersonAttributeDao.getUserAttributes("eric");
-        final Object[] args = this.testQueryPersonAttributeDao.getArgs();
+        final List<List<Object>>  args = this.testQueryPersonAttributeDao.getArgs();
         assertNull(args);
     }
     
     public void testCustomAttributes() {
-        final List queryAttributes = new ArrayList();
+        final List<String> queryAttributes = new ArrayList<String>();
         queryAttributes.add("name.first");
         queryAttributes.add("name.last");
         this.testQueryPersonAttributeDao.setQueryAttributes(queryAttributes);
         
-        final Map seed = new HashMap();
-        seed.put("name.first", "eric");
-        seed.put("name.last", "dalquist");
+        final Map<String, List<Object>> seed = new HashMap<String, List<Object>>();
+        seed.put("name.first", Collections.singletonList((Object)"eric"));
+        seed.put("name.last", Collections.singletonList((Object)"dalquist"));
         this.testQueryPersonAttributeDao.getUserAttributes(seed);
-        final Object[] args = this.testQueryPersonAttributeDao.getArgs();
-        final Object[] expectedArgs = new Object[] { "eric", "dalquist" };
+        final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
+        final Object[] expectedArgs = new Object[] { Collections.singletonList("eric"), Collections.singletonList("dalquist") };
         
         //Do asList for an easy comparison
-        assertEquals(Arrays.asList(expectedArgs), Arrays.asList(args));
+        assertEquals(Arrays.asList(expectedArgs), args);
     }
 
     private class TestQueryPersonAttributeDao extends AbstractQueryPersonAttributeDao {
-        private Object[] args = null;
+        private List<List<Object>> args = null;
         
         /**
          * @return the args
          */
-        public Object[] getArgs() {
+        public List<List<Object>> getArgs() {
             return this.args;
         }
 
-        /**
-         * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getUserAttributesIfNeeded(java.lang.Object[])
+        /* (non-Javadoc)
+         * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getUserAttributesIfNeeded(java.util.List)
          */
-        protected Map getUserAttributesIfNeeded(Object[] args) {
+        @Override
+        protected Map<String, List<Object>> getUserAttributesIfNeeded(List<List<Object>> args) {
             this.args = args;
             return null;
         }
 
-        /**
+        /* (non-Javadoc)
          * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
          */
-        public Set getPossibleUserAttributeNames() {
+        public Set<String> getPossibleUserAttributeNames() {
             return null;
         }
     }

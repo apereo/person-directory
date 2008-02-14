@@ -5,6 +5,7 @@
 
 package org.jasig.services.persondir.support;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jasig.services.persondir.IPersonAttributeDao;
@@ -17,7 +18,7 @@ import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
  * {@link MultivaluedAttributeMerger}.
  * 
  * @author andrew.petro@yale.edu
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
@@ -31,7 +32,8 @@ public class MergingPersonAttributeDaoImpl extends AbstractAggregatingDefaultQue
      * 
      * @see org.jasig.portal.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.portal.services.persondir.IPersonAttributeDao, java.util.Map)
      */
-    protected Map getAttributesFromDao(final Map seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Map resultAttributes) {
+    @Override
+    protected Map<String, List<Object>> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Map<String, List<Object>> resultAttributes) {
         return currentlyConsidering.getUserAttributes(seed);
     }
 }

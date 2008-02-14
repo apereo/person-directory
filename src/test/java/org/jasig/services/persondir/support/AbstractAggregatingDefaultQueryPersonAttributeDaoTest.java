@@ -13,20 +13,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
+import org.jasig.services.persondir.util.Util;
 
 /**
  * Provides base tests for classes that implement AbstractAggregatingDefaultQueryPersonAttributeDao.
  * 
  * 
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$
  */
 public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest extends AbstractDefaultQueryPersonAttributeDaoTest {
     /**
      * @see org.jasig.portal.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest#getAbstractDefaultQueryPersonAttributeDao()
      */
+    @Override
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         return this.getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao();
     }
@@ -39,19 +42,19 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
     public void testGetPossibleNamesWithException() {
         final AbstractAggregatingDefaultQueryPersonAttributeDao dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
         
-        final Map attrMap1 = new HashMap();
-        attrMap1.put("key1.1", "val1.1");
-        attrMap1.put("key1.2", "val1.2");
+        final Map<String, List<Object>> attrMap1 = new HashMap<String, List<Object>>();
+        attrMap1.put("key1.1", Util.list("val1.1"));
+        attrMap1.put("key1.2", Util.list("val1.2"));
         
-        final Map attrMap2 = new HashMap();
-        attrMap1.put("key2.1", "val2.1");
-        attrMap1.put("key2.2", "val2.2");
+        final Map<String, List<Object>> attrMap2 = new HashMap<String, List<Object>>();
+        attrMap1.put("key2.1", Util.list("val2.1"));
+        attrMap1.put("key2.2", Util.list("val2.2"));
         
-        final Set expectedNames = new HashSet();
+        final Set<String> expectedNames = new HashSet<String>();
         expectedNames.addAll(attrMap1.keySet());
         expectedNames.addAll(attrMap2.keySet());
         
-        final List childDaos = new ArrayList(3);
+        final List<IPersonAttributeDao> childDaos = new ArrayList<IPersonAttributeDao>(3);
         childDaos.add(new StubPersonAttributeDao(attrMap1));
         childDaos.add(new ThrowingPersonAttributeDao());
         childDaos.add(new StubPersonAttributeDao(attrMap2));
@@ -60,7 +63,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
         
         //Test exception recovery
         dao.setRecoverExceptions(true);
-        final Set resultNames = dao.getPossibleUserAttributeNames();
+        final Set<String> resultNames = dao.getPossibleUserAttributeNames();
         assertEquals(expectedNames, resultNames);
         
         //Test fail on exception
@@ -98,6 +101,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
         }
     }
     
+    @SuppressWarnings("unchecked")
     public void testProperties() {
         final AbstractAggregatingDefaultQueryPersonAttributeDao dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
         

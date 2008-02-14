@@ -3,12 +3,14 @@ package org.jasig.services.persondir.support.rule;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.util.Util;
 
 public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 
@@ -42,7 +44,7 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 
 		// attributeName (empty List).
 		try {
-			new DeclaredRulePersonAttributeDao(NAME, new ArrayList());
+			new DeclaredRulePersonAttributeDao(NAME, new ArrayList<AttributeRule>());
 			fail("IllegalArgumentException should have been thrown with null 'attributeName'.");
 		} catch (IllegalArgumentException iae) {
 			// expected...
@@ -59,17 +61,18 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 	}
 
 	public void testMatches() {
-        Map results = target.getUserAttributes("records-staff");
-        assertTrue(VALUE.equals(results.get("fax")));
+        Map<String, List<Object>> results = target.getUserAttributes("records-staff");
+        assertNotNull(results);
+        assertEquals(Util.list(VALUE), results.get("fax"));
 	}
 	
 	public void testDoesNotMatch() {
-        Map results = target.getUserAttributes("faculty");
+        Map<String, List<Object>> results = target.getUserAttributes("faculty");
 		assertNull(results);
 	}
 
 	public void testGetPossibleNames() {
-		Set s = new HashSet();
+		Set<String> s = new HashSet<String>();
 		s.add("fax");
 		assertEquals(s, target.getPossibleUserAttributeNames());
 	}

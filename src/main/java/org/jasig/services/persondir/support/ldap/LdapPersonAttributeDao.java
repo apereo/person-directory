@@ -85,7 +85,7 @@ import org.springframework.ldap.core.SearchExecutor;
  * </table>
  * 
  * @author andrew.petro@yale.edu
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
@@ -104,12 +104,13 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
     /**
      * Class for mapping LDAP Attributes to a person attribute Map using the LdapTemplate.
      */
+    @SuppressWarnings("unchecked")
     private PersonAttributesMapper attributesMapper = new PersonAttributesMapper(Collections.EMPTY_MAP);
 
     /**
      * {@link Set} of attributes this DAO may provide when queried.
      */
-    private Set possibleUserAttributeNames = Collections.EMPTY_SET;
+    private Set<String> possibleUserAttributeNames = Collections.emptySet();
 
     /**
      * The base distinguished name to use for queries.
@@ -144,26 +145,29 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
      * 
      * @see org.jasig.portal.services.persondir.support.AbstractQueryPersonAttributeDao#getUserAttributesIfNeeded(java.lang.Object[])
      */
-    protected Map getUserAttributesIfNeeded(final Object[] args) {
-        if (this.contextSource == null)
-            throw new IllegalStateException("ContextSource is null");
-
-        if (this.query == null)
-            throw new IllegalStateException("query is null");
+    @SuppressWarnings("unchecked")
+    @Override
+    protected Map<String, List<Object>> getUserAttributesIfNeeded(Object[] args) {
+        if (this.contextSource == null) {
+            throw new IllegalStateException("ContextSource must be set");
+        }
+        if (this.query == null) {
+            throw new IllegalStateException("query must be set");
+        }
 
         final SearchExecutor se = new QuerySearchExecutor(this.baseDN, this.query, args, this.searchControls);
         final CollectingNameClassPairCallbackHandler attributesMapperCallbackHandler = new AttributesMapperCallbackHandler(this.attributesMapper);
         
         this.ldapTemplate.search(se, attributesMapperCallbackHandler);
         
-        final List results = attributesMapperCallbackHandler.getList();
-        return (Map)DataAccessUtils.uniqueResult(results);
+        final List<Map<String, List<Object>>> results = attributesMapperCallbackHandler.getList();
+        return (Map<String, List<Object>>)DataAccessUtils.uniqueResult(results);
     }
 
     /*
      * @see org.jasig.portal.services.persondir.support.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
-    public Set getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames() {
         return this.possibleUserAttributeNames;
     }
 
@@ -173,7 +177,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
      * 
      * @return Returns the ldapAttributesToPortalAttributes.
      */
-    public Map getLdapAttributesToPortalAttributes() {
+    public Map<String, Set<String>> getLdapAttributesToPortalAttributes() {
         return this.attributesMapper.getLdapAttributesToPortalAttributes();
     }
 
@@ -193,12 +197,12 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
      *             If the {@link Map} doesn't follow the rules stated above.
      * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
      */
-    public void setLdapAttributesToPortalAttributes(final Map ldapAttributesToPortalAttributesArg) {
-        final Map ldapAttributesToPortalAttributes = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(ldapAttributesToPortalAttributesArg);
+    public void setLdapAttributesToPortalAttributes(final Map<String, Object> ldapAttributesToPortalAttributesArg) {
+        final Map<String, Set<String>> ldapAttributesToPortalAttributes = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(ldapAttributesToPortalAttributesArg);
         this.attributesMapper = new PersonAttributesMapper(ldapAttributesToPortalAttributes);
-        final Collection userAttributeCol = MultivaluedPersonAttributeUtils.flattenCollection(ldapAttributesToPortalAttributes.values());
+        final Collection<String> userAttributeCol = MultivaluedPersonAttributeUtils.flattenCollection(ldapAttributesToPortalAttributes.values());
 
-        this.possibleUserAttributeNames = Collections.unmodifiableSet(new HashSet(userAttributeCol));
+        this.possibleUserAttributeNames = Collections.unmodifiableSet(new HashSet<String>(userAttributeCol));
     }
 
     /**
@@ -241,8 +245,10 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
      * @param baseDN The ldapServer to set.
      */
     public void setBaseDN(String baseDN) {
-        if (baseDN == null)
+        if (baseDN == null) {
             baseDN = "";
+        }
+
         this.baseDN = baseDN;
     }
 

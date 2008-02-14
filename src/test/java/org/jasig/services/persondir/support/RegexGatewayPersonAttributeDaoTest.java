@@ -1,6 +1,8 @@
 package org.jasig.services.persondir.support;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -10,7 +12,7 @@ import org.jasig.services.persondir.IPersonAttributeDao;
 public class RegexGatewayPersonAttributeDaoTest extends TestCase {
 
 	// Instance Members.
-	private final Map attributes;
+	private final Map<String, List<Object>> attributes;
 	private final IPersonAttributeDao enclosed;
 	private final IPersonAttributeDao target;
 	
@@ -19,8 +21,8 @@ public class RegexGatewayPersonAttributeDaoTest extends TestCase {
 	 */
 	
 	public RegexGatewayPersonAttributeDaoTest() {
-		this.attributes = new HashMap();
-		attributes.put("phone", "(480) 555-1212");
+		this.attributes = new HashMap<String, List<Object>>();
+		attributes.put("phone", Collections.singletonList((Object)"(480) 555-1212"));
 		this.enclosed = new StubPersonAttributeDao(attributes);
 		this.target = new RegexGatewayPersonAttributeDao("username", ".*@.*", enclosed);
 	}
@@ -54,12 +56,12 @@ public class RegexGatewayPersonAttributeDaoTest extends TestCase {
 	}
 	
 	public void testMatches() {
-        Map results = target.getUserAttributes("monkey@yahoo.com");
+        Map<String, List<Object>> results = target.getUserAttributes("monkey@yahoo.com");
 		assertEquals(results, attributes);
 	}
 	
 	public void testDoesNotMatch() {
-        Map results = target.getUserAttributes("monkey");
+        Map<String, List<Object>> results = target.getUserAttributes("monkey");
 		assertFalse(attributes.equals(results));
 	}
 	

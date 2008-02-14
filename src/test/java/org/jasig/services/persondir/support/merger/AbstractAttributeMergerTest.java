@@ -6,6 +6,7 @@
 package org.jasig.services.persondir.support.merger;
 
 import java.util.HashMap;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -22,7 +23,7 @@ public abstract class AbstractAttributeMergerTest extends TestCase {
      */
     public void testNullToModify() {
         try {
-            getAttributeMerger().mergeAttributes(null, new HashMap());
+            getAttributeMerger().mergeAttributes(null, new HashMap<String, List<Object>>());
         } catch (IllegalArgumentException iae) {
             // good
             return;
@@ -36,7 +37,7 @@ public abstract class AbstractAttributeMergerTest extends TestCase {
      */
     public void testNullToConsider() {
         try {
-            getAttributeMerger().mergeAttributes(new HashMap(), null);
+            getAttributeMerger().mergeAttributes(new HashMap<String, List<Object>>(), null);
         } catch (IllegalArgumentException iae) {
             // good
             return;

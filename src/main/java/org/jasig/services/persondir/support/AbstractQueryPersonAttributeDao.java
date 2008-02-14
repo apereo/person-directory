@@ -5,10 +5,14 @@
 
 package org.jasig.services.persondir.support;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.Validate;
+import org.springframework.beans.factory.annotation.Required;
 
 /**
  * Provides common functionality for DAOs using a set of attribute values from the seed to
@@ -35,21 +39,21 @@ import java.util.Map;
  *             be returned. If the {@link List} is left null the {@link #getDefaultAttributeName()}
  *             will be used as the single argument when calling {@link #getUserAttributesIfNeeded(Object[])}
  *         </td>
- *         <td valign="top">No</td>
+ *         <td valign="top">Yes</td>
  *         <td valign="top">null</td>
  *     </tr>
  * </table>
  * 
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist 
  * @version $Revision$
  */
 public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
 
     /**
      * List of names of uPortal attributes the values of which will be used, in
-     * order, to populate the parameters of the LDAP query.
+     * order, to populate the parameters of the query.
      */
-    private List queryAttributes = null;
+    private List<String> queryAttributes = null;
 
     
     /**
@@ -59,36 +63,34 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
      *
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    public final Map getUserAttributes(final Map seed) {
-        // Checks to make sure the argument & state is valid
-        if (seed == null)
-            throw new IllegalArgumentException("The query seed Map cannot be null.");
+    public final Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed) {
+        Validate.notNull(seed, "seed may not be null.");
         
-        final Object[] args;
+        final List<List<Object>> args;
         
         //The queryAttributes are configured and the seed contains all of the needed attributes
         if (this.queryAttributes != null && seed.keySet().containsAll(this.queryAttributes)) {
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Constructing argument name array from the queryAttributes List");
-            }
-
             // Can't just to a toArray here since the order of the keys in the Map
             // may not match the order of the keys in the List and it is important to
             // the query.
-            args = new Object[this.queryAttributes.size()];
-            for (int index = 0; index < args.length; index++) {
-                final String attrName = (String) this.queryAttributes.get(index);
-                args[index] = seed.get(attrName);
+            args = new ArrayList<List<Object>>(this.queryAttributes.size());
+            for (final String attrName : this.queryAttributes) {
+                final List<Object> value = seed.get(attrName);
+                args.add(value);
+            }
+            
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Constructed argument array '" + args + "' from the queryAttributes List");
             }
         }
         //No queryAttributes are configured but the seed contains the default attribute
         else if (this.queryAttributes == null && seed.containsKey(this.getDefaultAttributeName())) {
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Constructing argument name array from the defaultAttributeName");
-            }
-
             final String attrName = this.getDefaultAttributeName();
-            args = new Object[] { seed.get(attrName) };
+            args = Collections.singletonList(seed.get(attrName));
+            
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Constructed argument array '" + args + "' from the defaultAttributeName='" + attrName + "'");
+            }
         }
         //The data needed to run the query isn't in the seed, null is returned
         else {
@@ -103,6 +105,16 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
     }
     
     /**
+     * Collates the first argument in each sub-list into an Object[] to pass to {@link #getUserAttributesIfNeeded(Object[])}
+     * 
+     * @see #getUserAttributesIfNeeded(Object[])
+     */
+    protected Map<String, List<Object>> getUserAttributesIfNeeded(final List<List<Object>> args) {
+        final Object[] queryArgumentArray = this.getQueryArgumentArray(args);
+        return this.getUserAttributesIfNeeded(queryArgumentArray);
+    }
+    
+    /**
      * Is called by {@link #getUserAttributes(Map)} if the attributes required for the query, as defined
      * by the values of the queryAttributes property, are available in the seed. The implementation of
      * {@link #getUserAttributes(Map)} also compiles the array of query argument values based on the order
@@ -111,20 +123,43 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
      * @param args The arguments to execute the query with.
      * @return The results of the query, as specified by {@link org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
      */
-    protected abstract Map getUserAttributesIfNeeded(final Object[] args);
+    protected Map<String, List<Object>> getUserAttributesIfNeeded(final Object[] args) {
+        throw new UnsupportedOperationException("getUserAttributesIfNeeded(Object[]) is not implemented");
+    }
+
+    /**
+     * Converts the List of List of value type to an Object[]. This implementation uses the first value of each
+     * sub-list as the value for the returned object array.
+     * 
+     * @param args the List of List of values to generate an object array from.
+     * @return An array of arguments based on the lists
+     */
+    protected Object[] getQueryArgumentArray(final List<List<Object>> args) {
+        final List<Object> queryArgs = new ArrayList<Object>(args.size());
+        
+        for (final List<Object> arg : args) {
+            final Object value = arg.get(0);
+            queryArgs.add(value);
+        }
+        
+        return queryArgs.toArray();
+    }
 
     /**
      * @return Returns the queryAttributes.
      */
-    public List getQueryAttributes() {
+    public final List<String> getQueryAttributes() {
         return this.queryAttributes;
     }
 
     /**
      * @param queryAttributes The queryAttributes to set.
      */
-    public void setQueryAttributes(List queryAttributes) {
+    @Required
+    public final void setQueryAttributes(List<String> queryAttributes) {
+        Validate.notNull(queryAttributes, "queryAttributes cannot be null");
+        
         //Create an unmodifiable defensive copy
-        this.queryAttributes = Collections.unmodifiableList(new LinkedList(queryAttributes));
+        this.queryAttributes = Collections.unmodifiableList(new LinkedList<String>(queryAttributes));
     }
 }

@@ -5,6 +5,7 @@
 
 package org.jasig.services.persondir.support.merger;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,11 +22,12 @@ public interface IAttributeMerger {
      * The modification performed is implementation-specific -- implementations
      * of this interface exist to perform some particular transformation on
      * the toModify argument given the toConsider argument.
+     * 
      * @param toModify - modify this map
      * @param toConsider - in consideration of this map
      * @return the modified Map
      * @throws IllegalArgumentException if either toModify or toConsider is null
      */
-    public Map mergeAttributes(Map toModify, Map toConsider);
+    public Map<String, List<Object>> mergeAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider);
     
 }

@@ -7,7 +7,7 @@ package org.jasig.services.persondir.support;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -80,11 +80,11 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  * 
  * 
  * @author dgrimwood@unicon.net
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Id
  */
 public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao {
-    protected static final Map NULL_RESULTS_OBJECT = Collections.singletonMap(CachingPersonAttributeDaoImpl.class.getName() + "UNIQUE_NULL_RESULTS_MAP", new Integer(CachingPersonAttributeDaoImpl.class.hashCode()));
+    protected static final Map<String, List<Object>> NULL_RESULTS_OBJECT = Collections.singletonMap(CachingPersonAttributeDaoImpl.class.getName() + "UNIQUE_NULL_RESULTS_MAP", Collections.singletonList((Object)CachingPersonAttributeDaoImpl.class.hashCode()));
     
     protected Log statsLogger = LogFactory.getLog(this.getClass().getName() + ".statistics");
 
@@ -99,12 +99,12 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /*
      * The cache to store query results in.
      */
-    private Map userInfoCache = null; 
+    private Map<Serializable, Map<String, List<Object>>> userInfoCache = null; 
     
     /*
      * The set of attributes to use to generate the cache key.
      */
-    private Set cacheKeyAttributes = null;
+    private Set<String> cacheKeyAttributes = null;
     
     /*
      * If null resutls should be cached
@@ -114,7 +114,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /*
      * The Object that should be stored in the cache if cacheNullResults is true
      */
-    private Map nullResultsObject = NULL_RESULTS_OBJECT;
+    private Map<String, List<Object>> nullResultsObject = NULL_RESULTS_OBJECT;
     
     /**
      * @return Returns the cachedPersonAttributesDao.
@@ -136,26 +136,26 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /**
      * @return Returns the cacheKeyAttributes.
      */
-    public Set getCacheKeyAttributes() {
+    public Set<String> getCacheKeyAttributes() {
         return this.cacheKeyAttributes;
     }
     /**
      * @param cacheKeyAttributes The cacheKeyAttributes to set.
      */
-    public void setCacheKeyAttributes(Set cacheKeyAttributes) {
+    public void setCacheKeyAttributes(Set<String> cacheKeyAttributes) {
         this.cacheKeyAttributes = cacheKeyAttributes;
     }
 
     /**
      * @return Returns the userInfoCache.
      */
-    public Map getUserInfoCache() {
+    public Map<Serializable, Map<String, List<Object>>> getUserInfoCache() {
         return this.userInfoCache;
     }
     /**
      * @param userInfoCache The userInfoCache to set.
      */
-    public void setUserInfoCache(Map userInfoCache) {
+    public void setUserInfoCache(Map<Serializable, Map<String, List<Object>>> userInfoCache) {
         if (userInfoCache == null) {
             throw new IllegalArgumentException("userInfoCache may not be null");
         }
@@ -179,13 +179,13 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /**
      * @return the nullResultsObject
      */
-    public Map getNullResultsObject() {
+    public Map<String, List<Object>> getNullResultsObject() {
         return this.nullResultsObject;
     }
     /**
      * @param nullResultsObject the nullResultsObject to set
      */
-    public void setNullResultsObject(Map nullResultsObject) {
+    public void setNullResultsObject(Map<String, List<Object>> nullResultsObject) {
         if (nullResultsObject == null) {
             throw new IllegalArgumentException("nullResultsObject may not be null");
         }
@@ -215,7 +215,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    public Map getUserAttributes(Map seed) {
+    public Map<String, List<Object>> getUserAttributes(Map<String, List<Object>> seed) {
         //Ensure the arguements and state are valid
         if (seed == null) {
             throw new IllegalArgumentException("The query seed Map cannot be null.");
@@ -228,10 +228,10 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
             throw new IllegalStateException("No 'userInfoCache' has been specified.");
         }
         
-        final Object cacheKey = this.getCacheKey(seed);
+        final Serializable cacheKey = this.getCacheKey(seed);
         
         if (cacheKey != null) {
-            Map cacheResults = (Map)this.userInfoCache.get(cacheKey);
+            Map<String, List<Object>> cacheResults = this.userInfoCache.get(cacheKey);
             if (cacheResults != null) {
                 //If the returned object is the null results object, set the cache results to null
                 if (this.nullResultsObject.equals(cacheResults)) {
@@ -250,7 +250,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
                 return cacheResults;
             }
         
-            final Map queryResults = this.cachedPersonAttributesDao.getUserAttributes(seed);
+            final Map<String, List<Object>> queryResults = this.cachedPersonAttributesDao.getUserAttributes(seed);
         
             if (queryResults != null) {
                 this.userInfoCache.put(cacheKey, queryResults);
@@ -271,23 +271,23 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
 
             return queryResults;
         }
-        else {
-            logger.warn("No cache key generated, caching disabled for this query. query='" + seed + "', cacheKeyAttributes=" + this.cacheKeyAttributes + "', defaultAttributeName='" + this.getDefaultAttributeName() + "'");
+        
+        
+        logger.warn("No cache key generated, caching disabled for this query. query='" + seed + "', cacheKeyAttributes=" + this.cacheKeyAttributes + "', defaultAttributeName='" + this.getDefaultAttributeName() + "'");
 
-            this.queries++;
-            this.misses++;
-            if (statsLogger.isDebugEnabled()) {
-                statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
-            }
-            
-            return this.cachedPersonAttributesDao.getUserAttributes(seed);
+        this.queries++;
+        this.misses++;
+        if (statsLogger.isDebugEnabled()) {
+            statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
         }
+        
+        return this.cachedPersonAttributesDao.getUserAttributes(seed);
     }
 
     /**
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
-    public Set getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames() {
         return this.cachedPersonAttributesDao.getPossibleUserAttributeNames();
     }
     
@@ -298,8 +298,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * @param querySeed The query to base the key on.
      * @return A Serializable cache key.
      */
-    protected Serializable getCacheKey(Map querySeed) {
-        final HashMap cacheKey = new HashMap();
+    protected Serializable getCacheKey(Map<String, List<Object>> querySeed) {
+        final HashMap<String, List<Object>> cacheKey = new HashMap<String, List<Object>>();
         
         if (this.cacheKeyAttributes == null || this.cacheKeyAttributes.size() == 0) {
             final String defaultAttrName = this.getDefaultAttributeName();
@@ -313,9 +313,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
             }
         }
         else {
-            for (final Iterator attrItr = this.cacheKeyAttributes.iterator(); attrItr.hasNext();) {
-                final String attr = (String)attrItr.next();
-                
+            for (final String attr : this.cacheKeyAttributes) {
                 if (querySeed.containsKey(attr)) {
                     cacheKey.put(attr, querySeed.get(attr));
                 }
@@ -329,8 +327,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         if (cacheKey.size() > 0) {
             return cacheKey;
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
 }

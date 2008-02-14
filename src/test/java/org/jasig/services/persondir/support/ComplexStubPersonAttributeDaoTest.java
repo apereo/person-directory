@@ -7,8 +7,11 @@ package org.jasig.services.persondir.support;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.jasig.services.persondir.util.Util;
 
 
 /**
@@ -19,24 +22,25 @@ public class ComplexStubPersonAttributeDaoTest
     extends AbstractDefaultQueryPersonAttributeDaoTest {
 
     private ComplexStubPersonAttributeDao testInstance;
-    private Map backingMap;
+    private Map<String, Map<String, List<Object>>> backingMap;
     
     
+    @Override
     protected void setUp() throws Exception {
         // built the user attributes for awp9
-        Map awp9Map = new HashMap();
-        awp9Map.put("shirtColor", "blue");
-        awp9Map.put("phone", "777-7777");
-        awp9Map.put("wearsTie", "false");
+        Map<String, List<Object>> awp9Map = new HashMap<String, List<Object>>();
+        awp9Map.put("shirtColor", Util.list("blue"));
+        awp9Map.put("phone", Util.list("777-7777"));
+        awp9Map.put("wearsTie", Util.list("false"));
         
         // build the user attributes for aam26
-        Map aam26Map = new HashMap();
-        aam26Map.put("shirtColor", "white");
-        aam26Map.put("phone", "666-6666");
-        aam26Map.put("musicalInstrumentOfChoice", "trumpet");
+        Map<String, List<Object>> aam26Map = new HashMap<String, List<Object>>();
+        aam26Map.put("shirtColor", Util.list("white"));
+        aam26Map.put("phone",Util.list( "666-6666"));
+        aam26Map.put("musicalInstrumentOfChoice", Util.list("trumpet"));
         
         // build the backing map, which maps from username to attribute map
-        Map bMap = new HashMap();
+        Map<String, Map<String, List<Object>>> bMap = new HashMap<String, Map<String, List<Object>>>();
         bMap.put("awp9", awp9Map);
         bMap.put("aam26", aam26Map);
         
@@ -53,12 +57,12 @@ public class ComplexStubPersonAttributeDaoTest
      * possible attribute names.
      */
     public void testGetPossibleUserAttributeNames() {
-        HashSet expectedAttributeNames = new HashSet();
+        HashSet<String> expectedAttributeNames = new HashSet<String>();
         expectedAttributeNames.add("shirtColor");
         expectedAttributeNames.add("phone");
         expectedAttributeNames.add("musicalInstrumentOfChoice");
         expectedAttributeNames.add("wearsTie");
-        Set possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
+        Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
         
         // test that it properly computed the set of possible attribute names
         
@@ -77,15 +81,14 @@ public class ComplexStubPersonAttributeDaoTest
      * Test getting user attributes using a Map key.
      */
     public void testGetUserAttributesMap() {
-        Map awp9Key = new HashMap();
-        awp9Key.put("username", "awp9");
+        Map<String, List<Object>> awp9Key = new HashMap<String, List<Object>>();
+        awp9Key.put("username", Util.list("awp9"));
         assertEquals(this.backingMap.get("awp9"), this.testInstance.getUserAttributes(awp9Key));
         
-        Map unknownUserKey = new HashMap();
-        unknownUserKey.put("uid", "unknownUser");
+        Map<String, List<Object>> unknownUserKey = new HashMap<String, List<Object>>();
+        unknownUserKey.put("uid", Util.list("unknownUser"));
         
         assertNull(this.testInstance.getUserAttributes(unknownUserKey));
-        
     }
 
     /**
@@ -97,6 +100,7 @@ public class ComplexStubPersonAttributeDaoTest
         assertNull(this.testInstance.getUserAttributes("unknownUser"));
     }
 
+    @Override
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         return this.testInstance;
     }

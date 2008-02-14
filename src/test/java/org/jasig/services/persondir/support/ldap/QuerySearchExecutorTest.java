@@ -8,7 +8,7 @@ package org.jasig.services.persondir.support.ldap;
 import junit.framework.TestCase;
 
 /**
- * @author Eric Dalquist <a href="mailto:eric.dalquist@doit.wisc.edu">eric.dalquist@doit.wisc.edu</a>
+ * @author Eric Dalquist 
  * @version $Revision$
  */
 public class QuerySearchExecutorTest extends TestCase {

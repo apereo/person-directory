@@ -6,8 +6,10 @@
 package org.jasig.services.persondir.support;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.services.persondir.IPersonAttributeDao;
@@ -41,7 +43,7 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  *     </tr>
  * </table>
  * 
- * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
+ * @author Eric Dalquist
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
@@ -67,18 +69,17 @@ public abstract class AbstractDefaultAttributePersonAttributeDao implements IPer
      * 
      * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.lang.String)
      */
-    public final Map getUserAttributes(final String uid) {
-        if (uid == null) {
-            throw new IllegalArgumentException("Illegal to invoke getUserAttributes(String) with null argument.");
-        }
+    @SuppressWarnings("unchecked")
+    public final Map<String, List<Object>> getUserAttributes(final String uid) {
+        Validate.notNull(uid, "uid may not be null.");
         
-        final Map seed = Collections.singletonMap(this.getDefaultAttributeName(), uid);
+        final List<Object> values = Collections.singletonList((Object)uid);
+        final Map<String, List<Object>> seed = Collections.singletonMap(this.getDefaultAttributeName(), values);
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Created seed map='" + seed + "' for uid='" + uid + "'");
         }
         
-        final Map userAttributes = this.getUserAttributes(seed);
-        return userAttributes;
+        return this.getUserAttributes(seed);
     }
 
     
@@ -100,9 +101,7 @@ public abstract class AbstractDefaultAttributePersonAttributeDao implements IPer
      * @throws IllegalArgumentException if <code>name</code> is <code>null</code>.
      */
     public final void setDefaultAttributeName(final String name) {
-        if (name == null)
-            throw new IllegalArgumentException("The default attribute name may not be null");
-
+        Validate.notNull(name, "The default attribute name may not be null");
         this.defaultAttribute = name;
     }
 }

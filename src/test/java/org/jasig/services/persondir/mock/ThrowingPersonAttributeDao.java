@@ -1,5 +1,6 @@
 package org.jasig.services.persondir.mock;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,21 +15,21 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /**
      * @throws RuntimeException always
      */
-    public Map getUserAttributes(String uid) {
+    public Map<String, List<Object>> getUserAttributes(String uid) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
     
     /**
      * @throws RuntimeException always
      */
-    public Map getUserAttributes(Map queryMap) {
+    public Map<String, List<Object>> getUserAttributes(Map<String, List<Object>> queryMap) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
     /**
      * @throws RuntimeException always
      */
-    public Set getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames() {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 }

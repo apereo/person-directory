@@ -1,11 +1,12 @@
 package org.jasig.services.persondir.support.rule;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
+
+import org.jasig.services.persondir.util.Util;
 
 public class SimpleAttributeRuleTest extends TestCase {
 
@@ -69,24 +70,14 @@ public class SimpleAttributeRuleTest extends TestCase {
 			// expected...
 		}
 
-		Map m = new HashMap();
+		Map<String, List<Object>> m = new HashMap<String, List<Object>>();
 		
 		// String --> true.
-		m.put(WHEN_KEY, WHEN_PATTERN);
-		assertTrue(r.appliesTo(m));
-
-		// String[] --> true.
-		m.put(WHEN_KEY, new String[] { WHEN_PATTERN });
-		assertTrue(r.appliesTo(m));
-
-		// List --> true.
-		List list = new ArrayList();
-		list.add(WHEN_PATTERN);
-		m.put(WHEN_KEY, list);
+		m.put(WHEN_KEY, Util.list(WHEN_PATTERN));
 		assertTrue(r.appliesTo(m));
 
 		// String --> false.
-		m.put(WHEN_KEY, "monkey");
+		m.put(WHEN_KEY, Util.list("monkey"));
 		assertFalse(r.appliesTo(m));
 
 	}

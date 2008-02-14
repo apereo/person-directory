@@ -1,5 +1,6 @@
 package org.jasig.services.persondir.support.rule;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ public interface AttributeRule {
      * @return TRUE if this rule applies to the Map data, FALSE if not.
      * @throws IllegalArgumentException If <code>userInfo</code> is <code>null.</code>
      */
-    public abstract boolean appliesTo(Map userInfo);
+    public abstract boolean appliesTo(Map<String, List<Object>> userInfo);
 
     /**
      * Applies the embodied rule to the user described by the specified
@@ -27,7 +28,7 @@ public interface AttributeRule {
      * 
      * This method follows the same contract as {@link org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
      */
-    public abstract Map evaluate(Map userInfo);
+    public abstract Map<String, List<Object>> evaluate(Map<String, List<Object>> userInfo);
 
     /**
      * Indicates the complete set of user attribute names that <em>may</em> be
@@ -35,6 +36,6 @@ public interface AttributeRule {
      * 
      * This method follows the same contract as {@link org.jasig.portal.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()}
      */
-    public abstract Set getPossibleUserAttributeNames();
+    public abstract Set<String> getPossibleUserAttributeNames();
 
 }

@@ -2,13 +2,13 @@ package org.jasig.services.persondir.support;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.Validate;
 import org.jasig.services.persondir.IPersonAttributeDao;
 
 /**
@@ -70,7 +70,7 @@ import org.jasig.services.persondir.IPersonAttributeDao;
 public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     private boolean matchAllPatterns = false;
     private boolean matchAllValues = false;
-    private Map patterns = null;
+    private Map<String, Pattern> patterns = null;
     private IPersonAttributeDao targetPersonAttributeDao = null;
 
     /**
@@ -82,13 +82,6 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
      * @param enclosed The IPersonAttributeDao to delegate to if the pattern matches.
      */
     public RegexGatewayPersonAttributeDao(String attributeName, String pattern, IPersonAttributeDao enclosed) {
-        if (attributeName == null) {
-            throw new IllegalArgumentException("Argument 'attributeName' cannot be null.");
-        }
-        if (pattern == null) {
-            throw new IllegalArgumentException("Argument 'pattern' cannot be null.");
-        }
-
         // Instance Members.
         this.setDefaultAttributeName(attributeName);
         this.setPatterns(Collections.singletonMap(this.getDefaultAttributeName(), pattern));
@@ -103,18 +96,42 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
     /**
      * @return the patterns
      */
-    public Map getPatterns() {
-        return this.patterns;
+    public Map<String, String> getPatterns() {
+        if (this.patterns == null) {
+            return null;
+        }
+        
+        final Map<String, String> toReturn = new HashMap<String, String>(this.patterns.size());
+        
+        for (final Map.Entry<String, Pattern> patternEntry : this.patterns.entrySet()) {
+            final String attribute = patternEntry.getKey();
+            final Pattern pattern = patternEntry.getValue();
+            toReturn.put(attribute, pattern.pattern());
+        }
+        
+        return Collections.unmodifiableMap(toReturn);
     }
     /**
      * @param patterns the patterns to set
      */
-    public void setPatterns(Map patterns) {
-        if (patterns == null || patterns.size() < 1) {
-            throw new IllegalArgumentException("patterns Map may not be null and must contain at least 1 mapping.");
-        }
+    public void setPatterns(Map<String, String> patterns) {
+        Validate.notEmpty(patterns, "patterns Map may not be null and must contain at least 1 mapping.");
+        
+        final Map<String, Pattern> newPatterns = new HashMap<String, Pattern>(patterns.size());
+        
+        //Pre-compile patterns for performance
+        for (final Map.Entry<String, String> patternEntry : patterns.entrySet()) {
+            final String attribute = patternEntry.getKey();
+            
+            final String pattern = patternEntry.getValue();
+            Validate.notNull(pattern, "pattern can not be null. attribute=" + attribute);
 
-        this.patterns = Collections.unmodifiableMap(new HashMap(patterns));
+            final Pattern compiledPattern = Pattern.compile(pattern);
+            
+            newPatterns.put(attribute, compiledPattern);
+        }
+        
+        this.patterns = Collections.unmodifiableMap(newPatterns);
     }
 
     /**
@@ -127,9 +144,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
      * @param targetPersonAttributeDao the targetPersonAttributeDao to set
      */
     public void setTargetPersonAttributeDao(IPersonAttributeDao targetPersonAttributeDao) {
-        if (targetPersonAttributeDao == null) {
-            throw new IllegalArgumentException("targetPersonAttributeDao may not be null");
-        }
+        Validate.notNull(targetPersonAttributeDao, "targetPersonAttributeDao may not be null");
 
         this.targetPersonAttributeDao = targetPersonAttributeDao;
     }
@@ -163,10 +178,9 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
     /*
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    public Map getUserAttributes(final Map seed) {
-        if (seed == null) {
-            throw new IllegalArgumentException("Argument 'seed' cannot be null.");
-        }
+    public Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed) {
+        Validate.notNull(seed, "Argument 'seed' cannot be null.");
+
         if (patterns == null || patterns.size() < 1) {
             throw new IllegalStateException("patterns Map may not be null and must contain at least 1 mapping.");
         }
@@ -178,13 +192,12 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
         boolean matchedPatterns = false;
         
         //Iterate through all attributeName/pattern pairs
-        for (final Iterator patternEntryItr = this.patterns.entrySet().iterator(); patternEntryItr.hasNext();) {
-            final Map.Entry patternEntry = (Map.Entry)patternEntryItr.next();
-            final String attributeName = (String)patternEntry.getKey();
-            final Object attributeValue = seed.get(attributeName);
+        for (final Map.Entry<String, Pattern> patternEntry : this.patterns.entrySet()) {
+            final String attributeName = patternEntry.getKey();
+            final List<Object> attributeValues = seed.get(attributeName);
             
             //Check if the value exists
-            if (attributeValue == null) {
+            if (attributeValues == null) {
                 if (this.matchAllPatterns) {
                     //Need to match ALL patters, if the attribute isn't in the seed it can't be matched, return null
                     if (this.logger.isInfoEnabled()) {
@@ -193,38 +206,25 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
 
                     return null;
                 }
-                else {
-                    //Don't need to match all, just go to the next attribute and see if it exists
-                    continue;
-                }
-            }
-            
-            //Convert the value to a List
-            final List valueList;
-            if (attributeValue instanceof List) {
-                valueList = (List)attributeValue;
-            }
-            else {
-                valueList = Collections.singletonList(attributeValue);
+
+                //Don't need to match all, just go to the next attribute and see if it exists
+                continue;
             }
             
             //The pattern to test the attribute's value(s) with
-            final String pattern = (String)patternEntry.getValue();
-            if (pattern == null) {
+            final Pattern compiledPattern = patternEntry.getValue();
+            if (compiledPattern == null) {
                 throw new IllegalStateException("Attribute '" + attributeName + "' has a null pattern");
             }
             
-            //Compile the regex for better performance if there are a lot of values
-            final Pattern compiledPattern = Pattern.compile(pattern);
-
             //Flag for matching the pattern on the values
             boolean matchedValues = false;
             
             //Iterate over the values for the attribute, testing each against the pattern
-            for (final Iterator valueItr = valueList.iterator(); valueItr.hasNext();) {
+            for (final Object valueObj : attributeValues) {
                 final String value;
                 try {
-                    value = (String)valueItr.next();
+                    value = (String)valueObj;
                 }
                 catch (ClassCastException cce) {
                     final IllegalArgumentException iae = new IllegalArgumentException("RegexGatewayPersonAttributeDao can only accept seeds who's values are String or List of String. Attribute '" + attributeName + "' has a non-String value.");
@@ -239,7 +239,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
                 //Only one value needs to be matched, this one matched so no need to test the rest, break out of the loop
                 if (matchedValues && !this.matchAllValues) {
                     if (this.logger.isDebugEnabled()) {
-                        this.logger.debug("value='" + value + "' matched pattern='" + pattern + "' and only one value match is needed, leaving value matching loop.");
+                        this.logger.debug("value='" + value + "' matched pattern='" + compiledPattern + "' and only one value match is needed, leaving value matching loop.");
                     }
 
                     break;
@@ -247,7 +247,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
                 //Need to match all values, this one failed so no need to test the rest, break out of the loop
                 else if (!matchedValues && this.matchAllValues) {
                     if (this.logger.isDebugEnabled()) {
-                        this.logger.debug("value='" + value + "' did not match pattern='" + pattern + "' and all values need to match, leaving value matching loop.");
+                        this.logger.debug("value='" + value + "' did not match pattern='" + compiledPattern + "' and all values need to match, leaving value matching loop.");
                     }
                     
                     break;
@@ -255,10 +255,10 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
                 //Extra logging
                 else if (this.logger.isDebugEnabled()) {
                     if (matchedValues) {
-                        this.logger.debug("value='" + value + "' matched pattern='" + pattern + "' and all values need to match, continuing value matching loop.");
+                        this.logger.debug("value='" + value + "' matched pattern='" + compiledPattern + "' and all values need to match, continuing value matching loop.");
                     }
                     else {
-                        this.logger.debug("value='" + value + "' did not match pattern='" + pattern + "' and only one value match is needed, continuing value matching loop.");
+                        this.logger.debug("value='" + value + "' did not match pattern='" + compiledPattern + "' and only one value match is needed, continuing value matching loop.");
                     }
                 }
             }
@@ -268,7 +268,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
             //Only one pattern needs to be matched, this one matched so no need to test the rest, break out of the loop
             if (matchedPatterns && !this.matchAllPatterns) {
                 if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("pattern='" + pattern + "' found a match and only one pattern match is needed, leaving pattern matching loop.");
+                    this.logger.debug("pattern='" + compiledPattern + "' found a match and only one pattern match is needed, leaving pattern matching loop.");
                 }
 
                 break;
@@ -276,7 +276,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
             //Need to match all patterns, this one failed so no need to test the rest, break out of the loop
             else if (!matchedPatterns && this.matchAllPatterns) {
                 if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("pattern='" + pattern + "' did not find a match and all patterns need to match, leaving pattern matching loop.");
+                    this.logger.debug("pattern='" + compiledPattern + "' did not find a match and all patterns need to match, leaving pattern matching loop.");
                 }
 
                 break;
@@ -284,10 +284,10 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
             //Extra logging
             else if (this.logger.isDebugEnabled()) {
                 if (matchedPatterns) {
-                    this.logger.debug("pattern='" + pattern + "' found a match and all patterns need to match, continuing pattern matching loop.");
+                    this.logger.debug("pattern='" + compiledPattern + "' found a match and all patterns need to match, continuing pattern matching loop.");
                 }
                 else {
-                    this.logger.debug("pattern='" + pattern + "' did not find a match and only one pattern match is needed, continuing pattern matching loop.");
+                    this.logger.debug("pattern='" + compiledPattern + "' did not find a match and only one pattern match is needed, continuing pattern matching loop.");
                 }
             }
         }
@@ -300,19 +300,18 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
             
             return this.targetPersonAttributeDao.getUserAttributes(seed);
         }
-        else {
-            if (this.logger.isInfoEnabled()) {
-                this.logger.info("Matching criteria was not met, return null");
-            }
-            
-            return null;
+
+        if (this.logger.isInfoEnabled()) {
+            this.logger.info("Matching criteria was not met, return null");
         }
+        
+        return null;
     }
 
     /*
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
-    public Set getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames() {
         return targetPersonAttributeDao.getPossibleUserAttributeNames();
     }
 }

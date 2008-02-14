@@ -5,6 +5,7 @@
 
 package org.jasig.services.persondir.support;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * 
      * This method will be invoked exactly once per invocation of each test method
      * implemented in this abstract class.
-     * 
+     
      * @return an IPersonAttributeDao instance for us to test
      */
     protected abstract IPersonAttributeDao getPersonAttributeDaoInstance();
@@ -37,7 +38,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      */
     public void testNullSeed() {
         IPersonAttributeDao dao = getPersonAttributeDaoInstance();
-        Map nullMap = null;
+        Map<String, List<Object>> nullMap = null;
         try {
             dao.getUserAttributes(nullMap);
         } catch (IllegalArgumentException iae) {
@@ -71,13 +72,13 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      */
     public void testPossibleSetConstraints() {
         IPersonAttributeDao dao = getPersonAttributeDaoInstance();
-        Set possibleNames = dao.getPossibleUserAttributeNames();
+        Set<String> possibleNames = dao.getPossibleUserAttributeNames();
         
         if (possibleNames != null) {
             try {
                 final int originalSize = possibleNames.size();
                 
-                final Object newObj = new Object();
+                final String newObj = new String();
                 possibleNames.add(newObj);
                 
                 assertEquals(originalSize, possibleNames.size());
@@ -87,6 +88,5 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
             }
         }
     }
-    
 }
 

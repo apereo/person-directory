@@ -1,5 +1,6 @@
 package org.jasig.services.persondir.support.rule;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ public final class SimpleAttributeRule implements AttributeRule {
     private final String whenPattern;
     private final String setKey;
     private final String setValue;
-    private final Set possibleAttributeNames;
+    private final Set<String> possibleAttributeNames;
 
     /*
      * Public API.
@@ -53,7 +54,7 @@ public final class SimpleAttributeRule implements AttributeRule {
         this.possibleAttributeNames = Collections.singleton(this.setKey);
     }
 
-    public boolean appliesTo(Map userInfo) {
+    public boolean appliesTo(Map<String, List<Object>> userInfo) {
 
         // Assertions.
         if (userInfo == null) {
@@ -61,7 +62,7 @@ public final class SimpleAttributeRule implements AttributeRule {
             throw new IllegalArgumentException(msg);
         }
 
-        Object value = userInfo.get(whenKey);
+        final List<Object> value = userInfo.get(whenKey);
         if (value == null) {
             // No problem... but we certainly don't apply in this case.
             return false;
@@ -69,23 +70,11 @@ public final class SimpleAttributeRule implements AttributeRule {
 
         // Figure out what to look at.
         String[] compare = null;
-        if (value instanceof String) {
-            compare = new String[] { (String) value };
-        } else if (value instanceof String[]) {
-            compare = (String[]) value;
-        } else if (value instanceof List) {
-            List list = (List) value;
-            try {
-                compare = (String[]) list.toArray(new String[list.size()]);
-            } catch (ClassCastException cce) {
-                String msg = "List values may contain only String instances.";
-                throw new RuntimeException(msg, cce);
-            }
-        } else {
-            // This situation isn't workable...
-            String msg = "The value of " + whenKey + " must be a String, String[], or List<String> "
-                                        + "instance.  Found:  " + value.getClass().getName();
-            throw new RuntimeException(msg);
+        try {
+            compare = value.toArray(new String[value.size()]);
+        } catch (ClassCastException cce) {
+            String msg = "List values may contain only String instances.";
+            throw new RuntimeException(msg, cce);
         }
 
         boolean rslt = false;   // default...
@@ -100,7 +89,7 @@ public final class SimpleAttributeRule implements AttributeRule {
 
     }
 
-    public Map evaluate(Map userInfo) {
+    public Map<String, List<Object>> evaluate(Map<String, List<Object>> userInfo) {
 
         // Assertions.
         if (userInfo == null) {
@@ -112,13 +101,15 @@ public final class SimpleAttributeRule implements AttributeRule {
             throw new IllegalArgumentException(msg);
         }
 
-        Map rslt = new HashMap();
-        rslt.put(setKey, setValue);
+        Map<String, List<Object>> rslt = new HashMap<String, List<Object>>();
+        List<Object> value = new ArrayList<Object>(1);
+        value.add(setValue);
+        rslt.put(setKey, value);
         return rslt;
 
     }
 
-    public Set getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames() {
         return this.possibleAttributeNames;
     }
 
