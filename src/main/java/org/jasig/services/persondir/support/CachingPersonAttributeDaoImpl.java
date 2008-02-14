@@ -5,15 +5,19 @@
 package org.jasig.services.persondir.support;
 
 import java.io.Serializable;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.services.persondir.IPersonAttributeDao;
+import org.springframework.beans.factory.InitializingBean;
+import org.springmodules.cache.key.CacheKeyGenerator;
 
 /**
  * A configurable caching implementation of {@link IPersonAttributeDao} 
@@ -83,7 +87,7 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  * @author Eric Dalquist
  * @version $Id
  */
-public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao {
+public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao implements InitializingBean {
     protected static final Map<String, List<Object>> NULL_RESULTS_OBJECT = Collections.singletonMap(CachingPersonAttributeDaoImpl.class.getName() + "UNIQUE_NULL_RESULTS_MAP", Collections.singletonList((Object)CachingPersonAttributeDaoImpl.class.hashCode()));
     
     protected Log statsLogger = LogFactory.getLog(this.getClass().getName() + ".statistics");
@@ -95,6 +99,11 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * The IPersonAttributeDao to delegate cache misses to.
      */
     private IPersonAttributeDao cachedPersonAttributesDao = null;
+    
+    /*
+     * Used to generate cache keys for storing calls in the cache.
+     */
+    private CacheKeyGenerator cacheKeyGenerator = null;
     
     /*
      * The cache to store query results in.
@@ -135,13 +144,17 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     
     /**
      * @return Returns the cacheKeyAttributes.
+     * @deprecated these should be retrieved from the provided {@link CacheKeyGenerator} if applicable
      */
+    @Deprecated
     public Set<String> getCacheKeyAttributes() {
         return this.cacheKeyAttributes;
     }
     /**
      * @param cacheKeyAttributes The cacheKeyAttributes to set.
+     * @deprecated these should be set on the provided {@link CacheKeyGenerator} if applicable
      */
+    @Deprecated
     public void setCacheKeyAttributes(Set<String> cacheKeyAttributes) {
         this.cacheKeyAttributes = cacheKeyAttributes;
     }
@@ -193,6 +206,17 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         this.nullResultsObject = nullResultsObject;
     }
     
+    /* (non-Javadoc)
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    public void afterPropertiesSet() throws Exception {
+        if (this.cacheKeyGenerator == null) {
+            final AttributeBasedCacheKeyGenerator cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
+            cacheKeyGenerator.setCacheKeyAttributes(this.cacheKeyAttributes);
+            cacheKeyGenerator.setDefaultAttributeName(this.getDefaultAttributeName());
+            this.cacheKeyGenerator = cacheKeyGenerator;
+        }
+    }
     
     /**
      * @return Returns the number of cache misses.
@@ -228,60 +252,49 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
             throw new IllegalStateException("No 'userInfoCache' has been specified.");
         }
         
-        final Serializable cacheKey = this.getCacheKey(seed);
-        
-        if (cacheKey != null) {
-            Map<String, List<Object>> cacheResults = this.userInfoCache.get(cacheKey);
-            if (cacheResults != null) {
-                //If the returned object is the null results object, set the cache results to null
-                if (this.nullResultsObject.equals(cacheResults)) {
-                    cacheResults = null;
-                }
-                
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Retrieved query from cache. key='" + cacheKey + "', results='" + cacheResults + "'");
-                }
-                    
-                this.queries++;
-                if (statsLogger.isDebugEnabled()) {
-                    statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
-                }
-                
-                return cacheResults;
-            }
-        
-            final Map<String, List<Object>> queryResults = this.cachedPersonAttributesDao.getMultivaluedUserAttributes(seed);
-        
-            if (queryResults != null) {
-                this.userInfoCache.put(cacheKey, queryResults);
-            }
-            else if (this.cacheNullResults) {
-                this.userInfoCache.put(cacheKey, this.nullResultsObject);
+        //Get the cache key
+        final MethodInvocation methodInvocation = new PersonAttributeDaoMethodInvocation(seed);
+        final Serializable cacheKey = this.cacheKeyGenerator.generateKey(methodInvocation);
+
+        Map<String, List<Object>> cacheResults = this.userInfoCache.get(cacheKey);
+        if (cacheResults != null) {
+            //If the returned object is the null results object, set the cache results to null
+            if (this.nullResultsObject.equals(cacheResults)) {
+                cacheResults = null;
             }
             
             if (logger.isDebugEnabled()) {
-                logger.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache. key='" + cacheKey + "', results='" + queryResults + "'");
+                logger.debug("Retrieved query from cache. key='" + cacheKey + "', results='" + cacheResults + "'");
             }
-            
+                
             this.queries++;
-            this.misses++;
             if (statsLogger.isDebugEnabled()) {
                 statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
             }
-
-            return queryResults;
+            
+            return cacheResults;
+        }
+    
+        final Map<String, List<Object>> queryResults = this.cachedPersonAttributesDao.getMultivaluedUserAttributes(seed);
+    
+        if (queryResults != null) {
+            this.userInfoCache.put(cacheKey, queryResults);
+        }
+        else if (this.cacheNullResults) {
+            this.userInfoCache.put(cacheKey, this.nullResultsObject);
         }
         
+        if (logger.isDebugEnabled()) {
+            logger.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache. key='" + cacheKey + "', results='" + queryResults + "'");
+        }
         
-        logger.warn("No cache key generated, caching disabled for this query. query='" + seed + "', cacheKeyAttributes=" + this.cacheKeyAttributes + "', defaultAttributeName='" + this.getDefaultAttributeName() + "'");
-
         this.queries++;
         this.misses++;
         if (statsLogger.isDebugEnabled()) {
             statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
         }
-        
-        return this.cachedPersonAttributesDao.getMultivaluedUserAttributes(seed);
+
+        return queryResults;
     }
 
     /**
@@ -291,43 +304,63 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         return this.cachedPersonAttributesDao.getPossibleUserAttributeNames();
     }
     
-    /**
-     * Generates a Serializable cache key from the seed parameters according to the documentation
-     * of this class. If the return value is NULL caching will be disabled for this query.
-     * 
-     * @param querySeed The query to base the key on.
-     * @return A Serializable cache key.
-     */
-    protected Serializable getCacheKey(Map<String, List<Object>> querySeed) {
-        final HashMap<String, List<Object>> cacheKey = new HashMap<String, List<Object>>();
-        
-        if (this.cacheKeyAttributes == null || this.cacheKeyAttributes.size() == 0) {
-            final String defaultAttrName = this.getDefaultAttributeName();
-            
-            if (querySeed.containsKey(defaultAttrName)) {
-                cacheKey.put(defaultAttrName, querySeed.get(defaultAttrName));
+    private static class PersonAttributeDaoMethodInvocation implements MethodInvocation {
+        private final static Method getMultivaluedUserAttributesMethod;
+        static {
+            try {
+                getMultivaluedUserAttributesMethod = IPersonAttributeDao.class.getMethod("getMultivaluedUserAttributes", Map.class);
             }
-            
-            if (logger.isDebugEnabled()) {
-                logger.debug("Created cacheKey='" + cacheKey + "' from query='" + querySeed + "' using default attribute='" + defaultAttrName + "'");
+            catch (SecurityException e) {
+                final NoSuchMethodError nsme = new NoSuchMethodError("The 'getMultivaluedUserAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' is not accessible due to a security policy.");
+                nsme.initCause(e);
+                throw nsme;
             }
-        }
-        else {
-            for (final String attr : this.cacheKeyAttributes) {
-                if (querySeed.containsKey(attr)) {
-                    cacheKey.put(attr, querySeed.get(attr));
-                }
-            }
-            
-            if (logger.isDebugEnabled()) {
-                logger.debug("Created cacheKey='" + cacheKey + "' from query='" + querySeed + "' using attributes='" + this.cacheKeyAttributes + "'");
+            catch (NoSuchMethodException e) {
+                final NoSuchMethodError nsme = new NoSuchMethodError("The 'getMultivaluedUserAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' is not accessible due to a security policy.");
+                nsme.initCause(e);
+                throw nsme;
             }
         }
         
-        if (cacheKey.size() > 0) {
-            return cacheKey;
+        private final Object[] args;
+        
+        public PersonAttributeDaoMethodInvocation(Object... args) {
+            this.args = args;
+        }
+        
+        /* (non-Javadoc)
+         * @see org.aopalliance.intercept.MethodInvocation#getMethod()
+         */
+        public Method getMethod() {
+            return getMultivaluedUserAttributesMethod;
         }
 
-        return null;
+        /* (non-Javadoc)
+         * @see org.aopalliance.intercept.Invocation#getArguments()
+         */
+        public Object[] getArguments() {
+            return this.args;
+        }
+
+        /* (non-Javadoc)
+         * @see org.aopalliance.intercept.Joinpoint#getStaticPart()
+         */
+        public AccessibleObject getStaticPart() {
+            throw new UnsupportedOperationException("This is a fake MethodInvocation, getStaticPart() is not supported.");
+        }
+
+        /* (non-Javadoc)
+         * @see org.aopalliance.intercept.Joinpoint#getThis()
+         */
+        public Object getThis() {
+            throw new UnsupportedOperationException("This is a fake MethodInvocation, getThis() is not supported.");
+        }
+
+        /* (non-Javadoc)
+         * @see org.aopalliance.intercept.Joinpoint#proceed()
+         */
+        public Object proceed() throws Throwable {
+            throw new UnsupportedOperationException("This is a fake MethodInvocation, proceed() is not supported.");
+        }
     }
 }
