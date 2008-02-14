@@ -46,22 +46,20 @@ public abstract class AbstractJdbcPersonAttributeDao extends AbstractQueryPerson
 
 
     /**
-     * Takes the {@link List} from the {@link AbstractPersonAttributeMappingQuery} implementation
-     * and passes it to the implementing the class for parsing into the returned user attribute Map.
+     * Takes the {@link List} of {@link Map}s from the query and parses it into the attribute {@link Map} to be returned.
      * 
-     * @param queryResults Results from the query done using the {@link AbstractPersonAttributeMappingQuery} returned by {@link #getAttributeQuery()}
-     * @return The results of the query, as specified by {@link org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(Map)} 
+     * @param queryResults Results from the query.
+     * @return The results of the query, as specified by {@link org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(Map)} 
      */
     protected abstract Map<String, List<Object>> parseAttributeMapFromResults(final List<Map<String, Object>> queryResults);
     
     /***
-     * Gets the query from the {@link #getAttributeQuery()} method.<br>
-     * Runs the query.<br>
+     * Runs the sql specified in the constructor.<br>
      * Calls {@link #parseAttributeMapFromResults(List)} with the query results.<br>
      * Returns results from {@link #parseAttributeMapFromResults(List)} link.<br>
      */
     @Override
-    protected Map<String, List<Object>> getUserAttributesIfNeeded(final Object[] args) {
+    protected final Map<String, List<Object>> getUserAttributesIfNeeded(final Object[] args) {
         final List<Map<String, Object>> queryResults = this.simpleJdbcTemplate.queryForList(this.sql, args);
         
         return this.parseAttributeMapFromResults(queryResults);

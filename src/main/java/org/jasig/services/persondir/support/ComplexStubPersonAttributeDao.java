@@ -14,7 +14,7 @@ import java.util.Set;
 
 
 /**
- * Looks up the user's attribute Map in the backingMap. If using the {@link IPersonAttributeDao#getUserAttributes(Map)}
+ * Looks up the user's attribute Map in the backingMap. If using the {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
  * method the attribute value returned for the key {@link #getDefaultAttributeName()} will
  * be used as the key for the backingMap.
  * 
@@ -34,7 +34,7 @@ import java.util.Set;
  *             Sets the backing map to use to return user attributes from. The backing map
  *             should have keys of type {@link String} which are the uid for the user. The
  *             values should be of type {@link Map} which follow the Map restrictions decribed
- *             by {@link IPersonAttributeDao#getUserAttributes(Map)}.
+ *             by {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}.
  *         </td>
  *         <td valign="top">No</td>
  *         <td valign="top">{@link Collections#EMPTY_MAP}</td>
@@ -100,9 +100,9 @@ public class ComplexStubPersonAttributeDao extends AbstractDefaultAttributePerso
     }
     
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
      */
-    public Map<String, List<Object>> getUserAttributes(Map<String, List<Object>> seed) {
+    public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
         if (seed == null) {
             throw new IllegalArgumentException("Illegal to invoke getUserAttributes(Map) with a null argument.");
         }

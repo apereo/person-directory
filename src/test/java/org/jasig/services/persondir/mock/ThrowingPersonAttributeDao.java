@@ -15,14 +15,14 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /**
      * @throws RuntimeException always
      */
-    public Map<String, List<Object>> getUserAttributes(String uid) {
+    public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
-    
+
     /**
      * @throws RuntimeException always
      */
-    public Map<String, List<Object>> getUserAttributes(Map<String, List<Object>> queryMap) {
+    public Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
@@ -32,4 +32,19 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     public Set<String> getPossibleUserAttributeNames() {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
+
+    /**
+     * @throws RuntimeException always
+     */
+    public Map<String, Object> getUserAttributes(Map<String, Object> seed) {
+        throw new RuntimeException("ThrowingPersonAttributeDao always throws");
+    }
+
+    /**
+     * @throws RuntimeException always
+     */
+    public Map<String, Object> getUserAttributes(String uid) {
+        throw new RuntimeException("ThrowingPersonAttributeDao always throws");
+    }
+    
 }

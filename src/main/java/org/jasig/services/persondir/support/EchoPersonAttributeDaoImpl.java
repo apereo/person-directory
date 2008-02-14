@@ -23,9 +23,9 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
     /**
      * Returns a duplicate of the seed it is passed.
      * @return a Map equal to but not the same reference as the seed.
-     * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    public Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed) {
+    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
         if (seed == null) {
             throw new IllegalArgumentException("seed may not be null");
         }
@@ -36,7 +36,7 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
     /**
      * Possible attributes are unknown; will always return <code>null</code>.
      * @return null
-     * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
     public Set<String> getPossibleUserAttributeNames() {
         return null;

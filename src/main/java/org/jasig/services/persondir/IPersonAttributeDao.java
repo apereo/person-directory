@@ -17,7 +17,6 @@ import java.util.Set;
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist
  * @version $Revision$ $Date$
- * @since uPortal 2.5
  */
 public interface IPersonAttributeDao {
 
@@ -45,8 +44,7 @@ public interface IPersonAttributeDao {
      * @return Map from attribute names to values
      * @throws IllegalArgumentException If <code>seed</code> is <code>null.</code>
      */
-    public Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed);
-
+    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed);
 
     /**
      * This method uses a single attribute to get a {@link Map} of user
@@ -58,8 +56,25 @@ public interface IPersonAttributeDao {
      * @return Map from attribute names to values
      * @see #getUserAttributes(Map)
      */
-    public Map<String, List<Object>> getUserAttributes(final String uid);
-
+    public Map<String, List<Object>> getMultivaluedUserAttributes(final String uid);
+    
+    /**
+     * This method returns single-valued user attributes. This method has the same
+     * behavior as {@link #getMultivaluedUserAttributes(Map)} other than the single-valued
+     * return Map
+     * 
+     * @see #getMultivaluedUserAttributes(Map)
+     */
+    public Map<String, Object> getUserAttributes(final Map<String, Object> seed);
+    
+    /**
+     * This method returns single-valued user attributes. This method has the same
+     * behavior as {@link #getMultivaluedUserAttributes(String)} other than the single-valued
+     * return Map
+     * 
+     * @see #getMultivaluedUserAttributes(String)
+     */
+    public Map<String, Object> getUserAttributes(final String uid);
 
     /**
      * Gets a {@link Set} of attribute names that may be returned by the
@@ -70,7 +85,7 @@ public interface IPersonAttributeDao {
      * <br>
      * Returns an immutable {@link Set}.
      * 
-     * @return A {link Set} of possible attribute names for user queries.
+     * @return A {@link Set} of possible attribute names for user queries.
      */
     public Set<String> getPossibleUserAttributeNames();
 }

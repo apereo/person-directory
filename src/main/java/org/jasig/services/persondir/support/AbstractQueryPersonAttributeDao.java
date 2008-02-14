@@ -61,9 +61,9 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
      * Ensures the seed contains the attributes needed to run the query, returns null if they aren't available.<br>
      * Compiles the Object[] of arguments from the seed based on the queryAttributes.<br>
      *
-     * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
      */
-    public final Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed) {
+    public final Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
         Validate.notNull(seed, "seed may not be null.");
         
         final List<List<Object>> args;
@@ -121,7 +121,7 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
      * of items in the queryAttributes property and the values in the seed.
      * 
      * @param args The arguments to execute the query with.
-     * @return The results of the query, as specified by {@link org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
+     * @return The results of the query, as specified by {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
      */
     protected Map<String, List<Object>> getUserAttributesIfNeeded(final Object[] args) {
         throw new UnsupportedOperationException("getUserAttributesIfNeeded(Object[]) is not implemented");

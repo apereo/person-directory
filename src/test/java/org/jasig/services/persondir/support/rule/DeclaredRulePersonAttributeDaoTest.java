@@ -61,13 +61,13 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 	}
 
 	public void testMatches() {
-        Map<String, List<Object>> results = target.getUserAttributes("records-staff");
+        Map<String, List<Object>> results = target.getMultivaluedUserAttributes("records-staff");
         assertNotNull(results);
         assertEquals(Util.list(VALUE), results.get("fax"));
 	}
 	
 	public void testDoesNotMatch() {
-        Map<String, List<Object>> results = target.getUserAttributes("faculty");
+        Map<String, List<Object>> results = target.getMultivaluedUserAttributes("faculty");
 		assertNull(results);
 	}
 

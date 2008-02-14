@@ -58,14 +58,14 @@ public class StubPersonAttributeDaoTest
     }
 
     public void testGetUserAttributesMap() {
-        assertSame(this.backingMap, this.testInstance.getUserAttributes(new HashMap<String, List<Object>>()));
-        assertEquals(this.backingMap, this.testInstance.getUserAttributes(new HashMap<String, List<Object>>()));
+        assertSame(this.backingMap, this.testInstance.getMultivaluedUserAttributes(new HashMap<String, List<Object>>()));
+        assertEquals(this.backingMap, this.testInstance.getMultivaluedUserAttributes(new HashMap<String, List<Object>>()));
 
     }
 
     public void testGetUserAttributesString() {
-        assertSame(this.backingMap, this.testInstance.getUserAttributes("anyone"));
-        assertEquals(this.backingMap, this.testInstance.getUserAttributes("wombat"));
+        assertSame(this.backingMap, this.testInstance.getMultivaluedUserAttributes("anyone"));
+        assertEquals(this.backingMap, this.testInstance.getMultivaluedUserAttributes("wombat"));
     }
 
     public void testBackingMap() {

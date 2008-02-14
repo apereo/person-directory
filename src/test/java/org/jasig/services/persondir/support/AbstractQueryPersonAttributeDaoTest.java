@@ -65,7 +65,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         final Map<String, List<Object>> seed = new HashMap<String, List<Object>>();
         seed.put("name.first", Collections.singletonList((Object)"eric"));
         seed.put("name.last", Collections.singletonList((Object)"dalquist"));
-        this.testQueryPersonAttributeDao.getUserAttributes(seed);
+        this.testQueryPersonAttributeDao.getMultivaluedUserAttributes(seed);
         final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
         final Object[] expectedArgs = new Object[] { Collections.singletonList("eric"), Collections.singletonList("dalquist") };
         

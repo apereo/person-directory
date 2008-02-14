@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPersonAttributeDao;
-
 /**
  * A stub IPersonAttributeDao to be used for testing.
  * Backed by a single Map which this implementation will always return.
@@ -39,7 +37,7 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
-public class StubPersonAttributeDao implements IPersonAttributeDao {
+public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao {
     private Map<String, List<Object>> backingMap = null;
 
     public StubPersonAttributeDao() {
@@ -57,14 +55,14 @@ public class StubPersonAttributeDao implements IPersonAttributeDao {
         return Collections.unmodifiableSet(this.backingMap.keySet());
     }
 
-    public Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed) {
+    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
         if (seed == null) {
             throw new IllegalArgumentException("Illegal to invoke getUserAttributes(Map) with a null argument.");
         }
         return this.backingMap;
     }
 
-    public Map<String, List<Object>> getUserAttributes(final String uid) {
+    public Map<String, List<Object>> getMultivaluedUserAttributes(final String uid) {
         if (uid == null) {
             throw new IllegalArgumentException("Illegal to invoke getUserAttributes(String) with a null argument.");
         }

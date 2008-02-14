@@ -21,7 +21,7 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 
 /**
- * An {@link org.jasig.portal.services.persondir.IPersonAttributeDao}
+ * An {@link org.jasig.services.persondir.IPersonAttributeDao}
  * implementation that maps from column names in the result of a SQL query
  * to attribute names. <br>
  * You must set a Map from column names to attribute names and only column names
@@ -115,10 +115,9 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
      * Tries to get the attributes specified for the column, determin the
      * mapping for the column and add it to the rowResults {@link Map}.
      * 
-     * @param rs The {@link ResultSet} to get the attribute value from.
+     * @param rs The {@link Map} of results to get the attribute value from.
      * @param columnName The name of the column to get the attribute value from.
      * @param rowResults The {@link Map} to add the mapped attribute to.
-     * @throws SQLException If there is a problem retrieving the value from the {@link ResultSet}.
      */
     protected void addMappedAttributes(final Map<String, Object> rs, final String columnName, final Map<String, List<Object>> rowResults) {
         Validate.notEmpty(columnName, "columnName cannot be null and must have length >= 0");

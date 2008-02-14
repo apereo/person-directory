@@ -68,7 +68,7 @@ public class MergingPersonAttributeDaoImplTest
     }
     
     /**
-     * @see org.jasig.portal.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao()
+     * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao()
      */
     @Override
     protected AbstractAggregatingDefaultQueryPersonAttributeDao getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao() {
@@ -84,7 +84,7 @@ public class MergingPersonAttributeDaoImplTest
     }
 
     /**
-     * @see org.jasig.portal.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao()
+     * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao()
      */
     @Override
     protected AbstractAggregatingDefaultQueryPersonAttributeDao getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao() {
@@ -109,7 +109,7 @@ public class MergingPersonAttributeDaoImplTest
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(queryAttr, Util.list("awp9"));
         
-        Map<String, List<Object>> result = impl.getUserAttributes(queryMap);
+        Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap);
         assertEquals(this.oneAndTwo, result);
     }
     
@@ -148,7 +148,7 @@ public class MergingPersonAttributeDaoImplTest
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(queryAttr, Util.list("awp9"));
         
-        Map<String, List<Object>> result = impl.getUserAttributes(queryMap);
+        Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap);
         assertEquals(this.oneAndTwoAndThree, result);
     }
     
@@ -197,7 +197,7 @@ public class MergingPersonAttributeDaoImplTest
             Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
             queryMap.put(queryAttr, Util.list("awp9"));
             
-            impl.getUserAttributes(queryMap);
+            impl.getMultivaluedUserAttributes(queryMap);
         } catch (RuntimeException rte) {
             // good, was propogated
             return;
@@ -223,7 +223,7 @@ public class MergingPersonAttributeDaoImplTest
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(queryAttr, Util.list("awp9"));
         
-        Map<String, List<Object>> result = impl.getUserAttributes(queryMap);
+        Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap);
         assertEquals(this.oneAndTwo, result);
     }
     
@@ -233,7 +233,7 @@ public class MergingPersonAttributeDaoImplTest
         queryMap.put(queryAttr, Util.list("awp9"));
         
         try {
-            impl.getUserAttributes(queryMap);
+            impl.getMultivaluedUserAttributes(queryMap);
             fail("IllegalStateException should have been thrown");
         }
         catch (IllegalStateException ise) {
@@ -250,17 +250,31 @@ public class MergingPersonAttributeDaoImplTest
         /**
          * @throws RuntimeException Always.
          */
-        public Map<String, List<Object>> getUserAttributes(String uid) {
+        public Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
             throw new RuntimeException("NullAttribNamesPersonAttributeDao always throws");
         }
         
         /**
          * @throws RuntimeException always
          */
-        public Map<String, List<Object>> getUserAttributes(Map<String, List<Object>> queryMap) {
+        public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> queryMap) {
             throw new RuntimeException("NullAttribNamesPersonAttributeDao always throws");
         }
         
+        /**
+         * @throws RuntimeException always
+         */
+        public Map<String, Object> getUserAttributes(Map<String, Object> seed) {
+            throw new RuntimeException("NullAttribNamesPersonAttributeDao always throws");
+        }
+
+        /**
+         * @throws RuntimeException always
+         */
+        public Map<String, Object> getUserAttributes(String uid) {
+            throw new RuntimeException("NullAttribNamesPersonAttributeDao always throws");
+        }
+
         /**
          * @return null
          */

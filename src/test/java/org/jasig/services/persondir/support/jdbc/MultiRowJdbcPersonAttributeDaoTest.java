@@ -174,7 +174,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
        
 
-       Map<String, List<Object>> attribs = impl.getUserAttributes("awp9");
+       Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
        assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -205,7 +205,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
        impl.setNameValueColumnMappings(Collections.singletonMap("attr_nam", "attr_val"));
 
        try {
-           impl.getUserAttributes("awp9");
+           impl.getMultivaluedUserAttributes("awp9");
            fail("BadSqlGrammarException expected with invalid attribute mapping key");
        }
        catch (BadSqlGrammarException bsge) {
@@ -216,7 +216,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_va"));
 
        try {
-           impl.getUserAttributes("awp9");
+           impl.getMultivaluedUserAttributes("awp9");
            fail("BadSqlGrammarException expected with invalid attribute mapping key");
        }
        catch (BadSqlGrammarException bsge) {
@@ -250,7 +250,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
        
        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-       Map<String, List<Object>> attribs = impl.getUserAttributes("awp9");
+       Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
        assertEquals(Util.list("blue"), attribs.get("shirt_color"));
@@ -324,7 +324,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
        
        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-       Map<String, List<Object>> attribs = impl.getUserAttributes("susan");
+       Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("susan");
        assertEquals(Collections.singletonList(null), attribs.get("dressShirtColor"));
        assertEquals(Util.list("Susan"), attribs.get("firstName"));
    }
@@ -356,7 +356,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         queryMap.put(queryAttr2, Util.list("blue"));
         queryMap.put("Name",Util.list("John"));
 
-        Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+        Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
         assertEquals(Util.list("blue"), attribs.get("color"));
     }
 
@@ -391,7 +391,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         queryMap.put(queryAttr1, Util.list("awp9"));
         queryMap.put("Name", Util.list("John"));
 
-        Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+        Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
         assertNull(attribs);
     }
     

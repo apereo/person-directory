@@ -19,7 +19,7 @@ import org.jasig.services.persondir.util.Util;
 public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTest {
 
     /**
-     * @see org.jasig.portal.services.persondir.support.AbstractPersonAttributeDaoTest#getPersonAttributeDaoInstance()
+     * @see org.jasig.services.persondir.support.AbstractPersonAttributeDaoTest#getPersonAttributeDaoInstance()
      */
     @Override
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {
@@ -35,7 +35,7 @@ public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTe
         
         final Map<String, List<Object>> goalMap = new HashMap<String, List<Object>>(testMap);
         
-        final Map<String, List<Object>> resultMap = dao.getUserAttributes(testMap);
+        final Map<String, List<Object>> resultMap = dao.getMultivaluedUserAttributes(testMap);
         
         assertEquals(goalMap, resultMap);
     }

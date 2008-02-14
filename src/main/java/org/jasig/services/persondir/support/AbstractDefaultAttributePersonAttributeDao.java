@@ -10,15 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jasig.services.persondir.IPersonAttributeDao;
 
 
 /**
- * Abstract class implementing the IPersonAttributeDao method 
- * {@link IPersonAttributeDao#getUserAttributes(String)} by delegation to 
- * {@link IPersonAttributeDao#getUserAttributes(Map)} using a configurable
+ * Abstract class implementing the IPersonAttributeDao method  {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(String)}
+ * and {@link org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(String)} methods by
+ * delegation to {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)} or
+ * {@link org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(Map)} using a configurable
  * default attribute name.
  * 
  * <br>
@@ -34,9 +32,9 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  *     <tr>
  *         <td align="right" valign="top">defaultAttribute</td>
  *         <td>
- *             The attribute to use for the key in the {@link Map} passed to {@link IPersonAttributeDao#getUserAttributes(Map)}
- *             when {@link #getUserAttributes(String)} is called. The value is the uid passed
- *             to the method.
+ *             The attribute to use for the key in the {@link Map} passed to {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
+ *             or {@link org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(Map)} when
+ *             {@link #getMultivaluedUserAttributes(String)} is called. The value is the uid passed to the method.
  *         </td>
  *         <td valign="top">No</td>
  *         <td valign="top">"username"</td>
@@ -47,30 +45,19 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
-public abstract class AbstractDefaultAttributePersonAttributeDao implements IPersonAttributeDao {
-    protected final Log logger = LogFactory.getLog(getClass());
-    
+public abstract class AbstractDefaultAttributePersonAttributeDao extends AbstractFlatteningPersonAttributeDao {
     /**
      * Defaults attribute to use for a simple query
      */
     private String defaultAttribute = "username";
     
-    
     /**
-     * Implements this interface method by creating a seed Map from the
-     * uid argument and delegating to getUserAttributes() on that Map.
+     * Implements this interface method by creating a seed Map from the uid argument and delegating to
+     * {@link #getMultivaluedUserAttributes(Map)} using the created seed Map.
      * 
-     * Uses {@link Collections#singletonMap(java.lang.Object, java.lang.Object)}
-     * to create a seed with the value rerturned by 
-     * {@link #getDefaultAttributeName()} as the key and <code>uid</code>
-     * as the value. Returns the result of invoking
-     * {@link IPersonAttributeDao#getUserAttributes(Map)} with the new
-     *  {@link Map} as the argument.
-     * 
-     * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.lang.String)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(String)
      */
-    @SuppressWarnings("unchecked")
-    public final Map<String, List<Object>> getUserAttributes(final String uid) {
+    public final Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
         Validate.notNull(uid, "uid may not be null.");
         
         final List<Object> values = Collections.singletonList((Object)uid);
@@ -79,10 +66,10 @@ public abstract class AbstractDefaultAttributePersonAttributeDao implements IPer
             this.logger.debug("Created seed map='" + seed + "' for uid='" + uid + "'");
         }
         
-        return this.getUserAttributes(seed);
+        return this.getMultivaluedUserAttributes(seed);
     }
 
-    
+
     /**
      * Returns the attribute set by {@link #setDefaultAttributeName(String)} or
      * if it has not been called the default value "uid" is returned.

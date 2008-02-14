@@ -24,7 +24,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.SearchExecutor;
 
 /**
- * LDAP implementation of {@link org.jasig.portal.services.persondir.IPersonAttributeDao}.
+ * LDAP implementation of {@link org.jasig.services.persondir.IPersonAttributeDao}.
  * 
  * In the case of multi valued attributes a {@link java.util.List} is set as the value.
  * 
@@ -55,7 +55,7 @@ import org.springframework.ldap.core.SearchExecutor;
  *             used in as the returned attribute name.
  *         </td>
  *         <td valign="top">No</td>
- *         <td valign="top">{@link Collections.EMPTY_MAP}</td>
+ *         <td valign="top">{@link Collections#EMPTY_MAP}</td>
  *     </tr>
  *     <tr>
  *         <td align="right" valign="top">query</td>
@@ -143,7 +143,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
      * Executes the search.<br>
      * Returns the attribute map results from the query.<br>
      * 
-     * @see org.jasig.portal.services.persondir.support.AbstractQueryPersonAttributeDao#getUserAttributesIfNeeded(java.lang.Object[])
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getUserAttributesIfNeeded(java.lang.Object[])
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -165,7 +165,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
     }
 
     /*
-     * @see org.jasig.portal.services.persondir.support.IPersonAttributeDao#getPossibleUserAttributeNames()
+     * @see org.jasig.services.persondir.support.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
     public Set<String> getPossibleUserAttributeNames() {
         return this.possibleUserAttributeNames;

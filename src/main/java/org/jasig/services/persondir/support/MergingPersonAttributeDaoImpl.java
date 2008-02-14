@@ -30,10 +30,10 @@ public class MergingPersonAttributeDaoImpl extends AbstractAggregatingDefaultQue
     /**
      * Calls the current IPersonAttributeDao from using the seed.
      * 
-     * @see org.jasig.portal.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.portal.services.persondir.IPersonAttributeDao, java.util.Map)
+     * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.services.persondir.IPersonAttributeDao, java.util.Map)
      */
     @Override
     protected Map<String, List<Object>> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Map<String, List<Object>> resultAttributes) {
-        return currentlyConsidering.getUserAttributes(seed);
+        return currentlyConsidering.getMultivaluedUserAttributes(seed);
     }
 }

@@ -74,7 +74,7 @@ public class LdapPersonAttributeDaoTest
         queryMap.put(queryAttr, Util.list("unknown"));
         
         try {
-            Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+            Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
             assertNull(attribs);
         }
         catch (DataAccessResourceFailureException darfe) {
@@ -110,7 +110,7 @@ public class LdapPersonAttributeDaoTest
         queryMap.put(queryAttr, Util.list("susan"));
 
         try {
-            Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+            Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
             assertEquals(Util.list("susan.bramhall@yale.edu"), attribs.get("email"));
         }
         catch (DataAccessResourceFailureException darfe) {
@@ -149,7 +149,7 @@ public class LdapPersonAttributeDaoTest
         queryMap.put(queryAttr, Util.list("susan"));
 
         try {
-            Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+            Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
             assertEquals(Util.list("susan.bramhall@yale.edu"), attribs.get("email"));
             assertEquals(Util.list("susan.bramhall@yale.edu"), attribs.get("work.email"));
         }
@@ -180,7 +180,7 @@ public class LdapPersonAttributeDaoTest
         queryMap.put(queryAttr, Util.list("susan"));
         
         try {
-            Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+            Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
             assertNull(attribs.get("email"));
         }
         catch (DataAccessResourceFailureException darfe) {
@@ -210,7 +210,7 @@ public class LdapPersonAttributeDaoTest
         queryMap.put(queryAttr, Util.list("susan"));
         
         try {
-            Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+            Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
             assertEquals(Util.list("susan.bramhall@yale.edu"), attribs.get("mail"));
         }
         catch (DataAccessResourceFailureException darfe) {
@@ -248,7 +248,7 @@ public class LdapPersonAttributeDaoTest
         queryMap.put("email", Util.list("edalquist@unicon.net"));
         
         try {
-            Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+            Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
             assertEquals(Util.list("susan.bramhall@yale.edu"), attribs.get("email"));
         }
         catch (DataAccessResourceFailureException darfe) {
@@ -284,7 +284,7 @@ public class LdapPersonAttributeDaoTest
         queryMap.put(queryAttr1, Util.list("susan"));
         queryMap.put("email", Util.list("edalquist@unicon.net"));
         
-        Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+        Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
         assertNull(attribs);
     }
     
@@ -370,7 +370,7 @@ public class LdapPersonAttributeDaoTest
         impl.setContextSource(this.contextSource);
         
         try {
-            impl.getUserAttributes(Collections.singletonMap("username", Util.list("seed")));
+            impl.getMultivaluedUserAttributes(Collections.singletonMap("username", Util.list("seed")));
             fail("IllegalStateException should have been thrown with no query configured");
         }
         catch (IllegalStateException ise) {
@@ -385,7 +385,7 @@ public class LdapPersonAttributeDaoTest
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         try {
-            impl.getUserAttributes(Collections.singletonMap("username", Util.list("seed")));
+            impl.getMultivaluedUserAttributes(Collections.singletonMap("username", Util.list("seed")));
             fail("IllegalStateException should have been thrown with no context configured");
         }
         catch (IllegalStateException ise) {

@@ -80,7 +80,7 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
     }
 
     /* (non-Javadoc)
-     * @see org.jasig.portal.services.persondir.support.merger.AbstractAttributeMergerTest#getAttributeMerger()
+     * @see org.jasig.services.persondir.support.merger.AbstractAttributeMergerTest#getAttributeMerger()
      */
     @Override
     protected IAttributeMerger getAttributeMerger() {

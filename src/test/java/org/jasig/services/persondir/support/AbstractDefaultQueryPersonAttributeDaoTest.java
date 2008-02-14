@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.util.Util;
 
 /**
@@ -19,12 +18,12 @@ import org.jasig.services.persondir.util.Util;
  * @author Eric Dalquist
  * @version $Revision$
  */
-public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
+public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends AbstractFlatteningPersonAttributeDaoTest {
     /**
-     * @see org.jasig.portal.services.persondir.support.AbstractPersonAttributeDaoTest#getPersonAttributeDaoInstance()
+     * @see org.jasig.services.persondir.support.AbstractFlatteningPersonAttributeDaoTest#getAbstractFlatteningPersonAttributeDao()
      */
     @Override
-    protected final IPersonAttributeDao getPersonAttributeDaoInstance() {
+    protected final AbstractFlatteningPersonAttributeDao getAbstractFlatteningPersonAttributeDao() {
         return this.getAbstractDefaultQueryPersonAttributeDao();
     }
     
@@ -53,21 +52,21 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
         expected.put("TestAttrName", Util.list("edalquist"));
         
-        assertEquals(expected, dao.getUserAttributes("edalquist"));
+        assertEquals(expected, dao.getMultivaluedUserAttributes("edalquist"));
     }
     
     private class SimpleDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
         /**
-         * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
+         * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
          */
         public Set<String> getPossibleUserAttributeNames() {
             return null;
         }
 
         /**
-         * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+         * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
          */
-        public Map<String, List<Object>> getUserAttributes(Map<String, List<Object>> seed) {
+        public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
             return seed;
         }
     }

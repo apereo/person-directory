@@ -176,9 +176,9 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
     }
 
     /*
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
      */
-    public Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed) {
+    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
         Validate.notNull(seed, "Argument 'seed' cannot be null.");
 
         if (patterns == null || patterns.size() < 1) {
@@ -298,7 +298,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
                 this.logger.info("Matching criteria was met, delegating call to the targetPersonAttributeDao='" + targetPersonAttributeDao + "'");
             }
             
-            return this.targetPersonAttributeDao.getUserAttributes(seed);
+            return this.targetPersonAttributeDao.getMultivaluedUserAttributes(seed);
         }
 
         if (this.logger.isInfoEnabled()) {

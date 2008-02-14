@@ -26,7 +26,7 @@ public interface AttributeRule {
      * Applies the embodied rule to the user described by the specified
      * information and returns the result.
      * 
-     * This method follows the same contract as {@link org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
+     * This method follows the same contract as {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
      */
     public abstract Map<String, List<Object>> evaluate(Map<String, List<Object>> userInfo);
 
@@ -34,7 +34,7 @@ public interface AttributeRule {
      * Indicates the complete set of user attribute names that <em>may</em> be
      * returned by a call to <code>evaluate</code>.
      * 
-     * This method follows the same contract as {@link org.jasig.portal.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()}
+     * This method follows the same contract as {@link org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()}
      */
     public abstract Set<String> getPossibleUserAttributeNames();
 

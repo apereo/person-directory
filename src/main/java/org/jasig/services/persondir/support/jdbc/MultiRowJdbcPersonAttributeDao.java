@@ -21,7 +21,7 @@ import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.springframework.jdbc.BadSqlGrammarException;
 
 /**
- * An {@link org.jasig.portal.services.persondir.IPersonAttributeDao}
+ * An {@link org.jasig.services.persondir.IPersonAttributeDao}
  * implementation that maps attribute names and values from name and value column
  * pairs. This is usefull if user attributes are stored in a table like:<br>
  * <table border="1">
@@ -55,7 +55,7 @@ import org.springframework.jdbc.BadSqlGrammarException;
  * <br>
  * 
  * This class expects 1 to N row results for a query, with each row containing 1 to N name
- * value attribute mappings. This contrasts {@link org.jasig.portal.services.persondir.support.jdbc.SingleRowJdbcPersonAttributeDao}
+ * value attribute mappings. This contrasts {@link org.jasig.services.persondir.support.jdbc.SingleRowJdbcPersonAttributeDao}
  * which expects a single row result for a user query. <br>
  * 
  * <br>
@@ -118,7 +118,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      * Creates a new MultiRowJdbcPersonAttributeDao specifying the DataSource and SQL to use.
      * 
      * @param ds The DataSource to get connections from for executing queries, may not be null.
-     * @param attrList Sets the query attribute list to pass to {@link AbstractJdbcPersonAttributeDao#setQueryAttributes(List)} and {@link MultiRowPersonAttributeMappingQuery#MultiRowPersonAttributeMappingQuery(DataSource, String, List, MultiRowJdbcPersonAttributeDao)}
+     * @param attrList Sets the query attribute list to pass to {@link AbstractJdbcPersonAttributeDao#AbstractJdbcPersonAttributeDao(DataSource, String)} and {@link AbstractJdbcPersonAttributeDao#setQueryAttributes(List)}
      * @param sql The SQL to execute for user attributes, may not be null.
      */
     public MultiRowJdbcPersonAttributeDao(DataSource ds, List<String> attrList, String sql) {
@@ -132,7 +132,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      * Returned {@link Map} will have values of {@link String} or a
      * {@link List} of {@link String}.
      * 
-     * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
     @Override
     protected Map<String, List<Object>> parseAttributeMapFromResults(List<Map<String, Object>> queryResults) {
@@ -193,7 +193,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     }
     
     /* 
-     * @see org.jasig.portal.services.persondir.support.IPersonAttributeDao#getPossibleUserAttributeNames()
+     * @see org.jasig.services.persondir.support.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
     public Set<String> getPossibleUserAttributeNames() {
         return this.userAttributes;

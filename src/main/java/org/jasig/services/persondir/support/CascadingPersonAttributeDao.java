@@ -13,9 +13,9 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
 
 
 /**
- * This {@link org.jasig.portal.services.persondir.IPersonAttributeDao}
+ * This {@link org.jasig.services.persondir.IPersonAttributeDao}
  * implementation iterates through an ordered {@link java.util.List} of
- * {@link org.jasig.portal.services.persondir.IPersonAttributeDao} impls
+ * {@link org.jasig.services.persondir.IPersonAttributeDao} impls
  * when getting user attributes.
  * <br>
  * The first DAO is queried using the seed {@link Map} passed to this class. The results
@@ -33,7 +33,7 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
  * running.
  * <br>
  * It is <u>highly</u> recomended that the first DAO on the list for this class is
- * the {@link org.jasig.portal.services.persondir.support.EchoPersonAttributeDaoImpl}
+ * the {@link org.jasig.services.persondir.support.EchoPersonAttributeDaoImpl}
  * to ensure the seed gets placed into the general result map.
  * 
  * @author Eric Dalquist
@@ -49,14 +49,14 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
      * If this is the first call, isFirstQuery == true, the query run against the current IPersonAttributeDao is done using
      * the seed Map. Otherwise the query is run using the resultAttributes Map. 
      * 
-     * @see org.jasig.portal.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.portal.services.persondir.IPersonAttributeDao, java.util.Map)
+     * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.services.persondir.IPersonAttributeDao, java.util.Map)
      */
     @Override
     protected Map<String, List<Object>> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Map<String, List<Object>> resultAttributes) {
         if (isFirstQuery) {
-            return currentlyConsidering.getUserAttributes(seed);
+            return currentlyConsidering.getMultivaluedUserAttributes(seed);
         }
 
-        return currentlyConsidering.getUserAttributes(resultAttributes);
+        return currentlyConsidering.getMultivaluedUserAttributes(resultAttributes);
     }
 }

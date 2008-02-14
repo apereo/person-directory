@@ -32,13 +32,31 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
     protected abstract IPersonAttributeDao getPersonAttributeDaoInstance();
 
     /**
-     * Test that invocation of getUserAttributes(Map null) throws
+     * Test that invocation of getMultivaluedUserAttributes(Map null) throws
      * IllegalArgumentException as specified in IPersonAttributeDao's 
      * interface declaration.
      */
     public void testNullSeed() {
         IPersonAttributeDao dao = getPersonAttributeDaoInstance();
         Map<String, List<Object>> nullMap = null;
+        try {
+            dao.getMultivaluedUserAttributes(nullMap);
+        } catch (IllegalArgumentException iae) {
+            // good, as expected
+            return;
+        }
+        fail("Expected IllegalArgumentException on getMultivaluedUserAttributes((Map)null)");
+
+    }
+
+    /**
+     * Test that invocation of getUserAttributes(Map null) throws
+     * IllegalArgumentException as specified in IPersonAttributeDao's 
+     * interface declaration.
+     */
+    public void testMultiNullSeed() {
+        IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        Map<String, Object> nullMap = null;
         try {
             dao.getUserAttributes(nullMap);
         } catch (IllegalArgumentException iae) {
@@ -47,6 +65,23 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         }
         fail("Expected IllegalArgumentException on getUserAttributes((Map)null)");
 
+    }
+    
+    /**
+     * Test that invocation of getMultivaluedUserAttributes(String null) throws
+     * IllegalArgumentException as specified in IPersonAttributeDao's
+     * interface declaration.
+     */
+    public void testMultiNullUid() {
+        IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        String nullString = null;
+        try {
+            dao.getMultivaluedUserAttributes(nullString);
+        } catch (IllegalArgumentException iae) {
+            // good, as expected
+            return;
+        }
+        fail("Expected IllegalArgumentException on getMultivaluedUserAttributes((String)null)");
     }
     
     /**

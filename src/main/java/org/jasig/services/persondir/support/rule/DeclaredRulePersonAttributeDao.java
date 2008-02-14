@@ -47,7 +47,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     /**
      * Creates a new DeclaredRulePersonAttributeDao specifying the attributeName to pass to
      * {@link #setDefaultAttributeName(String)} and the {@link List} of {@link AttributeRule}s
-     * to pass to {@link #setRules(AttributeRule[])}
+     * to pass to {@link #setRules(List)}
      * 
      * @param attributeName
      * @param rules
@@ -87,7 +87,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     /*
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    public Map<String, List<Object>> getUserAttributes(final Map<String, List<Object>> seed) {
+    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
         Validate.notNull(seed, "Argument 'seed' cannot be null.");
 
         Map<String, List<Object>> rslt = null;    // default (contract of IPersonAttributeDao)

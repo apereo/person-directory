@@ -149,7 +149,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
        columnsToAttributes.put("shirt_color", "dressShirtColor");
        impl.setColumnsToAttributes(columnsToAttributes);
 
-       Map<String, List<Object>> attribs = impl.getUserAttributes("awp9");
+       Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
        assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -178,7 +178,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
        impl.setColumnsToAttributes(columnsToAttributes);
 
        try {
-           impl.getUserAttributes("awp9");
+           impl.getMultivaluedUserAttributes("awp9");
            fail("BadSqlGrammarException expected with invalid attribute mapping key");
        }
        catch (BadSqlGrammarException bsge) {
@@ -210,7 +210,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
        columnsToAttributes.put("shirt_color", null);
        impl.setColumnsToAttributes(columnsToAttributes);
 
-       Map<String, List<Object>> attribs = impl.getUserAttributes("awp9");
+       Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
        assertEquals(Util.list("blue"), attribs.get("shirt_color"));
@@ -282,7 +282,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
        columnsToAttributes.put("shirt_color", "dressShirtColor");
        impl.setColumnsToAttributes(columnsToAttributes);
 
-       Map<String, List<Object>> attribs = impl.getUserAttributes("susan");
+       Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("susan");
        assertNull(attribs.get("dressShirtColor"));
        assertEquals(Util.list("Susan"), attribs.get("firstName"));
    }
@@ -317,7 +317,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         queryMap.put(queryAttr2, Util.list("blue"));
         queryMap.put("Name", Util.list("John"));
 
-        Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+        Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("Andrew"), attribs.get("firstName"));
@@ -352,7 +352,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         queryMap.put(queryAttr1, Util.list("awp9"));
         queryMap.put("Name", Util.list("John"));
 
-        Map<String, List<Object>> attribs = impl.getUserAttributes(queryMap);
+        Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
         assertNull(attribs);
     }
     
@@ -383,7 +383,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         queryMap.put(queryAttr, Util.list("blue"));
         
         try {
-            impl.getUserAttributes(queryMap);
+            impl.getMultivaluedUserAttributes(queryMap);
         } 
         catch (IncorrectResultSizeDataAccessException irsdae) {
             // good, exception thrown for multiple results

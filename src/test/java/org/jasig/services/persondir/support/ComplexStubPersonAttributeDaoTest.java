@@ -83,21 +83,21 @@ public class ComplexStubPersonAttributeDaoTest
     public void testGetUserAttributesMap() {
         Map<String, List<Object>> awp9Key = new HashMap<String, List<Object>>();
         awp9Key.put("username", Util.list("awp9"));
-        assertEquals(this.backingMap.get("awp9"), this.testInstance.getUserAttributes(awp9Key));
+        assertEquals(this.backingMap.get("awp9"), this.testInstance.getMultivaluedUserAttributes(awp9Key));
         
         Map<String, List<Object>> unknownUserKey = new HashMap<String, List<Object>>();
         unknownUserKey.put("uid", Util.list("unknownUser"));
         
-        assertNull(this.testInstance.getUserAttributes(unknownUserKey));
+        assertNull(this.testInstance.getMultivaluedUserAttributes(unknownUserKey));
     }
 
     /**
      * Test getting user attributes using a String key.
      */
     public void testGetUserAttributesString() {
-        assertEquals(this.backingMap.get("aam26"), this.testInstance.getUserAttributes("aam26"));
+        assertEquals(this.backingMap.get("aam26"), this.testInstance.getMultivaluedUserAttributes("aam26"));
         
-        assertNull(this.testInstance.getUserAttributes("unknownUser"));
+        assertNull(this.testInstance.getMultivaluedUserAttributes("unknownUser"));
     }
 
     @Override

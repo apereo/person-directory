@@ -56,12 +56,12 @@ public class RegexGatewayPersonAttributeDaoTest extends TestCase {
 	}
 	
 	public void testMatches() {
-        Map<String, List<Object>> results = target.getUserAttributes("monkey@yahoo.com");
+        Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey@yahoo.com");
 		assertEquals(results, attributes);
 	}
 	
 	public void testDoesNotMatch() {
-        Map<String, List<Object>> results = target.getUserAttributes("monkey");
+        Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey");
 		assertFalse(attributes.equals(results));
 	}
 	

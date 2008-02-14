@@ -86,7 +86,7 @@ public class CascadingPersonAttributeDaoTest
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
         
-        final Map<String, List<Object>> results = targetDao.getUserAttributes("edalquist");
+        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
         
         Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
         expected.put("studentId", Util.list("123456789"));
@@ -100,7 +100,7 @@ public class CascadingPersonAttributeDaoTest
         final CascadingPersonAttributeDao targetDao = new CascadingPersonAttributeDao();
         
         try {
-            targetDao.getUserAttributes("edalquist");
+            targetDao.getMultivaluedUserAttributes("edalquist");
             fail("IllegalStateException should have been thrown with no child DAOs");
         }
         catch (IllegalStateException ise) {
@@ -120,7 +120,7 @@ public class CascadingPersonAttributeDaoTest
         
         
         targetDao.setRecoverExceptions(true);
-        Map<String, List<Object>> results = targetDao.getUserAttributes("edalquist");
+        Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
         
         Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
         expected.put("studentId", Util.list("123456789"));
@@ -133,7 +133,7 @@ public class CascadingPersonAttributeDaoTest
         
         targetDao.setRecoverExceptions(false);
         try {
-            targetDao.getUserAttributes("edalquist");
+            targetDao.getMultivaluedUserAttributes("edalquist");
             fail("RuntimeException should have been thrown with no child DAOs");
         }
         catch (RuntimeException ise) {
@@ -142,7 +142,7 @@ public class CascadingPersonAttributeDaoTest
     }
     
     /**
-     * @see org.jasig.portal.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao()
+     * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao()
      */
     @Override
     protected AbstractAggregatingDefaultQueryPersonAttributeDao getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao() {
@@ -158,7 +158,7 @@ public class CascadingPersonAttributeDaoTest
     }
 
     /**
-     * @see org.jasig.portal.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao()
+     * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao()
      */
     @Override
     protected AbstractAggregatingDefaultQueryPersonAttributeDao getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao() {

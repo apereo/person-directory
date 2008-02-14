@@ -88,11 +88,11 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     /**
      * Iterates through the configured {@link java.util.List} of {@link IPersonAttributeDao}
      * instances. The results from each DAO are merged into the result {@link Map}
-     * by the configured {@link org.jasig.portal.services.persondir.support.merger.IAttributeMerger}. 
+     * by the configured {@link IAttributeMerger}. 
      * 
-     * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(Map)
      */
-    public Map<String, List<Object>> getUserAttributes(Map<String, List<Object>> seed) {
+    public final Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
         Validate.notNull(seed, "seed may not be null.");
         
         if (this.personAttributeDaos == null) {
@@ -165,7 +165,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * invoking this IPersonAttributeDao implementation are not the union
      * of the attributes declared by the underlying PersonAttributeDaos.
      * 
-     * @see org.jasig.portal.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
     public final Set<String> getPossibleUserAttributeNames() {
         final Set<String> attrNames = new HashSet<String>();

@@ -35,10 +35,10 @@ class PersonAttributesMapper implements AttributesMapper {
     
     /**
      * Create a mapper with the ldap to portal attribute mappings. Please read the
-     * documentation for {@link org.jasig.portal.services.persondir.support.ldap.LdapPersonAttributeDao#setLdapAttributesToPortalAttributes(Map)}
+     * documentation for {@link org.jasig.services.persondir.support.ldap.LdapPersonAttributeDao#setLdapAttributesToPortalAttributes(Map)}
      * 
      * @param ldapAttributesToPortalAttributes Map of ldap to portal attributes.
-     * @see org.jasig.portal.services.persondir.support.ldap.LdapPersonAttributeDao#setLdapAttributesToPortalAttributes(Map)
+     * @see org.jasig.services.persondir.support.ldap.LdapPersonAttributeDao#setLdapAttributesToPortalAttributes(Map)
      */
     public PersonAttributesMapper(Map<String, Set<String>> ldapAttributesToPortalAttributes) {
         if (ldapAttributesToPortalAttributes == null) {
