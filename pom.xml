@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.jasig</groupId>
@@ -12,7 +11,7 @@
     <groupId>org.jasig.service</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
 
     <licenses>
         <license>
@@ -21,18 +20,17 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    
+    <distributionManagement>
+        <site>
+            <id>developer.jasig</id>
+            <url>scp://developer.ja-sig.org/jasig/htdocs/developer/projects/person-directory/${pom.version}</url>
+        </site>
+    </distributionManagement>
 
     <name>Person Directory Parent</name>
     <description>Parent project for the API and Impl packages.</description>
-    <issueManagement>
-        <url>http://www.ja-sig.org/issues/browse/PERSONDIR</url>
-        <system>Jira</system>
-    </issueManagement>
-    <scm>
-        <url>http://developer.ja-sig.org/source/changelog/jasigsvn/person-directory</url>
-        <developerConnection>scm:svn:https://${maven.username}@developer.ja-sig.org/svn/person-directory/</developerConnection>
-        <connection>scm:svn:https://developer.ja-sig.org/svn/person-directory/</connection>
-    </scm>
+
     <repositories>
         <repository>
             <id>jasig-repository</id>
@@ -42,64 +40,24 @@
     </repositories>
     <mailingLists>
         <mailingList>
-            <name>JA-SIG Portal</name>
-            <subscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-portal&amp;A=1</subscribe>
-            <unsubscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-portal&amp;A=1</unsubscribe>
-            <archive>http://list.unm.edu/archives/jasig-portal.html</archive>
+            <name>Person-Directory Users</name>
+            <subscribe>http://www.ja-sig.org/wiki/display/JSG/person-directory-user</subscribe>
+            <unsubscribe>http://www.ja-sig.org/wiki/display/JSG/person-directory-user</unsubscribe>
+            <archive>http://www.ja-sig.org/wiki/display/JSG/person-directory-user</archive>
         </mailingList>
         <mailingList>
-            <name>JA-SIG Developers</name>
-            <subscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-dev&amp;A=1</subscribe>
-            <unsubscribe>http://list.unm.edu/cgi-bin/wa?SUBED1=jasig-dev&amp;A=1</unsubscribe>
-            <archive>http://list.unm.edu/archives/jasig-dev.html</archive>
+            <name>Person-Directory Developers</name>
+            <subscribe>http://www.ja-sig.org/wiki/display/JSG/person-directory-dev</subscribe>
+            <unsubscribe>http://www.ja-sig.org/wiki/display/JSG/person-directory-dev</unsubscribe>
+            <archive>http://www.ja-sig.org/wiki/display/JSG/person-directory-dev</archive>
         </mailingList>
     </mailingLists>
-    <developers>
-        <developer>
-            <name>Andrew Petro</name>
-            <id>awp9</id>
-            <email>andrew.petro@yale.edu</email>
-            <organization>Unicon Inc.</organization>
-            <roles>
-                <role>Developer</role>
-            </roles>
-            <url>http://www.ja-sig.org/wiki/display/~awp9</url>
-            <timezone>-7</timezone>
-        </developer>
-        <developer>
-            <name>Eric Dalquist</name>
-            <id>edalquist</id>
-            <email>eric.dalquist@doit.wisc.edu</email>
-            <organization>UW - Madison</organization>
-            <roles>
-                <role>Project Admin</role>
-                <role>Developer</role>
-            </roles>
-            <url>http://www.ja-sig.org/wiki/display/~edalquist</url>
-            <timezone>-6</timezone>
-        </developer>
-        <developer>
-            <name>Scott Battaglia</name>
-            <id>sbattaglia</id>
-            <email>scott_battaglia@rutgers.edu</email>
-            <organization>Rutgers</organization>
-            <roles>
-                <role>Developer</role>
-            </roles>
-            <url>http://www.ja-sig.org/wiki/display/~battags</url>
-            <timezone>-5</timezone>
-        </developer>
-    </developers>
-    <contributors>
-        <contributor>
-            <name>Ernest Rider</name>
-            <email>erider@unicon.net</email>
-            <organization>Unicon Inc.</organization>
-            <timezone>-7</timezone>
-        </contributor>
-    </contributors>
     
     <properties>
+        <!-- POM Configuration Properties -->
+        <issues.projectKey>PERSONDIR</issues.projectKey>
+        <scm.path>/person-directory/trunk</scm.path>
+        
         <!-- Project Dependency Version Properties -->
         <commons-collections.version>3.2</commons-collections.version>
         <commons-dbcp.version>1.2.1</commons-dbcp.version>
@@ -277,4 +235,10 @@
             </reporting>
         </profile>
     </profiles>
+
+  <scm>
+    <connection>scm:svn:https://www.ja-sig.org/svn/person-directory/tags/rel-1.1.0</connection>
+    <developerConnection>scm:svn:https://www.ja-sig.org/svn/person-directory/tags/rel-1.1.0</developerConnection>
+    <url>http://developer.ja-sig.org/source/browse/jasigsvn/person-directory/tags/rel-1.1.0</url>
+  </scm>
 </project>
