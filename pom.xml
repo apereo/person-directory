@@ -21,6 +21,13 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    
+    <distributionManagement>
+        <site>
+            <id>developer.jasig</id>
+            <url>scp://developer.ja-sig.org/jasig/htdocs/developer/projects/person-directory/${pom.version}</url>
+        </site>
+    </distributionManagement>
 
     <name>Person Directory Parent</name>
     <description>Parent project for the API and Impl packages.</description>
