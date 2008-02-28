@@ -155,7 +155,6 @@ public abstract class AbstractQueryPersonAttributeDao extends AbstractDefaultAtt
     /**
      * @param queryAttributes The queryAttributes to set.
      */
-    @Required
     public final void setQueryAttributes(List<String> queryAttributes) {
         Validate.notNull(queryAttributes, "queryAttributes cannot be null");
         
