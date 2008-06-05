@@ -174,6 +174,13 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         result = dao.getMultivaluedUserAttributes(queryMap);
         this.validateUser1(result);
         assertEquals("Incorrect number of items in cache", 2, cacheMap.size());
+        
+        
+        dao.removeUserAttributesMultivaluedSeed(queryMap);
+        assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
+        
+        dao.removeUserAttributes("nobody");
+        assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
     }
     
 

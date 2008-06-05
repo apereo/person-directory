@@ -60,13 +60,22 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
     public final Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
         Validate.notNull(uid, "uid may not be null.");
         
+        final Map<String, List<Object>> seed = this.toSeedMap(uid);
+        
+        return this.getMultivaluedUserAttributes(seed);
+    }
+
+    /**
+     * Converts the uid to a multi-valued seed Map using the value from {@link #getDefaultAttributeName()}
+     * as the key. 
+     */
+    protected Map<String, List<Object>> toSeedMap(String uid) {
         final List<Object> values = Collections.singletonList((Object)uid);
         final Map<String, List<Object>> seed = Collections.singletonMap(this.getDefaultAttributeName(), values);
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Created seed map='" + seed + "' for uid='" + uid + "'");
         }
-        
-        return this.getMultivaluedUserAttributes(seed);
+        return seed;
     }
 
 

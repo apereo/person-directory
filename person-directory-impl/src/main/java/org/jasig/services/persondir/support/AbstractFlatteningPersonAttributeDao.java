@@ -32,18 +32,26 @@ public abstract class AbstractFlatteningPersonAttributeDao implements IPersonAtt
     public final Map<String, Object> getUserAttributes(Map<String, Object> seed) {
         Validate.notNull(seed, "seed may not be null.");
         
-        //Convert the <String, Object> map to a <String, List<Object>> map
+        final Map<String, List<Object>> multiSeed = toMultivaluedSeed(seed);
+        
+        //Get the attributes from the subclass
+        final Map<String, List<Object>> multivaluedUserAttributes = this.getMultivaluedUserAttributes(multiSeed);
+        
+        return this.flattenResults(multivaluedUserAttributes);
+    }
+
+    /**
+     * Convert the <String, Object> map to a <String, List<Object>> map by simply wrapping
+     * each value in a singleton (read-only) List
+     */
+    protected Map<String, List<Object>> toMultivaluedSeed(Map<String, Object> seed) {
         final Map<String, List<Object>> multiSeed = new HashMap<String, List<Object>>(seed.size());
         for (final Map.Entry<String, Object> seedEntry : seed.entrySet()) {
             final String seedName = seedEntry.getKey();
             final Object seedValue = seedEntry.getValue();
             multiSeed.put(seedName, Collections.singletonList(seedValue));
         }
-        
-        //Get the attributes from the subclass
-        final Map<String, List<Object>> multivaluedUserAttributes = this.getMultivaluedUserAttributes(multiSeed);
-        
-        return this.flattenResults(multivaluedUserAttributes);
+        return multiSeed;
     }
 
     /* (non-Javadoc)

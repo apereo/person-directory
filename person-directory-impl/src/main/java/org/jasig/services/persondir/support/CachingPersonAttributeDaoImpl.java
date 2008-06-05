@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.services.persondir.IPersonAttributeDao;
@@ -295,6 +296,23 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         }
 
         return queryResults;
+    }
+    
+    public void removeUserAttributes(String uid) {
+        Validate.notNull(uid, "uid may not be null.");
+        final Map<String, List<Object>> seed = this.toSeedMap(uid);
+        this.removeUserAttributesMultivaluedSeed(seed);
+    }
+    
+    public void removeUserAttributes(Map<String, Object> seed) {
+        final Map<String, List<Object>> multiSeed = this.toMultivaluedSeed(seed);
+        this.removeUserAttributesMultivaluedSeed(multiSeed);
+    }
+    
+    public void removeUserAttributesMultivaluedSeed(Map<String, List<Object>> seed) {
+        final MethodInvocation methodInvocation = new PersonAttributeDaoMethodInvocation(seed);
+        final Serializable cacheKey = this.cacheKeyGenerator.generateKey(methodInvocation);
+        this.userInfoCache.remove(cacheKey);
     }
 
     /**
