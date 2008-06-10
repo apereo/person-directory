@@ -16,12 +16,15 @@ import javax.naming.directory.SearchControls;
 
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
+import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.ldap.core.AttributesMapperCallbackHandler;
 import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.SearchExecutor;
+import org.springframework.util.Assert;
 
 /**
  * LDAP implementation of {@link org.jasig.services.persondir.IPersonAttributeDao}.
@@ -89,19 +92,8 @@ import org.springframework.ldap.core.SearchExecutor;
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
-public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
-    /**
-     * Time limit, in milliseconds, for LDAP query. Zero means wait
-     * indefinitely.
-     */
-    private int timeLimit = 0;
-
-    /**
-     * The query we should execute.
-     */
-    private String query;
-
-    /**
+public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao implements InitializingBean {
+        /**
      * Class for mapping LDAP Attributes to a person attribute Map using the LdapTemplate.
      */
     @SuppressWarnings("unchecked")
@@ -113,29 +105,38 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
     private Set<String> possibleUserAttributeNames = Collections.emptySet();
 
     /**
-     * The base distinguished name to use for queries.
-     */
-    private String baseDN = "";
-
-    /**
-     * The ContextSource to get DirContext objects for queries from.
-     */
-    private ContextSource contextSource = null;
-    
-    /**
      * The LdapTemplate to use to execute queries on the DirContext
      */
     private LdapTemplate ldapTemplate = null;
-    
-    /**
-     * Search controls to use for LDAP queries
-     */
-    final private SearchControls searchControls;
+
+    private String query = null;
+    private String baseDN = "";
+    private ContextSource contextSource = null;
+    private SearchControls searchControls = new SearchControls();
+    private boolean setReturningAttributes = true;
     
     
     public LdapPersonAttributeDao() {
-        this.searchControls = new SearchControls();
         this.searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    public void afterPropertiesSet() throws Exception {
+        if (this.setReturningAttributes) {
+            final Map<String, Set<String>> ldapAttributesToPortalAttributes = this.attributesMapper.getLdapAttributesToPortalAttributes();
+            final Set<String> ldapAttributes = ldapAttributesToPortalAttributes.keySet();
+            this.searchControls.setReturningAttributes(ldapAttributes.toArray(new String[ldapAttributes.size()]));
+        }
+        
+        if (this.contextSource == null) {
+            throw new BeanCreationException("contextSource must be set");
+        }
+        
+        if (this.query == null) {
+            throw new BeanCreationException("query must be set");
+        }
     }
 
     /**
@@ -148,13 +149,6 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
     @SuppressWarnings("unchecked")
     @Override
     protected Map<String, List<Object>> getUserAttributesIfNeeded(Object[] args) {
-        if (this.contextSource == null) {
-            throw new IllegalStateException("ContextSource must be set");
-        }
-        if (this.query == null) {
-            throw new IllegalStateException("query must be set");
-        }
-
         final SearchExecutor se = new QuerySearchExecutor(this.baseDN, this.query, args, this.searchControls);
         final CollectingNameClassPairCallbackHandler attributesMapperCallbackHandler = new AttributesMapperCallbackHandler(this.attributesMapper);
         
@@ -206,43 +200,47 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
     }
 
     /**
-     * @return Returns the timeLimit.
+     * @see javax.naming.directory.SearchControls#getTimeLimit()
+     * @deprecated Set the property on the {@link SearchControls} and set that via {@link #setSearchControls(SearchControls)}
      */
+    @Deprecated
     public int getTimeLimit() {
-        return this.timeLimit;
+        return this.searchControls.getTimeLimit();
     }
 
     /**
-     * @param timeLimit The timeLimit to set.
+     * @see javax.naming.directory.SearchControls#setTimeLimit(int)
+     * @deprecated
      */
-    public void setTimeLimit(int timeLimit) {
-        this.timeLimit = timeLimit;
-        this.searchControls.setTimeLimit(this.timeLimit);
+    @Deprecated
+    public void setTimeLimit(int ms) {
+        this.searchControls.setTimeLimit(ms);
     }
-
+    
     /**
-     * @return Returns the query.
+     * @return The query to be executed.
      */
     public String getQuery() {
         return this.query;
     }
 
     /**
-     * @param uidQuery The query to set.
+     * @param uidQuery The query to be executed.
      */
     public void setQuery(String uidQuery) {
+        Assert.notNull(uidQuery, "uidQuery can not be null");
         this.query = uidQuery;
     }
 
     /**
-     * @return Returns the ldapServer.
+     * @return The base distinguished name to use for queries.
      */
     public String getBaseDN() {
         return this.baseDN;
     }
 
     /**
-     * @param baseDN The ldapServer to set.
+     * @param baseDN The base distinguished name to use for queries.
      */
     public void setBaseDN(String baseDN) {
         if (baseDN == null) {
@@ -253,17 +251,32 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao {
     }
 
     /**
-     * @return Returns the contextSource.
+     * @return The ContextSource to get DirContext objects for queries from.
      */
     public ContextSource getContextSource() {
         return this.contextSource;
     }
     
     /**
-     * @param contextSource The contextSource to set.
+     * @param contextSource The ContextSource to get DirContext objects for queries from.
      */
     public void setContextSource(ContextSource contextSource) {
+        Assert.notNull(contextSource, "contextSource can not be null");
         this.contextSource = contextSource;
         this.ldapTemplate = new LdapTemplate(this.contextSource);
+    }
+
+    /**
+     * @return Search controls to use for LDAP queries
+     */
+    public SearchControls getSearchControls() {
+        return this.searchControls;
+    }
+    /**
+     * @param searchControls Search controls to use for LDAP queries
+     */
+    public void setSearchControls(SearchControls searchControls) {
+        Assert.notNull(searchControls, "searchControls can not be null");
+        this.searchControls = searchControls;
     }
 }

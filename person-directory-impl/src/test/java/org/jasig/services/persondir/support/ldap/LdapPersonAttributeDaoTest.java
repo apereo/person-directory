@@ -16,6 +16,7 @@ import java.util.Set;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
 import org.jasig.services.persondir.util.Util;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.core.support.LdapContextSource;
 
@@ -52,7 +53,7 @@ public class LdapPersonAttributeDaoTest
         this.contextSource = null;
     }
 
-    public void testNotFoundQuery() {
+    public void testNotFoundQuery() throws Exception {
         final String queryAttr = "uid";
         final List<String> queryAttrList = new LinkedList<String>();
         queryAttrList.add(queryAttr);
@@ -69,6 +70,8 @@ public class LdapPersonAttributeDaoTest
         impl.setQuery("(uid={0})");
         
         impl.setQueryAttributes(queryAttrList);
+
+        impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(queryAttr, Util.list("unknown"));
@@ -88,7 +91,7 @@ public class LdapPersonAttributeDaoTest
      * This testcase will cease to work on that fateful day when Susan
      * no longer appears in Yale University LDAP.
      */
-    public void testSingleAttrQuery() {
+    public void testSingleAttrQuery() throws Exception {
         final String queryAttr = "uid";
         final List<String> queryAttrList = new LinkedList<String>();
         queryAttrList.add(queryAttr);
@@ -105,6 +108,8 @@ public class LdapPersonAttributeDaoTest
         impl.setQuery("(uid={0})");
         
         impl.setQueryAttributes(queryAttrList);
+
+        impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(queryAttr, Util.list("susan"));
@@ -124,7 +129,7 @@ public class LdapPersonAttributeDaoTest
      * This testcase will cease to work on that fateful day when Susan
      * no longer appears in Yale University LDAP.
      */
-    public void testMultipleMappings() {
+    public void testMultipleMappings() throws Exception {
         final String queryAttr = "uid";
         final List<String> queryAttrList = new LinkedList<String>();
         queryAttrList.add(queryAttr);
@@ -144,6 +149,8 @@ public class LdapPersonAttributeDaoTest
         impl.setQuery("(uid={0})");
         
         impl.setQueryAttributes(queryAttrList);
+
+        impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(queryAttr, Util.list("susan"));
@@ -158,7 +165,7 @@ public class LdapPersonAttributeDaoTest
         }
     }
 
-    public void testInvalidAttrMap() {
+    public void testInvalidAttrMap() throws Exception {
         final String queryAttr = "uid";
         final List<String> queryAttrList = new LinkedList<String>();
         queryAttrList.add(queryAttr);
@@ -175,6 +182,8 @@ public class LdapPersonAttributeDaoTest
         impl.setQuery("(uid={0})");
         
         impl.setQueryAttributes(queryAttrList);
+
+        impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(queryAttr, Util.list("susan"));
@@ -188,7 +197,7 @@ public class LdapPersonAttributeDaoTest
         }
     }
 
-    public void testDefaultAttrMap() {
+    public void testDefaultAttrMap() throws Exception {
         final String queryAttr = "uid";
         final List<String> queryAttrList = new LinkedList<String>();
         queryAttrList.add(queryAttr);
@@ -205,6 +214,8 @@ public class LdapPersonAttributeDaoTest
         impl.setQuery("(uid={0})");
         
         impl.setQueryAttributes(queryAttrList);
+
+        impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(queryAttr, Util.list("susan"));
@@ -222,7 +233,7 @@ public class LdapPersonAttributeDaoTest
      * Test case for a query that needs multiple attributes to complete and
      * more attributes than are needed to complete are passed to it.
      */
-    public void testMultiAttrQuery() {
+    public void testMultiAttrQuery() throws Exception {
         final String queryAttr1 = "uid";
         final String queryAttr2 = "alias";
         final List<String> queryAttrList = new LinkedList<String>();
@@ -241,6 +252,8 @@ public class LdapPersonAttributeDaoTest
         impl.setQuery("(&(uid={0})(alias={1}))");
         
         impl.setQueryAttributes(queryAttrList);
+
+        impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(queryAttr1, Util.list("susan"));
@@ -260,7 +273,7 @@ public class LdapPersonAttributeDaoTest
      * A query that needs mulitple attributes to complete but the needed
      * attributes aren't passed to it.
      */
-    public void testInsufficientAttrQuery() {
+    public void testInsufficientAttrQuery() throws Exception {
         final String queryAttr1 = "uid";
         final String queryAttr2 = "alias";
         final List<String> queryAttrList = new LinkedList<String>();
@@ -291,7 +304,7 @@ public class LdapPersonAttributeDaoTest
     /**
      * Test proper reporting of declared attribute names.
      */
-    public void testAttributeNames() {
+    public void testAttributeNames() throws Exception {
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
@@ -315,7 +328,7 @@ public class LdapPersonAttributeDaoTest
         assertEquals(expectedAttributeNames, impl.getPossibleUserAttributeNames());
     }
     
-    public void testProperties() {
+    public void testProperties() throws Exception {
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         assertEquals("", impl.getBaseDN());
@@ -365,15 +378,15 @@ public class LdapPersonAttributeDaoTest
     /**
      * Test proper reporting of declared attribute names.
      */
-    public void testNullContext() {
+    public void testNullContext() throws Exception {
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         impl.setContextSource(this.contextSource);
         
         try {
-            impl.getMultivaluedUserAttributes(Collections.singletonMap("username", Util.list("seed")));
-            fail("IllegalStateException should have been thrown with no query configured");
+            impl.afterPropertiesSet();
+            fail("BeanCreationException should have been thrown with no query configured");
         }
-        catch (IllegalStateException ise) {
+        catch (BeanCreationException ise) {
             //expected
         }
     }
@@ -381,14 +394,14 @@ public class LdapPersonAttributeDaoTest
     /**
      * Test proper reporting of declared attribute names.
      */
-    public void testNullQuery() {
+    public void testNullQuery() throws Exception {
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         try {
-            impl.getMultivaluedUserAttributes(Collections.singletonMap("username", Util.list("seed")));
-            fail("IllegalStateException should have been thrown with no context configured");
+            impl.afterPropertiesSet();
+            fail("BeanCreationException should have been thrown with no context configured");
         }
-        catch (IllegalStateException ise) {
+        catch (BeanCreationException ise) {
             //expected
         }
     }
