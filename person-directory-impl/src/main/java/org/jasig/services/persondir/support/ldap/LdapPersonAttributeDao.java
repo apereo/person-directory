@@ -42,12 +42,12 @@ import org.springframework.util.Assert;
  *         <th align="left">Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">timeLimit</td>
+ *         <td align="right" valign="top">searchControls</td>
  *         <td>
- *             Sets a time limit for LDAP Query execution time. See {@link SearchControls#setTimeLimit(int)}
+ *             Set the {@link SearchControls} used for executing the LDAP query.
  *         </td>
  *         <td valign="top">No</td>
- *         <td valign="top">0</td>
+ *         <td valign="top">Default instance with SUBTREE scope.</td>
  *     </tr>
  *     <tr>
  *         <td align="right" valign="top">ldapAttributesToPortalAttributes</td>
@@ -84,6 +84,16 @@ import org.springframework.util.Assert;
  *         </td>
  *         <td valign="top">Yes</td>
  *         <td valign="top">null</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">setReturningAttributes</td>
+ *         <td>
+ *             If the ldap attributes set in the ldapAttributesToPortalAttributes Map should be copied
+ *             into the {@link SearchControls#setReturningAttributes(String[])}. Setting this helps reduce
+ *             wire traffic of ldap queries.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">true</td>
  *     </tr>
  * </table>
  * 
