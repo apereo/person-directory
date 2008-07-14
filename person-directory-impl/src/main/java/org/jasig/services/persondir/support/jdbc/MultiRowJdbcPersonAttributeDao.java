@@ -71,22 +71,11 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
  *         <th align="left">Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">attributeNameMappings</td>
- *         <td>
- *             Maps attribute names as defined in the database to attribute names to be exposed
- *             to the client code. The keys of the Map must be Strings, the values may be
- *             <code>null</code>, String or a Set of Strings. The keySet of this Map is returned
- *             as the possibleUserAttributeNames property. If an attribute name is not in
- *             the map the attribute name will be used in as the returned attribute name.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">{@link java.util.Collections#EMPTY_MAP}</td>
- *     </tr>
- *     <tr>
  *         <td align="right" valign="top">nameValueColumnMappings</td>
  *         <td>
- *             The {@link Map} of columns from a name column to value columns. Keys are Strings,
- *             Values are Strings or {@link java.util.List} of Strings 
+ *             A {@link Map} of attribute name columns to attribute value columns. A single result row can have multiple
+ *             name columns and multiple value columns associated with each name. The values of the {@link Ma}p can be
+ *             either {@link String} or {@link Collection<String>}.
  *         </td>
  *         <td valign="top">Yes</td>
  *         <td valign="top">null</td>
@@ -131,7 +120,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      * 
      * @param nameValueColumnMap The Map of name column to value column(s). 
      */
-    public void setNameValueColumnMappings(final Map<String, ? extends Object> nameValueColumnMap) {
+    public void setNameValueColumnMappings(final Map<String, ?> nameValueColumnMap) {
         if (nameValueColumnMap == null) {
             this.nameValueColumnMappings = null;
         }
@@ -220,69 +209,4 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
             return new LinkedHashMap<K, V>();
         }
     }
-    
-//    /**
-//     * Returned {@link Map} will have values of {@link String} or a
-//     * {@link List} of {@link String}.
-//     * 
-//     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
-//     */
-//    @Override
-//    protected Map<String, List<Object>> parseAttributeMapFromResults(List<Map<String, Object>> queryResults) {
-//        final Map<String, List<Object>> results = new HashMap<String, List<Object>>();
-//        
-//        //Iterate over each row in the result set
-//        for (final Map<String, Object> rowResult : queryResults) {
-//            final Map<String, Object> caseInsensitiveRowResult = new CaseInsensitiveMap<Object>(rowResult);
-//
-//            //Iterate over each attribute column mapping to get the data from the row
-//            for (final Map.Entry<String, Set<String>> columnMapping : this.nameValueColumnMappings.entrySet()) {
-//                final String keyColumn = columnMapping.getKey();
-//                final Object attrNameObj = caseInsensitiveRowResult.get(keyColumn);
-//                if (attrNameObj == null && !caseInsensitiveRowResult.containsKey(keyColumn)) {
-//                    throw new BadSqlGrammarException("No column named '" + keyColumn + "' exists in result set", this.getQueryTemplate(), null);
-//                }
-//                
-//                final String attrName = String.valueOf(attrNameObj);
-//                
-//                final Set<String> valueColumns = columnMapping.getValue();
-//                final List<Object> attrValues = new ArrayList<Object>(valueColumns.size());
-//                for (final String valueColumn : valueColumns) {
-//                    final Object attrValue = caseInsensitiveRowResult.get(valueColumn);
-//                    if (attrValue == null && !caseInsensitiveRowResult.containsKey(valueColumn)) {
-//                        throw new BadSqlGrammarException("No column named '" + valueColumn + "' exists in result set", this.getQueryTemplate(), null);
-//                    }
-//                    
-//                    attrValues.add(attrValue);
-//                }
-//
-//                final Set<String> mappedNames = this.attributeNameMappings.get(attrName);
-//                
-//                //If no portal user attribute names are mapped add the value(s) with the attribute name from the result set
-//                if (mappedNames == null) {
-//                    if (this.logger.isDebugEnabled()) {
-//                        this.logger.debug("Adding un-mapped attribute '" + attrName + "'");
-//                    }
-//                    
-//                    MultivaluedPersonAttributeUtils.addResult(results, attrName, attrValues);
-//                }
-//                else {
-//                    //For each mapped portlet attribute name store the value(s)
-//                    for (final String portalAttrName : mappedNames) {
-//                        if (this.logger.isDebugEnabled()) {
-//                            this.logger.debug("Adding mapped attribute '" + portalAttrName + "' for source attribute '" + attrName + "'");
-//                        }
-//
-//                        MultivaluedPersonAttributeUtils.addResult(results, portalAttrName, attrValues);
-//                    }
-//                }
-//            }
-//        }
-//        
-//        if (this.logger.isDebugEnabled()) {
-//            this.logger.debug("Returning attribute Map '" + results + "' from query results '" + queryResults + "'");
-//        }
-//        
-//        return results;
-//    }
 }

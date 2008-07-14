@@ -78,8 +78,8 @@ public final class MultivaluedPersonAttributeUtils {
                 mappedAttributesBuilder.put(sourceAttrName, mappedSet);
             }
             //Create a defenisve copy of the mapped set & verify its contents are strings
-            else if (mappedAttribute instanceof Set) {
-                final Set<?> sourceSet = (Set<?>)mappedAttribute;
+            else if (mappedAttribute instanceof Collection) {
+                final Collection<?> sourceSet = (Collection<?>)mappedAttribute;
                 
                 //Ensure the collection only contains strings.
                 final Set<String> mappedSet = new LinkedHashSet<String>();

@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jasig.services.persondir.IPerson;
-import org.jasig.services.persondir.IPersonAttributeDao;
 
 /**
  * Defines the contract for a person directory user attribute rule for use with

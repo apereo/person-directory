@@ -13,7 +13,8 @@ import org.jasig.services.persondir.IPerson;
 
 
 /**
- * Maps calls to {@link #getPeople(Map)} to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)}
+ * Maps calls to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeople(Map)} to
+ * {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)}
  * 
  * @author Eric Dalquist
  * @version $Revision$

@@ -32,16 +32,42 @@ import org.jasig.services.persondir.IPerson;
  *         <th align="left">Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">queryAttributes</td>
+ *         <td align="right" valign="top">queryAttributeMapping</td>
  *         <td>
- *             A {@link List} of {@link String} attribute names whos values should be used
- *             when executing the
- *             query via {@link #getUserAttributesIfNeeded(Object[])}. If this {@link List} is set all of the names it contains must be in
- *             the keySet of the seed passed to {@link #getUserAttributes(Map)} or null will
- *             be returned. If the {@link List} is left null the {@link #getDefaultAttributeName()}
- *             will be used as the single argument when calling {@link #getUserAttributesIfNeeded(Object[])}
+ *             A {@link Map} from attribute names used in the query {@link Map} to attribute names to use in the SQL.
+ *             The values can be either {@link String} or {@link Collection<String>} to use a single Map attribute under
+ *             multiple names as in the SQL. If set only {@link Map} attributes listed will be used in the SQL. If not
+ *             set all {@link Map} attributes are used as-is in the SQL.
  *         </td>
- *         <td valign="top">Yes</td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">resultAttributeMapping</td>
+ *         <td>
+ *             A {@link Map} from SQL result names to returned attribute names. The values can be either {@link String} 
+ *             or {@link Collection<String>} to use a single SQL result under multiple returned attributes. If set only
+ *             SQL attributes listed will be returned. If not set all SQL attributes will be returned.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">requireAllQueryAttributes</td>
+ *         <td>
+ *             If the SQL should only be run if all attributes listed in the queryAttributeMapping exist in the query
+ *             {@link Map}. Ignored if queryAttributeMapping is null
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">false</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">userNameAttribute</td>
+ *         <td>
+ *             The name of the returned attribute to use as the username for the resulting IPersons. If null the value
+ *             of defaultAttribute is used.
+ *         </td>
+ *         <td valign="top">No</td>
  *         <td valign="top">null</td>
  *     </tr>
  * </table>

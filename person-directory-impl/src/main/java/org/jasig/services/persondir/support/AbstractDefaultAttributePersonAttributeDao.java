@@ -12,12 +12,14 @@ import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.jasig.services.persondir.IPerson;
+import org.springframework.dao.support.DataAccessUtils;
 
 
 /**
  * Abstract class implementing the IPersonAttributeDao method  {@link org.jasig.services.persondir.IPersonAttributeDao#getPerson(String)}
- * by delegation to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeople(Map)} using a configurable
- * default attribute name.
+ * by delegation to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)} using a configurable
+ * default attribute name. If {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)} returnes
+ * more than one {@link IPerson} is returned {@link org.springframework.dao.IncorrectResultSizeDataAccessException} is thrown.
  * 
  * <br>
  * <br>
@@ -32,7 +34,7 @@ import org.jasig.services.persondir.IPerson;
  *     <tr>
  *         <td align="right" valign="top">defaultAttribute</td>
  *         <td>
- *             The attribute to use for the key in the {@link Map} passed to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeople(Map)}
+ *             The attribute to use for the key in the {@link Map} passed to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)}
  *             when {@link #getPerson(String)} is called. The value is the uid passed to the method.
  *         </td>
  *         <td valign="top">No</td>
@@ -50,21 +52,26 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      */
     private String defaultAttribute = "username";
 
-    /* (non-Javadoc)
+    /**
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
+     * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one matching {@link IPerson} is found.
      */
     public final IPerson getPerson(String uid) {
         Validate.notNull(uid, "uid may not be null.");
         
+        //Generate the seed map for the uid
         final Map<String, List<Object>> seed = this.toSeedMap(uid);
         
+        //Run the query using the seed
         final Set<IPerson> people = this.getPeopleWithMultivaluedAttributes(seed);
         
-        if (people == null || people.size() == 0) {
+        //Ensure a single result is returned
+        IPerson person = (IPerson)DataAccessUtils.singleResult(people);
+        if (person == null) {
             return null;
         }
         
-        IPerson person = people.iterator().next();
+        //Force set the name of the returned IPerson if it isn't provided in the return object
         if (person.getName() == null) {
             person = new NamedPersonImpl(uid, person.getAttributes());
         }
@@ -75,11 +82,11 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
 
     /**
      * Converts the uid to a multi-valued seed Map using the value from {@link #getDefaultAttributeName()}
-     * as the key. 
+     * as the key.
      */
     protected Map<String, List<Object>> toSeedMap(String uid) {
         final List<Object> values = Collections.singletonList((Object)uid);
-        final Map<String, List<Object>> seed = Collections.singletonMap(this.getDefaultAttributeName(), values);
+        final Map<String, List<Object>> seed = Collections.singletonMap(this.defaultAttribute, values);
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Created seed map='" + seed + "' for uid='" + uid + "'");
         }

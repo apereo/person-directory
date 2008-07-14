@@ -99,7 +99,9 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
      * 
      * @param multivaluedUserAttributes The attribute map to flatten.
      * @return A flattened version of the Map, null if the argument was null.
+     * @deprecated This method is just used internally and will be removed with this class in 1.6
      */
+    @Deprecated
     protected Map<String, Object> flattenResults(Map<String, List<Object>> multivaluedUserAttributes) {
         if (multivaluedUserAttributes == null) {
             return null;

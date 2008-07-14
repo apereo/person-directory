@@ -2,7 +2,7 @@ package org.jasig.services.persondir.support.rule;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -110,7 +110,7 @@ public final class SimpleAttributeRule implements AttributeRule {
             throw new IllegalArgumentException(msg);
         }
         
-        Map<String, List<Object>> rslt = new HashMap<String, List<Object>>();
+        Map<String, List<Object>> rslt = new LinkedHashMap<String, List<Object>>();
         List<Object> value = new ArrayList<Object>(1);
         value.add(setValue);
         rslt.put(setKey, value);

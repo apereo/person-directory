@@ -10,9 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Data access object which, for a given {@link Map} of query
- * data, returns a {@link Map} from attribute names to attribute
- * values.
+ * Defines methods for finding a {@link IPerson} or Set of IPersons based on a user ID or a Map of user attributes to
+ * query with.
  * 
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist
@@ -26,7 +25,7 @@ public interface IPersonAttributeDao {
      * This method returns according to the following rules:<br>
      * <ul>
      *  <li>If the user exists and has attributes a populated {@link IPerson} is returned.</li>
-     *  <li>If the user exists and has no attributes an empty {@link IPerson} is returned.</li>
+     *  <li>If the user exists and has no attributes an {@link IPerson} with an empty attributes Map is returned.</li>
      *  <li>If the user doesn't exist <code>null</code> is returned.</li>
      *  <li>If an error occurs while find the person an appropriate exception will be thrown.</li>
      * </ul>
@@ -39,8 +38,8 @@ public interface IPersonAttributeDao {
     
     /**
      * Searches for {@link IPerson}s that match the set of attributes provided in the query {@link Map}. Each
-     * implementation is free to define what a 'match' is on its own. The provided query Map contains String attribute
-     * names and single values which may be null.
+     * implementation is free to define what qualifies as a 'match' is on its own. The provided query Map contains
+     * String attribute names and single values which may be null.
      * <br>
      * If the implementation can not execute its query for an expected reason such as not enough information in the
      * query {@link Map} null should be returned. For unexpected problems throw an exception.
@@ -53,8 +52,8 @@ public interface IPersonAttributeDao {
     
     /**
      * Searches for {@link IPerson}s that match the set of attributes provided in the query {@link Map}. Each
-     * implementation is free to define what a 'match' is on its own. The provided query Map contains String attribute
-     * names and multiple values any of which may be null or the List itself may be null.
+     * implementation is free to define what qualifies as a 'match' is on its own. The provided query Map contains
+     * String attribute names and single values which may be null.
      * <br>
      * If the implementation can not execute its query for an expected reason such as not enough information in the
      * query {@link Map} null should be returned. For unexpected problems throw an exception.
@@ -66,9 +65,9 @@ public interface IPersonAttributeDao {
     public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query);
 
     /**
-     * Gets a {@link Set} of attribute names that may be returned by the {@link #getUserAttributes(Map)}. The names
-     * returned represent all possible attributes names for the {@link IPerson} objects returned by the get methods. If
-     * the dao doesn't have a way to know all possible attribute names this method should return <code>null</code>.
+     * Gets a {@link Set} of attribute names that may be returned for an IPerson. The names returned represent all
+     * possible attributes names for the {@link IPerson} objects returned by the get methods. If the dao doesn't have a
+     * way to know all possible attribute names this method should return <code>null</code>.
      * <br>
      * Returns an immutable {@link Set}.
      * 

@@ -21,6 +21,25 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 /**
  * Provides common logic for executing a JDBC based query including building the WHERE clause SQL string.
+ * <br>
+ * <br>
+ * Configuration:
+ * <table border="1">
+ *     <tr>
+ *         <th align="left">Property</th>
+ *         <th align="left">Description</th>
+ *         <th align="left">Required</th>
+ *         <th align="left">Default</th>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">queryType</td>
+ *         <td>
+ *             How multiple attributes in a query should be concatenated together. The other option is OR.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">AND</td>
+ *     </tr>
+ * </table>
  * 
  * @author Eric Dalquist 
  * @version $Revision$
@@ -29,7 +48,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     private static final Pattern WILDCARD = Pattern.compile("\\*");
     
     private final SimpleJdbcTemplate simpleJdbcTemplate;
-    private String queryTemplate;
+    private final String queryTemplate;
     private QueryType queryType = QueryType.AND;
     
     /**
@@ -49,15 +68,6 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
      */
     public String getQueryTemplate() {
         return queryTemplate;
-    }
-    /**
-     * Template to use for SQL query generation. Use {0} as the placeholder for where the generated portion of
-     * the WHERE clause should be inserted. 
-     * 
-     * @param queryTemplate the queryTemplate to set
-     */
-    public void setQueryTemplate(String queryTemplate) {
-        this.queryTemplate = queryTemplate;
     }
 
     /**

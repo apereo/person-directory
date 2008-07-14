@@ -6,7 +6,6 @@
 package org.jasig.services.persondir.support.ldap;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,25 +51,6 @@ import org.springframework.util.Assert;
  *         <td valign="top">Default instance with SUBTREE scope.</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">ldapAttributesToPortalAttributes</td>
- *         <td>
- *             The {@link Map} of {@link String} ldap attribute names to {@link String} or
- *             {@link Set}s of {@link String}s to use as attribute names in the returned Map.
- *             If a ldap attribute name is not in the map the ldap attribute name will be
- *             used in as the returned attribute name.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">{@link Collections#EMPTY_MAP}</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">query</td>
- *         <td>
- *             The LDAP filter query to use when finding the user attributes.
- *         </td>
- *         <td valign="top">Yes</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
  *         <td align="right" valign="top">baseDN</td>
  *         <td>
  *             The base DistinguishedName to use when executing the query filter.
@@ -96,6 +76,14 @@ import org.springframework.util.Assert;
  *         </td>
  *         <td valign="top">No</td>
  *         <td valign="top">true</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">queryType</td>
+ *         <td>
+ *             How multiple attributes in a query should be concatenated together. The other option is OR.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">AND</td>
  *     </tr>
  * </table>
  * 

@@ -2,7 +2,7 @@ package org.jasig.services.persondir.support.rule;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -110,7 +110,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
     public Set<String> getPossibleUserAttributeNames() {
-        Set<String> rslt = new HashSet<String>();
+        Set<String> rslt = new LinkedHashSet<String>();
 
         for (final AttributeRule rule : this.rules) {
             final Set<String> possibleUserAttributeNames = rule.getPossibleUserAttributeNames();
@@ -124,7 +124,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
     public Set<String> getAvailableQueryAttributes() {
-        Set<String> rslt = new HashSet<String>();
+        Set<String> rslt = new LinkedHashSet<String>();
 
         for (final AttributeRule rule : this.rules) {
             final Set<String> possibleUserAttributeNames = rule.getAvailableQueryAttributes();
