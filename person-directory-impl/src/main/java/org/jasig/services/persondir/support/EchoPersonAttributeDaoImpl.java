@@ -5,10 +5,12 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.jasig.services.persondir.IPerson;
 
 
 /**
@@ -23,14 +25,14 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
     /**
      * Returns a duplicate of the seed it is passed.
      * @return a Map equal to but not the same reference as the seed.
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
-        if (seed == null) {
+    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+        if (query == null) {
             throw new IllegalArgumentException("seed may not be null");
         }
 
-        return new HashMap<String, List<Object>>(seed);
+        return Collections.singleton((IPerson)new AttributeNamedPersonImpl(query));
     }
 
     /**
@@ -42,4 +44,10 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
+     */
+    public Set<String> getAvailableQueryAttributes() {
+        return null;
+    }
 }

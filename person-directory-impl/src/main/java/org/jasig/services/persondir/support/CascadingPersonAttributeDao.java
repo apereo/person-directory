@@ -7,7 +7,9 @@ package org.jasig.services.persondir.support;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.jasig.services.persondir.IPerson;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
 
@@ -44,19 +46,22 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
     public CascadingPersonAttributeDao() {
         this.attrMerger = new ReplacingAttributeAdder();
     }
+    
+    
 
     /**
-     * If this is the first call, isFirstQuery == true, the query run against the current IPersonAttributeDao is done using
-     * the seed Map. Otherwise the query is run using the resultAttributes Map. 
-     * 
-     * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.services.persondir.IPersonAttributeDao, java.util.Map)
+     * If this is the first call or there are no results in the resultPeople Set the seed map is used. If not the
+     * attributes of the first user in the resultPeople Set are used.
+     *  
+     * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.services.persondir.IPersonAttributeDao, java.util.Set)
      */
     @Override
-    protected Map<String, List<Object>> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Map<String, List<Object>> resultAttributes) {
-        if (isFirstQuery) {
-            return currentlyConsidering.getMultivaluedUserAttributes(seed);
+    protected Set<IPerson> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Set<IPerson> resultPeople) {
+        if (isFirstQuery || resultPeople == null || resultPeople.size() == 0) {
+            return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed);
         }
-
-        return currentlyConsidering.getMultivaluedUserAttributes(resultAttributes);
+        
+        final IPerson person = resultPeople.iterator().next();
+        return currentlyConsidering.getPeopleWithMultivaluedAttributes(person.getAttributes());
     }
 }

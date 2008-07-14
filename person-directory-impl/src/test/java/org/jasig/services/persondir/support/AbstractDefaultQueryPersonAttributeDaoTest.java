@@ -5,11 +5,13 @@
 
 package org.jasig.services.persondir.support;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jasig.services.persondir.IPerson;
 import org.jasig.services.persondir.util.Util;
 
 /**
@@ -56,18 +58,25 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
     }
     
     private class SimpleDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
-        /**
+        /* (non-Javadoc)
          * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
          */
         public Set<String> getPossibleUserAttributeNames() {
             return null;
         }
 
-        /**
-         * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
+        /* (non-Javadoc)
+         * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
          */
-        public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
-            return seed;
+        public Set<String> getAvailableQueryAttributes() {
+            return null;
+        }
+
+        /* (non-Javadoc)
+         * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
+         */
+        public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+            return Collections.singleton((IPerson)new AttributeNamedPersonImpl(query));
         }
     }
 }

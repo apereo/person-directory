@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
+import org.jasig.services.persondir.IPerson;
 import org.jasig.services.persondir.IPersonAttributeDao;
 
 /**
@@ -175,10 +176,10 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
         this.matchAllValues = matchAllValues;
     }
 
-    /*
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
+    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> seed) {
         Validate.notNull(seed, "Argument 'seed' cannot be null.");
 
         if (patterns == null || patterns.size() < 1) {
@@ -298,7 +299,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
                 this.logger.info("Matching criteria was met, delegating call to the targetPersonAttributeDao='" + targetPersonAttributeDao + "'");
             }
             
-            return this.targetPersonAttributeDao.getMultivaluedUserAttributes(seed);
+            return this.targetPersonAttributeDao.getPeopleWithMultivaluedAttributes(seed);
         }
 
         if (this.logger.isInfoEnabled()) {
@@ -313,5 +314,12 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
      */
     public Set<String> getPossibleUserAttributeNames() {
         return targetPersonAttributeDao.getPossibleUserAttributeNames();
+    }
+
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
+     */
+    public Set<String> getAvailableQueryAttributes() {
+        return this.targetPersonAttributeDao.getAvailableQueryAttributes();
     }
 }

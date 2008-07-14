@@ -245,39 +245,11 @@ public class MergingPersonAttributeDaoImplTest
      * RuntimeExcedption for the attribute getting methods and returns null
      * for the getPossibleUserAttributeNames() method.
      */
-    private class NullAttribNamesPersonAttributeDao implements IPersonAttributeDao {
-
-        /**
-         * @throws RuntimeException Always.
-         */
-        public Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
-            throw new RuntimeException("NullAttribNamesPersonAttributeDao always throws");
-        }
-        
-        /**
-         * @throws RuntimeException always
-         */
-        public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> queryMap) {
-            throw new RuntimeException("NullAttribNamesPersonAttributeDao always throws");
-        }
-        
-        /**
-         * @throws RuntimeException always
-         */
-        public Map<String, Object> getUserAttributes(Map<String, Object> seed) {
-            throw new RuntimeException("NullAttribNamesPersonAttributeDao always throws");
-        }
-
-        /**
-         * @throws RuntimeException always
-         */
-        public Map<String, Object> getUserAttributes(String uid) {
-            throw new RuntimeException("NullAttribNamesPersonAttributeDao always throws");
-        }
-
+    private static class NullAttribNamesPersonAttributeDao extends ThrowingPersonAttributeDao {
         /**
          * @return null
          */
+        @Override
         public Set<String> getPossibleUserAttributeNames() {
             return null;
         }

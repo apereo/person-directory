@@ -16,6 +16,7 @@ import org.springframework.test.AbstractSingleSpringContextTests;
  * @author Eric Dalquist
  * @version $Revision$
  */
+@SuppressWarnings("deprecation")
 public class AttributeBasedCacheKeyGeneratorTest extends AbstractSingleSpringContextTests {
     /* (non-Javadoc)
      * @see org.springframework.test.AbstractSingleSpringContextTests#getConfigPath()

@@ -12,6 +12,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 
 	private static final String WHEN_KEY = "eduPersonPrimaryAffiliation";
 	private static final String WHEN_PATTERN = "records-staff";
+	private static final String SET_UID = "username";
 	private static final String SET_KEY = "fax";
 	private static final String SET_VALUE = "(480) 555-1212";
 
@@ -25,7 +26,7 @@ public class SimpleAttributeRuleTest extends TestCase {
         
 		// whenKey.
 		try {
-			new SimpleAttributeRule(null, WHEN_PATTERN, SET_KEY, SET_VALUE);
+			new SimpleAttributeRule(null, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
 			fail("IllegalArgumentException should have been thrown with null 'whenKey'.");
 		} catch (IllegalArgumentException iae) {
 			// expected...
@@ -33,7 +34,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 
 		// whenPattern.
 		try {
-			new SimpleAttributeRule(WHEN_KEY, null, SET_KEY, SET_VALUE);
+			new SimpleAttributeRule(WHEN_KEY, null, SET_UID, SET_KEY, SET_VALUE);
 			fail("IllegalArgumentException should have been thrown with null 'whenPattern'.");
 		} catch (IllegalArgumentException iae) {
 			// expected...
@@ -41,7 +42,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 
 		// setKey.
 		try {
-			new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, null, SET_VALUE);
+			new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, null, SET_VALUE);
 			fail("IllegalArgumentException should have been thrown with null 'setKey'.");
 		} catch (IllegalArgumentException iae) {
 			// expected...
@@ -49,7 +50,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 
 		// setValue.
 		try {
-			new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_KEY, null);
+			new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, null);
 			fail("IllegalArgumentException should have been thrown with null 'setValue'.");
 		} catch (IllegalArgumentException iae) {
 			// expected...
@@ -60,7 +61,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 
 	public void testAppliesToParameters() {
         
-		AttributeRule r = new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_KEY, SET_VALUE);
+		AttributeRule r = new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
 		
 		// null.
 		try {

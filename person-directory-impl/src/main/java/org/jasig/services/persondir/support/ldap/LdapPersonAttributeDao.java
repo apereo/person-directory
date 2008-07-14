@@ -5,25 +5,27 @@
 
 package org.jasig.services.persondir.support.ldap;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.naming.directory.SearchControls;
 
+import org.apache.commons.lang.StringUtils;
+import org.jasig.services.persondir.IPerson;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
-import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
+import org.jasig.services.persondir.support.CaseInsensitiveAttributeNamedPersonImpl;
+import org.jasig.services.persondir.support.QueryType;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.ldap.core.AttributesMapperCallbackHandler;
-import org.springframework.ldap.core.CollectingNameClassPairCallbackHandler;
+import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.SearchExecutor;
+import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.filter.LikeFilter;
 import org.springframework.util.Assert;
 
 /**
@@ -102,111 +104,95 @@ import org.springframework.util.Assert;
  * @version $Revision$ $Date$
  * @since uPortal 2.5
  */
-public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao implements InitializingBean {
-        /**
-     * Class for mapping LDAP Attributes to a person attribute Map using the LdapTemplate.
-     */
-    @SuppressWarnings("unchecked")
-    private PersonAttributesMapper attributesMapper = new PersonAttributesMapper(Collections.EMPTY_MAP);
-
-    /**
-     * {@link Set} of attributes this DAO may provide when queried.
-     */
-    private Set<String> possibleUserAttributeNames = Collections.emptySet();
+public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<LogicalFilterWrapper> implements InitializingBean {
+    private final static AttributesMapper MAPPER = new AttributeMapAttributesMapper();
 
     /**
      * The LdapTemplate to use to execute queries on the DirContext
      */
     private LdapTemplate ldapTemplate = null;
 
-    private String query = null;
     private String baseDN = "";
     private ContextSource contextSource = null;
     private SearchControls searchControls = new SearchControls();
     private boolean setReturningAttributes = true;
+    private QueryType queryType = QueryType.AND;
     
     
     public LdapPersonAttributeDao() {
         this.searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        this.searchControls.setReturningObjFlag(false);
     }
     
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     public void afterPropertiesSet() throws Exception {
-        if (this.setReturningAttributes) {
-            final Map<String, Set<String>> ldapAttributesToPortalAttributes = this.attributesMapper.getLdapAttributesToPortalAttributes();
-            final Set<String> ldapAttributes = ldapAttributesToPortalAttributes.keySet();
-            this.searchControls.setReturningAttributes(ldapAttributes.toArray(new String[ldapAttributes.size()]));
+        final Map<String, Set<String>> resultAttributeMapping = this.getResultAttributeMapping();
+        if (this.setReturningAttributes && resultAttributeMapping != null) {
+            this.searchControls.setReturningAttributes(resultAttributeMapping.keySet().toArray(new String[resultAttributeMapping.size()]));
         }
         
         if (this.contextSource == null) {
             throw new BeanCreationException("contextSource must be set");
         }
-        
-        if (this.query == null) {
-            throw new BeanCreationException("query must be set");
-        }
     }
 
-    /**
-     * Checks for valid query and context source objects.<br>
-     * Executes the search.<br>
-     * Returns the attribute map results from the query.<br>
-     * 
-     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getUserAttributesIfNeeded(java.lang.Object[])
+    
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    protected Map<String, List<Object>> getUserAttributesIfNeeded(Object[] args) {
-        final SearchExecutor se = new QuerySearchExecutor(this.baseDN, this.query, args, this.searchControls);
-        final CollectingNameClassPairCallbackHandler attributesMapperCallbackHandler = new AttributesMapperCallbackHandler(this.attributesMapper);
+    protected LogicalFilterWrapper appendAttributeToQuery(LogicalFilterWrapper queryBuilder, String dataAttribute, List<Object> queryValues) {
+        if (queryBuilder == null) {
+            queryBuilder = new LogicalFilterWrapper(this.queryType);
+        }
         
-        this.ldapTemplate.search(se, attributesMapperCallbackHandler);
+        for (final Object queryValue : queryValues) {
+            final Filter filter;
+            
+            final String queryValueString = queryValue == null ? null : queryValue.toString();
+            
+            if (queryValueString == null || !queryValueString.contains("*")) {
+                filter = new EqualsFilter(dataAttribute, queryValueString);
+            }
+            else {
+                filter = new LikeFilter(dataAttribute, queryValueString);
+            }
+            
+            queryBuilder.append(filter);
+        }
         
-        final List<Map<String, List<Object>>> results = attributesMapperCallbackHandler.getList();
-        return (Map<String, List<Object>>)DataAccessUtils.uniqueResult(results);
+        return queryBuilder;
     }
 
-    /*
-     * @see org.jasig.services.persondir.support.IPersonAttributeDao#getPossibleUserAttributeNames()
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
      */
-    public Set<String> getPossibleUserAttributeNames() {
-        return this.possibleUserAttributeNames;
-    }
+    @Override
+    protected List<IPerson> getPeopleForQuery(LogicalFilterWrapper queryBuilder) {
+        final String ldapQuery = queryBuilder.encode();
 
-    /**
-     * Get the mapping from LDAP attribute names to uPortal attribute names.
-     * Mapping type is from String to [String | Set of String].
-     * 
-     * @return Returns the ldapAttributesToPortalAttributes.
-     */
-    public Map<String, Set<String>> getLdapAttributesToPortalAttributes() {
-        return this.attributesMapper.getLdapAttributesToPortalAttributes();
-    }
-
-    /**
-     * Set the {@link Map} to use for mapping from a ldap attribute name to a
-     * portal attribute name or {@link Set} of portal attribute names. Ldap
-     * attribute names that are specified but have null mappings will use the
-     * ldap attribute name for the portal attribute name. Ldap attribute names
-     * that are not specified as keys in this {@link Map} will be ignored. <br>
-     * The passed {@link Map} must have keys of type {@link String} and values
-     * of type {@link String} or a {@link Set} of {@link String}.
-     * 
-     * @param ldapAttributesToPortalAttributesArg
-     *            {@link Map} from ldap attribute names to portal attribute
-     *            names.
-     * @throws IllegalArgumentException
-     *             If the {@link Map} doesn't follow the rules stated above.
-     * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
-     */
-    public void setLdapAttributesToPortalAttributes(final Map<String, Object> ldapAttributesToPortalAttributesArg) {
-        final Map<String, Set<String>> ldapAttributesToPortalAttributes = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(ldapAttributesToPortalAttributesArg);
-        this.attributesMapper = new PersonAttributesMapper(ldapAttributesToPortalAttributes);
-        final Collection<String> userAttributeCol = MultivaluedPersonAttributeUtils.flattenCollection(ldapAttributesToPortalAttributes.values());
-
-        this.possibleUserAttributeNames = Collections.unmodifiableSet(new HashSet<String>(userAttributeCol));
+        //If no query is generated return null since the query cannot be run
+        if (StringUtils.isBlank(ldapQuery)) {
+            return null;
+        }
+        
+        //Execute the query
+        @SuppressWarnings("unchecked")
+        final List<Map<String, List<Object>>> queryResults = this.ldapTemplate.search(this.baseDN, ldapQuery, this.searchControls, MAPPER);
+        
+        final List<IPerson> peopleAttributes = new ArrayList<IPerson>(queryResults.size());
+        
+        for (final Map<String, List<Object>> queryResult : queryResults) {
+            //Create the IPerson doing a best-guess at a userName attribute
+            final String userNameAttribute = this.getConfiguredUserNameAttribute();
+            final IPerson person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, queryResult);
+            
+            peopleAttributes.add(person);
+        }
+        
+        return peopleAttributes;
     }
 
     /**
@@ -227,21 +213,6 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao impl
         this.searchControls.setTimeLimit(ms);
     }
     
-    /**
-     * @return The query to be executed.
-     */
-    public String getQuery() {
-        return this.query;
-    }
-
-    /**
-     * @param uidQuery The query to be executed.
-     */
-    public void setQuery(String uidQuery) {
-        Assert.notNull(uidQuery, "uidQuery can not be null");
-        this.query = uidQuery;
-    }
-
     /**
      * @return The base distinguished name to use for queries.
      */
@@ -288,5 +259,20 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao impl
     public void setSearchControls(SearchControls searchControls) {
         Assert.notNull(searchControls, "searchControls can not be null");
         this.searchControls = searchControls;
+    }
+
+    /**
+     * @return the queryType
+     */
+    public QueryType getQueryType() {
+        return queryType;
+    }
+    /**
+     * Type of logical operator to use when joining WHERE clause components
+     * 
+     * @param queryType the queryType to set
+     */
+    public void setQueryType(QueryType queryType) {
+        this.queryType = queryType;
     }
 }

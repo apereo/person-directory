@@ -16,6 +16,7 @@ import junit.framework.TestCase;
  * IllegalArgumentException throwing for illegal invocations of interface methods.
  * @version $Revision: 43106 $ $Date: 2008-02-14 11:22:40 -0600 (Thu, 14 Feb 2008) $
  */
+@SuppressWarnings("deprecation")
 public abstract class AbstractPersonAttributeDaoTest extends TestCase {
     
     /**

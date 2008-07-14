@@ -56,21 +56,25 @@ public class CascadingPersonAttributeDaoTest
         Map<String, List<Object>> user1a = new HashMap<String, List<Object>>();
         user1a.put("phone", Util.list("777-7777x777"));
         user1a.put("major", Util.list("CS"));
+        user1a.put("username", Util.list("edalquist"));
         daoBackingMap2.put("123456789", user1a);
         
         Map<String, List<Object>> user2a = new HashMap<String, List<Object>>();
         user2a.put("phone", Util.list("888-8887x888"));
         user2a.put("major", Util.list("ME"));
+        user2a.put("username", Util.list("awp9"));
         daoBackingMap2.put("987654321", user2a);
         
         Map<String, List<Object>> user3a = new HashMap<String, List<Object>>();
         user3a.put("phone", Util.list("666-6666x666"));
         user3a.put("major", Util.list("EE"));
+        user3a.put("username", Util.list("erider"));
         daoBackingMap2.put("000000000", user3a);
         
         this.sourceTwo = new ComplexStubPersonAttributeDao();
         this.sourceTwo.setBackingMap(daoBackingMap2);
         this.sourceTwo.setDefaultAttributeName("studentId");
+        this.sourceTwo.setUserNameAttribute("username");
         
         
         this.nullSource = new StubPersonAttributeDao();
@@ -89,6 +93,7 @@ public class CascadingPersonAttributeDaoTest
         final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
         
         Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        expected.put("username", Util.list("edalquist"));
         expected.put("studentId", Util.list("123456789"));
         expected.put("major", Util.list("CS"));
         expected.put("phone", Util.list("777-7777", "777-7777x777"));
@@ -125,6 +130,7 @@ public class CascadingPersonAttributeDaoTest
         Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
         expected.put("studentId", Util.list("123456789"));
         expected.put("major", Util.list("CS"));
+        expected.put("username", Util.list("edalquist"));
         expected.put("phone", Util.list("777-7777","777-7777x777"));
         
         assertEquals(expected, results);

@@ -6,11 +6,13 @@
 package org.jasig.services.persondir.support;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.jasig.services.persondir.IPerson;
 
 
 /**
@@ -43,7 +45,7 @@ import java.util.Set;
  * 
  * @version $Revision$ $Date$
  */
-public class ComplexStubPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
+public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeDao<String> {
     /*
      * Map from userids to Maps.  The Map values are maps from
      * attribute names to attribute values.
@@ -86,35 +88,67 @@ public class ComplexStubPersonAttributeDao extends AbstractDefaultAttributePerso
             this.possibleUserAttributeNames = Collections.emptySet();
         }
         else {
-            this.backingMap = Collections.unmodifiableMap(new HashMap<String, Map<String, List<Object>>>(backingMap));
+            this.backingMap = Collections.unmodifiableMap(new LinkedHashMap<String, Map<String, List<Object>>>(backingMap));
             this.initializePossibleAttributeNames();
         }
     }
     
-    
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @Override
     public Set<String> getPossibleUserAttributeNames() {
         return this.possibleUserAttributeNames;
     }
     
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getAvailableQueryAttributes()
      */
-    public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
-        if (seed == null) {
-            throw new IllegalArgumentException("Illegal to invoke getUserAttributes(Map) with a null argument.");
-        }
+    @Override
+    public Set<String> getAvailableQueryAttributes() {
+        return Collections.singleton(this.getDefaultAttributeName());
+    }
 
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
+     */
+    @Override
+    protected String appendAttributeToQuery(String queryBuilder, String dataAttribute, List<Object> queryValues) {
+        if (queryBuilder != null) {
+            return queryBuilder;
+        }
+        
         final String defaultAttrName = this.getDefaultAttributeName();
-        final List<Object> seedValues = seed.get(defaultAttrName);
-        if (seedValues == null) {
+        if (defaultAttrName.equals(dataAttribute)) {
+            return String.valueOf(queryValues.get(0));
+        }
+        
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
+     */
+    @Override
+    protected List<IPerson> getPeopleForQuery(String seedValue) {
+        final Map<String, List<Object>> attributes = this.backingMap.get(seedValue);
+        
+        if (attributes == null) {
             return null;
         }
-
-        final String seedValue =  String.valueOf(seedValues.get(0));
-        return this.backingMap.get(seedValue);
+        
+        final String defaultAttrName = this.getDefaultAttributeName();
+        final String userNameAttribute = this.getConfiguredUserNameAttribute();
+        
+        final IPerson person;
+        if (defaultAttrName.equals(userNameAttribute)) {
+            person = new NamedPersonImpl(seedValue, attributes);
+        }
+        else {
+            person = new AttributeNamedPersonImpl(userNameAttribute, attributes);
+        }
+        
+        return Collections.singletonList(person);
     }
 
     /**
@@ -123,7 +157,7 @@ public class ComplexStubPersonAttributeDao extends AbstractDefaultAttributePerso
      * possibleUserAttributeNames.
      */
     private void initializePossibleAttributeNames() {
-        final Set<String> possibleAttribNames = new HashSet<String>();
+        final Set<String> possibleAttribNames = new LinkedHashSet<String>();
         
         for (final Map<String, List<Object>> attributeMapForSomeUser : this.backingMap.values()) {
             final Set<String> keySet = attributeMapForSomeUser.keySet();

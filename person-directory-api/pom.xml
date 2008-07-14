@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jasig.service</groupId>
         <artifactId>person-directory-parent</artifactId>
-        <version>1.1.3-SNAPSHOT</version>
+        <version>1.5.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -15,16 +15,4 @@
     <name>Person Directory API</name>
     <description>Provides a general interface for accessing attributes for a person.</description>
 
-    <dependencies>
-        <!--
-         | Test Dependencies
-         +-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <type>jar</type>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>

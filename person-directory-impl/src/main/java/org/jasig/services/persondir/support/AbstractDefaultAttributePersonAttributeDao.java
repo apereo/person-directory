@@ -8,15 +8,15 @@ package org.jasig.services.persondir.support;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.Validate;
+import org.jasig.services.persondir.IPerson;
 
 
 /**
- * Abstract class implementing the IPersonAttributeDao method  {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(String)}
- * and {@link org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(String)} methods by
- * delegation to {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)} or
- * {@link org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(Map)} using a configurable
+ * Abstract class implementing the IPersonAttributeDao method  {@link org.jasig.services.persondir.IPersonAttributeDao#getPerson(String)}
+ * by delegation to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeople(Map)} using a configurable
  * default attribute name.
  * 
  * <br>
@@ -32,9 +32,8 @@ import org.apache.commons.lang.Validate;
  *     <tr>
  *         <td align="right" valign="top">defaultAttribute</td>
  *         <td>
- *             The attribute to use for the key in the {@link Map} passed to {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
- *             or {@link org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(Map)} when
- *             {@link #getMultivaluedUserAttributes(String)} is called. The value is the uid passed to the method.
+ *             The attribute to use for the key in the {@link Map} passed to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeople(Map)}
+ *             when {@link #getPerson(String)} is called. The value is the uid passed to the method.
  *         </td>
  *         <td valign="top">No</td>
  *         <td valign="top">"username"</td>
@@ -50,20 +49,29 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      * Defaults attribute to use for a simple query
      */
     private String defaultAttribute = "username";
-    
-    /**
-     * Implements this interface method by creating a seed Map from the uid argument and delegating to
-     * {@link #getMultivaluedUserAttributes(Map)} using the created seed Map.
-     * 
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(String)
+
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
      */
-    public final Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
+    public final IPerson getPerson(String uid) {
         Validate.notNull(uid, "uid may not be null.");
         
         final Map<String, List<Object>> seed = this.toSeedMap(uid);
         
-        return this.getMultivaluedUserAttributes(seed);
+        final Set<IPerson> people = this.getPeopleWithMultivaluedAttributes(seed);
+        
+        if (people == null || people.size() == 0) {
+            return null;
+        }
+        
+        IPerson person = people.iterator().next();
+        if (person.getName() == null) {
+            person = new NamedPersonImpl(uid, person.getAttributes());
+        }
+        
+        return person;
     }
+
 
     /**
      * Converts the uid to a multi-valued seed Map using the value from {@link #getDefaultAttributeName()}

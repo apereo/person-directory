@@ -8,17 +8,16 @@ package org.jasig.services.persondir.support.ldap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
-import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
 import org.jasig.services.persondir.util.Util;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.ldap.test.AbstractDirContextTest;
 
 
 /**
@@ -27,54 +26,40 @@ import org.springframework.ldap.core.support.LdapContextSource;
  * @author Eric Dalquist
  * @version $Revision$ $Date$
  */
-public class LdapPersonAttributeDaoTest 
-    extends AbstractDefaultQueryPersonAttributeDaoTest {
-    
-    LdapContextSource contextSource;
-    
-    /*
-     * @see TestCase#setUp()
+public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
+    /* (non-Javadoc)
+     * @see org.springframework.ldap.test.AbstractDirContextTest#getPartitionName()
      */
     @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.contextSource = new LdapContextSource();
-        this.contextSource.setUrl("ldap://mrfrumble.its.yale.edu:389");
-        this.contextSource.setBase("o=yale.edu");
-        this.contextSource.afterPropertiesSet();
+    protected String getPartitionName() {
+        return "personDirectory";
     }
 
-    /*
-     * @see TestCase#tearDown()
+    /* (non-Javadoc)
+     * @see org.springframework.ldap.test.AbstractDirContextTest#initializationData()
      */
     @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        this.contextSource = null;
+    protected Resource[] initializationData() {
+        final ClassPathResource ldapPersonInfo = new ClassPathResource("/ldapPersonInfo.ldif");
+        return new Resource[] { ldapPersonInfo };
     }
-
+    
     public void testNotFoundQuery() throws Exception {
-        final String queryAttr = "uid";
-        final List<String> queryAttrList = new LinkedList<String>();
-        queryAttrList.add(queryAttr);
-        
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
         ldapAttribsToPortalAttribs.put("mail", "email");
         
-        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
         
-        impl.setContextSource(this.contextSource);
+        impl.setContextSource(this.getContextSource());
         
-        impl.setQuery("(uid={0})");
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
         
-        impl.setQueryAttributes(queryAttrList);
-
         impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
-        queryMap.put(queryAttr, Util.list("unknown"));
+        queryMap.put("uid", Util.list("unknown"));
         
         try {
             Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
@@ -87,36 +72,27 @@ public class LdapPersonAttributeDaoTest
 
     /**
      * Test for a query with a single attribute. 
-     * 
-     * This testcase will cease to work on that fateful day when Susan
-     * no longer appears in Yale University LDAP.
      */
     public void testSingleAttrQuery() throws Exception {
-        final String queryAttr = "uid";
-        final List<String> queryAttrList = new LinkedList<String>();
-        queryAttrList.add(queryAttr);
-        
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
         ldapAttribsToPortalAttribs.put("mail", "email");
         
-        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
         
-        impl.setContextSource(this.contextSource);
+        impl.setContextSource(this.getContextSource());
         
-        impl.setQuery("(uid={0})");
-        
-        impl.setQueryAttributes(queryAttrList);
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
 
         impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
-        queryMap.put(queryAttr, Util.list("susan"));
+        queryMap.put("uid", Util.list("edalquist"));
 
         try {
             Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
-            assertEquals(Util.list("susan.bramhall@yale.edu"), attribs.get("email"));
+            assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("email"));
         }
         catch (DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -126,14 +102,10 @@ public class LdapPersonAttributeDaoTest
     /**
      * Test for a query with a single attribute. 
      * 
-     * This testcase will cease to work on that fateful day when Susan
+     * This testcase will cease to work on that fateful day when edalquist
      * no longer appears in Yale University LDAP.
      */
     public void testMultipleMappings() throws Exception {
-        final String queryAttr = "uid";
-        final List<String> queryAttrList = new LinkedList<String>();
-        queryAttrList.add(queryAttr);
-        
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
@@ -142,23 +114,21 @@ public class LdapPersonAttributeDaoTest
         portalAttributes.add("work.email");
         ldapAttribsToPortalAttribs.put("mail", portalAttributes);
         
-        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
         
-        impl.setContextSource(this.contextSource);
+        impl.setContextSource(this.getContextSource());
         
-        impl.setQuery("(uid={0})");
-        
-        impl.setQueryAttributes(queryAttrList);
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
 
         impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
-        queryMap.put(queryAttr, Util.list("susan"));
+        queryMap.put("uid", Util.list("edalquist"));
 
         try {
             Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
-            assertEquals(Util.list("susan.bramhall@yale.edu"), attribs.get("email"));
-            assertEquals(Util.list("susan.bramhall@yale.edu"), attribs.get("work.email"));
+            assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("email"));
+            assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("work.email"));
         }
         catch (DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -166,27 +136,21 @@ public class LdapPersonAttributeDaoTest
     }
 
     public void testInvalidAttrMap() throws Exception {
-        final String queryAttr = "uid";
-        final List<String> queryAttrList = new LinkedList<String>();
-        queryAttrList.add(queryAttr);
-        
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
         ldapAttribsToPortalAttribs.put("email", "email");
         
-        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
         
-        impl.setContextSource(this.contextSource);
+        impl.setContextSource(this.getContextSource());
         
-        impl.setQuery("(uid={0})");
-        
-        impl.setQueryAttributes(queryAttrList);
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
 
         impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
-        queryMap.put(queryAttr, Util.list("susan"));
+        queryMap.put("uid", Util.list("edalquist"));
         
         try {
             Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
@@ -198,31 +162,25 @@ public class LdapPersonAttributeDaoTest
     }
 
     public void testDefaultAttrMap() throws Exception {
-        final String queryAttr = "uid";
-        final List<String> queryAttrList = new LinkedList<String>();
-        queryAttrList.add(queryAttr);
-        
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
         ldapAttribsToPortalAttribs.put("mail", null);
         
-        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
         
-        impl.setContextSource(this.contextSource);
+        impl.setContextSource(this.getContextSource());
         
-        impl.setQuery("(uid={0})");
-        
-        impl.setQueryAttributes(queryAttrList);
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
 
         impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
-        queryMap.put(queryAttr, Util.list("susan"));
+        queryMap.put("uid", Util.list("edalquist"));
         
         try {
             Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
-            assertEquals(Util.list("susan.bramhall@yale.edu"), attribs.get("mail"));
+            assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("mail"));
         }
         catch (DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -234,35 +192,30 @@ public class LdapPersonAttributeDaoTest
      * more attributes than are needed to complete are passed to it.
      */
     public void testMultiAttrQuery() throws Exception {
-        final String queryAttr1 = "uid";
-        final String queryAttr2 = "alias";
-        final List<String> queryAttrList = new LinkedList<String>();
-        queryAttrList.add(queryAttr1);
-        queryAttrList.add(queryAttr2);
-        
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
         ldapAttribsToPortalAttribs.put("mail", "email");
         
-        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
         
-        impl.setContextSource(this.contextSource);
+        impl.setContextSource(this.getContextSource());
         
-        impl.setQuery("(&(uid={0})(alias={1}))");
-        
-        impl.setQueryAttributes(queryAttrList);
+        Map<String, String> queryAttrs = new HashMap<String, String>();
+        queryAttrs.put("uid", null);
+        queryAttrs.put("alias", null);
+        impl.setQueryAttributeMapping(queryAttrs);
 
         impl.afterPropertiesSet();
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
-        queryMap.put(queryAttr1, Util.list("susan"));
-        queryMap.put(queryAttr2, Util.list("susan.bramhall"));
+        queryMap.put("uid", Util.list("edalquist"));
+        queryMap.put("givenname", Util.list("Eric"));
         queryMap.put("email", Util.list("edalquist@unicon.net"));
         
         try {
             Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
-            assertEquals(Util.list("susan.bramhall@yale.edu"), attribs.get("email"));
+            assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("email"));
         }
         catch (DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -274,28 +227,23 @@ public class LdapPersonAttributeDaoTest
      * attributes aren't passed to it.
      */
     public void testInsufficientAttrQuery() throws Exception {
-        final String queryAttr1 = "uid";
-        final String queryAttr2 = "alias";
-        final List<String> queryAttrList = new LinkedList<String>();
-        queryAttrList.add(queryAttr1);
-        queryAttrList.add(queryAttr2);
-        
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
         ldapAttribsToPortalAttribs.put("mail", "email");
         
-        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
+        impl.setContextSource(this.getContextSource());
         
-        impl.setContextSource(this.contextSource);
-        
-        impl.setQuery("(&(uid={0})(alias={1}))");
-        
-        impl.setQueryAttributes(queryAttrList);
+        Map<String, String> queryAttrs = new HashMap<String, String>();
+        queryAttrs.put("uid", null);
+        queryAttrs.put("alias", null);
+        impl.setQueryAttributeMapping(queryAttrs);
+        impl.setRequireAllQueryAttributes(true);
         
         Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
-        queryMap.put(queryAttr1, Util.list("susan"));
-        queryMap.put("email", Util.list("edalquist@unicon.net"));
+        queryMap.put("uid", Util.list("edalquist"));
+        queryMap.put("email", Util.list("edalquist@example.net"));
         
         Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
         assertNull(attribs);
@@ -318,7 +266,7 @@ public class LdapPersonAttributeDaoTest
         surNameAttributeNames.add("thirdName");
         ldapAttribsToPortalAttribs.put("lastName", surNameAttributeNames);
         
-        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
+        impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
         
         Set<String> expectedAttributeNames = new HashSet<String>();
         expectedAttributeNames.addAll(surNameAttributeNames);
@@ -338,63 +286,31 @@ public class LdapPersonAttributeDaoTest
         assertEquals("", impl.getBaseDN());
         
         
-        assertEquals(Collections.EMPTY_MAP, impl.getLdapAttributesToPortalAttributes());
-        
+        assertNull(impl.getResultAttributeMapping());
         Map<String, Object> attrMap = new HashMap<String, Object>();
         attrMap.put("mail", "email");
-        impl.setLdapAttributesToPortalAttributes(attrMap);
+        impl.setResultAttributeMapping(attrMap);
         
         Map<String, Set<String>> expectedAttrMap = new HashMap<String, Set<String>>();
         expectedAttrMap.put("mail", Collections.singleton("email"));
-        assertEquals(expectedAttrMap, impl.getLdapAttributesToPortalAttributes());
+        assertEquals(expectedAttrMap, impl.getResultAttributeMapping());
         
         
         assertNull(impl.getContextSource());
-        impl.setContextSource(this.contextSource);
-        assertEquals(contextSource, impl.getContextSource());
+        impl.setContextSource(this.getContextSource());
+        assertEquals(this.getContextSource(), impl.getContextSource());
         
         
-        impl.setLdapAttributesToPortalAttributes(null);
+        impl.setResultAttributeMapping(null);
         assertEquals(Collections.EMPTY_SET, impl.getPossibleUserAttributeNames());
-        impl.setLdapAttributesToPortalAttributes(attrMap);
+        impl.setResultAttributeMapping(attrMap);
         assertEquals(Collections.singleton("email"), impl.getPossibleUserAttributeNames());
-        
-        
-        assertNull(impl.getQuery());
-        impl.setQuery("QueryString");
-        assertEquals("QueryString", impl.getQuery());
-        
-        
-        assertNull(impl.getQueryAttributes());
-        impl.setQueryAttributes(Collections.singletonList("QAttr"));
-        assertEquals(Collections.singletonList("QAttr"), impl.getQueryAttributes());
-        
-        
-        assertEquals(0, impl.getTimeLimit());
-        impl.setTimeLimit(1337);
-        assertEquals(1337, impl.getTimeLimit());
     }
     
     /**
      * Test proper reporting of declared attribute names.
      */
     public void testNullContext() throws Exception {
-        LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
-        impl.setContextSource(this.contextSource);
-        
-        try {
-            impl.afterPropertiesSet();
-            fail("BeanCreationException should have been thrown with no query configured");
-        }
-        catch (BeanCreationException ise) {
-            //expected
-        }
-    }
-    
-    /**
-     * Test proper reporting of declared attribute names.
-     */
-    public void testNullQuery() throws Exception {
         LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
         try {
@@ -404,27 +320,5 @@ public class LdapPersonAttributeDaoTest
         catch (BeanCreationException ise) {
             //expected
         }
-    }
-
-    @Override
-    protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
-        final String queryAttr = "uid";
-        final List<String> queryAttrList = new LinkedList<String>();
-        queryAttrList.add(queryAttr);
-        
-        LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
-        
-        Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
-        ldapAttribsToPortalAttribs.put("mail", "email");
-        
-        impl.setLdapAttributesToPortalAttributes(ldapAttribsToPortalAttribs);
-        
-        impl.setContextSource(this.contextSource);
-        
-        impl.setQuery("(uid={0})");
-        
-        impl.setQueryAttributes(queryAttrList);
-        
-        return impl;
     }
 }

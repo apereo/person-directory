@@ -1,0 +1,189 @@
+/**
+ * Copyright 2007 The JA-SIG Collaborative.  All rights reserved.
+ * See license distributed with this file and
+ * available online at http://www.uportal.org/license.html
+ */
+package org.springframework.ldap.test;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Set;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.directory.DirContext;
+
+import org.apache.directory.server.core.configuration.MutablePartitionConfiguration;
+import org.apache.directory.server.unit.AbstractServerTest;
+import org.springframework.core.io.Resource;
+import org.springframework.ldap.core.ContextSource;
+
+/**
+ * Base LDAP server test for testing code that uses a Spring-LDAP ContextSource
+ * 
+ * @author Eric Dalquist
+ * @version $Revision: 1.1 $
+ */
+public abstract class AbstractDirContextTest extends AbstractServerTest {
+    private ContextSource contextSource;
+    
+    /**
+     * Initialize the server.
+     */
+    @Override
+    public final void setUp() throws Exception {
+        final String partitionName = this.getPartitionName();
+        
+        // Add partition 'sevenSeas'
+        final MutablePartitionConfiguration partitionConfiguration = new MutablePartitionConfiguration();
+        partitionConfiguration.setName(partitionName);
+        partitionConfiguration.setSuffix("o=" + partitionName);
+
+        // Create some indices
+        final Set<String> indexedAttrs = new HashSet<String>();
+        indexedAttrs.add("objectClass");
+        indexedAttrs.add("o");
+        partitionConfiguration.setIndexedAttributes(indexedAttrs);
+
+        // Create a first entry associated to the partition
+        final Attributes attrs = new BasicAttributes(true);
+
+        // First, the objectClass attribute
+        final Attribute objectClassAttr = new BasicAttribute("objectClass");
+        objectClassAttr.add("top");
+        objectClassAttr.add("organization");
+        attrs.put(objectClassAttr);
+
+        // The the 'Organization' attribute
+        final Attribute orgAttribute = new BasicAttribute("o");
+        orgAttribute.add(partitionName);
+        attrs.put(orgAttribute);
+
+        // Associate this entry to the partition
+        partitionConfiguration.setContextEntry(attrs);
+
+        // As we can create more than one partition, we must store
+        // each created partition in a Set before initialization
+        final Set<MutablePartitionConfiguration> partitionConfigurations = new HashSet<MutablePartitionConfiguration>();
+        partitionConfigurations.add(partitionConfiguration);
+
+        this.configuration.setContextPartitionConfigurations(partitionConfigurations);
+
+        // Create a working directory
+        final File workingDirectory = File.createTempFile(this.getClass().getName() + ".", ".apacheds-server-work");
+        workingDirectory.delete();
+        workingDirectory.deleteOnExit();
+        this.configuration.setWorkingDirectory(workingDirectory);
+
+        // Now, let's call the upper class which is responsible for the
+        // partitions creation
+        super.setUp();
+
+        // Load initializationg ldif data
+        final Resource[] initializationData = this.initializationData();
+        for (final Resource data : initializationData) {
+            final InputStream dataStream = data.getInputStream();
+            this.importLdif(dataStream);
+        }
+
+        //Setup the ContextSource
+        final DirContext context = this.createContext();
+        this.contextSource = new SingleContextSource(context);
+        
+        this.internalSetUp();
+    }
+
+    /**
+     * Shutdown the server.
+     */
+    @Override
+    public final void tearDown() throws Exception {
+        this.internaltearDown();
+        
+        this.contextSource = null;
+        
+        super.tearDown();
+    }
+    
+    /**
+     * Create a context pointing to the partition
+     */
+    @SuppressWarnings("unchecked")
+    protected final DirContext createContext() throws NamingException {
+        // Create a environment container
+        Hashtable<Object, Object> env = new Hashtable<Object, Object>(configuration.toJndiEnvironment());
+        
+        final String partitionName = this.getPartitionName();
+
+        // Create a new context pointing to the partition
+        env.put(Context.PROVIDER_URL, "o=" + partitionName);
+        env.put(Context.SECURITY_PRINCIPAL, "uid=admin,ou=system");
+        env.put(Context.SECURITY_CREDENTIALS, "secret");
+        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.directory.server.jndi.ServerContextFactory");
+
+        // Let's open a connection on this partition
+        InitialContext initialContext = new InitialContext(env);
+
+        // We should be able to read it
+        DirContext appRoot = (DirContext) initialContext.lookup("");
+        assertNotNull(appRoot);
+
+        return appRoot;
+    }
+    
+    /**
+     * @return A Spring-LDAP ContextSource for the in-memory LDAP server
+     */
+    protected final ContextSource getContextSource() {
+        return this.contextSource;
+    }
+    
+    /**
+     * Can be overridden for local setUp logic
+     */
+    protected void internalSetUp() throws Exception {
+    }
+
+    /**
+     * Can be overridden for local tearDown logic
+     */
+    protected void internaltearDown() throws Exception {
+    }
+    
+    /**
+     * @return The root name for the in-memory LDAP partition
+     */
+    protected abstract String getPartitionName();
+    
+    /**
+     * @return Resources pointing to ldif content to import into the in-memory LDAP server during setUp
+     */
+    protected abstract Resource[] initializationData();
+    
+    /**
+     * Tests that the partition is created correctly
+     */
+    public final void testPartition() throws NamingException {
+        final DirContext appRoot = this.createContext();
+        final String partitionName = this.getPartitionName();
+        
+        // Let's get the entry associated to the top level
+        final Attributes attributes = appRoot.getAttributes("");
+        assertNotNull(attributes);
+        assertEquals(partitionName, attributes.get("o").get());
+
+        final Attribute attribute = attributes.get("objectClass");
+        assertNotNull(attribute);
+        assertTrue(attribute.contains("top"));
+        assertTrue(attribute.contains("organization"));
+        // Ok, everything is fine
+    }
+}

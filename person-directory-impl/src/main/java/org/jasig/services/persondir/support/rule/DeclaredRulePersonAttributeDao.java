@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
+import org.jasig.services.persondir.IPerson;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 
 /**
@@ -83,14 +84,11 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
         this.rules = Collections.unmodifiableList(new ArrayList<AttributeRule>(rules));
     }
 
-
-    /*
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
+    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> seed) {
         Validate.notNull(seed, "Argument 'seed' cannot be null.");
-
-        Map<String, List<Object>> rslt = null;    // default (contract of IPersonAttributeDao)
 
         for (final AttributeRule rule : this.rules) {
             if (rule.appliesTo(seed)) {
@@ -98,12 +96,11 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
                     logger.debug("Evaluating rule='" + rule + "' from the rules List");
                 }
 
-            	rslt = rule.evaluate(seed);
-                break;  // We promise to apply at most one rule...
+            	return rule.evaluate(seed);
             }
         }
-
-        return rslt;
+        
+        return null;
     }
 
     /**
@@ -123,4 +120,17 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
         return rslt;
     }
 
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
+     */
+    public Set<String> getAvailableQueryAttributes() {
+        Set<String> rslt = new HashSet<String>();
+
+        for (final AttributeRule rule : this.rules) {
+            final Set<String> possibleUserAttributeNames = rule.getAvailableQueryAttributes();
+            rslt.addAll(possibleUserAttributeNames);
+        }
+
+        return rslt;
+    }
 }

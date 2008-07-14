@@ -6,6 +6,7 @@
 package org.jasig.services.persondir.support;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -101,24 +102,23 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that an attempt to parse a Map containing as a value a Set containing
      * something other than a String fails with an IllegalArgumentException.
      */
-    public void testIllegalContentsInValueSet() {
+    public void testNonStringContentsInValueSet() {
         Map<String, Object> nullKeyMap = new HashMap<String, Object>();
         nullKeyMap.put("A", "B");
         
         Set<Object> badSet = new HashSet<Object>();
         badSet.add("goodString");
-        badSet.add(new Date());
+        badSet.add(new Long(1234));
         badSet.add("anotherGoodString");
         
         nullKeyMap.put("wombat", badSet);
         
-        try {
-            MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
-        } catch (IllegalArgumentException iae) {
-            // good
-            return;
-        }
-        fail("Should have rejected Map argument with a value that was a Set containing something other than a String.");
+        final Map<String, Set<String>> attributeToAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
+        
+        final Map<String, HashSet<String>> expected = new HashMap<String, HashSet<String>>();
+        expected.put("A", new HashSet<String>(Arrays.asList("B")));
+        expected.put("wombat", new HashSet<String>(Arrays.asList("goodString", "1234", "anotherGoodString")));
+        assertEquals(expected, attributeToAttributeMapping);
     }
     
     /**

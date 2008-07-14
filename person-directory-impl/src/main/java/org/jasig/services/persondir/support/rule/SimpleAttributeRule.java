@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.support.NamedPersonImpl;
+
 /**
  * Sets a specified attribute to a specified value when a specified seed value 
  * matches a specified pattern.
@@ -16,6 +19,7 @@ public final class SimpleAttributeRule implements AttributeRule {
     // Instance Members.
     private final String whenKey;
     private final String whenPattern;
+    private final String setUserName;
     private final String setKey;
     private final String setValue;
     private final Set<String> possibleAttributeNames;
@@ -24,7 +28,7 @@ public final class SimpleAttributeRule implements AttributeRule {
      * Public API.
      */
 
-    public SimpleAttributeRule(String whenKey, String whenPattern,
+    public SimpleAttributeRule(String whenKey, String whenPattern, String setUserName,
                             String setKey, String setValue) {
 
         // Assertions.
@@ -40,6 +44,10 @@ public final class SimpleAttributeRule implements AttributeRule {
             String msg = "Argument 'setKey' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
+        if (setUserName == null) {
+            String msg = "Argument 'setUserName' cannot be null.";
+            throw new IllegalArgumentException(msg);
+        }
         if (setValue == null) {
             String msg = "Argument 'setValue' cannot be null.";
             throw new IllegalArgumentException(msg);
@@ -48,6 +56,7 @@ public final class SimpleAttributeRule implements AttributeRule {
         // Instance Members.
         this.whenKey = whenKey;
         this.whenPattern = whenPattern;
+        this.setUserName = setUserName;
         this.setKey = setKey;
         this.setValue = setValue;
         
@@ -89,7 +98,7 @@ public final class SimpleAttributeRule implements AttributeRule {
 
     }
 
-    public Map<String, List<Object>> evaluate(Map<String, List<Object>> userInfo) {
+    public Set<IPerson> evaluate(Map<String, List<Object>> userInfo) {
 
         // Assertions.
         if (userInfo == null) {
@@ -100,17 +109,21 @@ public final class SimpleAttributeRule implements AttributeRule {
             String msg = "May not evaluate.  This rule does not apply.";
             throw new IllegalArgumentException(msg);
         }
-
+        
         Map<String, List<Object>> rslt = new HashMap<String, List<Object>>();
         List<Object> value = new ArrayList<Object>(1);
         value.add(setValue);
         rslt.put(setKey, value);
-        return rslt;
-
+        
+        final IPerson person = new NamedPersonImpl(this.setUserName, rslt);
+        return Collections.singleton(person);
     }
 
     public Set<String> getPossibleUserAttributeNames() {
         return this.possibleAttributeNames;
     }
 
+    public Set<String> getAvailableQueryAttributes() {
+        return Collections.singleton(this.whenKey);
+    }
 }

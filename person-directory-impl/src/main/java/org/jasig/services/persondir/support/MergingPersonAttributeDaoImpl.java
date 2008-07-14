@@ -7,7 +7,9 @@ package org.jasig.services.persondir.support;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.jasig.services.persondir.IPerson;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
 
@@ -27,13 +29,14 @@ public class MergingPersonAttributeDaoImpl extends AbstractAggregatingDefaultQue
         this.attrMerger = new MultivaluedAttributeMerger();
     }
     
+    
     /**
      * Calls the current IPersonAttributeDao from using the seed.
      * 
-     * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.services.persondir.IPersonAttributeDao, java.util.Map)
+     * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.services.persondir.IPersonAttributeDao, java.util.Set)
      */
     @Override
-    protected Map<String, List<Object>> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Map<String, List<Object>> resultAttributes) {
-        return currentlyConsidering.getMultivaluedUserAttributes(seed);
+    protected Set<IPerson> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Set<IPerson> resultPeople) {
+        return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed);
     }
 }

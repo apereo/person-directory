@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
 import org.jasig.services.persondir.IPersonAttributeDao;
@@ -49,7 +48,8 @@ public abstract class AbstractFlatteningPersonAttributeDaoTest extends AbstractP
         
         
         
-        final SimpleDefaultQueryPersonAttributeDao flatteningPersonAttributeDao = new SimpleDefaultQueryPersonAttributeDao(backingMap);
+//        final SimpleDefaultQueryPersonAttributeDao flatteningPersonAttributeDao = new SimpleDefaultQueryPersonAttributeDao(backingMap);
+        final StubPersonAttributeDao flatteningPersonAttributeDao = new StubPersonAttributeDao(backingMap);
         
         final Map<String, Object> userAttributesUid = flatteningPersonAttributeDao.getUserAttributes("seed");
         assertEquals(expected, userAttributesUid);
@@ -58,25 +58,25 @@ public abstract class AbstractFlatteningPersonAttributeDaoTest extends AbstractP
         assertEquals(expected, userAttributesMap);
     }
     
-
-    
-    private class SimpleDefaultQueryPersonAttributeDao extends AbstractFlatteningPersonAttributeDao {
-        private Map<String, List<Object>> backingMap;
-        
-        public SimpleDefaultQueryPersonAttributeDao(Map<String, List<Object>> backingMap) {
-            this.backingMap = backingMap;
-        }
-        
-        public Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
-            return this.backingMap;
-        }
-        
-        public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
-            return this.backingMap;
-        }
-
-        public Set<String> getPossibleUserAttributeNames() {
-            return null;
-        }
-    }
+//
+//    
+//    private class SimpleDefaultQueryPersonAttributeDao extends AbstractFlatteningPersonAttributeDao {
+//        private Map<String, List<Object>> backingMap;
+//        
+//        public SimpleDefaultQueryPersonAttributeDao(Map<String, List<Object>> backingMap) {
+//            this.backingMap = backingMap;
+//        }
+//        
+//        public Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
+//            return this.backingMap;
+//        }
+//        
+//        public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
+//            return this.backingMap;
+//        }
+//
+//        public Set<String> getPossibleUserAttributeNames() {
+//            return null;
+//        }
+//    }
 }

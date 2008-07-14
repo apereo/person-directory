@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jasig.services.persondir.IPerson;
 import org.jasig.services.persondir.util.Util;
 
 
@@ -21,6 +22,7 @@ import org.jasig.services.persondir.util.Util;
  * @author Eric Dalquist
  * @version $Revision$
  */
+@SuppressWarnings("deprecation")
 public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAttributeDaoTest {
     private static final String defaultAttr = "uid"; 
 
@@ -86,7 +88,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setDefaultAttributeName(defaultAttr);
-        dao.setUserInfoCache(new HashMap<Serializable, Map<String, List<Object>>>());
+        dao.setUserInfoCache(new HashMap<Serializable, Set<IPerson>>());
         dao.afterPropertiesSet();
         
         assertEquals("Query count incorrect", 0, dao.getQueries());
@@ -129,7 +131,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
     
     public void testCaching() throws Exception {
-        Map<Serializable, Map<String, List<Object>>> cacheMap = new HashMap<Serializable, Map<String, List<Object>>>();
+        Map<Serializable, Set<IPerson>> cacheMap = new HashMap<Serializable, Set<IPerson>>();
         
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
@@ -186,7 +188,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
     
     public void testMulipleAttributeKeys() throws Exception {
-        Map<Serializable, Map<String, List<Object>>> cacheMap = new HashMap<Serializable, Map<String, List<Object>>>();
+        Map<Serializable, Set<IPerson>> cacheMap = new HashMap<Serializable, Set<IPerson>>();
         
         Set<String> keyAttrs = new HashSet<String>();
         keyAttrs.add("name.first");
@@ -267,8 +269,8 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         catch (IllegalArgumentException iae) {
             //expected
         }
-        final Map<Serializable, Map<String, List<Object>>> cacheMap = new HashMap<Serializable, Map<String, List<Object>>>();
-        final Map<Serializable, Map<String, List<Object>>> expectedcacheMap = new HashMap<Serializable, Map<String, List<Object>>>(cacheMap);
+        final Map<Serializable, Set<IPerson>> cacheMap = new HashMap<Serializable, Set<IPerson>>();
+        final Map<Serializable, Set<IPerson>> expectedcacheMap = new HashMap<Serializable, Set<IPerson>>(cacheMap);
         dao.setUserInfoCache(cacheMap);
         assertEquals(expectedcacheMap, dao.getUserInfoCache());
     }
@@ -295,7 +297,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         }
         
         dao = new CachingPersonAttributeDaoImpl();
-        dao.setUserInfoCache(new HashMap<Serializable, Map<String, List<Object>>>());
+        dao.setUserInfoCache(new HashMap<Serializable, Set<IPerson>>());
         try {
             dao.getMultivaluedUserAttributes(Collections.EMPTY_MAP);
             fail("Calling getUserAttributes(Map) with no initialization should result in an IllegalStateException");
@@ -306,7 +308,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
     
     public void testEmptyCacheKeyWithDefaultAttr() throws Exception {
-        Map<Serializable, Map<String, List<Object>>> cacheMap = new HashMap<Serializable, Map<String, List<Object>>>();
+        Map<Serializable, Set<IPerson>> cacheMap = new HashMap<Serializable, Set<IPerson>>();
         
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
@@ -344,7 +346,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
     
     public void testEmptyCacheKeyWithKeyAttrs() throws Exception {
-        Map<Serializable, Map<String, List<Object>>> cacheMap = new HashMap<Serializable, Map<String, List<Object>>>();
+        Map<Serializable, Set<IPerson>> cacheMap = new HashMap<Serializable, Set<IPerson>>();
         
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
@@ -390,7 +392,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setDefaultAttributeName(defaultAttr);
-        dao.setUserInfoCache(new HashMap<Serializable, Map<String, List<Object>>>());
+        dao.setUserInfoCache(new HashMap<Serializable, Set<IPerson>>());
         
         return dao;
     }

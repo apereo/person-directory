@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 
 import org.jasig.services.persondir.IPersonAttributeDao;
 
+@SuppressWarnings("deprecation")
 public class RegexGatewayPersonAttributeDaoTest extends TestCase {
 
 	// Instance Members.

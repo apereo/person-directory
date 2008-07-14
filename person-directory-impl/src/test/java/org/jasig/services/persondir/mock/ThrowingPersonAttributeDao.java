@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jasig.services.persondir.IPerson;
 import org.jasig.services.persondir.IPersonAttributeDao;
 
 /**
@@ -12,39 +13,70 @@ import org.jasig.services.persondir.IPersonAttributeDao;
  */
 public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
 
-    /**
-     * @throws RuntimeException always
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
-    public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
+    public Set<String> getAvailableQueryAttributes() {
+        throw new RuntimeException("ThrowingPersonAttributeDao always throws");
+    }
+    
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPeople(java.util.Map)
+     */
+    public Set<IPerson> getPeople(Map<String, Object> query) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
-    /**
-     * @throws RuntimeException always
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
+    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
-    /**
-     * @throws RuntimeException always
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
+     */
+    public IPerson getPerson(String uid) {
+        throw new RuntimeException("ThrowingPersonAttributeDao always throws");
+    }
+
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
     public Set<String> getPossibleUserAttributeNames() {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
-    /**
-     * @throws RuntimeException always
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
      */
+    @SuppressWarnings("deprecation")
+    public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
+        throw new RuntimeException("ThrowingPersonAttributeDao always throws");
+    }
+
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.lang.String)
+     */
+    @SuppressWarnings("deprecation")
+    public Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
+        throw new RuntimeException("ThrowingPersonAttributeDao always throws");
+    }
+
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
+     */
+    @SuppressWarnings("deprecation")
     public Map<String, Object> getUserAttributes(Map<String, Object> seed) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
-    /**
-     * @throws RuntimeException always
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.lang.String)
      */
+    @SuppressWarnings("deprecation")
     public Map<String, Object> getUserAttributes(String uid) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
-    
 }

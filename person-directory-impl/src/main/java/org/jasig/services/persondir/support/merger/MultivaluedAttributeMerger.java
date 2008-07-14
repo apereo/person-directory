@@ -24,14 +24,12 @@ import org.apache.commons.lang.Validate;
  * @author Eric Dalquist
  * @version $Revision$ $Date$
  */
-public class MultivaluedAttributeMerger implements IAttributeMerger {
-
-    /**
-     * Please note that the <code>toModify</code> map is modified.
-     * 
-     * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergeAttributes(java.util.Map, java.util.Map)
+public class MultivaluedAttributeMerger extends BaseAdditiveAttributeMerger {
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.support.merger.BaseAdditiveAttributeMerger#mergePersonAttributes(java.util.Map, java.util.Map)
      */
-    public Map<String, List<Object>> mergeAttributes(final Map<String, List<Object>> toModify, final Map<String, List<Object>> toConsider) {
+    @Override
+    protected Map<String, List<Object>> mergePersonAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider) {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
         
@@ -50,5 +48,4 @@ public class MultivaluedAttributeMerger implements IAttributeMerger {
         
         return toModify;
     }
-
 }

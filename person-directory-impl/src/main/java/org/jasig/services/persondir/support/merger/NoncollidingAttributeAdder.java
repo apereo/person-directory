@@ -17,14 +17,13 @@ import org.apache.commons.lang.Validate;
  * @author andrew.petro@yale.edu
  * @version $Revision$ $Date$
  */
-public class NoncollidingAttributeAdder implements IAttributeMerger {
+public class NoncollidingAttributeAdder extends BaseAdditiveAttributeMerger {
 
-    /**
-     * Please note that the <code>toModify</code> map is modified.
-     * 
-     * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergeAttributes(java.util.Map, java.util.Map)
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.support.merger.BaseAdditiveAttributeMerger#mergePersonAttributes(java.util.Map, java.util.Map)
      */
-    public Map<String, List<Object>> mergeAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider) {
+    @Override
+    protected Map<String, List<Object>> mergePersonAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider) {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
 

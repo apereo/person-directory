@@ -5,63 +5,144 @@
 
 package org.jasig.services.persondir.support.jdbc;
 
+import java.text.MessageFormat;
 import java.util.List;
-import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.Validate;
+import org.jasig.services.persondir.IPerson;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
+import org.jasig.services.persondir.support.QueryType;
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 /**
- * Provides common logic for executing a JDBC based attribute query.
- * 
+ * Provides common logic for executing a JDBC based query including building the WHERE clause SQL string.
  * 
  * @author Eric Dalquist 
  * @version $Revision$
  */
-public abstract class AbstractJdbcPersonAttributeDao extends AbstractQueryPersonAttributeDao {
+public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPersonAttributeDao<PartialWhereClause> {
+    private static final Pattern WILDCARD = Pattern.compile("\\*");
+    
     private final SimpleJdbcTemplate simpleJdbcTemplate;
-    private final String sql;
+    private String queryTemplate;
+    private QueryType queryType = QueryType.AND;
     
     /**
      * @param ds The DataSource to use for queries
-     * @param sql The SQL to execute
+     * @param queryTemplate Template to use for SQL query generation. Use {0} as the placeholder for where the generated portion of the WHERE clause should be inserted. 
      */
-    public AbstractJdbcPersonAttributeDao(DataSource ds, String sql) {
+    public AbstractJdbcPersonAttributeDao(DataSource ds, String queryTemplate) {
         Validate.notNull(ds, "DataSource can not be null");
-        Validate.notNull(sql, "sql can not be null");
+        Validate.notNull(queryTemplate, "queryTemplate can not be null");
         
         this.simpleJdbcTemplate = new SimpleJdbcTemplate(ds);
-        this.sql = sql;
+        this.queryTemplate = queryTemplate;
     }
     
     /**
-     * @return the sql that is used for the query
+     * @return the queryTemplate
      */
-    protected String getSql() {
-        return sql;
+    public String getQueryTemplate() {
+        return queryTemplate;
+    }
+    /**
+     * Template to use for SQL query generation. Use {0} as the placeholder for where the generated portion of
+     * the WHERE clause should be inserted. 
+     * 
+     * @param queryTemplate the queryTemplate to set
+     */
+    public void setQueryTemplate(String queryTemplate) {
+        this.queryTemplate = queryTemplate;
+    }
+
+    /**
+     * @return the queryType
+     */
+    public QueryType getQueryType() {
+        return queryType;
+    }
+    /**
+     * Type of logical operator to use when joining WHERE clause components
+     * 
+     * @param queryType the queryType to set
+     */
+    public void setQueryType(QueryType queryType) {
+        this.queryType = queryType;
     }
 
 
     /**
-     * Takes the {@link List} of {@link Map}s from the query and parses it into the attribute {@link Map} to be returned.
+     * Takes the {@link List} from the query and parses it into the {@link List} of {@link IPerson} attributes to be returned.
      * 
      * @param queryResults Results from the query.
-     * @return The results of the query, as specified by {@link org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(Map)} 
+     * @return The results of the query 
      */
-    protected abstract Map<String, List<Object>> parseAttributeMapFromResults(final List<Map<String, Object>> queryResults);
+    protected abstract List<IPerson> parseAttributeMapFromResults(final List<R> queryResults);
     
-    /***
-     * Runs the sql specified in the constructor.<br>
-     * Calls {@link #parseAttributeMapFromResults(List)} with the query results.<br>
-     * Returns results from {@link #parseAttributeMapFromResults(List)} link.<br>
+    /**
+     * @return The ParameterizedRowMapper to handle the results of the SQL query.
+     */
+    protected abstract ParameterizedRowMapper<R> getRowMapper();
+    
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
      */
     @Override
-    protected final Map<String, List<Object>> getUserAttributesIfNeeded(final Object[] args) {
-        final List<Map<String, Object>> queryResults = this.simpleJdbcTemplate.queryForList(this.sql, args);
+    protected PartialWhereClause appendAttributeToQuery(PartialWhereClause queryBuilder, String dataAttribute, List<Object> queryValues) {
+        if (queryBuilder == null) {
+            queryBuilder = new PartialWhereClause();
+        }
         
-        return this.parseAttributeMapFromResults(queryResults);
+        for (final Object queryValue : queryValues) {
+            if (queryBuilder.sql.length() > 0) {
+                queryBuilder.sql.append(" ").append(this.queryType.toString()).append(" ");
+            }
+            
+            if (queryValue == null) {
+                queryBuilder.sql.append(dataAttribute);
+                queryBuilder.sql.append(" IS NULL");
+            }
+            else {
+                final String queryString = queryValue.toString();
+                
+                //Convert to SQL wildcard
+                final Matcher queryValueMatcher = WILDCARD.matcher(queryString);
+                final String formattedQueryValue = queryValueMatcher.replaceAll("%");
+                
+                queryBuilder.arguments.add(formattedQueryValue);
+                queryBuilder.sql.append(dataAttribute);
+                if (formattedQueryValue.equals(queryString)) {
+                    queryBuilder.sql.append(" = ");
+                }
+                else {
+                    queryBuilder.sql.append(" LIKE ");
+                }
+                queryBuilder.sql.append("?");
+            }
+        }
+        
+        return queryBuilder;
+    }
+
+    
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
+     */
+    @Override
+    protected final List<IPerson> getPeopleForQuery(PartialWhereClause queryBuilder) {
+        //Merge the generated SQL with the base query template
+        final StringBuilder partialSqlWhere = queryBuilder.sql;
+        final String querySQL = MessageFormat.format(this.queryTemplate, partialSqlWhere);
+
+        //Execute the query
+        final ParameterizedRowMapper<R> rowMapper = this.getRowMapper();
+        final List<R> results = this.simpleJdbcTemplate.query(querySQL, rowMapper, queryBuilder.arguments.toArray());
+        
+        return this.parseAttributeMapFromResults(results);
     }
 }

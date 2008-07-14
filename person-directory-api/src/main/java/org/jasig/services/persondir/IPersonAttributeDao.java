@@ -19,73 +19,111 @@ import java.util.Set;
  * @version $Revision$ $Date$
  */
 public interface IPersonAttributeDao {
-
+    
     /**
-     * Obtains a mutable {@link Map} from attribute names to values for
-     * the given query seed which is an immutable Map. The values may be mutable objects but it is
-     * recommended that they be immutable.<br>
+     * Searches for a single {@link IPerson} using the specified uid (userName).<br>
      * 
      * This method returns according to the following rules:<br>
      * <ul>
-     *  <li>If the user exists and has attributes a populated {@link Map} is returned.</li>
-     *  <li>If the user exists and has no attributes an empty {@link Map} is returned.</li>
+     *  <li>If the user exists and has attributes a populated {@link IPerson} is returned.</li>
+     *  <li>If the user exists and has no attributes an empty {@link IPerson} is returned.</li>
      *  <li>If the user doesn't exist <code>null</code> is returned.</li>
-     *  <li>If an error occurs while getting the attributes the appropriate exception will be propagated.</li>
+     *  <li>If an error occurs while find the person an appropriate exception will be thrown.</li>
      * </ul>
-     * <br>
-     * Unless otherwise specified by an implementation the returned {@link Map}
-     * will not be a union of the seed and query results. If your are given a
-     * {@link Map} that includes the attribute "phone" and value "555-1212" and
-     * the returned {@link Map} contains the attribute "phone" with the value
-     * "555-1212", this means that your implementation also believes that the
-     * "phone" attribute should have this value.
      * 
-     * @param seed immutable Map of attributes to values to seed the query
-     * @return Map from attribute names to values
-     * @throws IllegalArgumentException If <code>seed</code> is <code>null.</code>
+     * @param uid The userName of the person to find.
+     * @return The populated {@link IPerson} for the specified uid, null if no person could be found for the uid. 
+     * @throws IllegalArgumentException If <code>uid</code> is <code>null.</code>
      */
-    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed);
-
-    /**
-     * This method uses a single attribute to get a {@link Map} of user
-     * attributes. 
-     * <br>
-     * This methods follows the same return rules as {@link #getUserAttributes(Map)}
-     * 
-     * @param uid The string to use as the value in the seed
-     * @return Map from attribute names to values
-     * @see #getUserAttributes(Map)
-     */
-    public Map<String, List<Object>> getMultivaluedUserAttributes(final String uid);
+    public IPerson getPerson(String uid);
     
     /**
-     * This method returns single-valued user attributes. This method has the same
-     * behavior as {@link #getMultivaluedUserAttributes(Map)} other than the single-valued
-     * return Map
+     * Searches for {@link IPerson}s that match the set of attributes provided in the query {@link Map}. Each
+     * implementation is free to define what a 'match' is on its own. The provided query Map contains String attribute
+     * names and single values which may be null.
+     * <br>
+     * If the implementation can not execute its query for an expected reason such as not enough information in the
+     * query {@link Map} null should be returned. For unexpected problems throw an exception.
      * 
-     * @see #getMultivaluedUserAttributes(Map)
+     * @param query A {@link Map} of name/value pair attributes to use in searching for {@link IPerson}s
+     * @return A {@link Set} of {@link IPerson}s that match the query {@link Map}. If no matches are found an empty {@link Set} is returned. If the query could not be run null is returned.
+     * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
-    public Map<String, Object> getUserAttributes(final Map<String, Object> seed);
+    public Set<IPerson> getPeople(Map<String, Object> query);
     
     /**
-     * This method returns single-valued user attributes. This method has the same
-     * behavior as {@link #getMultivaluedUserAttributes(String)} other than the single-valued
-     * return Map
+     * Searches for {@link IPerson}s that match the set of attributes provided in the query {@link Map}. Each
+     * implementation is free to define what a 'match' is on its own. The provided query Map contains String attribute
+     * names and multiple values any of which may be null or the List itself may be null.
+     * <br>
+     * If the implementation can not execute its query for an expected reason such as not enough information in the
+     * query {@link Map} null should be returned. For unexpected problems throw an exception.
      * 
-     * @see #getMultivaluedUserAttributes(String)
+     * @param query A {@link Map} of name/value pair attributes to use in searching for {@link IPerson}s
+     * @return A {@link Set} of {@link IPerson}s that match the query {@link Map}. If no matches are found an empty {@link Set} is returned. If the query could not be run null is returned.
+     * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
-    public Map<String, Object> getUserAttributes(final String uid);
+    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query);
 
     /**
-     * Gets a {@link Set} of attribute names that may be returned by the
-     * {@link #getUserAttributes(Map)}. The names returned represent all
-     * possible names {@link #getUserAttributes(Map)} could return. If the
-     * dao doesn't have a way to know all possible attribute names this
-     * method should return <code>null</code>.
+     * Gets a {@link Set} of attribute names that may be returned by the {@link #getUserAttributes(Map)}. The names
+     * returned represent all possible attributes names for the {@link IPerson} objects returned by the get methods. If
+     * the dao doesn't have a way to know all possible attribute names this method should return <code>null</code>.
      * <br>
      * Returns an immutable {@link Set}.
      * 
      * @return A {@link Set} of possible attribute names for user queries.
      */
     public Set<String> getPossibleUserAttributeNames();
+
+    /**
+     * Gets a {@link Set} of attribute names that this implementation knows how to use in a query. The names returned 
+     * represent all possible names for query attributes for this implmenentation. If the dao doesn't have a way to know
+     * all possible query attribute names this method should return <code>null</code>
+     * <br>
+     * Returns an immutable {@link Set}.
+     * 
+     * @return The set of attributes that can be used to query for user ids in this dao, null if the set is unknown.
+     */
+    public Set<String> getAvailableQueryAttributes();
+    
+    
+
+    
+    
+    /**
+     * Returns a mutable {@link Map} of the attributes of the first {@link IPerson} returned by calling
+     * {@link #getPeople(Map)}
+     * 
+     * @deprecated Use {@link #getPeople(Map)} instead. This method will be removed in 1.6
+     */
+    @Deprecated
+    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed);
+
+    /**
+     * Returns a mutable {@link Map} of the attributes of the {@link IPerson} returned by calling
+     * {@link #getPerson(String)}
+     * 
+     * @deprecated Use {@link #getPerson(String)} instead. This method will be removed in 1.6
+     */
+    @Deprecated
+    public Map<String, List<Object>> getMultivaluedUserAttributes(final String uid);
+    
+    /**
+     * Returns a mutable {@link Map} of the single-valued attributes of the first {@link IPerson} returned by calling
+     * {@link #getPeople(Map)}
+     * 
+     * @deprecated Use {@link #getPeople(Map)} instead. This method will be removed in 1.6
+     */
+    @Deprecated
+    public Map<String, Object> getUserAttributes(final Map<String, Object> seed);
+
+    /**
+     * Returns a mutable {@link Map} of the single-valued attributes of the {@link IPerson} returned by calling
+     * {@link #getPerson(String)}
+     * 
+     * @deprecated Use {@link #getPerson(String)} instead. This method will be removed in 1.6
+     */
+    @Deprecated
+    public Map<String, Object> getUserAttributes(final String uid);
 }

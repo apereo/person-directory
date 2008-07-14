@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributeDao;
+
 /**
  * Defines the contract for a person directory user attribute rule for use with
  * the <code>DeclaredRulePersonAttributeDao</code>.
@@ -26,9 +29,9 @@ public interface AttributeRule {
      * Applies the embodied rule to the user described by the specified
      * information and returns the result.
      * 
-     * This method follows the same contract as {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
+     * This method follows the same contract as {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)}
      */
-    public abstract Map<String, List<Object>> evaluate(Map<String, List<Object>> userInfo);
+    public abstract Set<IPerson> evaluate(Map<String, List<Object>> userInfo);
 
     /**
      * Indicates the complete set of user attribute names that <em>may</em> be
@@ -37,5 +40,9 @@ public interface AttributeRule {
      * This method follows the same contract as {@link org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()}
      */
     public abstract Set<String> getPossibleUserAttributeNames();
-
+    
+    /**
+     * @see IPersonAttributeDao#getAvailableQueryAttributes()
+     */
+    public abstract Set<String> getAvailableQueryAttributes();
 }

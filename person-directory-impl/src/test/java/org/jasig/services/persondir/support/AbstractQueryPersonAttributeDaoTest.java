@@ -5,15 +5,17 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import junit.framework.TestCase;
+
+import org.jasig.services.persondir.IPerson;
 
 /**
  * @author Eric Dalquist 
@@ -47,20 +49,20 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     }
     
     public void testInsuffcientSeed() {
-        final List<String> queryAttributes = new ArrayList<String>();
-        queryAttributes.add("userid");
+        final Map<String, String> queryAttributes = new LinkedHashMap<String, String>();
+        queryAttributes.put("userid", null);
         
-        this.testQueryPersonAttributeDao.setQueryAttributes(queryAttributes);
+        this.testQueryPersonAttributeDao.setQueryAttributeMapping(queryAttributes);
         this.testQueryPersonAttributeDao.getUserAttributes("eric");
         final List<List<Object>>  args = this.testQueryPersonAttributeDao.getArgs();
         assertNull(args);
     }
     
     public void testCustomAttributes() {
-        final List<String> queryAttributes = new ArrayList<String>();
-        queryAttributes.add("name.first");
-        queryAttributes.add("name.last");
-        this.testQueryPersonAttributeDao.setQueryAttributes(queryAttributes);
+        final Map<String, String> queryAttributes = new LinkedHashMap<String, String>();
+        queryAttributes.put("name.first", null);
+        queryAttributes.put("name.last", null);
+        this.testQueryPersonAttributeDao.setQueryAttributeMapping(queryAttributes);
         
         final Map<String, List<Object>> seed = new HashMap<String, List<Object>>();
         seed.put("name.first", Collections.singletonList((Object)"eric"));
@@ -73,7 +75,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         assertEquals(Arrays.asList(expectedArgs), args);
     }
 
-    private class TestQueryPersonAttributeDao extends AbstractQueryPersonAttributeDao {
+    private class TestQueryPersonAttributeDao extends AbstractQueryPersonAttributeDao<List<List<Object>>> {
         private List<List<Object>> args = null;
         
         /**
@@ -82,20 +84,27 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         public List<List<Object>> getArgs() {
             return this.args;
         }
-
+        
         /* (non-Javadoc)
-         * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getUserAttributesIfNeeded(java.util.List)
+         * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
          */
         @Override
-        protected Map<String, List<Object>> getUserAttributesIfNeeded(List<List<Object>> args) {
-            this.args = args;
-            return null;
+        protected List<List<Object>> appendAttributeToQuery(List<List<Object>> queryBuilder, String dataAttribute, List<Object> queryValues) {
+            if (queryBuilder == null) {
+                queryBuilder = new LinkedList<List<Object>>();
+            }
+            
+            queryBuilder.add(queryValues);
+            
+            return queryBuilder;
         }
 
         /* (non-Javadoc)
-         * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
+         * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
          */
-        public Set<String> getPossibleUserAttributeNames() {
+        @Override
+        protected List<IPerson> getPeopleForQuery(List<List<Object>> queryBuilder) {
+            this.args = queryBuilder;
             return null;
         }
     }

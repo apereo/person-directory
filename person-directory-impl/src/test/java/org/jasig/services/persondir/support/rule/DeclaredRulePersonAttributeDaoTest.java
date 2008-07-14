@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.util.Util;
 
+@SuppressWarnings("deprecation")
 public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 
 	private static final String NAME = "eduPersonPrimaryAffiliation"; 
@@ -27,7 +28,7 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 	
 	public DeclaredRulePersonAttributeDaoTest() {
 		this.rule = new SimpleAttributeRule(NAME, 
-							"records-staff", "fax", VALUE);
+							"records-staff", "userName", "fax", VALUE);
 		this.target = new DeclaredRulePersonAttributeDao(NAME, 
 								Arrays.asList(new AttributeRule[] { this.rule }));
 	}

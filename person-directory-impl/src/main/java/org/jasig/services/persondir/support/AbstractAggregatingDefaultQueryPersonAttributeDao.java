@@ -6,13 +6,13 @@
 package org.jasig.services.persondir.support;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
+import org.jasig.services.persondir.IPerson;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.support.merger.IAttributeMerger;
 import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
@@ -84,36 +84,35 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     protected boolean recoverExceptions = true;
     
 
-    
     /**
      * Iterates through the configured {@link java.util.List} of {@link IPersonAttributeDao}
      * instances. The results from each DAO are merged into the result {@link Map}
      * by the configured {@link IAttributeMerger}. 
      * 
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(Map)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public final Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
-        Validate.notNull(seed, "seed may not be null.");
+    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+        Validate.notNull(query, "query may not be null.");
         
-        if (this.personAttributeDaos == null) {
-            throw new IllegalStateException("personAttributeDaos property must be set");
-        }
-
-        //Initialize null, so that if none of the sub-DAOs find the user null is returned appropriately
-        Map<String, List<Object>> resultAttributes = null;
+        //Initialize null, so that if none of the sub-DAOs find any people null is returned appropriately
+        Set<IPerson> resultPeople = null;
         
         //Denotes that this is the first time we are running a query and the original seed should be used
         boolean isFirstQuery = true;
         
+        if (this.personAttributeDaos == null) {
+            throw new IllegalStateException("personAttributeDaos must be set");
+        }
+        
         //Iterate through the configured IPersonAttributeDaos, querying each.
         for (final IPersonAttributeDao currentlyConsidering : this.personAttributeDaos) {
-            Map<String, List<Object>> currentAttributes = new HashMap<String, List<Object>>();
+            Set<IPerson> currentPeople = null;
             try {
-                currentAttributes = this.getAttributesFromDao(seed, isFirstQuery, currentlyConsidering, resultAttributes);
+                currentPeople = this.getAttributesFromDao(query, isFirstQuery, currentlyConsidering, resultPeople);
                 isFirstQuery = false;
 
                 if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Retrieved attributes='" + currentAttributes + "' for seed='" + seed + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='" + currentlyConsidering + "', resultAttributes='" + resultAttributes + "'");
+                    this.logger.debug("Retrieved attributes='" + currentPeople + "' for query='" + query + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='" + currentlyConsidering + "', resultAttributes='" + resultPeople + "'");
                 }
             }
             catch (final RuntimeException rte) {
@@ -126,22 +125,29 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                 }
             }
 
-            if (resultAttributes == null) {
-                //If this is the first valid result set just use it.
-                resultAttributes = currentAttributes;
+            if (currentPeople != null) {
+                if (resultPeople == null) {
+                    //If this is the first valid result set just use it.
+                    resultPeople = new LinkedHashSet<IPerson>(currentPeople);
+                }
+                else {
+                    //Merge the Sets of IPersons
+                    resultPeople = this.attrMerger.mergeResults(resultPeople, currentPeople);
+                }
             }
-            else if (currentAttributes != null) {
-                //Perform the appropriate attribute attrMerger
-                resultAttributes = this.attrMerger.mergeAttributes(resultAttributes, currentAttributes);
-            }
+        }
+        
+        if (resultPeople == null) {
+            return null;
         }
         
         if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Aggregated attributes '" + resultAttributes + "' for seed='" + seed + "'");
+            this.logger.debug("Aggregated search results '" + resultPeople + "' for query='" + query + "'");
         }
         
-        return resultAttributes;
+        return Collections.unmodifiableSet(resultPeople);
     }
+    
     
     /**
      * Call to execute the appropriate query on the current {@link IPersonAttributeDao}. Provides extra information
@@ -153,22 +159,18 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * @param resultAttributes The Map of results from all previous queries, may be null.
      * @return The results from the call to the DAO, follows the same rules as {@link IPersonAttributeDao#getUserAttributes(Map)}.
      */
-    protected abstract Map<String, List<Object>> getAttributesFromDao(final Map<String, List<Object>> seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Map<String, List<Object>> resultAttributes);
+    protected abstract Set<IPerson> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Set<IPerson> resultPeople);
     
     
     /**
-     * This implementation is not always correct.
-     * It handles the basic case where the Set of attributes returned by this
-     * implementation is the union of the attributes declared by all of the
-     * underlying implementations to be merged.  Of course, an IAttributeMerger
-     * might provide for a merging policy such that the attributes resulting from
-     * invoking this IPersonAttributeDao implementation are not the union
-     * of the attributes declared by the underlying PersonAttributeDaos.
+     * Merges the results of calling {@link IPersonAttributeDao#getPossibleUserAttributeNames()} on each child dao using
+     * the configured {@link IAttributeMerger#mergePossibleUserAttributeNames(Set, Set)}. If all children return null
+     * this method returns null as well. If any child does not return null this method will not return null.
      * 
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
     public final Set<String> getPossibleUserAttributeNames() {
-        final Set<String> attrNames = new HashSet<String>();
+        Set<String> attrNames = null;
         
         for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
             Set<String> currentDaoAttrNames = null;
@@ -190,7 +192,11 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             }
             
             if (currentDaoAttrNames != null) {
-                attrNames.addAll(currentDaoAttrNames);
+                if (attrNames == null) {
+                    attrNames = new LinkedHashSet<String>();
+                }
+
+                attrNames = this.attrMerger.mergePossibleUserAttributeNames(attrNames, currentDaoAttrNames);
             }
         }
         
@@ -198,9 +204,63 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             this.logger.debug("Aggregated possible attribute names '" + attrNames + "'");
         }
         
+        if (attrNames == null) {
+            return null;
+        }
+        
         return Collections.unmodifiableSet(attrNames);
     }
     
+    /**
+     * Merges the results of calling {@link IPersonAttributeDao#getAvailableQueryAttributes()} on each child dao using
+     * the configured {@link IAttributeMerger#mergeAvailableQueryAttributes(Set, Set)}. If all children return null this
+     * method returns null as well. If any child does not return null this method will not return null.
+     * 
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
+     */
+    public Set<String> getAvailableQueryAttributes() {
+        Set<String> queryAttrs = null;
+        
+        for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
+            Set<String> currentDaoQueryAttrs = null;
+            try {
+                currentDaoQueryAttrs = currentDao.getAvailableQueryAttributes();
+                
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Retrieved possible query attributes '" + currentDaoQueryAttrs + "' from '" + currentDao + "'");
+                }
+            }
+            catch (final RuntimeException rte) {
+                if (this.recoverExceptions) {
+                    this.logger.warn("Recovering From Exception thrown by '" + currentDao + "'", rte);
+                }
+                else {
+                    this.logger.error("Failing From Exception thrown by '" + currentDao + "'", rte);
+                    throw rte;
+                }
+            }
+            
+            if (currentDaoQueryAttrs != null) {
+                if (queryAttrs == null) {
+                    queryAttrs = new LinkedHashSet<String>();
+                }
+
+                queryAttrs = this.attrMerger.mergeAvailableQueryAttributes(queryAttrs, currentDaoQueryAttrs);
+            }
+        }
+
+        
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Aggregated possible query attributes '" + queryAttrs + "'");
+        }
+        
+        if (queryAttrs == null) {
+            return null;
+        }
+        
+        return Collections.unmodifiableSet(queryAttrs);
+    }
+
     /**
      * Get the strategy whereby we accumulate attributes.
      * 

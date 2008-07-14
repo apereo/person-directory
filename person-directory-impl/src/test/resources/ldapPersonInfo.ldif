@@ -1,0 +1,31 @@
+dn: ou=people,o=personDirectory
+objectClass: organizationalUnit
+objectClass: top
+ou: people
+description: Contains entries which describe people
+
+dn: cn=Eric Dalquist,ou=people,o=personDirectory
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: top
+cn: Eric Dalquist
+description: uPortal Developer
+givenname: Eric
+sn: Dalquist
+uid: edalquist
+mail: eric.dalquist@example.com
+userpassword: {SHA}nU4eI71bcnBGqeO0t9tXvY1u5oQ=
+
+dn: cn=Jim Johnson,ou=people,o=personDirectory
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: top
+cn: Jim Johnson
+description: uPortal Lackey
+givenname: Jim
+sn: Johnson
+uid: jjohnson
+mail: jim.johnson@example.com
+userpassword: {SHA}nU4eI71bcnBGqeO0t9tXvY1u5aQ=

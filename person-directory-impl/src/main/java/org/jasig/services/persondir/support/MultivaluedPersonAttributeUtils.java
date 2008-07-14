@@ -7,14 +7,13 @@ package org.jasig.services.persondir.support;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.Validate;
 
 
@@ -25,7 +24,6 @@ import org.apache.commons.lang.Validate;
  * @since uPortal 2.5
  */
 public final class MultivaluedPersonAttributeUtils {
-
     
     /**
      * Translate from a more flexible Attribute to Attribute mapping format to a Map
@@ -44,9 +42,8 @@ public final class MultivaluedPersonAttributeUtils {
      * type {@link String} and values of type {@link String} or {@link Set} of 
      * {@link String}s.  The argument must not be null and must have no null
      * keys.  It must contain no keys other than Strings and no values other
-     * than Strings or Sets of Strings.  This method will throw
-     * IllegalArgumentException if the method argument doesn't meet these 
-     * requirements.
+     * than Strings or Sets of Strings.  This method will convert any non-string
+     * values to a String using the object's toString() method.
      * 
      * This method returns a Map equivalent to its argument except whereever there
      * was a String value in the Map there will instead be an immutable Set containing
@@ -56,16 +53,14 @@ public final class MultivaluedPersonAttributeUtils {
      * @param mapping {@link Map} from String names of attributes in the underlying store 
      * to uP attribute names or Sets of such names.
      * @return a Map from String to Set of Strings
-     * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
      */
-    @SuppressWarnings("unchecked")
     public static Map<String, Set<String>> parseAttributeToAttributeMapping(final Map<String, ? extends Object> mapping) {
         //null is assumed to be an empty map
         if (mapping == null) {
             return Collections.emptyMap();
         }
         
-        final Map<String, Set<String>> mappedAttributesBuilder = new HashMap<String, Set<String>>();
+        final Map<String, Set<String>> mappedAttributesBuilder = new LinkedHashMap<String, Set<String>>();
         
         for (final Map.Entry<String, ? extends Object> mappingEntry : mapping.entrySet()) {
             final String sourceAttrName = mappingEntry.getKey();
@@ -84,12 +79,19 @@ public final class MultivaluedPersonAttributeUtils {
             }
             //Create a defenisve copy of the mapped set & verify its contents are strings
             else if (mappedAttribute instanceof Set) {
-                final Set<String> sourceSet = (Set<String>)mappedAttribute;
+                final Set<?> sourceSet = (Set<?>)mappedAttribute;
                 
-                //Verify the collection only contains strings.
-                CollectionUtils.typedCollection(sourceSet, String.class);
+                //Ensure the collection only contains strings.
+                final Set<String> mappedSet = new LinkedHashSet<String>();
+                for (final Object sourceObj : sourceSet) {
+                    if (sourceObj != null) {
+                        mappedSet.add(sourceObj.toString());
+                    }
+                    else {
+                        mappedSet.add(null);
+                    }
+                }
                 
-                final Set<String> mappedSet = new HashSet<String>(sourceSet);
                 mappedAttributesBuilder.put(sourceAttrName, Collections.unmodifiableSet(mappedSet));
             }
             //Not a valid type for the mapping
@@ -163,6 +165,22 @@ public final class MultivaluedPersonAttributeUtils {
         }
 
         return result;
+    }
+    
+    /**
+     * Convert the <String, Object> map to a <String, List<Object>> map by simply wrapping
+     * each value in a singleton (read-only) List
+     */
+    public static Map<String, List<Object>> toMultivaluedMap(Map<String, Object> seed) {
+        Validate.notNull(seed, "seed can not be null");
+        
+        final Map<String, List<Object>> multiSeed = new LinkedHashMap<String, List<Object>>(seed.size());
+        for (final Map.Entry<String, Object> seedEntry : seed.entrySet()) {
+            final String seedName = seedEntry.getKey();
+            final Object seedValue = seedEntry.getValue();
+            multiSeed.put(seedName, Collections.singletonList(seedValue));
+        }
+        return multiSeed;
     }
     
     /**
