@@ -355,18 +355,18 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     }
     
     private static class PersonAttributeDaoMethodInvocation implements MethodInvocation {
-        private final static Method getMultivaluedUserAttributesMethod;
+        private final static Method getPeopleWithMultivaluedAttributesMethod;
         static {
             try {
-                getMultivaluedUserAttributesMethod = IPersonAttributeDao.class.getMethod("getMultivaluedUserAttributes", Map.class);
+                getPeopleWithMultivaluedAttributesMethod = IPersonAttributeDao.class.getMethod("getPeopleWithMultivaluedAttributes", Map.class);
             }
             catch (SecurityException e) {
-                final NoSuchMethodError nsme = new NoSuchMethodError("The 'getMultivaluedUserAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' is not accessible due to a security policy.");
+                final NoSuchMethodError nsme = new NoSuchMethodError("The 'getPeopleWithMultivaluedAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' is not accessible due to a security policy.");
                 nsme.initCause(e);
                 throw nsme;
             }
             catch (NoSuchMethodException e) {
-                final NoSuchMethodError nsme = new NoSuchMethodError("The 'getMultivaluedUserAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' is not accessible due to a security policy.");
+                final NoSuchMethodError nsme = new NoSuchMethodError("The 'getPeopleWithMultivaluedAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' does not exist.");
                 nsme.initCause(e);
                 throw nsme;
             }
@@ -382,7 +382,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
          * @see org.aopalliance.intercept.MethodInvocation#getMethod()
          */
         public Method getMethod() {
-            return getMultivaluedUserAttributesMethod;
+            return getPeopleWithMultivaluedAttributesMethod;
         }
 
         /* (non-Javadoc)
