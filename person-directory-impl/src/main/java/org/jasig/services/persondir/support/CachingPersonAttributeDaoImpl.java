@@ -92,8 +92,6 @@ import org.springmodules.cache.key.CacheKeyGenerator;
 public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao implements InitializingBean {
     protected static final Set<IPerson> NULL_RESULTS_OBJECT = Collections.singleton((IPerson)new SingletonPersonImpl());
             
-//            CachingPersonAttributeDaoImpl.class.getName() + "UNIQUE_NULL_RESULTS_MAP", Collections.singletonList((IPerson)null));
-    
     protected Log statsLogger = LogFactory.getLog(this.getClass().getName() + ".statistics");
 
     private long queries = 0;
@@ -136,6 +134,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         return this.cachedPersonAttributesDao;
     }
     /**
+     * The IPersonAttributeDao to cache results from.
+     * 
      * @param cachedPersonAttributesDao The cachedPersonAttributesDao to set.
      */
     public void setCachedPersonAttributesDao(IPersonAttributeDao cachedPersonAttributesDao) {
@@ -170,6 +170,9 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         return this.userInfoCache;
     }
     /**
+     * The Map to use for caching results. Only get, put and remove are used so the Map may be backed by a real caching
+     * implementation.
+     * 
      * @param userInfoCache The userInfoCache to set.
      */
     public void setUserInfoCache(Map<Serializable, Set<IPerson>> userInfoCache) {
@@ -187,6 +190,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         return this.cacheNullResults;
     }
     /**
+     * If null results should be cached to avoid repeating failed lookups. Defaults to false.
+     * 
      * @param cacheNullResults the cacheNullResults to set
      */
     public void setCacheNullResults(boolean cacheNullResults) {
@@ -200,6 +205,9 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         return this.nullResultsObject;
     }
     /**
+     * Used to specify the placeholder object to put in the cache for null results. Defaults to a minimal Set. Most
+     * installations will not need to set this.
+     * 
      * @param nullResultsObject the nullResultsObject to set
      */
     public void setNullResultsObject(Set<IPerson> nullResultsObject) {
@@ -208,6 +216,21 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         }
 
         this.nullResultsObject = nullResultsObject;
+    }
+    
+    /**
+     * @return the cacheKeyGenerator
+     */
+    public CacheKeyGenerator getCacheKeyGenerator() {
+        return cacheKeyGenerator;
+    }
+    /**
+     * The CacheKeyGenerator to use for generating cache keys.
+     * 
+     * @param cacheKeyGenerator the cacheKeyGenerator to set
+     */
+    public void setCacheKeyGenerator(CacheKeyGenerator cacheKeyGenerator) {
+        this.cacheKeyGenerator = cacheKeyGenerator;
     }
     
     /* (non-Javadoc)

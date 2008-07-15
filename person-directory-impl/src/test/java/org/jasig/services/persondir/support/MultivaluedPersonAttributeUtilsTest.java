@@ -81,24 +81,6 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     }
     
     /**
-     * Test that an attempt to parse a Map with a non-String, non-Set key results in
-     * IllegalArgumentException.
-     */
-    public void testNonStringNonSetValueMapping() {
-        Map<String, Object> nullKeyMap = new HashMap<String, Object>();
-        nullKeyMap.put("A", "B");
-        nullKeyMap.put("wombat", new ArrayList<Object>());
-        
-        try {
-            MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
-        } catch (IllegalArgumentException iae) {
-            // good
-            return;
-        }
-        fail("Should have rejected map argument containing non-String, non-Set value.");
-    }
-    
-    /**
      * Test that an attempt to parse a Map containing as a value a Set containing
      * something other than a String fails with an IllegalArgumentException.
      */

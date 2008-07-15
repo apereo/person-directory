@@ -34,7 +34,8 @@ import org.springmodules.cache.key.HashCodeCalculator;
  * @version $Revision$
  */
 public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
-    private static final Map<String, Object> POSSIBLE_USER_ATTRIBUTE_NAMES_SEED_MAP = Collections.singletonMap("getPossibleUserAttributeNames_seedMap", new Object());
+    private static final Map<String, Object> POSSIBLE_USER_ATTRIBUTE_NAMES_SEED_MAP = Collections.singletonMap("getPossibleUserAttributeNames_seedMap", (Object)new Serializable() { private static final long serialVersionUID = 1L; });
+    private static final Map<String, Object> AVAILABLE_QUERY_ATTRIBUTES_SEED_MAP = Collections.singletonMap("getAvailableQueryAttributes_seedMap", (Object)new Serializable() { private static final long serialVersionUID = 1L; });
     
     protected final Log logger = LogFactory.getLog(this.getClass());
     
@@ -42,11 +43,20 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * Methods on {@link org.jasig.services.persondir.IPersonAttributeDao} that are cachable
      */
     public enum CachableMethod {
+        @Deprecated
         MULTIVALUED_USER_ATTRIBUTES__MAP("getMultivaluedUserAttributes", Map.class),
+        @Deprecated
         MULTIVALUED_USER_ATTRIBUTES__STR("getMultivaluedUserAttributes", String.class),
+        @Deprecated
         USER_ATTRIBUTES__MAP("getUserAttributes", Map.class),
+        @Deprecated
         USER_ATTRIBUTES__STR("getUserAttributes", String.class),
-        POSSIBLE_USER_ATTRIBUTE_NAMES("getPossibleUserAttributeNames");
+        
+        PERSON_STR("getPerson", String.class),
+        PEOPLE_MAP("getPeople", Map.class),
+        PEOPLE_MULTIVALUED_MAP("getPeopleWithMultivaluedAttributes", Map.class),
+        POSSIBLE_USER_ATTRIBUTE_NAMES("getPossibleUserAttributeNames"),
+        AVAILABLE_QUERY_ATTRIBUTES("getAvailableQueryAttributes");
         
         private final String name;
         private final Class<?>[] args;
@@ -80,8 +90,8 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      */
     private Set<String> cacheKeyAttributes = null;
     
-    private String defaultAttributeName = null;
-    private Set<String> defaultAttributeNameSet = null;
+    private String defaultAttributeName = "username";
+    private Set<String> defaultAttributeNameSet = Collections.singleton(this.defaultAttributeName);
     
     /**
      * @return the cacheKeyAttributes
@@ -154,6 +164,8 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         final Map<String, Object> seed;
         switch (cachableMethod) {
             //Both methods that take a Map argument can just have the first argument returned
+            case PEOPLE_MAP:
+            case PEOPLE_MULTIVALUED_MAP:
             case MULTIVALUED_USER_ATTRIBUTES__MAP:
             case USER_ATTRIBUTES__MAP: {
                 seed = (Map<String, Object>)methodArguments[0];
@@ -168,6 +180,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
             break;
             
             //The single valued attributes with a string needs to be converted to Map<String, Object>
+            case PERSON_STR:
             case USER_ATTRIBUTES__STR: {
                 final String uid = (String)methodArguments[0];
                 seed = Collections.singletonMap(this.defaultAttributeName, (Object)uid);
@@ -177,6 +190,12 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
             //The getPossibleUserAttributeNames has a special Map seed that we return to represent calls to it 
             case POSSIBLE_USER_ATTRIBUTE_NAMES: {
                 seed = POSSIBLE_USER_ATTRIBUTE_NAMES_SEED_MAP;
+            }
+            break;
+            
+            //The getAvailableQueryAttributes has a special Map seed that we return to represent calls to it 
+            case AVAILABLE_QUERY_ATTRIBUTES: {
+                seed = AVAILABLE_QUERY_ATTRIBUTES_SEED_MAP;
             }
             break;
             

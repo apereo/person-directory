@@ -4,6 +4,7 @@
 		<configExtension>xml</configExtension>
 	</configExtensions>
 	<configs>
+		<config>person-directory-impl/src/test/resources/cacheKeyGeneratorTestContext.xml</config>
 	</configs>
 	<configSets>
 		<configSet>
@@ -11,6 +12,7 @@
 			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
 			<incomplete>false</incomplete>
 			<configs>
+				<config>person-directory-impl/src/test/resources/cacheKeyGeneratorTestContext.xml</config>
 			</configs>
 		</configSet>
 	</configSets>
