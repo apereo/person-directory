@@ -7,7 +7,7 @@ import org.apache.commons.collections15.map.CaseInsensitiveMap;
 import org.apache.commons.collections15.map.ListOrderedMap;
 
 /**
- * Custom IPerson that uses a case insensitive Map to hide attribute name case
+ * Custom IPersonAttributes that uses a case insensitive Map to hide attribute name case
  */
 public class CaseInsensitiveAttributeNamedPersonImpl extends AttributeNamedPersonImpl {
     private static final long serialVersionUID = 1L;

@@ -16,12 +16,12 @@ import java.util.Map;
  * 
  * {@link Principal#getName()} is used for the uid (userName).
  * 
- * The equality and hashCode of an IPerson should ONLY include the name property and none of the attributes.
+ * The equality and hashCode of an IPersonAttributes should ONLY include the name property and none of the attributes.
  * 
  * @author Eric Dalquist
  * @version $Revision$
  */
-public interface IPerson extends Principal, Serializable {
+public interface IPersonAttributes extends Principal, Serializable {
     /**
      * @return The immutable Map of all attributes for the person.
      */

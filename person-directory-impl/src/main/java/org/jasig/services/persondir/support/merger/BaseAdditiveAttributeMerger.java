@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.NamedPersonImpl;
 
 /**
@@ -43,20 +43,20 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergeResults(java.util.Set, java.util.Set)
      */
-    public final Set<IPerson> mergeResults(Set<IPerson> toModify, Set<IPerson> toConsider) {
+    public final Set<IPersonAttributes> mergeResults(Set<IPersonAttributes> toModify, Set<IPersonAttributes> toConsider) {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
         
         //Convert the toModify Set into a Map to allow for easier lookups
-        final Map<String, IPerson> toModfyPeople = new LinkedHashMap<String, IPerson>();
-        for (final IPerson toModifyPerson : toModify) {
+        final Map<String, IPersonAttributes> toModfyPeople = new LinkedHashMap<String, IPersonAttributes>();
+        for (final IPersonAttributes toModifyPerson : toModify) {
             toModfyPeople.put(toModifyPerson.getName(), toModifyPerson);
         }
         
         //Merge in the toConsider people
-        for (final IPerson toConsiderPerson : toConsider) {
+        for (final IPersonAttributes toConsiderPerson : toConsider) {
             final String toConsiderName = toConsiderPerson.getName();
-            final IPerson toModifyPerson = toModfyPeople.get(toConsiderName);
+            final IPersonAttributes toModifyPerson = toModfyPeople.get(toConsiderName);
             
             //No matching toModify person, just add the new person
             if (toModifyPerson == null) {

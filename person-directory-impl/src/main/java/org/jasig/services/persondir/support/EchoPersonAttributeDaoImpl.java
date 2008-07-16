@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 
 
 /**
@@ -27,12 +27,12 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
      * @return a Map equal to but not the same reference as the seed.
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
         if (query == null) {
             throw new IllegalArgumentException("seed may not be null");
         }
 
-        return Collections.singleton((IPerson)new AttributeNamedPersonImpl(query));
+        return Collections.singleton((IPersonAttributes)new AttributeNamedPersonImpl(query));
     }
 
     /**

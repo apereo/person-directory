@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 
 /**
  * Defines the contract for a person directory user attribute rule for use with
@@ -30,7 +30,7 @@ public interface AttributeRule {
      * 
      * This method follows the same contract as {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)}
      */
-    public abstract Set<IPerson> evaluate(Map<String, List<Object>> userInfo);
+    public abstract Set<IPersonAttributes> evaluate(Map<String, List<Object>> userInfo);
 
     /**
      * Indicates the complete set of user attribute names that <em>may</em> be

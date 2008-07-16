@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 
 /**
@@ -87,7 +87,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> seed) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> seed) {
         Validate.notNull(seed, "Argument 'seed' cannot be null.");
 
         for (final AttributeRule rule : this.rules) {

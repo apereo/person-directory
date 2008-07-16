@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
 
@@ -36,7 +36,7 @@ public class MergingPersonAttributeDaoImpl extends AbstractAggregatingDefaultQue
      * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.services.persondir.IPersonAttributeDao, java.util.Set)
      */
     @Override
-    protected Set<IPerson> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Set<IPerson> resultPeople) {
+    protected Set<IPersonAttributes> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Set<IPersonAttributes> resultPeople) {
         return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed);
     }
 }

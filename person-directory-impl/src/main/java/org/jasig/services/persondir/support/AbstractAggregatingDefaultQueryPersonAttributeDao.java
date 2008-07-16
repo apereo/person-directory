@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.support.merger.IAttributeMerger;
 import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
@@ -91,11 +91,11 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * 
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
         Validate.notNull(query, "query may not be null.");
         
         //Initialize null, so that if none of the sub-DAOs find any people null is returned appropriately
-        Set<IPerson> resultPeople = null;
+        Set<IPersonAttributes> resultPeople = null;
         
         //Denotes that this is the first time we are running a query and the original seed should be used
         boolean isFirstQuery = true;
@@ -106,7 +106,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         
         //Iterate through the configured IPersonAttributeDaos, querying each.
         for (final IPersonAttributeDao currentlyConsidering : this.personAttributeDaos) {
-            Set<IPerson> currentPeople = null;
+            Set<IPersonAttributes> currentPeople = null;
             try {
                 currentPeople = this.getAttributesFromDao(query, isFirstQuery, currentlyConsidering, resultPeople);
                 isFirstQuery = false;
@@ -128,7 +128,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             if (currentPeople != null) {
                 if (resultPeople == null) {
                     //If this is the first valid result set just use it.
-                    resultPeople = new LinkedHashSet<IPerson>(currentPeople);
+                    resultPeople = new LinkedHashSet<IPersonAttributes>(currentPeople);
                 }
                 else {
                     //Merge the Sets of IPersons
@@ -159,7 +159,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * @param resultAttributes The Map of results from all previous queries, may be null.
      * @return The results from the call to the DAO, follows the same rules as {@link IPersonAttributeDao#getUserAttributes(Map)}.
      */
-    protected abstract Set<IPerson> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Set<IPerson> resultPeople);
+    protected abstract Set<IPersonAttributes> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Set<IPersonAttributes> resultPeople);
     
     
     /**

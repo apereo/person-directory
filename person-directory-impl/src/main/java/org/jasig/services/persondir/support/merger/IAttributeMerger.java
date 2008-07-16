@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 
 /**
  * Interface for merging attributes from sibling PersonAttributeDaos. 
@@ -25,7 +25,7 @@ public interface IAttributeMerger {
      * @param toModify The compiled results map, this will be modified based on the values in toConsider.
      * @param toConsider The query results map, this will not be modified.
      */
-    public Set<IPerson> mergeResults(Set<IPerson> toModify, Set<IPerson> toConsider);
+    public Set<IPersonAttributes> mergeResults(Set<IPersonAttributes> toModify, Set<IPersonAttributes> toConsider);
 
     /**
      * Modify the "toModify" argument in consideration of the "toConsider" argument. Return the resulting Set which may

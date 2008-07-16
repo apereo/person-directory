@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 
 
 /**
@@ -24,7 +24,7 @@ public abstract class AbstractFlatteningPersonAttributeDao extends BasePersonAtt
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeople(java.util.Map)
      */
-    public final Set<IPerson> getPeople(Map<String, Object> query) {
+    public final Set<IPersonAttributes> getPeople(Map<String, Object> query) {
         final Map<String, List<Object>> multivaluedSeed = MultivaluedPersonAttributeUtils.toMultivaluedMap(query);
         return this.getPeopleWithMultivaluedAttributes(multivaluedSeed);
     }

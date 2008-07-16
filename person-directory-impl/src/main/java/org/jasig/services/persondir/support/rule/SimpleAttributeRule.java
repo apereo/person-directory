@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.NamedPersonImpl;
 
 /**
@@ -98,7 +98,7 @@ public final class SimpleAttributeRule implements AttributeRule {
 
     }
 
-    public Set<IPerson> evaluate(Map<String, List<Object>> userInfo) {
+    public Set<IPersonAttributes> evaluate(Map<String, List<Object>> userInfo) {
 
         // Assertions.
         if (userInfo == null) {
@@ -115,7 +115,7 @@ public final class SimpleAttributeRule implements AttributeRule {
         value.add(setValue);
         rslt.put(setKey, value);
         
-        final IPerson person = new NamedPersonImpl(this.setUserName, rslt);
+        final IPersonAttributes person = new NamedPersonImpl(this.setUserName, rslt);
         return Collections.singleton(person);
     }
 

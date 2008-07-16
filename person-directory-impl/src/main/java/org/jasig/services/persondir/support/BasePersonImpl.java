@@ -15,13 +15,13 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 
 /**
  * @author Eric Dalquist
  * @version $Revision$
  */
-public abstract class BasePersonImpl implements IPerson {
+public abstract class BasePersonImpl implements IPersonAttributes {
     private final Map<String, List<Object>> attributes;
     
     public BasePersonImpl(Map<String, List<Object>> attributes) {
@@ -53,14 +53,14 @@ public abstract class BasePersonImpl implements IPerson {
     }
 
     /**
-     * Create the Map used to store the attributes internally for this IPerson
+     * Create the Map used to store the attributes internally for this IPersonAttributes
      */
     protected Map<String, List<Object>> createImmutableAttributeMap(int size) {
         return new LinkedHashMap<String, List<Object>>(size > 0 ? size : 1);
     }
 
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPerson#getAttributeValue(java.lang.String)
+     * @see org.jasig.services.persondir.IPersonAttributes#getAttributeValue(java.lang.String)
      */
     public Object getAttributeValue(String name) {
         final List<Object> values = this.attributes.get(name);
@@ -72,7 +72,7 @@ public abstract class BasePersonImpl implements IPerson {
     }
 
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPerson#getAttributeValues(java.lang.String)
+     * @see org.jasig.services.persondir.IPersonAttributes#getAttributeValues(java.lang.String)
      */
     public List<Object> getAttributeValues(String name) {
         final List<Object> values = this.attributes.get(name);
@@ -84,7 +84,7 @@ public abstract class BasePersonImpl implements IPerson {
     }
 
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPerson#getAttributes()
+     * @see org.jasig.services.persondir.IPersonAttributes#getAttributes()
      */
     public Map<String, List<Object>> getAttributes() {
         return this.attributes;
@@ -98,10 +98,10 @@ public abstract class BasePersonImpl implements IPerson {
         if (object == this) {
             return true;
         }
-        if (!(object instanceof IPerson)) {
+        if (!(object instanceof IPersonAttributes)) {
             return false;
         }
-        IPerson rhs = (IPerson) object;
+        IPersonAttributes rhs = (IPersonAttributes) object;
         return new EqualsBuilder()
             .append(this.getName(), rhs.getName())
             .isEquals();

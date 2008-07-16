@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.springframework.dao.support.DataAccessUtils;
 
 
@@ -19,7 +19,7 @@ import org.springframework.dao.support.DataAccessUtils;
  * Abstract class implementing the IPersonAttributeDao method  {@link org.jasig.services.persondir.IPersonAttributeDao#getPerson(String)}
  * by delegation to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)} using a configurable
  * default attribute name. If {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)} returnes
- * more than one {@link IPerson} is returned {@link org.springframework.dao.IncorrectResultSizeDataAccessException} is thrown.
+ * more than one {@link IPersonAttributes} is returned {@link org.springframework.dao.IncorrectResultSizeDataAccessException} is thrown.
  * 
  * <br>
  * <br>
@@ -54,24 +54,24 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
 
     /**
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
-     * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one matching {@link IPerson} is found.
+     * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one matching {@link IPersonAttributes} is found.
      */
-    public final IPerson getPerson(String uid) {
+    public final IPersonAttributes getPerson(String uid) {
         Validate.notNull(uid, "uid may not be null.");
         
         //Generate the seed map for the uid
         final Map<String, List<Object>> seed = this.toSeedMap(uid);
         
         //Run the query using the seed
-        final Set<IPerson> people = this.getPeopleWithMultivaluedAttributes(seed);
+        final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
         
         //Ensure a single result is returned
-        IPerson person = (IPerson)DataAccessUtils.singleResult(people);
+        IPersonAttributes person = (IPersonAttributes)DataAccessUtils.singleResult(people);
         if (person == null) {
             return null;
         }
         
-        //Force set the name of the returned IPerson if it isn't provided in the return object
+        //Force set the name of the returned IPersonAttributes if it isn't provided in the return object
         if (person.getName() == null) {
             person = new NamedPersonImpl(uid, person.getAttributes());
         }

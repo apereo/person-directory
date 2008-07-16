@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.map.LazyMap;
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.jasig.services.persondir.support.NamedPersonImpl;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -148,7 +148,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#parseAttributeMapFromResults(java.util.List)
      */
     @Override
-    protected List<IPerson> parseAttributeMapFromResults(List<Map<String, Object>> queryResults) {
+    protected List<IPersonAttributes> parseAttributeMapFromResults(List<Map<String, Object>> queryResults) {
         final Map<String, Map<String, List<Object>>> peopleAttributesBuilder = LazyMap.decorate(new LinkedHashMap<String, Map<String, List<Object>>>(), new LinkedHashMapFactory<String, List<Object>>());
 
         final String userNameAttribute = this.getConfiguredUserNameAttribute();
@@ -192,12 +192,12 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         
         
         //Convert the builder structure into a List of IPersons
-        final List<IPerson> people = new ArrayList<IPerson>(peopleAttributesBuilder.size());
+        final List<IPersonAttributes> people = new ArrayList<IPersonAttributes>(peopleAttributesBuilder.size());
         
         for (final Map.Entry<String, Map<String, List<Object>>> mappedAttributesEntry : peopleAttributesBuilder.entrySet()) {
             final String userName = mappedAttributesEntry.getKey();
             final Map<String, List<Object>> attributes = mappedAttributesEntry.getValue();
-            final IPerson person = new NamedPersonImpl(userName, attributes);
+            final IPersonAttributes person = new NamedPersonImpl(userName, attributes);
             people.add(person);
         }
 

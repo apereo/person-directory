@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.Util;
 
 /**
@@ -75,8 +75,8 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         /* (non-Javadoc)
          * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
          */
-        public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
-            return Collections.singleton((IPerson)new AttributeNamedPersonImpl(query));
+        public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+            return Collections.singleton((IPersonAttributes)new AttributeNamedPersonImpl(query));
         }
     }
 }

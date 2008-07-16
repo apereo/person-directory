@@ -16,7 +16,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.springframework.beans.factory.InitializingBean;
 import org.springmodules.cache.key.CacheKeyGenerator;
@@ -90,7 +90,7 @@ import org.springmodules.cache.key.CacheKeyGenerator;
  * @version $Id
  */
 public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao implements InitializingBean {
-    protected static final Set<IPerson> NULL_RESULTS_OBJECT = Collections.singleton((IPerson)new SingletonPersonImpl());
+    protected static final Set<IPersonAttributes> NULL_RESULTS_OBJECT = Collections.singleton((IPersonAttributes)new SingletonPersonImpl());
             
     protected Log statsLogger = LogFactory.getLog(this.getClass().getName() + ".statistics");
 
@@ -110,7 +110,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /*
      * The cache to store query results in.
      */
-    private Map<Serializable, Set<IPerson>> userInfoCache = null; 
+    private Map<Serializable, Set<IPersonAttributes>> userInfoCache = null; 
     
     /*
      * The set of attributes to use to generate the cache key.
@@ -125,7 +125,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /*
      * The Object that should be stored in the cache if cacheNullResults is true
      */
-    private Set<IPerson> nullResultsObject = NULL_RESULTS_OBJECT;
+    private Set<IPersonAttributes> nullResultsObject = NULL_RESULTS_OBJECT;
     
     /**
      * @return Returns the cachedPersonAttributesDao.
@@ -166,7 +166,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /**
      * @return Returns the userInfoCache.
      */
-    public Map<Serializable, Set<IPerson>> getUserInfoCache() {
+    public Map<Serializable, Set<IPersonAttributes>> getUserInfoCache() {
         return this.userInfoCache;
     }
     /**
@@ -175,7 +175,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @param userInfoCache The userInfoCache to set.
      */
-    public void setUserInfoCache(Map<Serializable, Set<IPerson>> userInfoCache) {
+    public void setUserInfoCache(Map<Serializable, Set<IPersonAttributes>> userInfoCache) {
         if (userInfoCache == null) {
             throw new IllegalArgumentException("userInfoCache may not be null");
         }
@@ -201,7 +201,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /**
      * @return the nullResultsObject
      */
-    public Set<IPerson> getNullResultsObject() {
+    public Set<IPersonAttributes> getNullResultsObject() {
         return this.nullResultsObject;
     }
     /**
@@ -210,7 +210,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @param nullResultsObject the nullResultsObject to set
      */
-    public void setNullResultsObject(Set<IPerson> nullResultsObject) {
+    public void setNullResultsObject(Set<IPersonAttributes> nullResultsObject) {
         if (nullResultsObject == null) {
             throw new IllegalArgumentException("nullResultsObject may not be null");
         }
@@ -265,7 +265,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> seed) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> seed) {
         //Ensure the arguments and state are valid
         if (seed == null) {
             throw new IllegalArgumentException("The query seed Map cannot be null.");
@@ -282,7 +282,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         final MethodInvocation methodInvocation = new PersonAttributeDaoMethodInvocation(seed);
         final Serializable cacheKey = this.cacheKeyGenerator.generateKey(methodInvocation);
 
-        Set<IPerson> cacheResults = this.userInfoCache.get(cacheKey);
+        Set<IPersonAttributes> cacheResults = this.userInfoCache.get(cacheKey);
         if (cacheResults != null) {
             //If the returned object is the null results object, set the cache results to null
             if (this.nullResultsObject.equals(cacheResults)) {
@@ -301,7 +301,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
             return cacheResults;
         }
     
-        final Set<IPerson> queryResults = this.cachedPersonAttributesDao.getPeopleWithMultivaluedAttributes(seed);
+        final Set<IPersonAttributes> queryResults = this.cachedPersonAttributesDao.getPeopleWithMultivaluedAttributes(seed);
     
         if (queryResults != null) {
             this.userInfoCache.put(cacheKey, queryResults);

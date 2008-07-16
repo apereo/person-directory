@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.IPersonAttributeDao;
 
 /**
@@ -23,21 +23,21 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeople(java.util.Map)
      */
-    public Set<IPerson> getPeople(Map<String, Object> query) {
+    public Set<IPersonAttributes> getPeople(Map<String, Object> query) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPerson> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
      */
-    public IPerson getPerson(String uid) {
+    public IPersonAttributes getPerson(String uid) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 

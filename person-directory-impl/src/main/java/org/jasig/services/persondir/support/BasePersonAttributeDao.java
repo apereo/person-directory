@@ -13,7 +13,7 @@ import java.util.Set;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.springframework.dao.support.DataAccessUtils;
 
@@ -32,10 +32,10 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
      */
     @SuppressWarnings("deprecation")
     public final Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
-        final Set<IPerson> people = this.getPeopleWithMultivaluedAttributes(seed);
+        final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
 
-        //Get the first IPerson to return data for
-        final IPerson person = (IPerson)DataAccessUtils.singleResult(people);
+        //Get the first IPersonAttributes to return data for
+        final IPersonAttributes person = (IPersonAttributes)DataAccessUtils.singleResult(people);
         
         //If null or no results return null
         if (person == null) {
@@ -51,7 +51,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
      */
     @SuppressWarnings("deprecation")
     public final Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
-        final IPerson person = this.getPerson(uid);
+        final IPersonAttributes person = this.getPerson(uid);
         
         if (person == null) {
             return null;
@@ -66,10 +66,10 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
      */
     @SuppressWarnings("deprecation")
     public final Map<String, Object> getUserAttributes(Map<String, Object> seed) {
-        final Set<IPerson> people = this.getPeople(seed);
+        final Set<IPersonAttributes> people = this.getPeople(seed);
 
-        //Get the first IPerson to return data for
-        final IPerson person = (IPerson)DataAccessUtils.singleResult(people);
+        //Get the first IPersonAttributes to return data for
+        final IPersonAttributes person = (IPersonAttributes)DataAccessUtils.singleResult(people);
         
         //If null or no results return null
         if (person == null) {

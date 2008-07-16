@@ -11,7 +11,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.CaseInsensitiveAttributeNamedPersonImpl;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -76,15 +76,15 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
      * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#parseAttributeMapFromResults(java.util.List)
      */
     @Override
-    protected List<IPerson> parseAttributeMapFromResults(List<Map<String, Object>> queryResults) {
-        final List<IPerson> peopleAttributes = new ArrayList<IPerson>(queryResults.size());
+    protected List<IPersonAttributes> parseAttributeMapFromResults(List<Map<String, Object>> queryResults) {
+        final List<IPersonAttributes> peopleAttributes = new ArrayList<IPersonAttributes>(queryResults.size());
         
         for (final Map<String, Object> queryResult : queryResults) {
             final Map<String, List<Object>> multivaluedQueryResult = MultivaluedPersonAttributeUtils.toMultivaluedMap(queryResult);
             
-            //Create the IPerson doing a best-guess at a userName attribute
+            //Create the IPersonAttributes doing a best-guess at a userName attribute
             final String userNameAttribute = this.getConfiguredUserNameAttribute();
-            final IPerson person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, multivaluedQueryResult);
+            final IPersonAttributes person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, multivaluedQueryResult);
             
             peopleAttributes.add(person);
         }

@@ -15,7 +15,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 
 /**
  * @author Eric Dalquist 
@@ -103,7 +103,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
          * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
          */
         @Override
-        protected List<IPerson> getPeopleForQuery(List<List<Object>> queryBuilder) {
+        protected List<IPersonAttributes> getPeopleForQuery(List<List<Object>> queryBuilder) {
             this.args = queryBuilder;
             return null;
         }

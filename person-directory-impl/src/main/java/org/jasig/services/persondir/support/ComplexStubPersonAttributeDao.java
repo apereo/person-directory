@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 
 
 /**
@@ -130,7 +130,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
      */
     @Override
-    protected List<IPerson> getPeopleForQuery(String seedValue) {
+    protected List<IPersonAttributes> getPeopleForQuery(String seedValue) {
         final Map<String, List<Object>> attributes = this.backingMap.get(seedValue);
         
         if (attributes == null) {
@@ -140,7 +140,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         final String defaultAttrName = this.getDefaultAttributeName();
         final String userNameAttribute = this.getConfiguredUserNameAttribute();
         
-        final IPerson person;
+        final IPersonAttributes person;
         if (defaultAttrName.equals(userNameAttribute)) {
             person = new NamedPersonImpl(seedValue, attributes);
         }

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.Validate;
-import org.jasig.services.persondir.IPerson;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.QueryType;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -87,12 +87,12 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
 
 
     /**
-     * Takes the {@link List} from the query and parses it into the {@link List} of {@link IPerson} attributes to be returned.
+     * Takes the {@link List} from the query and parses it into the {@link List} of {@link IPersonAttributes} attributes to be returned.
      * 
      * @param queryResults Results from the query.
      * @return The results of the query 
      */
-    protected abstract List<IPerson> parseAttributeMapFromResults(final List<R> queryResults);
+    protected abstract List<IPersonAttributes> parseAttributeMapFromResults(final List<R> queryResults);
     
     /**
      * @return The ParameterizedRowMapper to handle the results of the SQL query.
@@ -144,7 +144,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
      */
     @Override
-    protected final List<IPerson> getPeopleForQuery(PartialWhereClause queryBuilder) {
+    protected final List<IPersonAttributes> getPeopleForQuery(PartialWhereClause queryBuilder) {
         //Merge the generated SQL with the base query template
         final StringBuilder partialSqlWhere = queryBuilder.sql;
         final String querySQL = MessageFormat.format(this.queryTemplate, partialSqlWhere);
