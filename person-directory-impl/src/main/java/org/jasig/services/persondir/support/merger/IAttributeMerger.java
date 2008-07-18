@@ -68,8 +68,6 @@ public interface IAttributeMerger {
      * @param toConsider - in consideration of this map
      * @return the modified Map
      * @throws IllegalArgumentException if either toModify or toConsider is null
-     * @deprecated Merging individual result sets is no longer needed by client code. This method will be removed in 1.6
      */
-    @Deprecated
     public Map<String, List<Object>> mergeAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider);
 }
