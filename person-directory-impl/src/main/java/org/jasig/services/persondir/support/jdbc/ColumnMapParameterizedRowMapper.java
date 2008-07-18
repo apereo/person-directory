@@ -10,8 +10,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 
-import org.apache.commons.collections15.map.CaseInsensitiveMap;
-import org.apache.commons.collections15.map.ListOrderedMap;
+import org.apache.commons.collections.map.CaseInsensitiveMap;
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
 
@@ -61,8 +61,9 @@ public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<M
      * @param columnCount the column count, to be used as initial capacity for the Map
      * @return the new Map instance
      */
+    @SuppressWarnings("unchecked")
     protected Map<String, Object> createColumnMap(int columnCount) {
-        return ListOrderedMap.decorate(new CaseInsensitiveMap<Object>(columnCount > 0 ? columnCount : 1));
+        return ListOrderedMap.decorate(new CaseInsensitiveMap(columnCount > 0 ? columnCount : 1));
     }
 
     /**

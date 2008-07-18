@@ -13,9 +13,9 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
-import org.apache.commons.collections15.EnumerationUtils;
-import org.apache.commons.collections15.map.CaseInsensitiveMap;
-import org.apache.commons.collections15.map.ListOrderedMap;
+import org.apache.commons.collections.EnumerationUtils;
+import org.apache.commons.collections.map.CaseInsensitiveMap;
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.springframework.ldap.core.AttributesMapper;
 
 /**
@@ -68,8 +68,9 @@ class AttributeMapAttributesMapper implements AttributesMapper {
      * @param attributeCount the attribute count, to be used as initial capacity for the Map
      * @return the new Map instance
      */
+    @SuppressWarnings("unchecked")
     protected Map<String, Object> createAttributeMap(int attributeCount) {
-        return ListOrderedMap.decorate(new CaseInsensitiveMap<Object>(attributeCount > 0 ? attributeCount : 1));
+        return ListOrderedMap.decorate(new CaseInsensitiveMap(attributeCount > 0 ? attributeCount : 1));
     }
 
     /**

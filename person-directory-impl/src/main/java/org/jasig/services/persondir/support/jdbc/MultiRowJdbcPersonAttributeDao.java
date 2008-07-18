@@ -13,8 +13,8 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.collections15.Factory;
-import org.apache.commons.collections15.map.LazyMap;
+import org.apache.commons.collections.Factory;
+import org.apache.commons.collections.map.LazyMap;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.jasig.services.persondir.support.NamedPersonImpl;
@@ -148,6 +148,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#parseAttributeMapFromResults(java.util.List)
      */
     @Override
+    @SuppressWarnings("unchecked")
     protected List<IPersonAttributes> parseAttributeMapFromResults(List<Map<String, Object>> queryResults) {
         final Map<String, Map<String, List<Object>>> peopleAttributesBuilder = LazyMap.decorate(new LinkedHashMap<String, Map<String, List<Object>>>(), new LinkedHashMapFactory<String, List<Object>>());
 
@@ -204,7 +205,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         return people;
     }
     
-    private static final class LinkedHashMapFactory<K, V> implements Factory<Map<K, V>> {
+    private static final class LinkedHashMapFactory<K, V> implements Factory {
         public Map<K, V> create() {
             return new LinkedHashMap<K, V>();
         }
