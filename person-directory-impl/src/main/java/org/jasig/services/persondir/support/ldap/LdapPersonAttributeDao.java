@@ -137,18 +137,19 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         }
         
         for (final Object queryValue : queryValues) {
-            final Filter filter;
-            
             final String queryValueString = queryValue == null ? null : queryValue.toString();
             
-            if (queryValueString == null || !queryValueString.contains("*")) {
-                filter = new EqualsFilter(dataAttribute, queryValueString);
+            if (StringUtils.isNotBlank(queryValueString)) {
+                final Filter filter;
+                if (!queryValueString.contains("*")) {
+                    filter = new EqualsFilter(dataAttribute, queryValueString);
+                }
+                else {
+                    filter = new LikeFilter(dataAttribute, queryValueString);
+                }
+                
+                queryBuilder.append(filter);
             }
-            else {
-                filter = new LikeFilter(dataAttribute, queryValueString);
-            }
-            
-            queryBuilder.append(filter);
         }
         
         return queryBuilder;

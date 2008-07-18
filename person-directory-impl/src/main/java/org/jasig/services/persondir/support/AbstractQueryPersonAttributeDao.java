@@ -175,7 +175,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         //Generate the query to pass to the subclass
         final QB queryBuilder = this.generateQuery(query);
         if (queryBuilder == null) {
-            this.logger.info("No queryBuilder was generated for query " + query + ", null will be returned");
+            this.logger.debug("No queryBuilder was generated for query " + query + ", null will be returned");
             
             return null;
         }
@@ -249,16 +249,16 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                 if (queryValues != null ) {
                     final Set<String> dataAttributes = queryAttrEntry.getValue();
                     if (dataAttributes == null) {
-                        if (this.logger.isInfoEnabled()) {
-                            this.logger.info("Adding attribute '" + queryAttr + "' with value '" + queryValues + "' to query builder '" + queryBuilder + "'");
+                        if (this.logger.isDebugEnabled()) {
+                            this.logger.debug("Adding attribute '" + queryAttr + "' with value '" + queryValues + "' to query builder '" + queryBuilder + "'");
                         }
                         
                         queryBuilder = this.appendAttributeToQuery(queryBuilder, queryAttr, queryValues); 
                     }
                     else {
                         for (final String dataAttribute : dataAttributes) {
-                            if (this.logger.isInfoEnabled()) {
-                                this.logger.info("Adding attribute '" + dataAttribute + "' with value '" + queryValues + "' to query builder '" + queryBuilder + "'");
+                            if (this.logger.isDebugEnabled()) {
+                                this.logger.debug("Adding attribute '" + dataAttribute + "' with value '" + queryValues + "' to query builder '" + queryBuilder + "'");
                             }
                             
                             queryBuilder = this.appendAttributeToQuery(queryBuilder, dataAttribute, queryValues); 
@@ -266,7 +266,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                     }
                 }
                 else if (this.requireAllQueryAttributes) {
-                    this.logger.info("Query " + query + " does not contain all nessesary attributes as specified by queryAttributeMapping " + this.queryAttributeMapping + ", null will be returned for the queryBuilder");
+                    this.logger.debug("Query " + query + " does not contain all nessesary attributes as specified by queryAttributeMapping " + this.queryAttributeMapping + ", null will be returned for the queryBuilder");
                     return null;
                 }
             }
@@ -276,16 +276,16 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                 final String queryKey = queryAttrEntry.getKey();
                 final List<Object> queryValues = queryAttrEntry.getValue();
                 
-                if (this.logger.isInfoEnabled()) {
-                    this.logger.info("Adding attribute '" + queryKey + "' with value '" + queryValues + "' to query builder '" + queryBuilder + "'");
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Adding attribute '" + queryKey + "' with value '" + queryValues + "' to query builder '" + queryBuilder + "'");
                 }
                 
                 queryBuilder = this.appendAttributeToQuery(queryBuilder, queryKey, queryValues); 
             }
         }
         
-        if (this.logger.isInfoEnabled()) {
-            this.logger.info("Generated query builder '" + queryBuilder + "' from query Map " + query + ".");
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Generated query builder '" + queryBuilder + "' from query Map " + query + ".");
         }
         
         return queryBuilder;

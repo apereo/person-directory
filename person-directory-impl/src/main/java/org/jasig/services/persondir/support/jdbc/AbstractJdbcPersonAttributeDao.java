@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
@@ -109,17 +110,12 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
         }
         
         for (final Object queryValue : queryValues) {
-            if (queryBuilder.sql.length() > 0) {
-                queryBuilder.sql.append(" ").append(this.queryType.toString()).append(" ");
-            }
-            
-            if (queryValue == null) {
-                queryBuilder.sql.append(dataAttribute);
-                queryBuilder.sql.append(" IS NULL");
-            }
-            else {
-                final String queryString = queryValue.toString();
-                
+            final String queryString = queryValue != null ? queryValue.toString() : null;
+            if (StringUtils.isNotBlank(queryString)) {
+                if (queryBuilder.sql.length() > 0) {
+                    queryBuilder.sql.append(" ").append(this.queryType.toString()).append(" ");
+                }
+
                 //Convert to SQL wildcard
                 final Matcher queryValueMatcher = WILDCARD.matcher(queryString);
                 final String formattedQueryValue = queryValueMatcher.replaceAll("%");
@@ -149,11 +145,15 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
         final StringBuilder partialSqlWhere = queryBuilder.sql;
         final Matcher queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
         final String querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
-
+        
         //Execute the query
         final ParameterizedRowMapper<R> rowMapper = this.getRowMapper();
         final List<R> results = this.simpleJdbcTemplate.query(querySQL, rowMapper, queryBuilder.arguments.toArray());
         
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Executed '" + querySQL + "' with arguments " + queryBuilder.arguments + " and got results " + results);
+        }
+
         return this.parseAttributeMapFromResults(results);
     }
 }
