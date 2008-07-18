@@ -5,7 +5,6 @@
 
 package org.jasig.services.persondir.support.jdbc;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,6 +45,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  */
 public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPersonAttributeDao<PartialWhereClause> {
     private static final Pattern WILDCARD = Pattern.compile("\\*");
+    private static final Pattern WHERE_PLACEHOLDER = Pattern.compile("\\{0\\}");
     
     private final SimpleJdbcTemplate simpleJdbcTemplate;
     private final String queryTemplate;
@@ -147,7 +147,8 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     protected final List<IPersonAttributes> getPeopleForQuery(PartialWhereClause queryBuilder) {
         //Merge the generated SQL with the base query template
         final StringBuilder partialSqlWhere = queryBuilder.sql;
-        final String querySQL = MessageFormat.format(this.queryTemplate, partialSqlWhere);
+        final Matcher queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
+        final String querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
 
         //Execute the query
         final ParameterizedRowMapper<R> rowMapper = this.getRowMapper();
