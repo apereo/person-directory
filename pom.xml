@@ -137,7 +137,7 @@
             <dependency>
                 <groupId>org.jasig.service</groupId>
                 <artifactId>person-directory-api</artifactId>
-                <version>${pom.parent.version}</version>
+                <version>${pom.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
