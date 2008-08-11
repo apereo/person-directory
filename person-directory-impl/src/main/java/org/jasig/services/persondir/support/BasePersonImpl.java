@@ -22,6 +22,8 @@ import org.jasig.services.persondir.IPersonAttributes;
  * @version $Revision$
  */
 public abstract class BasePersonImpl implements IPersonAttributes {
+    private static final long serialVersionUID = 1L;
+
     private final Map<String, List<Object>> attributes;
     
     public BasePersonImpl(Map<String, List<Object>> attributes) {
