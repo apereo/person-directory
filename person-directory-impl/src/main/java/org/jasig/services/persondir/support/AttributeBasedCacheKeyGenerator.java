@@ -20,7 +20,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Required;
 import org.springmodules.cache.key.CacheKeyGenerator;
 import org.springmodules.cache.key.HashCodeCacheKey;
 import org.springmodules.cache.key.HashCodeCalculator;
@@ -120,7 +119,6 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     /**
      * @param defaultAttributeName the defaultAttributeName to set
      */
-    @Required
     public void setDefaultAttributeName(String defaultAttributeName) {
         Validate.notNull(defaultAttributeName);
         this.defaultAttributeName = defaultAttributeName;
