@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.naming.directory.SearchControls;
 
@@ -93,6 +95,7 @@ import org.springframework.util.Assert;
  * @since uPortal 2.5
  */
 public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<LogicalFilterWrapper> implements InitializingBean {
+    private static final Pattern QUERY_PLACEHOLDER = Pattern.compile("\\{0\\}");
     private final static AttributesMapper MAPPER = new AttributeMapAttributesMapper();
 
     /**
@@ -101,6 +104,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     private LdapTemplate ldapTemplate = null;
 
     private String baseDN = "";
+    private String queryTemplate = null;
     private ContextSource contextSource = null;
     private SearchControls searchControls = new SearchControls();
     private boolean setReturningAttributes = true;
@@ -160,11 +164,21 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
      */
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(LogicalFilterWrapper queryBuilder) {
-        final String ldapQuery = queryBuilder.encode();
+        final String generatedLdapQuery = queryBuilder.encode();
 
         //If no query is generated return null since the query cannot be run
-        if (StringUtils.isBlank(ldapQuery)) {
+        if (StringUtils.isBlank(generatedLdapQuery)) {
             return null;
+        }
+        
+        //Insert the generated query into the template if it is configured
+        final String ldapQuery;
+        if (this.queryTemplate == null) {
+            ldapQuery = generatedLdapQuery;
+        }
+        else {
+            final Matcher queryMatcher = QUERY_PLACEHOLDER.matcher(this.queryTemplate);
+            ldapQuery = queryMatcher.replaceAll(generatedLdapQuery);
         }
         
         //Execute the query
@@ -263,5 +277,15 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
      */
     public void setQueryType(QueryType queryType) {
         this.queryType = queryType;
+    }
+
+    public String getQueryTemplate() {
+        return this.queryTemplate;
+    }
+    /**
+     * Optional wrapper template for the generated part of the query. Use {0} as a placeholder for where the generated query should be inserted.
+     */
+    public void setQueryTemplate(String queryTemplate) {
+        this.queryTemplate = queryTemplate;
     }
 }
