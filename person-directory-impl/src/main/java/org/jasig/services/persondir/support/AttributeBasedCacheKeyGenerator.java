@@ -8,12 +8,15 @@ package org.jasig.services.persondir.support;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -92,6 +95,8 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     
     private String defaultAttributeName = "username";
     private Set<String> defaultAttributeNameSet = Collections.singleton(this.defaultAttributeName);
+    private boolean useAllAttributes = false;
+    private boolean ignoreEmptyAttributes = false;
     
     /**
      * @return the cacheKeyAttributes
@@ -120,6 +125,28 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         Validate.notNull(defaultAttributeName);
         this.defaultAttributeName = defaultAttributeName;
         this.defaultAttributeNameSet = Collections.singleton(this.defaultAttributeName);
+    }
+    
+    public boolean isUseAllAttributes() {
+        return useAllAttributes;
+    }
+    /**
+     * If all seed attributes should be used. If true cacheKeyAttributes and defaultAttributeName are ignored. Defaults
+     * to false.
+     */
+    public void setUseAllAttributes(boolean useAllAttributes) {
+        this.useAllAttributes = useAllAttributes;
+    }
+
+    public boolean isIgnoreEmptyAttributes() {
+        return ignoreEmptyAttributes;
+    }
+    /**
+     * If seed attributes with empty values (null, empty string or empty list values) should be ignored when generating
+     * the cache key. Defaults to false. 
+     */
+    public void setIgnoreEmptyAttributes(boolean ignoreEmptyAttributes) {
+        this.ignoreEmptyAttributes = ignoreEmptyAttributes;
     }
     
     
@@ -214,7 +241,10 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     protected int getKeyHash(Map<String, Object> seed) {
         //Determine the attributes to build the cache key with
         final Set<String> cacheAttributes;
-        if (this.cacheKeyAttributes != null) {
+        if (this.useAllAttributes) {
+            cacheAttributes = seed.keySet();
+        }
+        else if (this.cacheKeyAttributes != null) {
             cacheAttributes = this.cacheKeyAttributes;
         }
         else {
@@ -225,7 +255,24 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         final HashMap<String, Object> cacheKey = new HashMap<String, Object>(cacheAttributes.size());
         for (final String attr : cacheAttributes) {
             if (seed.containsKey(attr)) {
-                cacheKey.put(attr, seed.get(attr));
+                final Object value = seed.get(attr);
+                
+                if (!this.ignoreEmptyAttributes) {
+                    cacheKey.put(attr, value);
+                }
+                else if (value instanceof Collection) {
+                    if (CollectionUtils.isNotEmpty((Collection<?>)value)) {
+                        cacheKey.put(attr, value);
+                    }
+                }
+                else if (value instanceof String) {
+                    if (StringUtils.isNotEmpty((String)value)) {
+                        cacheKey.put(attr, value);
+                    }
+                }
+                else if (value != null) {
+                    cacheKey.put(attr, value);
+                }
             }
         }
         
