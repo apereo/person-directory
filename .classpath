@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="target-eclipse/classes" path="person-directory-api/src/main/java"/>
-	<classpathentry kind="src" output="target-eclipse/classes" path="person-directory-impl/src/main/java"/>
-	<classpathentry kind="src" output="target-eclipse/test-classes" path="person-directory-impl/src/test/java">
-		<attributes>
-			<attribute name="maven.type" value="test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="person-directory-impl/src/test/resources" path="person-directory-impl/src/test/resources"/>
+	<classpathentry kind="src" output="person-directory-api/target/classes" path="person-directory-api/src/main/java"/>
+	<classpathentry kind="src" output="person-directory-impl/target/classes" path="person-directory-impl/src/main/java"/>
+	<classpathentry kind="src" output="person-directory-impl/target/test-classes" path="person-directory-impl/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="person-directory-impl/target/test-classes" path="person-directory-impl/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER/modules/noworkspace"/>
-	<classpathentry kind="output" path="target-eclipse/classes"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
