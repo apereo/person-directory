@@ -105,14 +105,13 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
      */
     @Override
     protected PartialWhereClause appendAttributeToQuery(PartialWhereClause queryBuilder, String dataAttribute, List<Object> queryValues) {
-        if (queryBuilder == null) {
-            queryBuilder = new PartialWhereClause();
-        }
-        
         for (final Object queryValue : queryValues) {
             final String queryString = queryValue != null ? queryValue.toString() : null;
             if (StringUtils.isNotBlank(queryString)) {
-                if (queryBuilder.sql.length() > 0) {
+                if (queryBuilder == null) {
+                    queryBuilder = new PartialWhereClause();
+                }
+                else if (queryBuilder.sql.length() > 0) {
                     queryBuilder.sql.append(" ").append(this.queryType.toString()).append(" ");
                 }
 
