@@ -160,7 +160,15 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         //Use the resolved cachableMethod to determine the seed Map and then get the hash of the key elements
         final Object[] methodArguments = methodInvocation.getArguments();
         final Map<String, Object> seed = this.getSeed(methodArguments, cachableMethod);
-        final int keyHashCode = this.getKeyHash(seed);
+        final Integer keyHashCode = this.getKeyHash(seed);
+        
+        //If no code generated return null
+        if (keyHashCode == null) {
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("No cache key generated for MethodInvocation='" + methodInvocation + "'");
+            }
+            return null;
+        }
         
         //Calculate the hashCode and checkSum
         final HashCodeCalculator hashCodeCalculator = new HashCodeCalculator();
@@ -238,7 +246,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * the <code>cacheKeyAttributes</code> {@link Set} or if it is <code>null</code> the
      * <code>defaultAttributeName</code> is used as the key attribute.
      */
-    protected int getKeyHash(Map<String, Object> seed) {
+    protected Integer getKeyHash(Map<String, Object> seed) {
         //Determine the attributes to build the cache key with
         final Set<String> cacheAttributes;
         if (this.useAllAttributes) {
@@ -278,6 +286,11 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Generated cache Map " + cacheKey + " from seed Map " + seed);
+        }
+        
+        //If no entries don't return a key
+        if (cacheKey.size() == 0) {
+            return null;
         }
         
         //Return the key map's hash code

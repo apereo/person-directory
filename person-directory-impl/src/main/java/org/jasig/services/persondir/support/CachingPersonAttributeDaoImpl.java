@@ -282,42 +282,46 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         final MethodInvocation methodInvocation = new PersonAttributeDaoMethodInvocation(seed);
         final Serializable cacheKey = this.cacheKeyGenerator.generateKey(methodInvocation);
 
-        Set<IPersonAttributes> cacheResults = this.userInfoCache.get(cacheKey);
-        if (cacheResults != null) {
-            //If the returned object is the null results object, set the cache results to null
-            if (this.nullResultsObject.equals(cacheResults)) {
-                cacheResults = null;
-            }
-            
-            if (logger.isDebugEnabled()) {
-                logger.debug("Retrieved query from cache. key='" + cacheKey + "', results='" + cacheResults + "'");
-            }
+        if (cacheKey != null) {
+            Set<IPersonAttributes> cacheResults = this.userInfoCache.get(cacheKey);
+            if (cacheResults != null) {
+                //If the returned object is the null results object, set the cache results to null
+                if (this.nullResultsObject.equals(cacheResults)) {
+                    cacheResults = null;
+                }
                 
-            this.queries++;
-            if (statsLogger.isDebugEnabled()) {
-                statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Retrieved query from cache. key='" + cacheKey + "', results='" + cacheResults + "'");
+                }
+                    
+                this.queries++;
+                if (statsLogger.isDebugEnabled()) {
+                    statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
+                }
+                
+                return cacheResults;
             }
-            
-            return cacheResults;
         }
     
         final Set<IPersonAttributes> queryResults = this.cachedPersonAttributesDao.getPeopleWithMultivaluedAttributes(seed);
     
-        if (queryResults != null) {
-            this.userInfoCache.put(cacheKey, queryResults);
-        }
-        else if (this.cacheNullResults) {
-            this.userInfoCache.put(cacheKey, this.nullResultsObject);
-        }
-        
-        if (logger.isDebugEnabled()) {
-            logger.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache. key='" + cacheKey + "', results='" + queryResults + "'");
-        }
-        
-        this.queries++;
-        this.misses++;
-        if (statsLogger.isDebugEnabled()) {
-            statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
+        if (cacheKey != null) {
+            if (queryResults != null) {
+                this.userInfoCache.put(cacheKey, queryResults);
+            }
+            else if (this.cacheNullResults) {
+                this.userInfoCache.put(cacheKey, this.nullResultsObject);
+            }
+            
+            if (logger.isDebugEnabled()) {
+                logger.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache. key='" + cacheKey + "', results='" + queryResults + "'");
+            }
+            
+            this.queries++;
+            this.misses++;
+            if (statsLogger.isDebugEnabled()) {
+                statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
+            }
         }
 
         return queryResults;
