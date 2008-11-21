@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 import org.hsqldb.jdbcDriver;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
+import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.jasig.services.persondir.util.Util;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -129,7 +130,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-        impl.setDefaultAttributeName("uid");
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
         Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
         columnsToAttributes.put("name", "firstName");
@@ -156,7 +157,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
 //        SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
 //        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 //
-//        impl.setDefaultAttributeName("uid");
+//        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 //
 //        Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
 //        columnsToAttributes.put("name", "firstName");
@@ -180,7 +181,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-        impl.setDefaultAttributeName("uid");
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
         Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
         columnsToAttributes.put("name", "firstName");
@@ -225,7 +226,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-        impl.setDefaultAttributeName("uid");
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
         Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
         columnsToAttributes.put("name", "firstName");
@@ -307,7 +308,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     public void testMultiPersonQuery() {
         SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
-        impl.setDefaultAttributeName("uid");
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
         Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
         columnsToAttributes.put("netid", "uid");

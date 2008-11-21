@@ -9,8 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
-import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.IPersonAttributes;
 
 /**
  * This DAO wraps another DAO and only executes the wrapped DAO if the data in the seed matches
@@ -84,13 +84,15 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
      */
     public RegexGatewayPersonAttributeDao(String attributeName, String pattern, IPersonAttributeDao enclosed) {
         // Instance Members.
-        this.setDefaultAttributeName(attributeName);
-        this.setPatterns(Collections.singletonMap(this.getDefaultAttributeName(), pattern));
+        final SimpleUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider(attributeName);
+        this.setUsernameAttributeProvider(usernameAttributeProvider);
+        
+        this.setPatterns(Collections.singletonMap(attributeName, pattern));
         this.setTargetPersonAttributeDao(enclosed);
 
         // PersonDirectory won't stop for anything... we need decent logging.
         if (logger.isDebugEnabled()) {
-            logger.debug("Created RegexGatewayPersonAttributeDao with defaultAttributeName='" + this.getDefaultAttributeName() + "' and patterns=" + this.patterns);
+            logger.debug("Created RegexGatewayPersonAttributeDao with defaultAttributeName='" + attributeName + "' and patterns=" + this.patterns);
         }
     }
     

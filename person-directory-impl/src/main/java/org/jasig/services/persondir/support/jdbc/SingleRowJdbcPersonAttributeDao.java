@@ -8,11 +8,13 @@ package org.jasig.services.persondir.support.jdbc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.CaseInsensitiveAttributeNamedPersonImpl;
+import org.jasig.services.persondir.support.CaseInsensitiveNamedPersonImpl;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
@@ -72,19 +74,26 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
         return MAPPER;
     }
 
+    
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#parseAttributeMapFromResults(java.util.List)
+     * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#parseAttributeMapFromResults(java.util.List, java.lang.String)
      */
     @Override
-    protected List<IPersonAttributes> parseAttributeMapFromResults(List<Map<String, Object>> queryResults) {
+    protected List<IPersonAttributes> parseAttributeMapFromResults(List<Map<String, Object>> queryResults, String queryUserName) {
         final List<IPersonAttributes> peopleAttributes = new ArrayList<IPersonAttributes>(queryResults.size());
         
         for (final Map<String, Object> queryResult : queryResults) {
             final Map<String, List<Object>> multivaluedQueryResult = MultivaluedPersonAttributeUtils.toMultivaluedMap(queryResult);
             
-            //Create the IPersonAttributes doing a best-guess at a userName attribute
-            final String userNameAttribute = this.getConfiguredUserNameAttribute();
-            final IPersonAttributes person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, multivaluedQueryResult);
+            final IPersonAttributes person;
+            if (queryUserName != null) {
+                person = new CaseInsensitiveNamedPersonImpl(queryUserName, multivaluedQueryResult);
+            }
+            else {
+                //Create the IPersonAttributes doing a best-guess at a userName attribute
+                final String userNameAttribute = this.getConfiguredUserNameAttribute();
+                person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, multivaluedQueryResult);
+            }
             
             peopleAttributes.add(person);
         }

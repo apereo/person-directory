@@ -56,7 +56,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         
         
         this.stubDao.setBackingMap(daoBackingMap);
-        this.stubDao.setDefaultAttributeName(defaultAttr);
+        this.stubDao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
         
         super.setUp();
     }
@@ -87,7 +87,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     public void testCacheStats() throws Exception {
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
-        dao.setDefaultAttributeName(defaultAttr);
+        dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
         dao.setUserInfoCache(new HashMap<Serializable, Set<IPersonAttributes>>());
         dao.afterPropertiesSet();
         
@@ -135,7 +135,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
-        dao.setDefaultAttributeName(defaultAttr);
+        dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
         dao.setUserInfoCache(cacheMap);
         dao.afterPropertiesSet();
         
@@ -312,7 +312,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
-        dao.setDefaultAttributeName("UNUSED_ATTR_NAME");
+        dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("UNUSED_ATTR_NAME"));
         dao.setUserInfoCache(cacheMap);
         dao.afterPropertiesSet();
 
@@ -350,7 +350,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
-        dao.setDefaultAttributeName("UNUSED_ATTR_NAME");
+        dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("UNUSED_ATTR_NAME"));
         dao.setCacheKeyAttributes(Collections.singleton("UNUSED_ATTR_NAME"));
         dao.setUserInfoCache(cacheMap);
         dao.afterPropertiesSet();
@@ -391,7 +391,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
-        dao.setDefaultAttributeName(defaultAttr);
+        dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
         dao.setUserInfoCache(new HashMap<Serializable, Set<IPersonAttributes>>());
         
         return dao;

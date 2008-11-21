@@ -32,13 +32,13 @@ import org.springframework.dao.support.DataAccessUtils;
  *         <th align="left">Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">defaultAttribute</td>
+ *         <td align="right" valign="top">usernameAttributeProvider</td>
  *         <td>
- *             The attribute to use for the key in the {@link Map} passed to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)}
- *             when {@link #getPerson(String)} is called. The value is the uid passed to the method.
+ *             The provider used to determine the username attribute to use when no attribute is specified in the query. This
+ *             is primarily used for calls to {@link #getPerson(String)}.
  *         </td>
  *         <td valign="top">No</td>
- *         <td valign="top">"username"</td>
+ *         <td valign="top">{@link SimpleUsernameAttributeProvider}</td>
  *     </tr>
  * </table>
  * 
@@ -47,10 +47,7 @@ import org.springframework.dao.support.DataAccessUtils;
  * @since uPortal 2.5
  */
 public abstract class AbstractDefaultAttributePersonAttributeDao extends AbstractFlatteningPersonAttributeDao {
-    /**
-     * Defaults attribute to use for a simple query
-     */
-    private String defaultAttribute = "username";
+    private IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
 
     /**
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
@@ -86,7 +83,8 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      */
     protected Map<String, List<Object>> toSeedMap(String uid) {
         final List<Object> values = Collections.singletonList((Object)uid);
-        final Map<String, List<Object>> seed = Collections.singletonMap(this.defaultAttribute, values);
+        final String usernameAttribute = this.usernameAttributeProvider.getUsernameAttribute();
+        final Map<String, List<Object>> seed = Collections.singletonMap(usernameAttribute, values);
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Created seed map='" + seed + "' for uid='" + uid + "'");
         }
@@ -94,25 +92,18 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
     }
 
 
-    /**
-     * Returns the attribute set by {@link #setDefaultAttributeName(String)} or
-     * if it has not been called the default value "uid" is returned.
-     * 
-     * @return The default single string query attribute, will never be null.
-     */
-    public final String getDefaultAttributeName() {
-        return this.defaultAttribute;
+    public IUsernameAttributeProvider getUsernameAttributeProvider() {
+        return this.usernameAttributeProvider;
     }
-    
     /**
-     * Sets the attribute to use for {@link #getUserAttributes(String)} queries.
-     * It cannot be <code>null</code>.
+     * The {@link IUsernameAttributeProvider} to use for determining the username attribute
+     * to use when none is provided. The provider is used when calls are made to {@link #getPerson(String)}
+     * to build a query Map and then call {@link #getPeopleWithMultivaluedAttributes(Map)}
      * 
-     * @param name The attribute name to set as default.
-     * @throws IllegalArgumentException if <code>name</code> is <code>null</code>.
+     * @param usernameAttributeProvider the usernameAttributeProvider to set
      */
-    public final void setDefaultAttributeName(final String name) {
-        Validate.notNull(name, "The default attribute name may not be null");
-        this.defaultAttribute = name;
+    public void setUsernameAttributeProvider(IUsernameAttributeProvider usernameAttributeProvider) {
+        Validate.notNull(usernameAttributeProvider);
+        this.usernameAttributeProvider = usernameAttributeProvider;
     }
 }

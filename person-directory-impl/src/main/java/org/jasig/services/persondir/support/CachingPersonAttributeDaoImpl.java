@@ -16,8 +16,8 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.springframework.beans.factory.InitializingBean;
 import org.springmodules.cache.key.CacheKeyGenerator;
 
@@ -240,7 +240,10 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         if (this.cacheKeyGenerator == null) {
             final AttributeBasedCacheKeyGenerator cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
             cacheKeyGenerator.setCacheKeyAttributes(this.cacheKeyAttributes);
-            cacheKeyGenerator.setDefaultAttributeName(this.getDefaultAttributeName());
+            
+            final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
+            final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
+            cacheKeyGenerator.setDefaultAttributeName(usernameAttribute);
             this.cacheKeyGenerator = cacheKeyGenerator;
         }
     }

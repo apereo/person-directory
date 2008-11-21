@@ -46,17 +46,9 @@ import org.jasig.services.persondir.IPersonAttributes;
  * @version $Revision$ $Date$
  */
 public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeDao<String> {
-    /*
-     * Map from userids to Maps.  The Map values are maps from
-     * attribute names to attribute values.
-     */
     private Map<String, Map<String, List<Object>>> backingMap = Collections.emptyMap();
-    
-    /*
-     * Set of possible all attribute names that map to an attribute
-     * value for some user in our backing map.
-     */
     private Set<String> possibleUserAttributeNames = Collections.emptySet();
+    private String queryAttributeName = null;
     
     /**
      * Creates a new, empty, dao.
@@ -72,15 +64,33 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         this.setBackingMap(backingMap);
     }
     
-    
     /**
-     * @return Returns the backingMap.
+     * Creates a new DAO with the specified backing map and query attribute.
+     * @param queryAttributeName The queryAttributeName to call {@link #setQueryAttributeName(String)} with.
+     * @param backingMap The backingMap to call {@link #setBackingMap(Map)} with.
      */
+    public ComplexStubPersonAttributeDao(String queryAttributeName, Map<String, Map<String, List<Object>>> backingMap) {
+        this.setQueryAttributeName(queryAttributeName);
+        this.setBackingMap(backingMap);
+    }
+    
+    public String getQueryAttributeName() {
+        return this.queryAttributeName;
+    }
+    /**
+     * Name of the attribute to look for to key into the backing map. If not set the value returned by
+     * {@link #getUsernameAttributeProvider()} will be used.
+     */
+    public void setQueryAttributeName(String queryAttributeName) {
+        this.queryAttributeName = queryAttributeName;
+    }
+
     public Map<String, Map<String, List<Object>>> getBackingMap() {
         return this.backingMap;
     }
     /**
-     * @param backingMap The backingMap to set.
+     * The backing Map to use for queries, the outer map is keyed on the query attribute. The inner
+     * Map is the set of user attributes to be returned for the query attribute.
      */
     public void setBackingMap(Map<String, Map<String, List<Object>>> backingMap) {
         if (backingMap == null) {
@@ -106,7 +116,9 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      */
     @Override
     public Set<String> getAvailableQueryAttributes() {
-        return Collections.singleton(this.getDefaultAttributeName());
+        final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
+        final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
+        return Collections.singleton(usernameAttribute);
     }
 
     /* (non-Javadoc)
@@ -118,8 +130,16 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
             return queryBuilder;
         }
         
-        final String defaultAttrName = this.getDefaultAttributeName();
-        if (defaultAttrName.equals(dataAttribute)) {
+        final String keyAttributeName;
+        if (this.queryAttributeName != null) {
+            keyAttributeName = this.queryAttributeName;
+        }
+        else {
+            final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
+            keyAttributeName = usernameAttributeProvider.getUsernameAttribute();
+        }
+        
+        if (keyAttributeName.equals(dataAttribute)) {
             return String.valueOf(queryValues.get(0));
         }
         
@@ -127,25 +147,29 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     }
 
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object, java.lang.String)
      */
     @Override
-    protected List<IPersonAttributes> getPeopleForQuery(String seedValue) {
+    protected List<IPersonAttributes> getPeopleForQuery(String seedValue, String queryUserName) {
         final Map<String, List<Object>> attributes = this.backingMap.get(seedValue);
         
         if (attributes == null) {
             return null;
         }
         
-        final String defaultAttrName = this.getDefaultAttributeName();
-        final String userNameAttribute = this.getConfiguredUserNameAttribute();
-        
         final IPersonAttributes person;
-        if (defaultAttrName.equals(userNameAttribute)) {
-            person = new NamedPersonImpl(seedValue, attributes);
+        if (queryUserName != null) {
+            person = new NamedPersonImpl(queryUserName, attributes);
         }
         else {
-            person = new AttributeNamedPersonImpl(userNameAttribute, attributes);
+            final String usernameAttribute = this.getConfiguredUserNameAttribute();
+            
+            if (usernameAttribute.equals(this.queryAttributeName)) {
+                person = new NamedPersonImpl(seedValue, attributes);
+            }
+            else {
+                person = new AttributeNamedPersonImpl(usernameAttribute, attributes);
+            }
         }
         
         return Collections.singletonList(person);

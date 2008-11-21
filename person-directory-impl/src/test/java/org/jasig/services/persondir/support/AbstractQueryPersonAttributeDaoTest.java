@@ -100,10 +100,10 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         }
 
         /* (non-Javadoc)
-         * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
+         * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object, java.lang.String)
          */
         @Override
-        protected List<IPersonAttributes> getPeopleForQuery(List<List<Object>> queryBuilder) {
+        protected List<IPersonAttributes> getPeopleForQuery(List<List<Object>> queryBuilder, String queryUserName) {
             this.args = queryBuilder;
             return null;
         }

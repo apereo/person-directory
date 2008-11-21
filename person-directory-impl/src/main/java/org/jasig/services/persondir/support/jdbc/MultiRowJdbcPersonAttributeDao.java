@@ -144,24 +144,34 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         return MAPPER;
     }
 
+    
+    
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#parseAttributeMapFromResults(java.util.List)
+     * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#parseAttributeMapFromResults(java.util.List, java.lang.String)
      */
     @Override
     @SuppressWarnings("unchecked")
-    protected List<IPersonAttributes> parseAttributeMapFromResults(List<Map<String, Object>> queryResults) {
+    protected List<IPersonAttributes> parseAttributeMapFromResults(List<Map<String, Object>> queryResults, String queryUserName) {
         final Map<String, Map<String, List<Object>>> peopleAttributesBuilder = LazyMap.decorate(new LinkedHashMap<String, Map<String, List<Object>>>(), new LinkedHashMapFactory<String, List<Object>>());
 
         final String userNameAttribute = this.getConfiguredUserNameAttribute();
         
         for (final Map<String, Object> queryResult : queryResults) {
-            final Object userName = queryResult.get(userNameAttribute);
-            
-            if (userName == null) {
-                throw new BadSqlGrammarException("No userName column named '" + userNameAttribute + "' exists in result set", this.getQueryTemplate(), null);
+            final String userName;
+            if (queryUserName != null) {
+                userName = queryUserName;
+            }
+            else {
+                final Object userNameValue = queryResult.get(userNameAttribute);
+                
+                if (userNameValue == null) {
+                    throw new BadSqlGrammarException("No userName column named '" + userNameAttribute + "' exists in result set and no userName provided in query Map", this.getQueryTemplate(), null);
+                }
+                
+                userName = userNameValue.toString();
             }
             
-            final Map<String, List<Object>> attributes = peopleAttributesBuilder.get(userName.toString());
+            final Map<String, List<Object>> attributes = peopleAttributesBuilder.get(userName);
             
             //Iterate over each attribute column mapping to get the data from the row
             for (final Map.Entry<String, Set<String>> columnMapping : this.nameValueColumnMappings.entrySet()) {

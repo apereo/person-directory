@@ -37,7 +37,11 @@
     </bean>
     
     <bean id="personAttributeDaoTarget" class="org.jasig.services.persondir.support.ComplexStubPersonAttributeDao">
-        <property name="defaultAttributeName" value="userName" />
+        <property name="usernameAttributeProvider">
+            <bean class="org.jasig.services.persondir.support.SimpleUsernameAttributeProvider">
+                <property name="usernameAttribute" value="userName" />
+            </bean>
+        </property>
         <property name="backingMap"> <!-- Map<String, Map<String, List<Object>>> -->
             <map>
                 <entry key="edalquist">

@@ -34,23 +34,18 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
     public void testNullDefaultAttributeName() {
         AbstractDefaultAttributePersonAttributeDao dao = getAbstractDefaultQueryPersonAttributeDao();
         try {
-            dao.setDefaultAttributeName(null);
-            fail("Expected IllegalArgumentException on setDefaultAttributeName(null)");
+            dao.setUsernameAttributeProvider(null);
+            fail("Expected IllegalArgumentException on setUsernameAttributeProvider(null)");
         } 
         catch (IllegalArgumentException iae) {
             return;
         }
     }
     
-    public void testDefaultAttributeName() {
-        AbstractDefaultAttributePersonAttributeDao dao = getAbstractDefaultQueryPersonAttributeDao();
-        dao.setDefaultAttributeName("TestAttrName");
-        assertEquals("TestAttrName", dao.getDefaultAttributeName());
-    }
     
     public void testGetAttributesByString() {
         AbstractDefaultAttributePersonAttributeDao dao = new SimpleDefaultQueryPersonAttributeDao();
-        dao.setDefaultAttributeName("TestAttrName");
+        dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("TestAttrName"));
         Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
         expected.put("TestAttrName", Util.list("edalquist"));
         

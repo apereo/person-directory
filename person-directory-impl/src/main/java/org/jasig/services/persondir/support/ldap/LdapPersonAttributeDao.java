@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.CaseInsensitiveAttributeNamedPersonImpl;
+import org.jasig.services.persondir.support.CaseInsensitiveNamedPersonImpl;
 import org.jasig.services.persondir.support.QueryType;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.InitializingBean;
@@ -160,10 +161,10 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     }
 
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object, java.lang.String)
      */
     @Override
-    protected List<IPersonAttributes> getPeopleForQuery(LogicalFilterWrapper queryBuilder) {
+    protected List<IPersonAttributes> getPeopleForQuery(LogicalFilterWrapper queryBuilder, String queryUserName) {
         final String generatedLdapQuery = queryBuilder.encode();
 
         //If no query is generated return null since the query cannot be run
@@ -186,11 +187,16 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         final List<Map<String, List<Object>>> queryResults = this.ldapTemplate.search(this.baseDN, ldapQuery, this.searchControls, MAPPER);
         
         final List<IPersonAttributes> peopleAttributes = new ArrayList<IPersonAttributes>(queryResults.size());
-        
         for (final Map<String, List<Object>> queryResult : queryResults) {
-            //Create the IPersonAttributes doing a best-guess at a userName attribute
-            final String userNameAttribute = this.getConfiguredUserNameAttribute();
-            final IPersonAttributes person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, queryResult);
+            final IPersonAttributes person;
+            if (queryUserName != null) {
+                person = new CaseInsensitiveNamedPersonImpl(queryUserName, queryResult);
+            }
+            else {
+                //Create the IPersonAttributes doing a best-guess at a userName attribute
+                final String userNameAttribute = this.getConfiguredUserNameAttribute();
+                person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, queryResult);
+            }
             
             peopleAttributes.add(person);
         }

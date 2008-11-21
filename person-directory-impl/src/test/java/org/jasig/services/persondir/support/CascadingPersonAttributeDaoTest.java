@@ -29,6 +29,9 @@ public class CascadingPersonAttributeDaoTest
         
     @Override
     protected void setUp() {
+        final SimpleUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider("username");
+        
+        
         Map<String, Map<String, List<Object>>> daoBackingMap1 = new HashMap<String, Map<String, List<Object>>>();
         
         Map<String, List<Object>> user1 = new HashMap<String, List<Object>>();
@@ -48,7 +51,7 @@ public class CascadingPersonAttributeDaoTest
         
         this.sourceOne = new ComplexStubPersonAttributeDao();
         this.sourceOne.setBackingMap(daoBackingMap1);
-        this.sourceOne.setDefaultAttributeName("username");
+        this.sourceOne.setUsernameAttributeProvider(usernameAttributeProvider);
         
 
         Map<String, Map<String, List<Object>>> daoBackingMap2 = new HashMap<String, Map<String, List<Object>>>();
@@ -73,9 +76,8 @@ public class CascadingPersonAttributeDaoTest
         
         this.sourceTwo = new ComplexStubPersonAttributeDao();
         this.sourceTwo.setBackingMap(daoBackingMap2);
-        this.sourceTwo.setDefaultAttributeName("studentId");
-        this.sourceTwo.setUserNameAttribute("username");
-        
+        this.sourceTwo.setQueryAttributeName("studentId");
+        this.sourceTwo.setUsernameAttributeProvider(usernameAttributeProvider);
         
         this.nullSource = new StubPersonAttributeDao();
     }

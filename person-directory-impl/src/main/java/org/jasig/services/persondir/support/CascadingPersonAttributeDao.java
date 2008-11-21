@@ -5,6 +5,8 @@
 
 package org.jasig.services.persondir.support;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,7 +63,34 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
             return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed);
         }
         
-        final IPersonAttributes person = resultPeople.iterator().next();
-        return currentlyConsidering.getPeopleWithMultivaluedAttributes(person.getAttributes());
+        Set<IPersonAttributes> mergedPeopleResults = null;
+        for (final IPersonAttributes person : resultPeople) {
+            final Map<String, List<Object>> queryAttributes = new LinkedHashMap<String, List<Object>>();
+            
+            //Add the userName into the query map
+            final String userName = person.getName();
+            if (userName != null) {
+                final Map<String, List<Object>> userNameMap = this.toSeedMap(userName);
+                queryAttributes.putAll(userNameMap);
+            }
+            
+            //Add the rest of the attributes into the query map
+            final Map<String, List<Object>> personAttributes = person.getAttributes();
+            queryAttributes.putAll(personAttributes);
+            
+            final Set<IPersonAttributes> newResults = currentlyConsidering.getPeopleWithMultivaluedAttributes(queryAttributes);
+            if (newResults != null) {
+                if (mergedPeopleResults == null) {
+                    //If this is the first valid result set just use it.
+                    mergedPeopleResults = new LinkedHashSet<IPersonAttributes>(newResults);
+                }
+                else {
+                    //Merge the Sets of IPersons
+                    mergedPeopleResults = this.attrMerger.mergeResults(mergedPeopleResults, newResults);
+                }
+            }
+        }
+        
+        return mergedPeopleResults;
     }
 }

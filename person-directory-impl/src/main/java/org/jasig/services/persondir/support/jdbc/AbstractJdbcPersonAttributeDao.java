@@ -91,9 +91,10 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
      * Takes the {@link List} from the query and parses it into the {@link List} of {@link IPersonAttributes} attributes to be returned.
      * 
      * @param queryResults Results from the query.
+     * @param queryUserName The username passed in the query map, if no username attribute existed in the query Map null is provided.
      * @return The results of the query 
      */
-    protected abstract List<IPersonAttributes> parseAttributeMapFromResults(final List<R> queryResults);
+    protected abstract List<IPersonAttributes> parseAttributeMapFromResults(final List<R> queryResults, String queryUserName);
     
     /**
      * @return The ParameterizedRowMapper to handle the results of the SQL query.
@@ -136,10 +137,10 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
 
     
     /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object)
+     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object, java.lang.String)
      */
     @Override
-    protected final List<IPersonAttributes> getPeopleForQuery(PartialWhereClause queryBuilder) {
+    protected List<IPersonAttributes> getPeopleForQuery(PartialWhereClause queryBuilder, String queryUserName) {
         //Merge the generated SQL with the base query template
         final StringBuilder partialSqlWhere = queryBuilder.sql;
         final Matcher queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
@@ -153,6 +154,6 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
             this.logger.debug("Executed '" + querySQL + "' with arguments " + queryBuilder.arguments + " and got results " + results);
         }
 
-        return this.parseAttributeMapFromResults(results);
+        return this.parseAttributeMapFromResults(results, queryUserName);
     }
 }

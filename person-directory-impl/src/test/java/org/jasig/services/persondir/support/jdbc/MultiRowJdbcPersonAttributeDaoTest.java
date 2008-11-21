@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 import org.hsqldb.jdbcDriver;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
+import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.jasig.services.persondir.util.Util;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -152,8 +153,8 @@ public class MultiRowJdbcPersonAttributeDaoTest
        MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-       impl.setDefaultAttributeName("uid");
-       impl.setUserNameAttribute("netid");
+       impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+       impl.setUnmappedUsernameAttribute("netid");
        
        Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
        columnsToAttributes.put("name", "firstName");
@@ -183,8 +184,8 @@ public class MultiRowJdbcPersonAttributeDaoTest
        MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-       impl.setDefaultAttributeName("uid");
-       impl.setUserNameAttribute("netid");
+       impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+       impl.setUnmappedUsernameAttribute("netid");
 
        Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
        columnsToAttributes.put("name", "firstName");
@@ -221,8 +222,8 @@ public class MultiRowJdbcPersonAttributeDaoTest
        MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-       impl.setDefaultAttributeName("uid");
-       impl.setUserNameAttribute("netid");
+       impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+       impl.setUnmappedUsernameAttribute("netid");
        
        Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
        columnsToAttributes.put("name", "firstName");
@@ -250,8 +251,8 @@ public class MultiRowJdbcPersonAttributeDaoTest
        MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-       impl.setDefaultAttributeName("uid");
-       impl.setUserNameAttribute("netid");
+       impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+       impl.setUnmappedUsernameAttribute("netid");
 
        Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
        columnsToAttributes.put("", "dressShirtColor");
@@ -272,8 +273,8 @@ public class MultiRowJdbcPersonAttributeDaoTest
        MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-       impl.setDefaultAttributeName("uid");
-       impl.setUserNameAttribute("netid");
+       impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+       impl.setUnmappedUsernameAttribute("netid");
        
        Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
        columnsToAttributes.put("name", "firstName");
@@ -299,8 +300,8 @@ public class MultiRowJdbcPersonAttributeDaoTest
         MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(queryAttributeMapping);
 
-        impl.setDefaultAttributeName("uid");
-        impl.setUserNameAttribute("netid");
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+        impl.setUnmappedUsernameAttribute("netid");
         
         Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
         columnsToAttributes.put("shirt_color", "color");
@@ -329,8 +330,8 @@ public class MultiRowJdbcPersonAttributeDaoTest
         MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(queryAttributeMapping);
 
-        impl.setDefaultAttributeName("uid");
-        impl.setUserNameAttribute("netid");
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+        impl.setUnmappedUsernameAttribute("netid");
         impl.setRequireAllQueryAttributes(true);
 
         Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
@@ -356,8 +357,8 @@ public class MultiRowJdbcPersonAttributeDaoTest
         MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE shirt_color = ?");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "netid"));
 
-        impl.setDefaultAttributeName("shirt");
-        impl.setUserNameAttribute("netid");
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("shirt"));
+        impl.setUnmappedUsernameAttribute("netid");
         
         
         Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
