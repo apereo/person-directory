@@ -8,7 +8,6 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.jasig.service</groupId>
     <artifactId>person-directory-api</artifactId>
     <packaging>jar</packaging>
 

@@ -54,9 +54,23 @@
     </mailingLists>
     
     <properties>
-        <!-- POM Configuration Properties -->
+        <!-- JASIG Parent POM Configuration Properties -->
         <issues.projectKey>PERSONDIR</issues.projectKey>
         <scm.path>/person-directory/trunk</scm.path>
+        
+        <!-- Project Dependency Versions -->
+        <aopalliance.verison>1.0</aopalliance.verison>
+        <apacheds.verison>1.0.2</apacheds.verison>
+        <commons-collections.verison>3.2.1</commons-collections.verison>
+        <commons-lang.verison>2.4</commons-lang.verison>
+        <commons-logging.verison>1.1.1</commons-logging.verison>
+        <hsqldb.verison>1.8.0.7</hsqldb.verison>
+        <junit.verison>4.4</junit.verison>
+        <log4j.verison>1.2.15</log4j.verison>
+        <slf4j-log4j12.verison>1.5.5</slf4j-log4j12.verison>
+        <spring.verison>2.5.6</spring.verison>
+        <spring-ldap.verison>1.2.1</spring-ldap.verison>
+        <spring-modules.verison>0.8a</spring-modules.verison>
     </properties>
     
     <modules>
@@ -69,37 +83,37 @@
             <dependency>
                 <groupId>aopalliance</groupId>
                 <artifactId>aopalliance</artifactId>
-                <version>1.0</version>
+                <version>${aopalliance.verison}</version>
             </dependency>
             <dependency>
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
-                <version>3.2.1</version>
+                <version>${commons-collections.verison}</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
-                <version>2.4</version>
+                <version>${commons-lang.verison}</version>
             </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
-                <version>1.1.1</version>
+                <version>${commons-logging.verison}</version>
             </dependency>
             <dependency>
                 <groupId>hsqldb</groupId>
                 <artifactId>hsqldb</artifactId>
-                <version>1.8.0.7</version>
+                <version>${hsqldb.verison}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.4</version>
+                <version>${junit.verison}</version>
             </dependency>
             <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
-                <version>1.2.15</version>
+                <version>${log4j.verison}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>javax.jms</groupId>
@@ -122,18 +136,18 @@
             <dependency>
                 <groupId>org.apache.directory.server</groupId>
                 <artifactId>apacheds-core</artifactId>
-                <version>1.0.2</version>
+                <version>${apacheds.verison}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.directory.server</groupId>
                 <artifactId>apacheds-server-jndi</artifactId>
-                <version>1.0.2</version>
-            </dependency> 
+                <version>${apacheds.verison}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.directory.server</groupId>
                 <artifactId>apacheds-server-unit</artifactId>
-                <version>1.0.2</version>
-            </dependency> 
+                <version>${apacheds.verison}</version>
+            </dependency>
             <dependency>
                 <groupId>org.jasig.service</groupId>
                 <artifactId>person-directory-api</artifactId>
@@ -142,52 +156,52 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
-                <version>1.5.2</version>
+                <version>${slf4j-log4j12.verison}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
-                <version>2.5.5</version>
+                <version>${spring.verison}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
-                <version>2.5.5</version>
+                <version>${spring.verison}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>2.5.5</version>
+                <version>${spring.verison}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>2.5.5</version>
+                <version>${spring.verison}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
-                <version>2.5.5</version>
+                <version>${spring.verison}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
-                <version>2.5.5</version>
+                <version>${spring.verison}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
-                <version>2.5.5</version>
+                <version>${spring.verison}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.ldap</groupId>
                 <artifactId>spring-ldap</artifactId>
-                <version>1.2.1</version>
+                <version>${spring-ldap.verison}</version>
             </dependency>
             <dependency>
                 <groupId>org.springmodules</groupId>
                 <artifactId>spring-modules-cache</artifactId>
-                <version>0.8a</version>
+                <version>${spring-modules.verison}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>log4j</groupId>
@@ -310,16 +324,28 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.0.2</version>
                     <configuration>
                         <source>1.5</source>
                         <target>1.5</target>
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.2</version>
                     <configuration>
                         <archive>
                             <manifest>
@@ -330,8 +356,64 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.3</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-site-plugin</artifactId>
+                    <version>2.0-beta-7</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.4.3</version>
+                </plugin>
+                
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>changelog-maven-plugin</artifactId>
+                    <version>2.0-beta-1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>cobertura-maven-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>findbugs-maven-plugin</artifactId>
+                    <version>1.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jdepend-maven-plugin</artifactId>
+                    <version>2.0-beta-2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jxr-maven-plugin</artifactId>
+                    <version>2.0-beta-1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>surefire-report-maven-plugin</artifactId>
+                    <version>2.0-beta-1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>taglist-maven-plugin</artifactId>
+                    <version>2.2</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -342,45 +424,6 @@
     <reporting>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>surefire-report-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jxr-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <configuration>
-                    <linkXref>true</linkXref>
-                    <sourceEncoding>utf-8</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
-                    <targetJdk>1.5</targetJdk>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>changelog-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <source>1.5</source>
@@ -394,8 +437,44 @@
                 </configuration>
             </plugin>
             <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <linkXref>true</linkXref>
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <minimumTokens>100</minimumTokens>
+                    <targetJdk>1.5</targetJdk>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>changelog-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jxr-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>surefire-report-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </reporting>
