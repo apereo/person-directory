@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.jasig.services.persondir.IPersonAttributes;
 
@@ -378,14 +379,15 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
         final List<Object> usernameAttributeValues = query.get(usernameAttribute);
         
-        final String username;
         if (usernameAttributeValues == null || usernameAttributeValues.size() == 0) {
-            username = null;
+            return null;
         }
-        else {  
-            final Object firstValue = usernameAttributeValues.get(0);
-            username = firstValue == null ? null : String.valueOf(firstValue);
+
+        final Object firstValue = usernameAttributeValues.get(0);
+        if (firstValue == null) {
+            return null;
         }
-        return username;
+        
+        return StringUtils.trimToNull(String.valueOf(firstValue));
     }
 }
