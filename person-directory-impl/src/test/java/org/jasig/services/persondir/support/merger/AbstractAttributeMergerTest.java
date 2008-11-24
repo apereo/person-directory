@@ -15,7 +15,6 @@ import junit.framework.TestCase;
  * @author andrew.petro@yale.edu
  * @version $Revision$ $Date$
  */
-@SuppressWarnings("deprecation")
 public abstract class AbstractAttributeMergerTest extends TestCase {
 
     /**

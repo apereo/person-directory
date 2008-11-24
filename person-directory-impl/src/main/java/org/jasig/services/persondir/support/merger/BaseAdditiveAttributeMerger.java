@@ -121,7 +121,6 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergeAttributes(java.util.Map, java.util.Map)
      */
-    @SuppressWarnings("deprecation")
     public Map<String, List<Object>> mergeAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider) {
         return this.mergePersonAttributes(toModify, toConsider);
     }
