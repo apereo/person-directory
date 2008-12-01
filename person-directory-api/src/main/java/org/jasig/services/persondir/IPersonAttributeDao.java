@@ -18,6 +18,7 @@ import java.util.Set;
  * @version $Revision$ $Date$
  */
 public interface IPersonAttributeDao {
+    public static final String WILDCARD = "*";
     
     /**
      * Searches for a single {@link IPersonAttributes} using the specified uid (userName).<br>

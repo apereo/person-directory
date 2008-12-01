@@ -10,8 +10,13 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.jasig.services.persondir.IPersonAttributeDao;
 
 /**
+ * Provides the username attribute based on a pre-configured string. Determines the username from a query Map based
+ * on the configured attribute, {@link StringUtils#trimToNull(String)}, and if the username value does not contain a
+ * wildcard.
+ * 
  * @author Eric Dalquist
  * @version $Revision$
  */
@@ -55,6 +60,11 @@ public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvid
             return null;
         }
         
-        return StringUtils.trimToNull(String.valueOf(firstValue));
+        final String username = StringUtils.trimToNull(String.valueOf(firstValue));
+        if (username == null || username.contains(IPersonAttributeDao.WILDCARD)) {
+            return null;
+        }
+        
+        return username;
     }
 }

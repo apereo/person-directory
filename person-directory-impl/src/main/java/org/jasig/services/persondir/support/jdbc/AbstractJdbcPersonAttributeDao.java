@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.QueryType;
@@ -45,7 +46,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  * @version $Revision$
  */
 public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPersonAttributeDao<PartialWhereClause> {
-    private static final Pattern WILDCARD = Pattern.compile("\\*");
+    private static final Pattern WILDCARD = Pattern.compile("\\" + IPersonAttributeDao.WILDCARD);
     private static final Pattern WHERE_PLACEHOLDER = Pattern.compile("\\{0\\}");
     
     private final SimpleJdbcTemplate simpleJdbcTemplate;
