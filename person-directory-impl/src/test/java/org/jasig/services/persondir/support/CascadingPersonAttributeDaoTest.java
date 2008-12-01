@@ -29,7 +29,7 @@ public class CascadingPersonAttributeDaoTest
         
     @Override
     protected void setUp() {
-        final SimpleUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider("username");
+        final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider("username");
         
         
         Map<String, Map<String, List<Object>>> daoBackingMap1 = new HashMap<String, Map<String, List<Object>>>();

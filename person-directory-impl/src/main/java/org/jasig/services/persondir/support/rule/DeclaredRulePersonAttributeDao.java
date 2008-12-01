@@ -10,6 +10,7 @@ import java.util.Set;
 import org.apache.commons.lang.Validate;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
+import org.jasig.services.persondir.support.IUsernameAttributeProvider;
 import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
 
 /**
@@ -61,7 +62,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
         }
 
         // Instance Members.
-        final SimpleUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider(attributeName);
+        final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider(attributeName);
         this.setUsernameAttributeProvider(usernameAttributeProvider);
         this.setRules(rules);
 

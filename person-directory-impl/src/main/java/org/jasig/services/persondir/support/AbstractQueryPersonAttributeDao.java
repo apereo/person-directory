@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.jasig.services.persondir.IPersonAttributes;
 
@@ -182,7 +181,8 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         }
         
         //Get the username from the query, if specified
-        final String username = this.getUsernameFromQuery(query);
+        final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
+        final String username = usernameAttributeProvider.getUsernameFromQuery(query);
         
         //Execute the query in the subclass
         final List<IPersonAttributes> unmappedPeople = this.getPeopleForQuery(queryBuilder, username);
@@ -368,26 +368,5 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         
         final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
         return usernameAttributeProvider.getUsernameAttribute();
-    }
-    
-    /**
-     * @param query The query map of attributes
-     * @return The username included in the query, determined using the username attribute from {@linl #getUsernameAttributeProvider()}. Returns null if no username attribute is included in the query.
-     */
-    protected String getUsernameFromQuery(Map<String, List<Object>> query) {
-        final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
-        final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
-        final List<Object> usernameAttributeValues = query.get(usernameAttribute);
-        
-        if (usernameAttributeValues == null || usernameAttributeValues.size() == 0) {
-            return null;
-        }
-
-        final Object firstValue = usernameAttributeValues.get(0);
-        if (firstValue == null) {
-            return null;
-        }
-        
-        return StringUtils.trimToNull(String.valueOf(firstValue));
     }
 }

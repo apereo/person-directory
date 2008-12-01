@@ -84,7 +84,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
      */
     public RegexGatewayPersonAttributeDao(String attributeName, String pattern, IPersonAttributeDao enclosed) {
         // Instance Members.
-        final SimpleUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider(attributeName);
+        final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider(attributeName);
         this.setUsernameAttributeProvider(usernameAttributeProvider);
         
         this.setPatterns(Collections.singletonMap(attributeName, pattern));
