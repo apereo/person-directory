@@ -8,6 +8,7 @@ package org.jasig.services.persondir;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Defines methods for finding a {@link IPersonAttributes} or Set of IPersons based on a user ID or a Map of user attributes to
@@ -19,6 +20,7 @@ import java.util.Set;
  */
 public interface IPersonAttributeDao {
     public static final String WILDCARD = "*";
+    public static final Pattern WILDCARD_PATTERN = Pattern.compile(Pattern.quote(IPersonAttributeDao.WILDCARD));
     
     /**
      * Searches for a single {@link IPersonAttributes} using the specified uid (userName).<br>

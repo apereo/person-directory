@@ -8,10 +8,14 @@ package org.jasig.services.persondir.support;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 
 
@@ -151,12 +155,43 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      */
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(String seedValue, String queryUserName) {
+        if (seedValue != null && seedValue.contains(IPersonAttributeDao.WILDCARD)) {
+            final Matcher matcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(seedValue);
+            final String patternBuilder = matcher.replaceAll(".*");
+            final Pattern seedPattern = Pattern.compile(patternBuilder);
+            
+            final List<IPersonAttributes> results = new LinkedList<IPersonAttributes>();
+            
+            for (final Map.Entry<String, Map<String, List<Object>>> attributesEntry : this.backingMap.entrySet()) {
+                final String attributesKey = attributesEntry.getKey();
+                final Matcher keyMatcher = seedPattern.matcher(attributesKey);
+                if (keyMatcher.matches()) {
+                    final Map<String, List<Object>> attributes = attributesEntry.getValue();
+                    if (attributes != null) {
+                        final IPersonAttributes person = this.createPerson(null, queryUserName, attributes);
+                        results.add(person);
+                    }
+                }
+            }
+            
+            if (results.size() == 0) {
+                return null;
+            }
+            
+            return results;
+        }
+        
         final Map<String, List<Object>> attributes = this.backingMap.get(seedValue);
         
         if (attributes == null) {
             return null;
         }
         
+        final IPersonAttributes person = this.createPerson(seedValue, queryUserName, attributes);
+        return Collections.singletonList(person);
+    }
+
+    private IPersonAttributes createPerson(String seedValue, String queryUserName, Map<String, List<Object>> attributes) {
         final IPersonAttributes person;
         if (queryUserName != null) {
             person = new NamedPersonImpl(queryUserName, attributes);
@@ -164,15 +199,14 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         else {
             final String usernameAttribute = this.getConfiguredUserNameAttribute();
             
-            if (usernameAttribute.equals(this.queryAttributeName)) {
+            if (seedValue != null && usernameAttribute.equals(this.queryAttributeName)) {
                 person = new NamedPersonImpl(seedValue, attributes);
             }
             else {
                 person = new AttributeNamedPersonImpl(usernameAttribute, attributes);
             }
         }
-        
-        return Collections.singletonList(person);
+        return person;
     }
 
     /**
