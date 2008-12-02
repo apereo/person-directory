@@ -6,6 +6,8 @@
 package org.jasig.services.persondir.support;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.jasig.services.persondir.support.merger.NoncollidingAttributeAdder;
@@ -238,6 +241,74 @@ public class MergingPersonAttributeDaoImplTest
         }
         catch (IllegalStateException ise) {
         }
+    }
+    
+    /**
+     * Test handling of underlying sources which return null on 
+     * getPossibleUserAttributeNames().
+     */
+    public void testUsernameWildcardQuery() {
+        List<IPersonAttributeDao> attributeSources = new ArrayList<IPersonAttributeDao>();
+        
+        final ComplexStubPersonAttributeDao complexSourceOne = new ComplexStubPersonAttributeDao();
+        final Map<String, Map<String, List<Object>>> backingMapOne = new HashMap<String, Map<String,List<Object>>>();
+        
+        final Map<String, List<Object>> loHomeAttrs = new HashMap<String, List<Object>>();
+        loHomeAttrs.put("username", Arrays.asList((Object)"lo-home"));
+        loHomeAttrs.put("givenName", Arrays.asList((Object)"Home"));
+        loHomeAttrs.put("familyName", Arrays.asList((Object)"Layout Owner"));
+        backingMapOne.put("lo-home", loHomeAttrs);
+        
+        final Map<String, List<Object>> loWelcomeAttrs = new HashMap<String, List<Object>>();
+        loWelcomeAttrs.put("username", Arrays.asList((Object)"lo-welcome"));
+        loWelcomeAttrs.put("givenName", Arrays.asList((Object)"Welcome"));
+        loWelcomeAttrs.put("familyName", Arrays.asList((Object)"Layout Owner"));
+        backingMapOne.put("lo-welcome", loWelcomeAttrs);
+        
+        complexSourceOne.setBackingMap(backingMapOne);
+        attributeSources.add(complexSourceOne);
+        
+        
+        
+        final ComplexStubPersonAttributeDao complexSourceTwo = new ComplexStubPersonAttributeDao();
+        final Map<String, Map<String, List<Object>>> backingMapTwo = new HashMap<String, Map<String,List<Object>>>();
+        
+        final Map<String, List<Object>> edalquistAttrs = new HashMap<String, List<Object>>();
+        edalquistAttrs.put("username", Arrays.asList((Object)"edalquist"));
+        edalquistAttrs.put("givenName", Arrays.asList((Object)"Eric"));
+        edalquistAttrs.put("familyName", Arrays.asList((Object)"Dalquist"));
+        backingMapTwo.put("edalquist", edalquistAttrs);
+        
+        final Map<String, List<Object>> jshomeAttrs = new HashMap<String, List<Object>>();
+        jshomeAttrs.put("username", Arrays.asList((Object)"jshome"));
+        jshomeAttrs.put("givenName", Arrays.asList((Object)"Joe"));
+        jshomeAttrs.put("familyName", Arrays.asList((Object)"Shome"));
+        backingMapTwo.put("jshome", jshomeAttrs);
+        
+        complexSourceTwo.setBackingMap(backingMapTwo);
+        attributeSources.add(complexSourceTwo);
+        
+        
+        MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        impl.setPersonAttributeDaos(attributeSources);
+        
+        final Set<IPersonAttributes> layoutOwners = impl.getPeople(Collections.singletonMap("username", (Object)"lo-*"));
+
+        final Set<IPersonAttributes> excepectedLayoutOwners = new HashSet<IPersonAttributes>();
+        excepectedLayoutOwners.add(new NamedPersonImpl("lo-welcome", loWelcomeAttrs));
+        excepectedLayoutOwners.add(new NamedPersonImpl("lo-home", loHomeAttrs));
+        
+        assertEquals(excepectedLayoutOwners, layoutOwners);
+        
+        
+        
+        final Set<IPersonAttributes> homeUsers = impl.getPeople(Collections.singletonMap("username", (Object)"*home"));
+
+        final Set<IPersonAttributes> excepectedHomeUsers = new HashSet<IPersonAttributes>();
+        excepectedHomeUsers.add(new NamedPersonImpl("jshome", jshomeAttrs));
+        excepectedHomeUsers.add(new NamedPersonImpl("lo-home", loHomeAttrs));
+        
+        assertEquals(excepectedHomeUsers, homeUsers);
     }
     
     /**
