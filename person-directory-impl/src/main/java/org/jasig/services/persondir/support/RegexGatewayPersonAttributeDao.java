@@ -73,6 +73,13 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
     private boolean matchAllValues = false;
     private Map<String, Pattern> patterns = null;
     private IPersonAttributeDao targetPersonAttributeDao = null;
+    
+    /**
+     * Default constructor, {@link #setPatterns(Map)} and {@link #setTargetPersonAttributeDao(IPersonAttributeDao)}
+     * will need to be called if this is used.
+     */
+    public RegexGatewayPersonAttributeDao() {
+    }
 
     /**
      * Creates a RegexGatewayPersonAttributeDao that will test a single attribute. The specified
