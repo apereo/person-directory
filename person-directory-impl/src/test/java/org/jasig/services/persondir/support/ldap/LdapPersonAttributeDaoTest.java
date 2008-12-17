@@ -34,6 +34,15 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     protected String getPartitionName() {
         return "personDirectory";
     }
+    
+    /* (non-Javadoc)
+     * @see org.springframework.ldap.test.AbstractDirContextTest#getBaseDn()
+     */
+    @Override
+    protected String getBaseDn() {
+        return "ou=people,o=personDirectory";
+    }
+
 
     /* (non-Javadoc)
      * @see org.springframework.ldap.test.AbstractDirContextTest#initializationData()

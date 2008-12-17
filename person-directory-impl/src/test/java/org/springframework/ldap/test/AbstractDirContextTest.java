@@ -24,6 +24,7 @@ import org.apache.directory.server.core.configuration.MutablePartitionConfigurat
 import org.apache.directory.server.unit.AbstractServerTest;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.support.LdapContextSource;
 
 /**
  * Base LDAP server test for testing code that uses a Spring-LDAP ContextSource
@@ -97,6 +98,11 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
         final DirContext context = this.createContext();
         this.contextSource = new SingleContextSource(context);
         
+        this.contextSource = new LdapContextSource();
+        ((LdapContextSource) this.contextSource).setUrl("ldap://localhost:" + this.port);
+        ((LdapContextSource) this.contextSource).setBase(this.getBaseDn());
+        ((LdapContextSource) this.contextSource).afterPropertiesSet(); 
+        
         this.internalSetUp();
     }
 
@@ -162,6 +168,11 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
      * @return The root name for the in-memory LDAP partition
      */
     protected abstract String getPartitionName();
+    
+    /**
+     * @return The baseDn for the in-memory LDAP context
+     */
+    protected abstract String getBaseDn();
     
     /**
      * @return Resources pointing to ldif content to import into the in-memory LDAP server during setUp
