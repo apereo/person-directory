@@ -61,6 +61,16 @@ import org.springframework.beans.factory.annotation.Required;
  *         <td valign="top">No</td>
  *         <td valign="top">true</td>
  *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">stopOnSuccess</td>
+ *         <td>
+ *             If true iteration of the child DAOs will stop after the first one that returns without
+ *             throwing an exception. This is intended to provide fail-over among attribute sources. The
+ *             <b>recoverExceptions</b> should be set to true for this to function as expected 
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">false</td>
+ *     </tr>
  * </table>
  * 
  * @author Eric Dalquist
@@ -82,6 +92,8 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * individual DAOs.
      */
     protected boolean recoverExceptions = true;
+    
+    protected boolean stopOnSuccess = false;
     
 
     /**
@@ -106,6 +118,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         
         //Iterate through the configured IPersonAttributeDaos, querying each.
         for (final IPersonAttributeDao currentlyConsidering : this.personAttributeDaos) {
+            boolean handledException = false;
             Set<IPersonAttributes> currentPeople = null;
             try {
                 currentPeople = this.getAttributesFromDao(query, isFirstQuery, currentlyConsidering, resultPeople);
@@ -117,6 +130,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             }
             catch (final RuntimeException rte) {
                 if (this.recoverExceptions) {
+                    handledException = true;
                     this.logger.warn("Recovering From Exception thrown by '" + currentlyConsidering + "'", rte);
                 }
                 else {
@@ -134,6 +148,14 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                     //Merge the Sets of IPersons
                     resultPeople = this.attrMerger.mergeResults(resultPeople, currentPeople);
                 }
+            }
+            
+            if (this.stopOnSuccess && !handledException) {
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Successfully retrieved attributes from a child DAO and stopOnSuccess is true, stopping iteration of child DAOs");
+                }
+
+                break;
             }
         }
         
@@ -173,6 +195,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         Set<String> attrNames = null;
         
         for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
+            boolean handledException = false;
             Set<String> currentDaoAttrNames = null;
             try {
                 currentDaoAttrNames = currentDao.getPossibleUserAttributeNames();
@@ -183,6 +206,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             }
             catch (final RuntimeException rte) {
                 if (this.recoverExceptions) {
+                    handledException = true;
                     this.logger.warn("Recovering From Exception thrown by '" + currentDao + "'", rte);
                 }
                 else {
@@ -197,6 +221,14 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                 }
 
                 attrNames = this.attrMerger.mergePossibleUserAttributeNames(attrNames, currentDaoAttrNames);
+            }
+            
+            if (this.stopOnSuccess && !handledException) {
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Successfully retrieved possible user attributes from a child DAO and stopOnSuccess is true, stopping iteration of child DAOs");
+                }
+
+                break;
             }
         }
         
@@ -222,6 +254,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         Set<String> queryAttrs = null;
         
         for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
+            boolean handledException = false;
             Set<String> currentDaoQueryAttrs = null;
             try {
                 currentDaoQueryAttrs = currentDao.getAvailableQueryAttributes();
@@ -232,6 +265,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             }
             catch (final RuntimeException rte) {
                 if (this.recoverExceptions) {
+                    handledException = true;
                     this.logger.warn("Recovering From Exception thrown by '" + currentDao + "'", rte);
                 }
                 else {
@@ -246,6 +280,14 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                 }
 
                 queryAttrs = this.attrMerger.mergeAvailableQueryAttributes(queryAttrs, currentDaoQueryAttrs);
+            }
+            
+            if (this.stopOnSuccess && !handledException) {
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Successfully retrieved available query attributes from a child DAO and stopOnSuccess is true, stopping iteration of child DAOs");
+                }
+
+                break;
             }
         }
 
@@ -322,5 +364,19 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      */
     public final void setRecoverExceptions(boolean recover) {
         this.recoverExceptions = recover;
+    }
+
+    public boolean isStopOnSuccess() {
+        return stopOnSuccess;
+    }
+    /**
+     * If true iteration of the child DAOs will stop after the first one that returns without
+     * throwing an exception. This is intended to provide fail-over among attribute sources. The
+     * <b>recoverExceptions</b> should be set to true for this to function as expected
+     *  
+     * @param stopOnSuccess If the first valid results should be returned, defaults to false
+     */
+    public void setStopOnSuccess(boolean stopOnSuccess) {
+        this.stopOnSuccess = stopOnSuccess;
     }
 }

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.jasig.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.jasig.services.persondir.util.Util;
@@ -75,6 +76,54 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
         catch (RuntimeException re) {
             //expected
         }
+    }
+ 
+    
+    public void testStopOnSuccess() {
+        final AbstractAggregatingDefaultQueryPersonAttributeDao dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
+        
+        final Map<String, List<Object>> attrMap1 = new HashMap<String, List<Object>>();
+        attrMap1.put("username", Util.list("test"));
+        attrMap1.put("key1.1", Util.list("val1.1"));
+        attrMap1.put("key1.2", Util.list("val1.2"));
+        
+        final Map<String, List<Object>> attrMap2 = new HashMap<String, List<Object>>();
+        attrMap2.put("username", Util.list("test"));
+        attrMap2.put("key2.1", Util.list("val2.1"));
+        attrMap2.put("key2.2", Util.list("val2.2"));
+        
+        final Set<String> expectedNamesWithStop = new HashSet<String>();
+        expectedNamesWithStop.addAll(attrMap1.keySet());
+        
+        final Set<String> expectedNamesWithoutStop = new HashSet<String>();
+        expectedNamesWithoutStop.addAll(attrMap1.keySet());
+        expectedNamesWithoutStop.addAll(attrMap2.keySet());
+        
+        final List<IPersonAttributeDao> childDaos = new ArrayList<IPersonAttributeDao>(3);
+        childDaos.add(new ThrowingPersonAttributeDao());
+        childDaos.add(new StubPersonAttributeDao(attrMap1));
+        childDaos.add(new StubPersonAttributeDao(attrMap2));
+        
+        dao.setPersonAttributeDaos(childDaos);
+
+        
+        dao.setStopOnSuccess(true);
+        
+        final Set<String> resultNamesWithStop = dao.getPossibleUserAttributeNames();
+        assertEquals(expectedNamesWithStop, resultNamesWithStop);
+        
+        final IPersonAttributes personWithStop = dao.getPerson("test");
+        assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithStop);
+        
+        
+        dao.setStopOnSuccess(false);
+        
+        final Set<String> resultNamesWithoutStop = dao.getPossibleUserAttributeNames();
+        assertEquals(expectedNamesWithoutStop, resultNamesWithoutStop);
+        
+        final IPersonAttributes personWithoutStop = dao.getPerson("test");
+        assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithoutStop);
+        
     }
     
     public void testSetNullMerger() {
