@@ -65,6 +65,7 @@
         <commons-lang.verison>2.4</commons-lang.verison>
         <commons-logging.verison>1.1.1</commons-logging.verison>
         <hsqldb.verison>1.8.0.7</hsqldb.verison>
+        <jaxb-impl.version>2.1.9</jaxb-impl.version>
         <junit.verison>4.4</junit.verison>
         <log4j.verison>1.2.15</log4j.verison>
         <slf4j-log4j12.verison>1.5.5</slf4j-log4j12.verison>
@@ -85,6 +86,11 @@
                 <artifactId>aopalliance</artifactId>
                 <version>${aopalliance.verison}</version>
             </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb-impl.version}</version>
+            </dependency> 
             <dependency>
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>

@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
+import org.jasig.services.persondir.util.PatternHelper;
 
 
 /**
@@ -156,9 +157,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(String seedValue, String queryUserName) {
         if (seedValue != null && seedValue.contains(IPersonAttributeDao.WILDCARD)) {
-            final Matcher matcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(seedValue);
-            final String patternBuilder = matcher.replaceAll(".*");
-            final Pattern seedPattern = Pattern.compile(patternBuilder);
+            final Pattern seedPattern = PatternHelper.compilePattern(seedValue);
             
             final List<IPersonAttributes> results = new LinkedList<IPersonAttributes>();
             
