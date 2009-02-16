@@ -16,7 +16,7 @@
     <distributionManagement>
         <site>
             <id>developer.jasig</id>
-            <url>scp://developer.ja-sig.org/jasig/htdocs/developer/projects/person-directory/1.5.0-SNAPSHOT</url>
+            <url>${jasig-site-dist-base}/1.5.0-SNAPSHOT</url>
         </site>
     </distributionManagement>
     
