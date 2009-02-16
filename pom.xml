@@ -11,7 +11,7 @@
     <groupId>org.jasig.service</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.5.0-RC2</version>
     <url>${jasig-site-base}/person-directory/${project.version}</url>
     
     <distributionManagement>
@@ -481,4 +481,10 @@
             </plugin>
         </plugins>
     </reporting>
+
+  <scm>
+    <connection>scm:svn:https://www.ja-sig.org/svn/jasig-parent/tags/rel-1.5.0-RC2</connection>
+    <developerConnection>scm:svn:https://www.ja-sig.org/svn/jasig-parent/tags/rel-1.5.0-RC2</developerConnection>
+    <url>http://developer.jasig.org/source/browse/jasigsvn/jasig-parent/tags/rel-1.5.0-RC2</url>
+  </scm>
 </project>
