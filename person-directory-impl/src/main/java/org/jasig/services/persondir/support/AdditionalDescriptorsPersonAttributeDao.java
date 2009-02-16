@@ -13,12 +13,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
-import org.jasig.services.persondir.support.AbstractFlatteningPersonAttributeDao;
-import org.jasig.services.persondir.support.CaseInsensitiveNamedPersonImpl;
-import org.jasig.services.persondir.support.IUsernameAttributeProvider;
-import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
