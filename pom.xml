@@ -11,13 +11,13 @@
     <groupId>org.jasig.service</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.5.0-RC2</version>
     <url>${jasig-site-base}/person-directory/${project.version}</url>
     
     <scm>
-        <connection>${jasig-scm-base-mvn}/person-directory/trunk</connection>
-        <developerConnection>${jasig-scm-base-mvn}/person-directory/trunk</developerConnection>
-        <url>${jasig-scm-view-base}/person-directory/trunk</url>
+        <connection>scm:svn:https://www.ja-sig.org/svn/person-directory/tags/rel-1.5.0-RC2</connection>
+        <developerConnection>scm:svn:https://www.ja-sig.org/svn/person-directory/tags/rel-1.5.0-RC2</developerConnection>
+        <url>http://developer.jasig.org/source/browse/jasigsvn/person-directory/tags/rel-1.5.0-RC2</url>
     </scm>
     
     <distributionManagement>
