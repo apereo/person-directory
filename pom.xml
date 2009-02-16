@@ -14,6 +14,12 @@
     <version>1.5.0-SNAPSHOT</version>
     <url>${jasig-site-base}/person-directory/${project.version}</url>
     
+    <scm>
+        <connection>${jasig-scm-base-mvn}/person-directory/trunk</connection>
+        <developerConnection>${jasig-scm-base-mvn}/person-directory/trunk</developerConnection>
+        <url>${jasig-scm-view-base}/person-directory/trunk</url>
+    </scm>
+    
     <distributionManagement>
         <site>
             <id>developer.jasig</id>
