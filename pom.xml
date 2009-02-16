@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jasig</groupId>
         <artifactId>jasig-parent</artifactId>
-        <version>7</version>
+        <version>9</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -12,30 +12,27 @@
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.5.0-SNAPSHOT</version>
-
-    <licenses>
-        <license>
-            <name>JA-SIG Collabrative Licence</name>
-            <url>http://www.uportal.org/license.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
     
     <distributionManagement>
         <site>
             <id>developer.jasig</id>
-            <url>scp://developer.ja-sig.org/jasig/htdocs/developer/projects/person-directory/${pom.version}</url>
+            <url>scp://developer.ja-sig.org/jasig/htdocs/developer/projects/person-directory/1.5.0-SNAPSHOT</url>
         </site>
     </distributionManagement>
+    
+    <issueManagement>
+        <url>${jasig-issues-base}/PERSONDIR</url>
+        <system>${jasig-issues-system}</system>
+    </issueManagement>
 
     <name>Person Directory Parent</name>
     <description>Parent project for the API and Impl packages.</description>
 
     <repositories>
         <repository>
-            <id>jasig-repository</id>
-            <name>JA-SIG Maven2 Repository</name>
-            <url>http://developer.ja-sig.org/maven2</url>
+            <id>jasig-m2</id>
+            <name>JASIG Maven2 Repository</name>
+            <url>http://developer.jasig.org/repo/content/repositories/m2</url>
         </repository>
     </repositories>
     <mailingLists>
@@ -55,7 +52,6 @@
     
     <properties>
         <!-- JASIG Parent POM Configuration Properties -->
-        <issues.projectKey>PERSONDIR</issues.projectKey>
         <scm.path>/person-directory/trunk</scm.path>
         
         <!-- Project Dependency Versions -->
@@ -484,37 +480,4 @@
             </plugin>
         </plugins>
     </reporting>
-    
-    <profiles>
-        <profile>
-            <id>javadoc-uml</id>
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <source>1.5</source>
-                            <aggregate>true</aggregate>
-                            <links>
-                                <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-                                <link>http://static.springframework.org/spring-ldap/docs/1.2.1/api/spring-ldap/</link>
-                                <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
-                                <link>http://jakarta.apache.org/commons/logging/commons-logging-1.1/apidocs/</link>
-                            </links>
-                            <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
-                            <docletArtifact>
-                                <groupId>gr.spinellis</groupId>
-                                <artifactId>UmlGraph</artifactId>
-                                <version>4.6</version>
-                            </docletArtifact>
-                            <additionalparam>
-                                -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify -postfixpackage -nodefontsize 9 -nodefontpackagesize 7
-                            </additionalparam>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
-    </profiles>
 </project>
