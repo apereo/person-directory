@@ -28,7 +28,7 @@ import org.jasig.services.persondir.IPersonAttributes;
  * 
  * @author awills
  */
-public class AdditionalDescriptors implements IPersonAttributes {
+public class AdditionalDescriptors implements IAdditionalDescriptors {
 
     // Static Members.
     private static final long serialVersionUID = 1L;
@@ -74,11 +74,25 @@ public class AdditionalDescriptors implements IPersonAttributes {
         this.name = name;
     }
     
+    public void addAttributes(Map<String, List<Object>> attributes) {
+        for (final Map.Entry<String, List<Object>> newAttribute : attributes.entrySet()) {
+            final String name = newAttribute.getKey();
+            final List<Object> values = newAttribute.getValue();
+            
+            if (values == null) {
+                this.attributes.put(name, null);
+            }
+            else {
+                this.attributes.put(name, new ArrayList<Object>(values));
+            }
+        }
+    }
+    
     public void setAttributes(Map<String, List<Object>> attributes) {
         Validate.notNull(attributes, "Argument 'attributes' cannot be null");
         final Map<String, List<Object>> newAttributes = new ConcurrentHashMap<String, List<Object>>();
         
-        for (final Map.Entry<String, List<Object>> newAttribute : newAttributes.entrySet()) {
+        for (final Map.Entry<String, List<Object>> newAttribute : attributes.entrySet()) {
             final String name = newAttribute.getKey();
             final List<Object> values = newAttribute.getValue();
             
