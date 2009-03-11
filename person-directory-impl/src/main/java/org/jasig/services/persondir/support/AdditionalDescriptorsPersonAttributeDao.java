@@ -6,13 +6,10 @@
 package org.jasig.services.persondir.support;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -35,18 +32,9 @@ import org.springframework.beans.factory.annotation.Required;
  *         <th align="left">Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">usernameAttributeProvider</td>
- *         <td>
- *             The provider used to determine the username attribute to use when no attribute is specified in the query. This
- *             is primarily used for calls to {@link #getPerson(String)}.
- *         </td>
- *         <td valign="top">Yes</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
  *         <td align="right" valign="top">descriptors</td>
  *         <td>
- *             The {@link AdditionalDescriptors} object that models the collection 
+ *             The {@link IPersonAttributes} object that models the collection 
  *             of pushed attributes.  In most cases this property should be configured 
  *             as a Session-Scoped Proxy Bean. 
  *         </td>
@@ -57,32 +45,13 @@ import org.springframework.beans.factory.annotation.Required;
  * 
  * @author awills
  */
-public class AdditionalDescriptorsPersonAttributeDao extends AbstractFlatteningPersonAttributeDao {
-        
+public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     // Instance Members.
-    private IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
-    private AdditionalDescriptors descriptors;
-    private final Log log = LogFactory.getLog(getClass());
+    private IPersonAttributes descriptors;
     
     /*
      * Public API.
      */
-    
-    /**
-     * Called by Spring DI to let us know what the username attribute is.
-     */
-    @Required
-    public void setUsernameAttributeProvider(IUsernameAttributeProvider usernameAttributeProvider) {
-
-        // Assertions.
-        if (usernameAttributeProvider == null) {
-            String msg = "Argument 'usernameAttributeProvider' cannot be null";
-            throw new IllegalArgumentException(msg);
-        }
-        
-        this.usernameAttributeProvider = usernameAttributeProvider;
-
-    }
 
     /**
      * Called by Spring DI to inject the collection of additional descriptors.  
@@ -90,7 +59,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractFlatteningP
      * be a session-scoped bean.
      */
     @Required
-    public void setDescriptors(AdditionalDescriptors descriptors) {
+    public void setDescriptors(IPersonAttributes descriptors) {
         
         // Assertions.
         if (descriptors == null) {
@@ -100,8 +69,8 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractFlatteningP
         
         this.descriptors = descriptors;
 
-        if (log.isDebugEnabled()) {
-            log.debug("invoking setDescriptors()");
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("invoking setDescriptors(" + descriptors + ")");
         }
 
     }
@@ -111,56 +80,44 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractFlatteningP
      * don't use any attributes in queries.
      */
     public Set<String> getAvailableQueryAttributes() {
-        return Collections.emptySet();
+        final IUsernameAttributeProvider usernameAttributeProvider = super.getUsernameAttributeProvider();
+        return Collections.singleton(usernameAttributeProvider.getUsernameAttribute());
     }
 
+    /* (non-Javadoc)
+     * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
+     */
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
-
-        final Set<IPersonAttributes> rslt = new HashSet<IPersonAttributes>();
-        
-        if (log.isDebugEnabled()) {
-            log.debug("invoking getPeopleWithMultivaluedAttributes()");
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("invoking getPeopleWithMultivaluedAttributes(" + query + ")");
         }
         
-        final String usernameAttribute = this.usernameAttributeProvider.getUsernameAttribute();
-        final String name = query.containsKey(usernameAttribute) 
-                                    ? (String) query.get(usernameAttribute).get(0)
-                                    : usernameAttribute;
-
-        final Map<String, List<Object>> attributes = descriptors.getAttributes();
-        if (!attributes.isEmpty() && name.equals(descriptors.getName())) {
-            rslt.add(new CaseInsensitiveNamedPersonImpl(name, attributes));
-
-            if (log.isDebugEnabled()) {
-                StringBuilder msg = new StringBuilder();
-                msg.append("Adding additional descriptors [name=" + name + "]...");
-                for (Map.Entry<String, List<Object>> y : attributes.entrySet()) {
-                    msg.append("\tname=").append(y.getKey()).append(",value=")
-                                            .append(y.getValue().toString());
-                }
-                log.debug(msg.toString());
+        final IUsernameAttributeProvider usernameAttributeProvider = super.getUsernameAttributeProvider();
+        final String uid = usernameAttributeProvider.getUsernameFromQuery(query);
+        if (uid == null) {
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("No username attribute found in query, returning null");
             }
-        
+            
+            return null;
         }
         
-        return rslt;
-    }
-
-    public IPersonAttributes getPerson(final String uid) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("invoking getPerson():  uid=" + uid);
+        final String descriptorsName = this.descriptors.getName();
+        if (descriptorsName == null) {
+            this.logger.warn("AdditionalDescriptors has a null name, returning null. " + this.descriptors);
+            return null;
         }
         
-        IPersonAttributes rslt = null;
-        
-        final Map<String, List<Object>> attributes = descriptors.getAttributes();
-        if (!attributes.isEmpty() && descriptors.getName().equals(uid)) {
-            rslt = new CaseInsensitiveNamedPersonImpl(uid, attributes);
+        if (uid.equals(descriptorsName)) {
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Adding additional descriptors " + this.descriptors);
+            }
+            
+            final IPersonAttributes personAttributes = new CaseInsensitiveAttributeNamedPersonImpl(this.descriptors);
+            return Collections.singleton(personAttributes);
         }
         
-        return rslt;
-
+        return null;
     }
 
     /**
