@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.jasig.services.persondir.IPersonAttributes;
 
 /**
  * Custom IPersonAttributes that uses a case insensitive Map to hide attribute name case
@@ -23,6 +24,10 @@ public class CaseInsensitiveAttributeNamedPersonImpl extends AttributeNamedPerso
 
     public CaseInsensitiveAttributeNamedPersonImpl(String userNameAttribute, Map<String, List<Object>> attributes) {
         super(userNameAttribute, attributes);
+    }
+
+    public CaseInsensitiveAttributeNamedPersonImpl(IPersonAttributes personAttributes) {
+        super(personAttributes);
     }
 
     /* (non-Javadoc)

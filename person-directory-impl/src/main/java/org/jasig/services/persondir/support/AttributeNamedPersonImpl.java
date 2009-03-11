@@ -8,6 +8,8 @@ package org.jasig.services.persondir.support;
 import java.util.List;
 import java.util.Map;
 
+import org.jasig.services.persondir.IPersonAttributes;
+
 /**
  * @author Eric Dalquist
  * @version $Revision$
@@ -29,6 +31,10 @@ public class AttributeNamedPersonImpl extends BasePersonImpl {
         super(attributes);
         
         this.userNameAttribute = userNameAttribute;
+    }
+
+    public AttributeNamedPersonImpl(IPersonAttributes personAttributes) {
+        this(personAttributes.getName(), personAttributes.getAttributes());
     }
 
     /* (non-Javadoc)
