@@ -97,12 +97,14 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * 
      * @param queryAttributeMapping the queryAttributeMapping to set
      */
-    public void setQueryAttributeMapping(Map<String, ?> queryAttributeMapping) {
-        this.queryAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(queryAttributeMapping);
+    public void setQueryAttributeMapping(final Map<String, ?> queryAttributeMapping) {
+        final Map<String, Set<String>> parsedQueryAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(queryAttributeMapping);
         
-        if (this.queryAttributeMapping.containsKey("")) {
+        if (parsedQueryAttributeMapping.containsKey("")) {
             throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
         }
+        
+        this.queryAttributeMapping = parsedQueryAttributeMapping;
     }
 
     /**
@@ -124,13 +126,15 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
      */
     public void setResultAttributeMapping(Map<String, ?> resultAttributeMapping) {
-        this.resultAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(resultAttributeMapping);
+        final Map<String, Set<String>> parsedResultAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(resultAttributeMapping);
         
-        if (this.resultAttributeMapping.containsKey("")) {
+        if (parsedResultAttributeMapping.containsKey("")) {
             throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
         }
         
-        final Collection<String> userAttributes = MultivaluedPersonAttributeUtils.flattenCollection(this.resultAttributeMapping.values()); 
+        final Collection<String> userAttributes = MultivaluedPersonAttributeUtils.flattenCollection(parsedResultAttributeMapping.values());
+        
+        this.resultAttributeMapping = parsedResultAttributeMapping;
         this.possibleUserAttributes = Collections.unmodifiableSet(new LinkedHashSet<String>(userAttributes));
     }
     
