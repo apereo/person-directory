@@ -489,4 +489,16 @@
             </plugin>
         </plugins>
     </reporting>
+    
+    <profiles>
+        <profile>
+            <id>ci-local-site</id>
+            <distributionManagement>
+                <site>
+                    <id>ci-local-site</id>
+                    <url>file:/jasig/htdocs/developer.ja-sig.org/projects/person-directory/${project.version}</url>
+                </site>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>
