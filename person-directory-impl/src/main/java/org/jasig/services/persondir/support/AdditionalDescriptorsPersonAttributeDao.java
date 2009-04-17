@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Required;
 public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     // Instance Members.
     private IPersonAttributes descriptors;
+    private ICurrentUserProvider currentUserProvider;
     
     /*
      * Public API.
@@ -74,6 +75,19 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
         }
 
     }
+    
+    public ICurrentUserProvider getCurrentUserProvider() {
+        return currentUserProvider;
+    }
+    /**
+     * Sets the {@link ICurrentUserProvider} to use when determining if the additional attributes should be returned,
+     * this is an optional property.
+     */
+    public void setCurrentUserProvider(ICurrentUserProvider currentUserProvider) {
+        this.currentUserProvider = currentUserProvider;
+    }
+
+
 
     /**
      * Returns an empty <code>Set</code>, per the API documentation, because we 
@@ -101,19 +115,26 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
             
             return null;
         }
+
         
-        final String descriptorsName = this.descriptors.getName();
-        if (descriptorsName == null) {
-            this.logger.warn("AdditionalDescriptors has a null name, returning null. " + this.descriptors);
-            return null;
+        String targetName = this.descriptors.getName();
+        if (targetName == null) {
+            if (this.currentUserProvider != null) {
+                targetName = this.currentUserProvider.getCurrentUserName();
+            }
+            
+            if (targetName == null) {
+                this.logger.warn("AdditionalDescriptors has a null name and a null name was returned by the currentUserProvider, returning null. " + this.descriptors);
+                return null;
+            }
         }
         
-        if (uid.equals(descriptorsName)) {
+        if (uid.equals(targetName)) {
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Adding additional descriptors " + this.descriptors);
             }
             
-            final IPersonAttributes personAttributes = new CaseInsensitiveAttributeNamedPersonImpl(this.descriptors);
+            final IPersonAttributes personAttributes = new CaseInsensitiveNamedPersonImpl(targetName, this.descriptors.getAttributes());
             return Collections.singleton(personAttributes);
         }
         

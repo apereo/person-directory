@@ -64,13 +64,6 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
     }
     
     public void setName(String name) {
-        // Assertions.
-        if (name == null) {
-            // NB:  This assertion may not be necessary/appropriate...
-            String msg = "Argument 'name' cannot be null.";
-            throw new IllegalArgumentException(msg);
-        }
-
         this.name = name;
     }
     

@@ -8,6 +8,7 @@ package org.jasig.services.persondir.support.web;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +90,24 @@ import org.springframework.web.filter.GenericFilterBean;
  *         <td valign="top">null</td>
  *     </tr>
  *     <tr>
+ *         <td align="right" valign="top">serverNameAttribute</td>
+ *         <td>
+ *             If specified {@link HttpServletRequest#getServerName()} is called and the returned value is stored as
+ *             an attribute using the value specified for this property.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">serverPortAttribute</td>
+ *         <td>
+ *             If specified {@link HttpServletRequest#getServerPort()} is called and the returned value is stored as
+ *             an attribute using the value specified for this property.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ *     <tr>
  *         <td align="right" valign="top">clearExistingAttributes</td>
  *         <td>
  *             If true when attributes are found on the request any existing attributes in the provided {@link IAdditionalDescriptors}
@@ -105,13 +124,22 @@ import org.springframework.web.filter.GenericFilterBean;
  * @version $Revision$
  */
 public class RequestAttributeSourceFilter extends GenericFilterBean {
+    public enum ProcessingPosition {
+        PRE,
+        POST,
+        BOTH;
+    }
+    
     private String usernameAttribute;
-    private Map<String, Set<String>> headerAttributeMapping;
+    private Map<String, Set<String>> headerAttributeMapping = Collections.emptyMap();
     private IAdditionalDescriptors additionalDescriptors;
     private String remoteUserAttribute;
     private String remoteAddrAttribute;
     private String remoteHostAttribute;
+    private String serverNameAttribute;
+    private String serverPortAttribute;
     private boolean clearExistingAttributes = false;
+    private ProcessingPosition processingPosition = ProcessingPosition.POST;
     
     public String getUsernameAttribute() {
         return usernameAttribute;
@@ -152,7 +180,28 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public void setRemoteHostAttribute(String remoteHostAttribute) {
         this.remoteHostAttribute = remoteHostAttribute;
     }
+    
+    public String getServerNameAttribute() {
+        return serverNameAttribute;
+    }
+    /**
+     * If specified {@link HttpServletRequest#getServerName()} is added as an attribute under the provided name
+     */
+    public void setServerNameAttribute(String serverNameAttribute) {
+        this.serverNameAttribute = serverNameAttribute;
+    }
 
+    public String getServerPortAttribute() {
+        return serverPortAttribute;
+    }
+    /**
+     * If specified {@link HttpServletRequest#getServerPort()} is added as an attribute under the provided name
+     */
+    public void setServerPortAttribute(String serverPortAttribute) {
+        this.serverPortAttribute = serverPortAttribute;
+    }
+    
+    
     public IAdditionalDescriptors getAdditionalDescriptors() {
         return additionalDescriptors;
     }
@@ -174,7 +223,21 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public void setClearExistingAttributes(boolean clearExistingAttributes) {
         this.clearExistingAttributes = clearExistingAttributes;
     }
-
+    
+    public ProcessingPosition getProcessingPosition() {
+        return processingPosition;
+    }
+    /**
+     * Sets the pre/post/both position of the processing relative to the doFilter call.
+     * PRE  means the attribute processing happens before the doFilter call
+     * POST means the attribute processing happens after the doFilter call
+     * BOTH means the attribute processing happens before and after the doFilter call
+     */
+    public void setProcessingPosition(ProcessingPosition processingPosition) {
+        this.processingPosition = processingPosition;
+    }
+    
+    
     public Map<String, Set<String>> getHeaderAttributeMapping() {
         return headerAttributeMapping;
     }
@@ -204,7 +267,19 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /* (non-Javadoc)
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+    public final void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+        if (ProcessingPosition.PRE == this.processingPosition || ProcessingPosition.BOTH == this.processingPosition) {
+            this.doProcessing(servletRequest);
+        }
+        
+        chain.doFilter(servletRequest, servletResponse);
+        
+        if (ProcessingPosition.POST == this.processingPosition || ProcessingPosition.BOTH == this.processingPosition) {
+            this.doProcessing(servletRequest);
+        }
+    }
+
+    private void doProcessing(ServletRequest servletRequest) {
         if (servletRequest instanceof HttpServletRequest) {
             final HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
             
@@ -214,29 +289,29 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     
             this.addRequestHeaders(httpServletRequest, attributes);
             
+            final String username;
             final List<Object> usernameAttributes = attributes.get(this.usernameAttribute);
             if (usernameAttributes == null || usernameAttributes.isEmpty() || usernameAttributes.get(0) == null) {
                 this.logger.warn("No username found for attribute '" + this.usernameAttribute + "' among " + attributes);
+                username = null;
             }
             else {
-                final String username = usernameAttributes.get(0).toString();
-                if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Adding attributes for user " + username + ". " + attributes);
-                }
-                
-                this.additionalDescriptors.setName(username);
-                
-                if (this.clearExistingAttributes) {
-                    this.additionalDescriptors.setAttributes(attributes);
-                }
-                else {
-                    this.additionalDescriptors.addAttributes(attributes);
-                }
+                username = usernameAttributes.get(0).toString();
+            }
+            
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Adding attributes for user " + username + ". " + attributes);
+            }
+            
+            this.additionalDescriptors.setName(username);
+            
+            if (this.clearExistingAttributes) {
+                this.additionalDescriptors.setAttributes(attributes);
+            }
+            else {
+                this.additionalDescriptors.addAttributes(attributes);
             }
         }
-        
-        
-        chain.doFilter(servletRequest, servletResponse);
     }
 
     /**
@@ -254,6 +329,14 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         if (this.remoteHostAttribute != null) {
             final String remoteHost = httpServletRequest.getRemoteHost();
             attributes.put(this.remoteHostAttribute, list(remoteHost));
+        }
+        if (this.serverNameAttribute != null) {
+            final String serverName = httpServletRequest.getServerName();
+            attributes.put(this.serverNameAttribute, list(serverName));
+        }
+        if (this.serverPortAttribute != null) {
+            final int serverPort = httpServletRequest.getServerPort();
+            attributes.put(this.serverPortAttribute, list(serverPort));
         }
     }
 
