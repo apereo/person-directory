@@ -262,7 +262,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                             this.logger.debug("Adding attribute '" + queryAttr + "' with value '" + queryValues + "' to query builder '" + queryBuilder + "'");
                         }
                         
-                        queryBuilder = this.appendAttributeToQuery(queryBuilder, queryAttr, queryValues); 
+                        queryBuilder = this.appendAttributeToQuery(queryBuilder, null, queryValues); 
                     }
                     else {
                         for (final String dataAttribute : dataAttributes) {

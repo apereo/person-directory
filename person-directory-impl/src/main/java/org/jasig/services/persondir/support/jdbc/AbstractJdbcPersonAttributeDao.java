@@ -122,12 +122,14 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
                 final String formattedQueryValue = queryValueMatcher.replaceAll("%");
                 
                 queryBuilder.arguments.add(formattedQueryValue);
-                queryBuilder.sql.append(dataAttribute);
-                if (formattedQueryValue.equals(queryString)) {
-                    queryBuilder.sql.append(" = ");
-                }
-                else {
-                    queryBuilder.sql.append(" LIKE ");
+                if (dataAttribute != null) {
+                    queryBuilder.sql.append(dataAttribute);
+                    if (formattedQueryValue.equals(queryString)) {
+                        queryBuilder.sql.append(" = ");
+                    }
+                    else {
+                        queryBuilder.sql.append(" LIKE ");
+                    }
                 }
                 queryBuilder.sql.append("?");
             }

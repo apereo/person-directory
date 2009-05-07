@@ -150,29 +150,25 @@ public class SingleRowJdbcPersonAttributeDaoTest
         assertEquals(Util.list("Andrew"), attribs.get("firstName"));
     }
 
-//    /**
-//     * Test for a query with a single attribute
-//     */
-//    public void testInvalidColumnName() {
-//        SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
-//        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
-//
-//        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
-//
-//        Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
-//        columnsToAttributes.put("name", "firstName");
-//
-//        columnsToAttributes.put("emai", "emailAddress");
-//        impl.setResultAttributeMapping(columnsToAttributes);
-//
-//        try {
-//            impl.getMultivaluedUserAttributes("awp9");
-//            fail("BadSqlGrammarException expected with invalid attribute mapping key");
-//        }
-//        catch (BadSqlGrammarException bsge) {
-//            //expected
-//        }
-//    }
+    /**
+     * Test for a query with a single attribute
+     */
+    public void testNullColumnName() {
+        SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE netid = {0}");
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
+
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+
+        Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        columnsToAttributes.put("name", "firstName");
+
+        columnsToAttributes.put("email", "emailAddress");
+        impl.setResultAttributeMapping(columnsToAttributes);
+
+        Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
+        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
+        assertEquals(Util.list("Andrew"), attribs.get("firstName"));
+    }
    
    /**
      * Test for a query with a single attribute

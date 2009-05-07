@@ -92,7 +92,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         
         impl.setContextSource(this.getContextSource());
         
-        impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "uid"));
 
         impl.afterPropertiesSet();
         
@@ -127,7 +127,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         
         impl.setContextSource(this.getContextSource());
         
-        impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "uid"));
 
         impl.afterPropertiesSet();
         
@@ -154,7 +154,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         
         impl.setContextSource(this.getContextSource());
         
-        impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "uid"));
 
         impl.afterPropertiesSet();
         
@@ -180,7 +180,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         
         impl.setContextSource(this.getContextSource());
         
-        impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "uid"));
 
         impl.afterPropertiesSet();
         
@@ -211,8 +211,8 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         impl.setContextSource(this.getContextSource());
         
         Map<String, String> queryAttrs = new HashMap<String, String>();
-        queryAttrs.put("uid", null);
-        queryAttrs.put("alias", null);
+        queryAttrs.put("uid", "uid");
+        queryAttrs.put("alias", "alias");
         impl.setQueryAttributeMapping(queryAttrs);
 
         impl.afterPropertiesSet();
