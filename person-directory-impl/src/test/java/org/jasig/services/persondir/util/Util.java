@@ -31,4 +31,23 @@ public class Util {
         
         return list;
     }
+    
+    /**
+     * Utility for making a mutable list of Ts
+     */
+    public static <T> List<T> genList(T... objects) {
+        if (objects == null) {
+            final List<T> list = new ArrayList<T>(1);
+            list.add(null);
+            return list;
+        }
+        
+        final List<T> list = new ArrayList<T>(objects.length);
+        
+        for (final T obj : objects) {
+            list.add(obj);
+        }
+        
+        return list;
+    }
 }
