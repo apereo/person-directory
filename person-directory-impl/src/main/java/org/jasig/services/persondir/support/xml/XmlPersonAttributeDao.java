@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.jasig.services.persondir.support.IUsernameAttributeProvider;
@@ -125,12 +126,13 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
         boolean firstAttribute = true;
         for (final Map.Entry<String, List<Object>> queryEntry : query.entrySet()) {
             final String entryKey = queryEntry.getKey();
+
             //Skip attributes that no people contain
             if (!this.attributesCache.contains(entryKey)) {
                 continue;
             }
             
-            //Persons that have the current attribute
+            //Build Set of Persons that have the current attribute
             final Set<IPersonAttributes> personsForAttribute = this.personByAttributeCache.get(entryKey);
             for (final Iterator<IPersonAttributes> canidateItr = canidatePersons.values().iterator(); canidateItr.hasNext();) {
                 final IPersonAttributes canidate = canidateItr.next();
@@ -144,13 +146,13 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
             
             //Iterate over each possible value for an attribute checking for a match in the personsForAttribute 
             for (final Object entryValue : queryEntry.getValue()) {
-                //Skip null values
-                if (entryValue == null) {
+                //Skip null and blank values
+                final String queryString;
+                if (entryValue == null || StringUtils.isBlank(queryString = entryValue.toString())) {
                     continue;
                 }
                 
                 //Convert the query value into a regular expression pattern
-                final String queryString = entryValue.toString();
                 final Pattern queryPattern = PatternHelper.compilePattern(queryString);
                 
                 //Look for the attribute value in each potential IPersonAttributes
