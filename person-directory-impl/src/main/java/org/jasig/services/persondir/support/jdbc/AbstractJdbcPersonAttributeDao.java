@@ -46,7 +46,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  * @version $Revision$
  */
 public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPersonAttributeDao<PartialWhereClause> {
-    private static final Pattern WILDCARD = Pattern.compile("\\" + IPersonAttributeDao.WILDCARD);
     private static final Pattern WHERE_PLACEHOLDER = Pattern.compile("\\{0\\}");
     
     private final SimpleJdbcTemplate simpleJdbcTemplate;
@@ -118,7 +117,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
                 }
 
                 //Convert to SQL wildcard
-                final Matcher queryValueMatcher = WILDCARD.matcher(queryString);
+                final Matcher queryValueMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
                 final String formattedQueryValue = queryValueMatcher.replaceAll("%");
                 
                 queryBuilder.arguments.add(formattedQueryValue);
