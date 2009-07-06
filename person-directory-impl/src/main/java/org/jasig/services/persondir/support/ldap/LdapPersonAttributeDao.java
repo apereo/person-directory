@@ -250,10 +250,21 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     /**
      * @param contextSource The ContextSource to get DirContext objects for queries from.
      */
-    public void setContextSource(ContextSource contextSource) {
+    public synchronized void setContextSource(final ContextSource contextSource) {
         Assert.notNull(contextSource, "contextSource can not be null");
         this.contextSource = contextSource;
         this.ldapTemplate = new LdapTemplate(this.contextSource);
+    }
+
+    /**
+     * Sets the LdapTemplate, and thus the ContextSource (implicitly).
+     *
+     * @param ldapTemplate the LdapTemplate to query the LDAP server from.  CANNOT be NULL.
+     */
+    public synchronized void setLdapTemplate(final LdapTemplate ldapTemplate) {
+        Assert.notNull(ldapTemplate, "ldapTemplate cannot be null");
+        this.ldapTemplate = ldapTemplate;
+        this.contextSource = this.ldapTemplate.getContextSource();
     }
 
     /**
