@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -132,6 +133,23 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
                 continue;
             }
             
+            //Build list of non-blank attribute values
+            final List<String> entryValues = new LinkedList<String>();
+            for (final Object entryValue : queryEntry.getValue()) {
+                //Skip null and blank values
+                final String entry;
+                if (entryValue == null || StringUtils.isBlank(entry = entryValue.toString())) {
+                    continue;
+                }
+                
+                entryValues.add(entry);
+            }
+            
+            //Skip attributes that have no non-blank values
+            if (entryValues.size() == 0) {
+                continue;
+            }
+            
             //Build Set of Persons that have the current attribute
             final Set<IPersonAttributes> personsForAttribute = this.personByAttributeCache.get(entryKey);
             for (final Iterator<IPersonAttributes> canidateItr = canidatePersons.values().iterator(); canidateItr.hasNext();) {
@@ -145,13 +163,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
             final Set<String> attributeMissPersons = new HashSet<String>();
             
             //Iterate over each possible value for an attribute checking for a match in the personsForAttribute 
-            for (final Object entryValue : queryEntry.getValue()) {
-                //Skip null and blank values
-                final String queryString;
-                if (entryValue == null || StringUtils.isBlank(queryString = entryValue.toString())) {
-                    continue;
-                }
-                
+            for (final String queryString : entryValues) {
                 //Convert the query value into a regular expression pattern
                 final Pattern queryPattern = PatternHelper.compilePattern(queryString);
                 

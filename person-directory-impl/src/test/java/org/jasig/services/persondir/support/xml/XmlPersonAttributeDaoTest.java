@@ -104,6 +104,15 @@ public class XmlPersonAttributeDaoTest extends TestCase {
         query.put("emplid", Util.list(""));
         
         final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query);
-        assertEquals(2, results.size());
+        assertEquals(3, results.size());
+    }
+    
+    public void testAttributeSearch5() {
+        final Map<String, List<Object>> query = new LinkedHashMap<String, List<Object>>();
+        query.put("emplid", Util.list(""));
+        query.put("email", Util.list("*@example.edu", "*@faculty.org"));
+        
+        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query);
+        assertEquals(3, results.size());
     }
 }
