@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,6 +36,12 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         final AdditionalDescriptors additionalDescriptors = new AdditionalDescriptors();
         requestAttributeSourceFilter.setAdditionalDescriptors(additionalDescriptors);
         
+        final Map<String, Object>  cookieAttributeMapping = new LinkedHashMap<String, Object>();
+        cookieAttributeMapping.put("foo", new LinkedHashSet<Object>(Arrays.asList("foo", "baz")));
+        cookieAttributeMapping.put("ding", "ding");
+        cookieAttributeMapping.put("boo", "boo");
+        requestAttributeSourceFilter.setCookieAttributeMapping(cookieAttributeMapping);
+
         final Map<String, Object>  headerAttributeMapping = new LinkedHashMap<String, Object>();
         headerAttributeMapping.put("user.mail", new LinkedHashSet<Object>(Arrays.asList("user.mail", "email")));
         headerAttributeMapping.put("user.name.given", "user.name.given");
@@ -54,6 +61,7 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         EasyMock.expect(servletRequest.getRemoteUser()).andReturn("user1");
         EasyMock.expect(servletRequest.getRemoteAddr()).andReturn("127.0.0.1");
         EasyMock.expect(servletRequest.getRemoteHost()).andReturn(null);
+        EasyMock.expect(servletRequest.getCookies()).andReturn(new Cookie[] { new Cookie("foo", "bar"), new Cookie("ding", "dong") });
         EasyMock.expect(servletRequest.getHeader("user.mail")).andReturn("user1@example.com");
         EasyMock.expect(servletRequest.getHeader("user.name.given")).andReturn("Joe");
         EasyMock.expect(servletRequest.getHeader("user.name.family")).andReturn(null);
@@ -73,7 +81,11 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         final Map<String, List<Object>> expectedAttributes = new LinkedHashMap<String, List<Object>>();
         expectedAttributes.put("remoteUser", Util.list("user1"));
         expectedAttributes.put("remoteAddr", Util.list("127.0.0.1"));
-        expectedAttributes.put("remoteHost", Util.list(null));
+        expectedAttributes.put("remoteHost", Util.list((Object[])null));
+        expectedAttributes.put("foo", Util.list("bar"));
+        expectedAttributes.put("baz", Util.list("bar"));
+        expectedAttributes.put("ding", Util.list("dong"));
+        expectedAttributes.put("ding", Util.list("dong"));
         expectedAttributes.put("email", Util.list("user1@example.com"));
         expectedAttributes.put("user.mail", Util.list("user1@example.com"));
         expectedAttributes.put("user.name.given", Util.list("Joe"));

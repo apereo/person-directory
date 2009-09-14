@@ -18,6 +18,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jasig.services.persondir.support.IAdditionalDescriptors;
@@ -44,6 +45,19 @@ import org.springframework.web.filter.GenericFilterBean;
  *         <td>
  *             The name of the attribute from the request (header or property) to use as the username. This is required
  *             so that Person Directory can later associate these attributes with the user correctly during queries.
+ *         </td>
+ *         <td valign="top">Yes</td>
+ *         <td valign="top">null</td>
+ *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">cookieAttributeMapping</td>
+ *         <td>
+ *             Set the {@link Map} to use for mapping from a cookie name to an attribute name or {@link Set} of attribute
+ *             names. Cookie names that are specified but have null mappings will use the column name for the attribute
+ *             name. Cookie names that are not specified as keys in this {@link Map} will be ignored.
+ *             <br>
+ *             The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set}
+ *             of {@link String}.
  *         </td>
  *         <td valign="top">Yes</td>
  *         <td valign="top">null</td>
@@ -131,6 +145,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
     
     private String usernameAttribute;
+    private Map<String, Set<String>> cookieAttributeMapping = Collections.emptyMap();
     private Map<String, Set<String>> headerAttributeMapping = Collections.emptyMap();
     private IAdditionalDescriptors additionalDescriptors;
     private String remoteUserAttribute;
@@ -238,6 +253,32 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
     
     
+    public Map<String, Set<String>> getCookieAttributeMapping() {
+        return cookieAttributeMapping;
+    }
+
+    /**
+     * Set the {@link Map} to use for mapping from a cookie name to an attribute name or {@link Set} of attribute
+     * names. Cookie names that are specified but have null mappings will use the column name for the attribute
+     * name. Cookie names that are not specified as keys in this {@link Map} will be ignored.
+     * <br>
+     * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set} 
+     * of {@link String}.
+     * 
+     * @param cookieAttributeMapping {@link Map} from cookie names to attribute names, may not be null.
+     * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
+     * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
+     */
+    public void setCookieAttributeMapping(final Map<String, ?> cookieAttributeMapping) {
+        final Map<String, Set<String>> parsedCookieAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(cookieAttributeMapping);
+        
+        if (parsedCookieAttributeMapping.containsKey("")) {
+            throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
+        }
+        
+        this.cookieAttributeMapping = parsedCookieAttributeMapping;
+    }
+
     public Map<String, Set<String>> getHeaderAttributeMapping() {
         return headerAttributeMapping;
     }
@@ -286,7 +327,9 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             final Map<String, List<Object>> attributes = new LinkedHashMap<String, List<Object>>();
             
             this.addRequestProperties(httpServletRequest, attributes);
-    
+
+            this.addRequestCookies(httpServletRequest, attributes);
+
             this.addRequestHeaders(httpServletRequest, attributes);
             
             final String username;
@@ -341,6 +384,25 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
 
     /**
+     * Add request cookies to the attributes map
+     */
+    protected void addRequestCookies(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
+        final Cookie[] cookies = httpServletRequest.getCookies();
+        if (cookies == null) {
+            return;
+        }
+
+        for (final Cookie cookie : cookies) {
+            final String cookieName = cookie.getName();
+            if (this.cookieAttributeMapping.containsKey(cookieName)) {
+                for (final String attributeName : this.cookieAttributeMapping.get(cookieName)) {
+                    attributes.put(attributeName, list(cookie.getValue()));
+                }
+            }
+        }
+    }
+
+    /**
      * Add request headers to the attributes map
      */
     protected void addRequestHeaders(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
@@ -349,8 +411,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             final String value = httpServletRequest.getHeader(headerName);
             
             if (value != null) {
-                for (final String attribueName : headerAttributeEntry.getValue()) {
-                    attributes.put(attribueName, list(value));
+                for (final String attributeName : headerAttributeEntry.getValue()) {
+                    attributes.put(attributeName, list(value));
                 }
             }
         }
