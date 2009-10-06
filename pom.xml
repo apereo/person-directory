@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jasig</groupId>
         <artifactId>jasig-parent</artifactId>
-        <version>10</version>
+        <version>12</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -64,9 +64,9 @@
         <commons-collections.verison>3.2.1</commons-collections.verison>
         <commons-lang.verison>2.4</commons-lang.verison>
         <commons-logging.verison>1.1.1</commons-logging.verison>
-        <easymock.version>2.4</easymock.version>
+        <easymock.version>2.5.2</easymock.version>
         <hsqldb.verison>1.8.0.7</hsqldb.verison>
-        <jaxb-impl.version>2.1.9</jaxb-impl.version>
+        <jaxb-impl.version>2.1.12</jaxb-impl.version>
         <junit.verison>4.4</junit.verison>
         <log4j.verison>1.2.15</log4j.verison>
         <servlet-api.version>2.3</servlet-api.version>
@@ -376,7 +376,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>2.1</version>
+                    <version>2.1.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -384,7 +384,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>2.0-beta-7</version>
+                    <version>2.0.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -399,7 +399,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>cobertura-maven-plugin</artifactId>
-                    <version>2.2</version>
+                    <version>2.3</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
