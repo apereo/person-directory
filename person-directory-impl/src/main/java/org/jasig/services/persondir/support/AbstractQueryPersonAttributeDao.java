@@ -94,9 +94,22 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     private Map<String, Set<String>> resultAttributeMapping;
     private Set<String> possibleUserAttributes;
     private boolean requireAllQueryAttributes = false;
+    private boolean useAllQueryAttributes = true;
     private String unmappedUsernameAttribute = null;
     
 
+    public boolean isUseAllQueryAttributes() {
+        return this.useAllQueryAttributes;
+    }
+    /**
+     * If {@link #setQueryAttributeMapping(Map)} is null this determines if no parameters should be specified 
+     * or if all query attributes should be used as parameters. Defaults to true.
+     */
+    public void setUseAllQueryAttributes(boolean useAllQueryAttributes) {
+        this.useAllQueryAttributes = useAllQueryAttributes;
+    }
+    
+    
     /**
      * @return the queryAttributeMapping
      */
@@ -192,7 +205,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         
         //Generate the query to pass to the subclass
         final QB queryBuilder = this.generateQuery(query);
-        if (queryBuilder == null) {
+        if (queryBuilder == null && (this.queryAttributeMapping != null || this.useAllQueryAttributes == true)) {
             this.logger.debug("No queryBuilder was generated for query " + query + ", null will be returned");
             
             return null;
@@ -294,7 +307,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                 }
             }
         }
-        else {
+        else if (this.useAllQueryAttributes) {
             for (final Map.Entry<String, List<Object>> queryAttrEntry : query.entrySet()) {
                 final String queryKey = queryAttrEntry.getKey();
                 final List<Object> queryValues = queryAttrEntry.getValue();

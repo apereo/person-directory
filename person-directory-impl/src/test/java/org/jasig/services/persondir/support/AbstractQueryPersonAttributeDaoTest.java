@@ -62,6 +62,17 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         assertEquals(Collections.singletonList(Collections.singletonList("eric")), args);
     }
     
+    public void testNoQueryAttributeMapping() {
+        this.testQueryPersonAttributeDao.getUserAttributes("eric");
+        final List<List<Object>>  args1 = this.testQueryPersonAttributeDao.getArgs();
+        assertEquals(Arrays.asList(Arrays.asList("eric")), args1);
+        
+        this.testQueryPersonAttributeDao.setUseAllQueryAttributes(false);
+        this.testQueryPersonAttributeDao.getUserAttributes("eric");
+        final List<List<Object>>  args2 = this.testQueryPersonAttributeDao.getArgs();
+        assertNull(args2);
+    }
+    
     public void testInsuffcientSeed() {
         final Map<String, String> queryAttributes = new LinkedHashMap<String, String>();
         queryAttributes.put("userid", null);
