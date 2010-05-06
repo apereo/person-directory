@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.jasig</groupId>
+        <groupId>org.jasig.parent</groupId>
         <artifactId>jasig-parent</artifactId>
-        <version>12</version>
+        <version>17</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -12,7 +12,6 @@
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.5.0-SNAPSHOT</version>
-    <url>${jasig-site-base}/person-directory/${project.version}</url>
     
     <scm>
         <connection>scm:svn:https://www.ja-sig.org/svn/person-directory/trunk</connection>
@@ -35,13 +34,6 @@
     <name>Person Directory Parent</name>
     <description>Parent project for the API and Impl packages.</description>
 
-    <repositories>
-        <repository>
-            <id>jasig-m2</id>
-            <name>JASIG Maven2 Repository</name>
-            <url>http://developer.jasig.org/repo/content/repositories/m2</url>
-        </repository>
-    </repositories>
     <mailingLists>
         <mailingList>
             <name>Person-Directory Users</name>
@@ -62,15 +54,15 @@
         <aopalliance.verison>1.0</aopalliance.verison>
         <apacheds.verison>1.0.2</apacheds.verison>
         <commons-collections.verison>3.2.1</commons-collections.verison>
-        <commons-lang.verison>2.4</commons-lang.verison>
+        <commons-lang.verison>2.5</commons-lang.verison>
         <commons-logging.verison>1.1.1</commons-logging.verison>
         <easymock.version>2.5.2</easymock.version>
         <hsqldb.verison>1.8.0.7</hsqldb.verison>
-        <jaxb-impl.version>2.1.12</jaxb-impl.version>
-        <junit.verison>4.4</junit.verison>
-        <log4j.verison>1.2.15</log4j.verison>
+        <jaxb-impl.version>2.2</jaxb-impl.version>
+        <junit.verison>4.8.1</junit.verison>
+        <log4j.verison>1.2.16</log4j.verison>
         <servlet-api.version>2.3</servlet-api.version>
-        <slf4j-log4j12.verison>1.5.5</slf4j-log4j12.verison>
+        <slf4j-log4j12.verison>1.5.11</slf4j-log4j12.verison>
         <spring.verison>2.5.6</spring.verison>
         <spring-ldap.verison>1.2.1</spring-ldap.verison>
         <spring-modules.verison>0.8a</spring-modules.verison>
@@ -347,95 +339,34 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.3</version>
-                </plugin>
-                <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.0.2</version>
+                    <version>2.3</version>
                     <configuration>
                         <source>1.5</source>
                         <target>1.5</target>
                     </configuration>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.4</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-pmd-plugin</artifactId>
-                    <version>2.4</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>2.1.1</version>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.3</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.3</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>2.0.1</version>
+                    <version>2.4.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.4.3</version>
-                </plugin>
-                
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>changelog-maven-plugin</artifactId>
-                    <version>2.0-beta-1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>cobertura-maven-plugin</artifactId>
-                    <version>2.3</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>1.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jdepend-maven-plugin</artifactId>
-                    <version>2.0-beta-2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jxr-maven-plugin</artifactId>
-                    <version>2.0-beta-1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>surefire-report-maven-plugin</artifactId>
-                    <version>2.0-beta-1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>taglist-maven-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>2.5</version>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
 
-
-
     <reporting>
         <plugins>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.7</version>
                 <configuration>
                     <source>1.5</source>
                     <aggregate>true</aggregate>
@@ -449,48 +380,85 @@
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
+                <version>2.5</version>
                 <configuration>
-                    <linkXref>true</linkXref>
-                    <sourceEncoding>utf-8</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
                     <targetJdk>1.5</targetJdk>
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>changelog-maven-plugin</artifactId>
+                <version>2.0-beta-1</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.4</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.3.1</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
+                <version>2.0-beta-2</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jxr-maven-plugin</artifactId>
+                <version>2.0-beta-1</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>surefire-report-maven-plugin</artifactId>
+                <version>2.0-beta-1</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
+                <version>2.4</version>
             </plugin>
         </plugins>
     </reporting>
     
+    
     <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.0</version>
+                        <configuration>
+                            <mavenExecutorId>forked-path</mavenExecutorId>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.0</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>ci-local-site</id>
             <distributionManagement>
