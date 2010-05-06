@@ -51,6 +51,7 @@
         <dependency>
             <groupId>org.jasig.service</groupId>
             <artifactId>person-directory-api</artifactId>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

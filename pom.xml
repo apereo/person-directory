@@ -154,11 +154,6 @@
                 <version>${apacheds.verison}</version>
             </dependency>
             <dependency>
-                <groupId>org.jasig.service</groupId>
-                <artifactId>person-directory-api</artifactId>
-                <version>${pom.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
@@ -383,6 +378,12 @@
                 <version>2.5</version>
                 <configuration>
                     <targetJdk>1.5</targetJdk>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
             <plugin>
