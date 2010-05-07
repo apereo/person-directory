@@ -157,10 +157,16 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
      */
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(PartialWhereClause queryBuilder, String queryUserName) {
+        final String querySQL;
         //Merge the generated SQL with the base query template
-        final StringBuilder partialSqlWhere = queryBuilder.sql;
-        final Matcher queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
-        final String querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
+        if (queryBuilder != null) {
+            final StringBuilder partialSqlWhere = queryBuilder.sql;
+            final Matcher queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
+            querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
+        }
+        else {
+            querySQL = this.queryTemplate;
+        }
         
         //Execute the query
         final ParameterizedRowMapper<R> rowMapper = this.getRowMapper();
