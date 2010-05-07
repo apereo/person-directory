@@ -19,13 +19,6 @@
         <url>http://developer.jasig.org/source/browse/jasigsvn/person-directory/tags/person-directory-1.5.0-RC7</url>
     </scm>
     
-    <distributionManagement>
-        <site>
-            <id>developer.jasig</id>
-            <url>${jasig-site-dist-base}/person-directory/${project.version}</url>
-        </site>
-    </distributionManagement>
-    
     <issueManagement>
         <url>${jasig-issues-base}/PERSONDIR</url>
         <system>${jasig-issues-system}</system>
@@ -466,6 +459,15 @@
                 <site>
                     <id>ci-local-site</id>
                     <url>file:/jasig/htdocs/developer.ja-sig.org/projects/person-directory/${project.version}</url>
+                </site>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>jasig-site</id>
+            <distributionManagement>
+                <site>
+                    <id>developer.jasig</id>
+                    <url>${jasig-site-dist-base}/person-directory/${project.version}</url>
                 </site>
             </distributionManagement>
         </profile>
