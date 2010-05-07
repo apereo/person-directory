@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jasig.service.persondir</groupId>
         <artifactId>person-directory-parent</artifactId>
-        <version>1.5.0-SNAPSHOT</version>
+        <version>1.5.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -49,7 +49,7 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.jasig.service</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>person-directory-api</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
