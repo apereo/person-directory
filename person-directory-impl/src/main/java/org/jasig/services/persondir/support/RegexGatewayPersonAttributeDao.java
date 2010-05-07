@@ -324,14 +324,14 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
         //Execute the wrapped DAO if the match criteria was met
         if (matchedPatterns) {
             if (this.logger.isInfoEnabled()) {
-                this.logger.info("Matching criteria was met, delegating call to the targetPersonAttributeDao='" + targetPersonAttributeDao + "'");
+                this.logger.info("Matching criteria '" + this.patterns + "' was met for query '" + seed + "', delegating call to the targetPersonAttributeDao='" + this.targetPersonAttributeDao + "'");
             }
             
             return this.targetPersonAttributeDao.getPeopleWithMultivaluedAttributes(seed);
         }
 
         if (this.logger.isInfoEnabled()) {
-            this.logger.info("Matching criteria was not met, return null");
+            this.logger.info("Matching criteria '" + this.patterns + "' was not met for query '" + seed + "', return null");
         }
         
         return null;
