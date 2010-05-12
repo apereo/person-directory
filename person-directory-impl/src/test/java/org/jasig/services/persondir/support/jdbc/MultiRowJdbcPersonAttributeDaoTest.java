@@ -119,18 +119,34 @@ public class MultiRowJdbcPersonAttributeDaoTest
         
         this.testDataSource = null;
     }
+    
+    public void testNoQueryAttributeMapping() {
+        MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE netid = 'awp9'");
+        impl.setUseAllQueryAttributes(false);
 
-    //TODO this is no longer a FAILURE
-//    public void testNullAttributeList() {
-//        try {
-//            new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT attr_name, attr_val FROM user_table WHERE {0}");
-//            fail("IllegalArgumentException should have been thrown");
-//        }
-//        catch (IllegalArgumentException iae) {
-//            //expected
-//        }
-//    }
-//    
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+        impl.setUnmappedUsernameAttribute("netid");
+        
+        Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        columnsToAttributes.put("name", "firstName");
+        Set<String> emailAttributeNames = new LinkedHashSet<String>();
+        emailAttributeNames.add("email");
+        emailAttributeNames.add("emailAddress");
+        columnsToAttributes.put("email", emailAttributeNames);
+        columnsToAttributes.put("shirt_color", "dressShirtColor");
+        impl.setResultAttributeMapping(columnsToAttributes);
+        
+        
+        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
+        
+
+        Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
+        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
+        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
+        assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
+        assertNull(attribs.get("shirt_color"));
+        assertEquals(Util.list("Andrew"), attribs.get("firstName"));
+    }
 
    /**
     * Test that the implementation properly reports the attribute names it

@@ -96,19 +96,31 @@ public class SingleRowJdbcPersonAttributeDaoTest
         
         this.testDataSource = null;
     }
+    
+    public void testNoQueryAttributeMapping() {
+        SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE netid = 'awp9'");
+        impl.setUseAllQueryAttributes(false);
 
-    //TODO this is no longer a FAILURE
-//    public void testNullAttributeList() {
-//        try {
-//            new SingleRowJdbcPersonAttributeDao(testDataSource, null, "SELECT name, email, shirt_color FROM user_table WHERE netid = ?");
-//            fail("IllegalArgumentException should have been thrown");
-//        }
-//        catch (IllegalArgumentException iae) {
-//            //expected
-//        }
-//    }
-//    
-//
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+
+        Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        columnsToAttributes.put("name", "firstName");
+
+        Set<String> emailAttributeNames = new HashSet<String>();
+        emailAttributeNames.add("email");
+        emailAttributeNames.add("emailAddress");
+        columnsToAttributes.put("email", emailAttributeNames);
+        columnsToAttributes.put("shirt_color", "dressShirtColor");
+        impl.setResultAttributeMapping(columnsToAttributes);
+
+        Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
+        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
+        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
+        assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
+        assertNull(attribs.get("shirt_color"));
+        assertEquals(Util.list("Andrew"), attribs.get("firstName"));
+    }
+    
     /**
      * Test that the implementation properly reports the attribute names it
      * expects to map.

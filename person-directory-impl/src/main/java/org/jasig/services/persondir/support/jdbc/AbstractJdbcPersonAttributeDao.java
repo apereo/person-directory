@@ -157,23 +157,28 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
      */
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(PartialWhereClause queryBuilder, String queryUserName) {
-        final String querySQL;
-        //Merge the generated SQL with the base query template
-        if (queryBuilder != null) {
-            final StringBuilder partialSqlWhere = queryBuilder.sql;
-            final Matcher queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
-            querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
-        }
-        else {
-            querySQL = this.queryTemplate;
-        }
-        
         //Execute the query
         final ParameterizedRowMapper<R> rowMapper = this.getRowMapper();
-        final List<R> results = this.simpleJdbcTemplate.query(querySQL, rowMapper, queryBuilder.arguments.toArray());
         
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Executed '" + querySQL + "' with arguments " + queryBuilder.arguments + " and got results " + results);
+        final List<R> results;
+        if (queryBuilder != null) {
+            //Merge the generated SQL with the base query template
+            final StringBuilder partialSqlWhere = queryBuilder.sql;
+            final Matcher queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
+            final String querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
+            
+            results = this.simpleJdbcTemplate.query(querySQL, rowMapper, queryBuilder.arguments.toArray());
+            
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Executed '" + this.queryTemplate + "' with arguments " + queryBuilder.arguments + " and got results " + results);
+            }
+        }
+        else {
+            results = this.simpleJdbcTemplate.query(this.queryTemplate, rowMapper);
+            
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Executed '" + this.queryTemplate + "' and got results " + results);
+            }
         }
 
         return this.parseAttributeMapFromResults(results, queryUserName);
