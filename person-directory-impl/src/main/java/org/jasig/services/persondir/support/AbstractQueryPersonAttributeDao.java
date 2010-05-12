@@ -235,6 +235,10 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
     public Set<String> getAvailableQueryAttributes() {
+        if (this.queryAttributeMapping == null) {
+            return Collections.emptySet();
+        }
+        
         return Collections.unmodifiableSet(this.queryAttributeMapping.keySet());
     }
     
