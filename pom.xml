@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jasig.parent</groupId>
         <artifactId>jasig-parent</artifactId>
-        <version>17</version>
+        <version>33</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -14,8 +14,8 @@
     <version>1.5.0-RC9-SNAPSHOT</version>
     
     <scm>
-        <connection>scm:svn:https://www.ja-sig.org/svn/person-directory/trunk</connection>
-        <developerConnection>scm:svn:https://www.ja-sig.org/svn/person-directory/trunk</developerConnection>
+        <connection>scm:svn:https://source.jasig.org/person-directory/trunk</connection>
+        <developerConnection>scm:svn:https://source.jasig.org/person-directory/trunk</developerConnection>
         <url>http://developer.jasig.org/source/browse/jasigsvn/person-directory/trunk</url>
     </scm>
     
@@ -30,15 +30,15 @@
     <mailingLists>
         <mailingList>
             <name>Person-Directory Users</name>
-            <subscribe>http://www.ja-sig.org/wiki/display/JSG/person-directory-user</subscribe>
-            <unsubscribe>http://www.ja-sig.org/wiki/display/JSG/person-directory-user</unsubscribe>
-            <archive>http://www.ja-sig.org/wiki/display/JSG/person-directory-user</archive>
+            <subscribe>http://wiki.jasig.org/display/JSG/person-directory-user</subscribe>
+            <unsubscribe>http://wiki.jasig.org/display/JSG/person-directory-user</unsubscribe>
+            <archive>http://wiki.jasig.org/display/JSG/person-directory-user</archive>
         </mailingList>
         <mailingList>
             <name>Person-Directory Developers</name>
-            <subscribe>http://www.ja-sig.org/wiki/display/JSG/person-directory-dev</subscribe>
-            <unsubscribe>http://www.ja-sig.org/wiki/display/JSG/person-directory-dev</unsubscribe>
-            <archive>http://www.ja-sig.org/wiki/display/JSG/person-directory-dev</archive>
+            <subscribe>http://wiki.jasig.org/display/JSG/person-directory-dev</subscribe>
+            <unsubscribe>http://wiki.jasig.org/display/JSG/person-directory-dev</unsubscribe>
+            <archive>http://wiki.jasig.org/display/JSG/person-directory-dev</archive>
         </mailingList>
     </mailingLists>
     
@@ -59,6 +59,10 @@
         <spring.verison>2.5.6</spring.verison>
         <spring-ldap.verison>1.2.1</spring-ldap.verison>
         <spring-modules.verison>0.8a</spring-modules.verison>
+        
+        <project.build.sourceVersion>1.5</project.build.sourceVersion>
+        <project.build.targetVersion>1.5</project.build.targetVersion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
     <modules>
@@ -323,147 +327,25 @@
         </dependencies>
     </dependencyManagement>
     
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3</version>
-                    <configuration>
-                        <source>1.5</source>
-                        <target>1.5</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.3</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.4.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <source>1.5</source>
-                    <aggregate>true</aggregate>
-                    <links>
-                        <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-                        <link>http://static.springframework.org/spring-ldap/docs/1.2.1/api/spring-ldap/</link>
-                        <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
-                        <link>http://jakarta.apache.org/commons/logging/commons-logging-1.1/apidocs/</link>
-                    </links>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <targetJdk>1.5</targetJdk>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>changelog-maven-plugin</artifactId>
-                <version>2.0-beta-1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.4</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.3.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jdepend-maven-plugin</artifactId>
-                <version>2.0-beta-2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jxr-maven-plugin</artifactId>
-                <version>2.0-beta-1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>surefire-report-maven-plugin</artifactId>
-                <version>2.0-beta-1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-                <version>2.4</version>
-            </plugin>
-        </plugins>
-    </reporting>
-    
-    
     <profiles>
-        <profile>
-            <id>release-sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <version>2.0</version>
-                        <configuration>
-                            <mavenExecutorId>forked-path</mavenExecutorId>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.0</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+        <!-- 
+         | Used by the continuous integrations server to deploy the project site.
+         +-->
         <profile>
             <id>ci-local-site</id>
             <distributionManagement>
                 <site>
                     <id>ci-local-site</id>
-                    <url>file:/jasig/htdocs/developer.ja-sig.org/projects/person-directory/${project.version}</url>
+                    <url>${jasig-site-ci-dist-base}/person-directory/${project.version}</url>
                 </site>
             </distributionManagement>
         </profile>
+        <!-- 
+         | Should be activated manually by a developer that wishes to deploy a maven site for
+         | the project
+         +-->
         <profile>
-            <id>jasig-site</id>
+            <id>manual-site</id>
             <distributionManagement>
                 <site>
                     <id>developer.jasig</id>
