@@ -33,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springmodules.cache.key.CacheKeyGenerator;
 
@@ -104,7 +105,7 @@ import org.springmodules.cache.key.CacheKeyGenerator;
  * @author Eric Dalquist
  * @version $Id
  */
-public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao implements InitializingBean {
+public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao implements InitializingBean, BeanNameAware {
     protected static final Set<IPersonAttributes> NULL_RESULTS_OBJECT = Collections.singleton((IPersonAttributes)new SingletonPersonImpl());
             
     protected Log statsLogger = LogFactory.getLog(this.getClass().getName() + ".statistics");
@@ -141,6 +142,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * The Object that should be stored in the cache if cacheNullResults is true
      */
     private Set<IPersonAttributes> nullResultsObject = NULL_RESULTS_OBJECT;
+    
+    private String beanName;
     
     /**
      * @return Returns the cachedPersonAttributesDao.
@@ -248,6 +251,11 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         this.cacheKeyGenerator = cacheKeyGenerator;
     }
     
+    @Override
+    public void setBeanName(String name) {
+        this.beanName = name;
+    }
+    
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
@@ -309,12 +317,12 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
                 }
                 
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Retrieved query from cache. key='" + cacheKey + "', results='" + cacheResults + "'");
+                    logger.debug("Retrieved query from cache for " + beanName + ". key='" + cacheKey + "', results='" + cacheResults + "'");
                 }
                     
                 this.queries++;
                 if (statsLogger.isDebugEnabled()) {
-                    statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
+                    statsLogger.debug("Cache Stats " + beanName + ": queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
                 }
                 
                 return cacheResults;
@@ -332,13 +340,13 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
             }
             
             if (logger.isDebugEnabled()) {
-                logger.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache. key='" + cacheKey + "', results='" + queryResults + "'");
+                logger.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache for " + beanName + ". key='" + cacheKey + "', results='" + queryResults + "'");
             }
             
             this.queries++;
             this.misses++;
             if (statsLogger.isDebugEnabled()) {
-                statsLogger.debug("Cache Stats: queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
+                statsLogger.debug("Cache Stats " + beanName + ": queries=" + this.queries + ", hits=" + (this.queries - this.misses) + ", misses=" + this.misses);
             }
         }
 
