@@ -60,8 +60,8 @@
         <spring-ldap.verison>1.2.1</spring-ldap.verison>
         <spring-modules.verison>0.8a</spring-modules.verison>
         
-        <project.build.sourceVersion>1.5</project.build.sourceVersion>
-        <project.build.targetVersion>1.5</project.build.targetVersion>
+        <project.build.sourceVersion>1.6</project.build.sourceVersion>
+        <project.build.targetVersion>1.6</project.build.targetVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
