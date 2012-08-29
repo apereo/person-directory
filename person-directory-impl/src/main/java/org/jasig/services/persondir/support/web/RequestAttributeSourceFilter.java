@@ -348,7 +348,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             final String username;
             final List<Object> usernameAttributes = attributes.get(this.usernameAttribute);
             if (usernameAttributes == null || usernameAttributes.isEmpty() || usernameAttributes.get(0) == null) {
-                this.logger.warn("No username found for attribute '" + this.usernameAttribute + "' among " + attributes);
+                this.logger.info("No username found for attribute '" + this.usernameAttribute + "' among " + attributes);
                 username = null;
             }
             else {
