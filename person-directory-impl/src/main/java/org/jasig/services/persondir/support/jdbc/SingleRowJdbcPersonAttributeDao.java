@@ -99,12 +99,21 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
             final Map<String, List<Object>> multivaluedQueryResult = MultivaluedPersonAttributeUtils.toMultivaluedMap(queryResult);
             
             final IPersonAttributes person;
-            if (queryUserName != null) {
+            final String userNameAttribute = this.getConfiguredUserNameAttribute();
+            if (this.isUserNameAttributeConfigured() && queryResult.containsKey(userNameAttribute)) {
+                // Option #1:  An attribute is named explicitly in the config, 
+                // and that attribute is present in the results from LDAP;  use it
+                person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, multivaluedQueryResult);
+            } else if (queryUserName != null) {
+                // Option #2:  Use the userName attribute provided in the query 
+                // parameters.  (NB:  I'm not entirely sure this choice is 
+                // preferable to Option #3.  Keeping it because it most closely 
+                // matches the legacy behavior there the new option -- Option #1 
+                // -- doesn't apply.  ~drewwills)
                 person = new CaseInsensitiveNamedPersonImpl(queryUserName, multivaluedQueryResult);
-            }
-            else {
-                //Create the IPersonAttributes doing a best-guess at a userName attribute
-                final String userNameAttribute = this.getConfiguredUserNameAttribute();
+            } else {
+                // Option #3:  Create the IPersonAttributes doing a best-guess 
+                // at a userName attribute
                 person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, multivaluedQueryResult);
             }
             

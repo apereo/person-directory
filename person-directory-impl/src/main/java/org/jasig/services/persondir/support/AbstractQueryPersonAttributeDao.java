@@ -392,8 +392,13 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     }
     
     /**
-     * @return The appropriate attribute to user for the user name. Since {@link #getDefaultAttributeName()} should
-     * never return null this method should never return null either.
+     * Indicates which attribute found by the subclass should be taken as the 
+     * 'username' attribute.  (E.g. 'uid' or 'sAMAccountName')  NOTE:  Any two 
+     * instances if BasePersonImpl with the same username are considered 
+     * equal.  Since {@link #getDefaultAttributeName()} should never return 
+     * null, this method should never return null either.
+     * 
+     * @return The name of the attribute corresponding to the  user's username. 
      */
     protected String getConfiguredUserNameAttribute() {
         //If configured explicitly use it
@@ -403,5 +408,18 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         
         final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
         return usernameAttributeProvider.getUsernameAttribute();
+    }
+    
+    /**
+     * Indicates whether the value from {@link #getConfiguredUserNameAttribute()} 
+     * was configured explicitly.  A return value of <code>false</code> means 
+     * that the value from {@link #getConfiguredUserNameAttribute()} is a 
+     * default, and should not be used over a username passed in the query.
+     * 
+     * @return <code>true</code> If the 'unmappedUsernameAttribute' property was 
+     * set explicitly, otherwise <code>false</code>
+     */
+    protected boolean isUserNameAttributeConfigured() {
+        return this.unmappedUsernameAttribute != null;
     }
 }
