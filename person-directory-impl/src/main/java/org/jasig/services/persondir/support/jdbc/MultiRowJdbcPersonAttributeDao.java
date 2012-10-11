@@ -171,18 +171,26 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         final String userNameAttribute = this.getConfiguredUserNameAttribute();
         
         for (final Map<String, Object> queryResult : queryResults) {
-            final String userName;
-            if (queryUserName != null) {
-                userName = queryUserName;
-            }
-            else {
+            final String userName;  // Choose a username from the best available option
+            if (this.isUserNameAttributeConfigured() && queryResult.containsKey(userNameAttribute)) {
+                // Option #1:  An attribute is named explicitly in the config, 
+                // and that attribute is present in the results from LDAP;  use it
                 final Object userNameValue = queryResult.get(userNameAttribute);
-                
-                if (userNameValue == null) {
-                    throw new BadSqlGrammarException("No userName column named '" + userNameAttribute + "' exists in result set and no userName provided in query Map", this.getQueryTemplate(), null);
-                }
-                
                 userName = userNameValue.toString();
+            } else if (queryUserName != null) {
+                // Option #2:  Use the userName attribute provided in the query 
+                // parameters.  (NB:  I'm not entirely sure this choice is 
+                // preferable to Option #3.  Keeping it because it most closely 
+                // matches the legacy behavior there the new option -- Option #1 
+                // -- doesn't apply.  ~drewwills)
+                userName = queryUserName;
+            } else if (queryResult.containsKey(userNameAttribute)) {
+                // Option #3:  Create the IPersonAttributes useing the default 
+                // userName attribute, which we know to be present
+                final Object userNameValue = queryResult.get(userNameAttribute);
+                userName = userNameValue.toString();
+            } else {
+                throw new BadSqlGrammarException("No userName column named '" + userNameAttribute + "' exists in result set and no userName provided in query Map", this.getQueryTemplate(), null);
             }
             
             final Map<String, List<Object>> attributes = peopleAttributesBuilder.get(userName);
