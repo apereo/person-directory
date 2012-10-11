@@ -327,6 +327,18 @@
         </dependencies>
     </dependencyManagement>
     
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jasig.maven</groupId>
+                <artifactId>maven-notice-plugin</artifactId>
+                <configuration>
+                    <generateChildNotices>false</generateChildNotices>
+                </configuration>
+            </plugin>        
+        </plugins>
+    </build>
+
     <profiles>
         <!-- 
          | Used by the continuous integrations server to deploy the project site.
