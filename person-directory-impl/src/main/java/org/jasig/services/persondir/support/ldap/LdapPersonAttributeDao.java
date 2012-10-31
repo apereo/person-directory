@@ -102,6 +102,14 @@ import org.springframework.util.Assert;
  *         <td valign="top">No</td>
  *         <td valign="top">AND</td>
  *     </tr>
+ *     <tr>
+ *         <td align="right" valign="top">queryTemplate</td>
+ *         <td>
+ *             Optional wrapper template for the generated part of the query.  Use {0} as a placeholder for where the generated query should be inserted.
+ *         </td>
+ *         <td valign="top">No</td>
+ *         <td valign="top">null</td>
+ *     </tr>
  * </table>
  * 
  * @author andrew.petro@yale.edu
@@ -194,8 +202,11 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         else {
             final Matcher queryMatcher = QUERY_PLACEHOLDER.matcher(this.queryTemplate);
             ldapQuery = queryMatcher.replaceAll(generatedLdapQuery);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Final ldapQuery after applying queryTemplate: '" + ldapQuery + "'");
+            }
         }
-        
+
         //Execute the query
         @SuppressWarnings("unchecked")
         final List<Map<String, List<Object>>> queryResults = this.ldapTemplate.search(this.baseDN, ldapQuery, this.searchControls, MAPPER);
