@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -425,10 +426,33 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             
             if (value != null) {
                 for (final String attributeName : headerAttributeEntry.getValue()) {
-                    attributes.put(attributeName, list(value));
+                    attributes.put(attributeName, (List) splitOnSemiColonHandlingBackslashEscaping(value));
                 }
             }
         }
+    }
+
+    /* multiple attribute values are separated by a semicolon, and semicolons in values are escaped with a backslash */
+    /* (https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPAttributeAccess) */
+    /* transforms "a;b" into list { "a", "b" } */
+    /* transforms "a\;b" into list { "a;b" } */
+    private static List<String> splitOnSemiColonHandlingBackslashEscaping(String in) {
+	List<String> result = new LinkedList<String>();
+
+	int i = 1;
+	String prefix = "";
+	String[] l = in.split(";");
+	for (String s : l) {
+	    String s2 = s.replaceFirst("\\\\$", ";");
+	    if (s.equals(s2) || i == l.length) {
+		result.add(prefix + s);
+		prefix = "";
+	    } else {
+		prefix += s2;
+	    }
+	    i++;
+	}
+	return result;
     }
 
     private List<Object> list(final Object value) {
