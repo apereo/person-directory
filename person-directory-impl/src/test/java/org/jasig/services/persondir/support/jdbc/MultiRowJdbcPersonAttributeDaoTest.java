@@ -20,6 +20,7 @@
 package org.jasig.services.persondir.support.jdbc;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -33,8 +34,10 @@ import org.hsqldb.jdbcDriver;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
 import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
+import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 import org.jasig.services.persondir.util.Util;
 import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 /**
@@ -45,80 +48,135 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
  * @version $Revision$ $Date$
  */
 public class MultiRowJdbcPersonAttributeDaoTest 
-    extends AbstractDefaultQueryPersonAttributeDaoTest {
-    
-    private DataSource testDataSource;
-    
+    extends AbstractCaseSensitivityJdbcPersonAttributeDaoTest {
+
     @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    protected void setUpSchema(DataSource dataSource) throws SQLException {
+        Connection con = dataSource.getConnection();
 
-        this.testDataSource = new SimpleDriverDataSource(new jdbcDriver(), "jdbc:hsqldb:mem:adhommemds", "sa", "");
-
-        
-        Connection con = testDataSource.getConnection();
-        
         con.prepareStatement("CREATE TABLE user_table " +
-                             "(netid VARCHAR, " +
-                             "attr_name VARCHAR, " +
-                             "attr_val VARCHAR)").execute();
+                "(netid VARCHAR, " +
+                "attr_name VARCHAR, " +
+                "attr_val VARCHAR)").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('awp9', 'name', 'Andrew')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('awp9', 'name', 'Andrew')").execute();
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('awp9', 'email', 'andrew.petro@yale.edu')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('awp9', 'email', 'andrew.petro@yale.edu')").execute();
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('awp9', 'shirt_color', 'blue')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('awp9', 'shirt_color', 'blue')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('edalquist', 'name', 'Eric')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('edalquist', 'name', 'Eric')").execute();
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('edalquist', 'email', 'edalquist@unicon.net')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('edalquist', 'email', 'edalquist@unicon.net')").execute();
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('edalquist', 'shirt_color', 'blue')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('edalquist', 'shirt_color', 'blue')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('atest', 'name', 'Andrew')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('atest', 'name', 'Andrew')").execute();
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('atest', 'email', 'andrew.test@test.net')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('atest', 'email', 'andrew.test@test.net')").execute();
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('atest', 'shirt_color', 'red')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('atest', 'shirt_color', 'red')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('susan', 'name', 'Susan')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('susan', 'name', 'Susan')").execute();
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('susan', 'email', 'susan.test@test.net')").execute();
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('susan', 'email', 'susan.test@test.net')").execute();
         con.prepareStatement("INSERT INTO user_table " +
-                             "(netid, attr_name, attr_val) " +
-                             "VALUES ('susan', 'shirt_color', null)").execute();
-        
+                "(netid, attr_name, attr_val) " +
+                "VALUES ('susan', 'shirt_color', null)").execute();
+
         con.close();
     }
 
     @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        
-        Connection con = this.testDataSource.getConnection();
-        
+    protected void tearDownSchema(DataSource dataSource) throws SQLException {
+        Connection con = dataSource.getConnection();
+
         con.prepareStatement("DROP TABLE user_table").execute();
-//        con.prepareStatement("SHUTDOWN").execute();
 
         con.close();
-        
-        this.testDataSource = null;
     }
+
+    @Override
+    protected AbstractJdbcPersonAttributeDao<Map<String, Object>> newDao(DataSource dataSource) {
+        final MultiRowJdbcPersonAttributeDao dao = new MultiRowJdbcPersonAttributeDao(dataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        dao.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
+        return dao;
+    }
+
+    @Override
+    protected boolean supportsPerDataAttributeCaseSensitivity() {
+        return false;
+    }
+
+    @Override
+    protected void beforeNonUsernameQuery(AbstractJdbcPersonAttributeDao<Map<String, Object>> dao) {
+
+        // no processing method for caseInsensitiveResultAttributeMappings b/c
+        // the mapping from physical data layer attrib name (attr_val) to
+        // logical data layer attrib name has already occurred by the time
+        // the case canonicalization kicks in
+        processQueryAttributeMappingValues_BeforeNonUsernameQuery(dao);
+        processCaseInsensitiveDataAttributeMappingValues_BeforeNonUsernameQuery(dao);
+        dao.setUnmappedUsernameAttribute("netid");
+    }
+
+    protected void processQueryAttributeMappingValues_BeforeNonUsernameQuery(AbstractJdbcPersonAttributeDao<Map<String, Object>> dao) {
+        final Map<String, Set<String>> origMappings = dao.getQueryAttributeMapping();
+        if ( origMappings == null || origMappings.isEmpty() ) {
+            return;
+        }
+        final Map<String, Set<String>> newMappings = new LinkedHashMap<String, Set<String>>();
+        for ( Map.Entry<String,Set<String>> origMapping : origMappings.entrySet() ) {
+            Set<String> newMappingValue = new LinkedHashSet<String>();
+            // multi-row dao maps all non-username attr values to the same
+            // data layer column
+            for ( String origMappingValue : origMapping.getValue() ) {
+                if ( !("netid".equals(origMappingValue)) ) {
+                    newMappingValue.add("attr_val");
+                } else {
+                    newMappingValue.add(origMappingValue);
+                }
+            }
+            newMappings.put(origMapping.getKey(), newMappingValue);
+        }
+        dao.setQueryAttributeMapping(newMappings);
+    }
+
+    protected void processCaseInsensitiveDataAttributeMappingValues_BeforeNonUsernameQuery(AbstractJdbcPersonAttributeDao<Map<String, Object>> dao) {
+        final Map<String, CaseCanonicalizationMode> origMappings = dao.getCaseInsensitiveDataAttributes();
+        if ( origMappings == null || origMappings.isEmpty() ) {
+            return;
+        }
+        final Map<String, CaseCanonicalizationMode> newMappings = new LinkedHashMap<String, CaseCanonicalizationMode>();
+        for ( Map.Entry<String,CaseCanonicalizationMode> origMapping : origMappings.entrySet() ) {
+            // that's right, it's all or nothing for the multi-row DAO w/r/t
+            // case sensitivity of non-username attribs b/c the canonicalization
+            // is based on data-layer attribute names, which are all the same for
+            // this DAO type.
+            if ( !("netid".equals(origMapping.getKey())) ) {
+                newMappings.put("attr_val", origMapping.getValue());
+            } else {
+                newMappings.put(origMapping.getKey(), origMapping.getValue());
+            }
+        }
+        dao.setCaseInsensitiveDataAttributes(newMappings);
+    }
+
     
     public void testNoQueryAttributeMapping() {
         MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE netid = 'awp9'");

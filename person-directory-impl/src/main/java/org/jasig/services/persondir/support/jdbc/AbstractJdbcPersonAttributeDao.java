@@ -19,7 +19,13 @@
 
 package org.jasig.services.persondir.support.jdbc;
 
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +37,7 @@ import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.QueryType;
+import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
@@ -61,10 +68,19 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  */
 public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPersonAttributeDao<PartialWhereClause> {
     private static final Pattern WHERE_PLACEHOLDER = Pattern.compile("\\{0\\}");
+    private static final Map<CaseCanonicalizationMode,MessageFormat> DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS =
+            Collections.unmodifiableMap(new LinkedHashMap<CaseCanonicalizationMode, MessageFormat>() {{
+                put(CaseCanonicalizationMode.LOWER, new MessageFormat("lower({0})"));
+                put(CaseCanonicalizationMode.UPPER, new MessageFormat("upper({0})"));
+                put(CaseCanonicalizationMode.NONE, new MessageFormat("{0}"));
+            }});
     
     private final SimpleJdbcTemplate simpleJdbcTemplate;
     private final String queryTemplate;
     private QueryType queryType = QueryType.AND;
+    private Map<String,CaseCanonicalizationMode> caseInsensitiveDataAttributes;
+
+    private Map<CaseCanonicalizationMode,MessageFormat> dataAttributeCaseCanonicalizationFunctions = DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS;
     
     /**
      * @param ds The DataSource to use for queries
@@ -136,6 +152,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
                 
                 queryBuilder.arguments.add(formattedQueryValue);
                 if (dataAttribute != null) {
+                    dataAttribute = canonicalizeDataAttributeForSql(dataAttribute);
                     queryBuilder.sql.append(dataAttribute);
                     if (formattedQueryValue.equals(queryString)) {
                         queryBuilder.sql.append(" = ");
@@ -149,6 +166,37 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
         }
         
         return queryBuilder;
+    }
+
+    /**
+     * Canonicalize the data-layer attribute column with the given name via
+     * SQL function. This is as opposed to canonicalizing query attributes
+     * or application attributes passed into or mapped out of the data layer.
+     * Canonicalization of a data-layer column should only be necessary if
+     * the data layer if you require case-insensitive searching on a mixed-case
+     * column in a case-sensitive data layer. Careful, though, as this can
+     * result in table scanning if the data layer does not support
+     * function-based indices.
+     *
+     * @param dataAttribute
+     * @return
+     */
+    protected String canonicalizeDataAttributeForSql(String dataAttribute) {
+        if (this.caseInsensitiveDataAttributes == null || this.caseInsensitiveDataAttributes.isEmpty() || !(this.caseInsensitiveDataAttributes.containsKey(dataAttribute))) {
+            return dataAttribute;
+        }
+        if ( this.dataAttributeCaseCanonicalizationFunctions == null || this.dataAttributeCaseCanonicalizationFunctions.isEmpty() ) {
+            return dataAttribute;
+        }
+        CaseCanonicalizationMode canonicalizationMode = this.caseInsensitiveDataAttributes.get(dataAttribute);
+        if ( canonicalizationMode == null ) {
+            canonicalizationMode = getDefaultCaseCanonicalizationMode();
+        }
+        MessageFormat mf = this.dataAttributeCaseCanonicalizationFunctions.get(canonicalizationMode);
+        if ( mf == null ) {
+            return dataAttribute;
+        }
+        return mf.format(new String[] { dataAttribute });
     }
 
     
@@ -183,4 +231,46 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
 
         return this.parseAttributeMapFromResults(results, queryUserName);
     }
+
+    public Map<String, CaseCanonicalizationMode> getCaseInsensitiveDataAttributes() {
+        return caseInsensitiveDataAttributes;
+    }
+
+    public void setCaseInsensitiveDataAttributes(Map<String, CaseCanonicalizationMode> caseInsensitiveDataAttributes) {
+        this.caseInsensitiveDataAttributes = caseInsensitiveDataAttributes;
+    }
+
+    public void setCaseInsensitiveDataAttributesAsCollection(Collection<String> caseInsensitiveDataAttributes) {
+        if (caseInsensitiveDataAttributes == null || caseInsensitiveDataAttributes.isEmpty()) {
+            setCaseInsensitiveDataAttributes(null);
+        } else {
+            Map<String, CaseCanonicalizationMode> asMap = new HashMap<String, CaseCanonicalizationMode>();
+            for ( String attrib : caseInsensitiveDataAttributes ) {
+                asMap.put(attrib, null);
+            }
+            setCaseInsensitiveDataAttributes(asMap);
+        }
+    }
+
+    /**
+     * Assign {@link MessageFormat}s describing how to wrap a JDBC/SQL column
+     * reference in a function corresponding to a given
+     * {@link CaseCanonicalizationMode}. For example, a typical mapping for
+     * {@link CaseCanonicalizationMode#LOWER} would be "lower({0})". The
+     * defaults are just what you'd expect ("lower({0})" and "upper({0})").
+     *
+     * <p>Setting {@code null} or an empty map has the effect of never
+     * wrapping any columns in canonicalizing functions, even if they are
+     * referenced by {@link #setCaseInsensitiveDataAttributes(java.util.Map)}.</p>
+     *
+     * @param dataAttributeCaseCanonicalizationFunctions
+     */
+    public void setDataAttributeCaseCanonicalizationFunctions(Map<CaseCanonicalizationMode, MessageFormat> dataAttributeCaseCanonicalizationFunctions) {
+        this.dataAttributeCaseCanonicalizationFunctions = dataAttributeCaseCanonicalizationFunctions;
+    }
+
+    public Map<CaseCanonicalizationMode, MessageFormat> getDataAttributeCaseCanonicalizationFunctions() {
+        return dataAttributeCaseCanonicalizationFunctions;
+    }
+
 }

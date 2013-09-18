@@ -21,10 +21,12 @@ package org.jasig.services.persondir.support;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import org.jasig.services.persondir.IPersonAttributes;
+import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
@@ -63,6 +65,8 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     // Instance Members.
     private IPersonAttributes descriptors;
     private ICurrentUserProvider currentUserProvider;
+    private CaseCanonicalizationMode usernameCaseCanonicalizationMode = AbstractQueryPersonAttributeDao.DEFAULT_USERNAME_CASE_CANONICALIZATION_MODE;
+    private Locale usernameCaseCanonicalizationLocale = Locale.getDefault();
     
     /*
      * Public API.
@@ -121,7 +125,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
         }
         
         final IUsernameAttributeProvider usernameAttributeProvider = super.getUsernameAttributeProvider();
-        final String uid = usernameAttributeProvider.getUsernameFromQuery(query);
+        String uid = usernameAttributeProvider.getUsernameFromQuery(query);
         if (uid == null) {
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("No username attribute found in query, returning null");
@@ -129,7 +133,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
             
             return null;
         }
-
+        uid = usernameCaseCanonicalizationMode.canonicalize(uid, usernameCaseCanonicalizationLocale);
         
         String targetName = this.descriptors.getName();
         if (targetName == null) {
@@ -142,7 +146,8 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
                 return null;
             }
         }
-        
+
+        targetName = usernameCaseCanonicalizationMode.canonicalize(targetName, usernameCaseCanonicalizationLocale);
         if (uid.equals(targetName)) {
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Adding additional descriptors " + this.descriptors);
@@ -161,6 +166,30 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
      */
     public Set<String> getPossibleUserAttributeNames() {
         return null;
+    }
+
+    public CaseCanonicalizationMode getUsernameCaseCanonicalizationMode() {
+        return usernameCaseCanonicalizationMode;
+    }
+
+    public void setUsernameCaseCanonicalizationMode(CaseCanonicalizationMode usernameCaseCanonicalizationMode) {
+        if ( usernameCaseCanonicalizationMode == null ) {
+            this.usernameCaseCanonicalizationMode = AbstractQueryPersonAttributeDao.DEFAULT_USERNAME_CASE_CANONICALIZATION_MODE;
+        } else {
+            this.usernameCaseCanonicalizationMode = usernameCaseCanonicalizationMode;
+        }
+    }
+
+    public Locale getUsernameCaseCanonicalizationLocale() {
+        return usernameCaseCanonicalizationLocale;
+    }
+
+    public void setUsernameCaseCanonicalizationLocale(Locale usernameCaseCanonicalizationLocale) {
+        if ( usernameCaseCanonicalizationLocale == null ) {
+            this.usernameCaseCanonicalizationLocale = Locale.getDefault();
+        } else {
+            this.usernameCaseCanonicalizationLocale = usernameCaseCanonicalizationLocale;
+        }
     }
 
 }
