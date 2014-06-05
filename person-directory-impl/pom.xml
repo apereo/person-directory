@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jasig.service.persondir</groupId>
         <artifactId>person-directory-parent</artifactId>
-        <version>1.5.2-SNAPSHOT</version>
+        <version>1.5.2</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -98,7 +98,11 @@
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
-        
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <scope>compile</scope>
+        </dependency>
         
         <!--========== Runtime Dependencies ==========-->
 

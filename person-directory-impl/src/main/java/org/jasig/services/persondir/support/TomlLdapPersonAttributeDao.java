@@ -18,9 +18,6 @@
  */
 package org.jasig.services.persondir.support;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -84,8 +81,6 @@ java.naming.security.authentication = "simple"
  * @author Misagh Moayyed
  */
 public class TomlLdapPersonAttributeDao extends LdapPersonAttributeDao {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Resource tomlConfigFile;
 

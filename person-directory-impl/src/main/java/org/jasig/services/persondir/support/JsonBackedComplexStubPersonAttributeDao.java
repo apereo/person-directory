@@ -21,8 +21,8 @@ package org.jasig.services.persondir.support;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.core.io.Resource;
 
@@ -67,8 +67,6 @@ public class JsonBackedComplexStubPersonAttributeDao extends ComplexStubPersonAt
 
     private final ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JsonBackedComplexStubPersonAttributeDao.class);
-
     private final Object synchronizationMonitor = new Object();
 
     public JsonBackedComplexStubPersonAttributeDao(final Resource personAttributesConfigFile) {
@@ -92,10 +90,10 @@ public class JsonBackedComplexStubPersonAttributeDao extends ComplexStubPersonAt
 
     @SuppressWarnings("unchecked")
     private void unmarshalAndSetBackingMap() throws Exception {
-        LOGGER.info("Un-marshaling person attributes from the config file [{}] ...", this.personAttributesConfigFile.getFile());
+        logger.info("Un-marshaling person attributes from the config file " + this.personAttributesConfigFile.getFile());
         final Map<String, Map<String, List<Object>>> backingMap = this.jacksonObjectMapper.readValue(
                 this.personAttributesConfigFile.getFile(), Map.class);
-        LOGGER.debug("Person attributes have been successfully read into a Map<String, Map<String, List<Object>>>: {}", backingMap);
+        logger.debug("Person attributes have been successfully read into the map ");
         synchronized (this.synchronizationMonitor) {
             super.setBackingMap(backingMap);
         }
