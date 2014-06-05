@@ -32,7 +32,7 @@ import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.QueryType;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Provides common logic for executing a JDBC based query including building the WHERE clause SQL string.
@@ -62,7 +62,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPersonAttributeDao<PartialWhereClause> {
     private static final Pattern WHERE_PLACEHOLDER = Pattern.compile("\\{0\\}");
     
-    private final SimpleJdbcTemplate simpleJdbcTemplate;
+    private final JdbcTemplate simpleJdbcTemplate;
     private final String queryTemplate;
     private QueryType queryType = QueryType.AND;
     
@@ -74,7 +74,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
         Validate.notNull(ds, "DataSource can not be null");
         Validate.notNull(queryTemplate, "queryTemplate can not be null");
         
-        this.simpleJdbcTemplate = new SimpleJdbcTemplate(ds);
+        this.simpleJdbcTemplate = new JdbcTemplate(ds);
         this.queryTemplate = queryTemplate;
     }
     

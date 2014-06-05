@@ -70,7 +70,6 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
      */
-    @SuppressWarnings("deprecation")
     public Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -78,7 +77,6 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.lang.String)
      */
-    @SuppressWarnings("deprecation")
     public Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -86,7 +84,6 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    @SuppressWarnings("deprecation")
     public Map<String, Object> getUserAttributes(Map<String, Object> seed) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -94,7 +91,6 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.lang.String)
      */
-    @SuppressWarnings("deprecation")
     public Map<String, Object> getUserAttributes(String uid) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }

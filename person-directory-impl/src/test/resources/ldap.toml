@@ -1,0 +1,32 @@
+[ldap]
+baseDN = "ou=people,dc=school,dc=edu"
+urls = ["ldap://ldap.server1.edu:389", "ldap://ldap.server2.edu:389"]
+userDN = "cn=authSearch,ou=adminaccounts,dc=school,dc=edu"
+password = "psw"
+
+# Advanced settings
+###################
+
+#pooled = false
+#queryTemplate = "uid={0}"
+#unmappedUsernameAttribute = "CN"
+#cacheEnvironmentProperties = false
+#useAllQueryAttributes = true
+#queryType = "AND"
+#referral = "follow"
+#ignoreNameNotFoundException = false
+#ignorePartialResultException = true
+#requireAllQueryAttributes = true
+       
+[ldap.queryAttributeMappings]
+username = "uid"
+
+[ldap.resultAttributeMappings]
+displayName = "FullName"
+uid = "uid"
+CN = "Name"
+
+[ldap.baseEnvironmentSettings]
+com.sun.jndi.ldap.connect.timeout = 3000
+com.sun.jndi.ldap.read.timeout = 3000
+java.naming.security.authentication = "simple"

@@ -234,7 +234,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         return additionalDescriptors;
     }
     /**
-     * The {@link AdditionalDescriptors} instance to set request attributes on. This should be a Spring session-scoped
+     * The {@link IAdditionalDescriptors} instance to set request attributes on. This should be a Spring session-scoped
      * proxy to allow each session to have its own set of request-populated attributes.
      */
     public void setAdditionalDescriptors(IAdditionalDescriptors additionalDescriptors) {
