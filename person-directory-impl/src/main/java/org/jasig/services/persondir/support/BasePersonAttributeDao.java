@@ -44,7 +44,6 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
      */
-    @SuppressWarnings("deprecation")
     public final Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
         final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
 
@@ -63,7 +62,6 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.lang.String)
      */
-    @SuppressWarnings("deprecation")
     public final Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
         final IPersonAttributes person = this.getPerson(uid);
         
@@ -78,7 +76,6 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    @SuppressWarnings("deprecation")
     public final Map<String, Object> getUserAttributes(Map<String, Object> seed) {
         final Set<IPersonAttributes> people = this.getPeople(seed);
 
@@ -97,7 +94,6 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.lang.String)
      */
-    @SuppressWarnings("deprecation")
     public final Map<String, Object> getUserAttributes(String uid) {
         Validate.notNull(uid, "uid may not be null.");
         

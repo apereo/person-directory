@@ -25,17 +25,17 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
 
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextProxy;
-import org.springframework.ldap.transaction.compensating.LdapTransactionUtils;
 
 /**
  * @author Eric Dalquist
  * @version $Revision: 1.1 $
  */
-public class SingleContextSource implements ContextSource {
+public class SingleContextSource implements ContextSource  {
     private final DirContext ctx;
 
     public SingleContextSource(DirContext ctx) {
@@ -58,7 +58,7 @@ public class SingleContextSource implements ContextSource {
 
     private DirContext getNonClosingDirContextProxy(DirContext context) {
         return (DirContext) Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(),
-                new Class[] { LdapTransactionUtils.getActualTargetClass(context), DirContextProxy.class },
+                new Class[] { getActualTargetClass(context), DirContextProxy.class },
                 new NonClosingDirContextInvocationHandler(context));
 
     }
@@ -97,5 +97,27 @@ public class SingleContextSource implements ContextSource {
                 throw e.getTargetException();
             }
         }
+    }
+    
+    /**
+     * Get the actual class of the supplied DirContext instance; LdapContext or
+     * DirContext.
+     * 
+     * @param context
+     *            the DirContext instance to check.
+     * @return LdapContext.class if context is an LdapContext, DirContext.class
+     *         otherwise.
+     */
+    private static Class getActualTargetClass(final DirContext context) {
+        if (context instanceof LdapContext) {
+            return LdapContext.class;
+        }
+
+        return DirContext.class;
+    }
+
+    @Override
+    public DirContext getContext(String principal, String credentials) throws NamingException {
+        throw new UnsupportedOperationException();
     }
 }
