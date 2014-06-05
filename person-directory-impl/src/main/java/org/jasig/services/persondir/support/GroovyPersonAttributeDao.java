@@ -30,8 +30,6 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.jasig.services.persondir.IPersonAttributes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 /**
@@ -58,8 +56,7 @@ class SampleGroovyPersonAttributeDao {
  * @author Misagh Moayyed
  */
 public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     private final Resource groovyScriptResource;
     
     private String groovyScriptExecutingMethodName = "run";
@@ -102,23 +99,23 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
             loader = new GroovyClassLoader(parent);
             
             final Class<?> groovyClass = loader.parseClass(this.groovyScriptResource.getFile());
-            logger.debug("Loaded groovy class {} from script {}", groovyClass.getSimpleName(),
+            logger.debug("Loaded groovy class " + groovyClass.getSimpleName() + " from script " +
                     this.groovyScriptResource.getFilename());
             
             final GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
-            logger.debug("Created groovy object instance from class {}",
+            logger.debug("Created groovy object instance from class " +
                     this.groovyScriptResource.getFilename());
             
             final Object[] args = {uid, logger};
-            logger.debug("Executing groovy script's {} method, with parameters {}",
-                    this.groovyScriptExecutingMethodName, args);
+            logger.debug("Executing groovy script's " + this.groovyScriptExecutingMethodName
+                    + " method, with parameters " + args);
             
             @SuppressWarnings("unchecked")
             final Map<String, Object> personAttributesMap = (Map<String, Object>)
                 groovyObject.invokeMethod(this.groovyScriptExecutingMethodName, args);
             
-            logger.debug("Creating person attributes with the username {} and attributes {}",
-                    uid, personAttributesMap);
+            logger.debug("Creating person attributes with the username " + uid + " and attributes {}" +
+                     personAttributesMap);
             
             final Map<String, List<Object>> personAttributes = stuffAttributesIntoListValues(personAttributesMap);
                     

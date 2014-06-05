@@ -11,13 +11,14 @@
     <groupId>org.jasig.service.persondir</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.2-SNAPSHOT</version>
+    <version>1.5.2</version>
     
     <scm>
         <connection>scm:git:git://github.com/Jasig/person-directory.git</connection>
         <developerConnection>scm:git:git@github.com:Jasig/person-directory.git</developerConnection>
         <url>https://github.com/Jasig/person-directory</url>
-    </scm>
+      <tag>person-directory-parent-1.5.2</tag>
+  </scm>
     
     <issueManagement>
         <url>${jasig-issues-base}/PERSONDIR</url>
