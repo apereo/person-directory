@@ -19,16 +19,17 @@
 package org.jasig.services.persondir.support;
 
 import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyObject;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.jasig.services.persondir.IPersonAttributeScriptDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.springframework.core.io.Resource;
 
@@ -39,18 +40,25 @@ import org.springframework.core.io.Resource;
  * <p>Groovy file:
  * <pre><code>
  *
-import java.util.List;
-import java.util.Map;
+import org.apache.commons.logging.Log
+import org.jasig.services.persondir.IPersonAttributeScriptDao
 
-class SampleGroovyPersonAttributeDao {
-    def Map<String, List<Object>> run(final Object... args) {
+class SampleGroovyPersonAttributeDao implements IPersonAttributeScriptDao {
 
-        def uid = args[0]
-        def logger = args[1];
-
-        logger.debug("[{}]: The received uid is {}", this.class.simpleName, uid)
+    @Override
+    Map<String, Object> getAttributesForUser(String uid, Log log) {
+        log.debug("[Groovy script " + this.class.getSimpleName() + "] The received uid is " + uid)
         return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
     }
+
+    @Override
+    Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes, Log log) {
+        log.debug("[Groovy script " + this.class.getSimpleName() + "] Input map size is " + attributes.size())
+        Map<String, List<Object>> newMap = new HashMap<>(attributes)
+        newMap.put("foo", Arrays.asList(["value1", "value2"]))
+        return newMap
+    }
+
 }
  * </code></pre>
  * @author Misagh Moayyed
@@ -58,17 +66,20 @@ class SampleGroovyPersonAttributeDao {
 public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
 
     private final Resource groovyScriptResource;
-    
-    private String groovyScriptExecutingMethodName = "run";
+    private final IPersonAttributeScriptDao groovyScriptClass;
+    private GroovyClassLoader loader = null;
+
     private boolean caseInsensitiveUsername = false;
     
     public GroovyPersonAttributeDao(final Resource groovyScriptPath) throws IOException {
         verifyGroovyScriptAndThrowExceptionIfNeeded(groovyScriptPath);
         this.groovyScriptResource = groovyScriptPath;
+        this.groovyScriptClass = null;
     }
-    
-    public void setGroovyScriptExecutingMethodName(final String methodName) {
-        this.groovyScriptExecutingMethodName = methodName;
+
+    public GroovyPersonAttributeDao(IPersonAttributeScriptDao scriptClass) {
+        this.groovyScriptResource = null;
+        this.groovyScriptClass = scriptClass;
     }
     
     public void setCaseInsensitiveUsername(final boolean caseInsensitiveUsername) {
@@ -91,30 +102,32 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
         
     }
 
-    @Override
-    public IPersonAttributes getPerson(final String uid) {
-        GroovyClassLoader loader = null;
-        try {
+    private IPersonAttributeScriptDao getScriptObject() throws Exception {
+        IPersonAttributeScriptDao groovyObject = groovyScriptClass;
+        if (groovyObject == null) {
             final ClassLoader parent = getClass().getClassLoader();
             loader = new GroovyClassLoader(parent);
-            
+
             final Class<?> groovyClass = loader.parseClass(this.groovyScriptResource.getFile());
             logger.debug("Loaded groovy class " + groovyClass.getSimpleName() + " from script " +
                     this.groovyScriptResource.getFilename());
-            
-            final GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
+
+            groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
             logger.debug("Created groovy object instance from class " +
                     this.groovyScriptResource.getFilename());
+        }
+        return groovyObject;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public IPersonAttributes getPerson(final String uid) {
+        try {
+            IPersonAttributeScriptDao groovyObject = getScriptObject();
+            logger.debug("Executing groovy script's getAttributesForUser method");
             
-            final Object[] args = {uid, logger};
-            logger.debug("Executing groovy script's " + this.groovyScriptExecutingMethodName
-                    + " method, with parameters " + args);
-            
-            @SuppressWarnings("unchecked")
-            final Map<String, Object> personAttributesMap = (Map<String, Object>)
-                groovyObject.invokeMethod(this.groovyScriptExecutingMethodName, args);
-            
-            logger.debug("Creating person attributes with the username " + uid + " and attributes {}" +
+            final Map<String, Object> personAttributesMap = groovyObject.getAttributesForUser(uid, logger);
+            logger.debug("Creating person attributes with the username " + uid + " and attributes " +
                      personAttributesMap);
             
             final Map<String, List<Object>> personAttributes = stuffAttributesIntoListValues(personAttributesMap);
@@ -126,11 +139,14 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
         } catch (final Exception e) {
             logger.error(e.getMessage(), e); 
         } finally {
+            // Do we really need to close the class loader every time?  Would we potentially incur memory issues
+            // if we just left it around?
             IOUtils.closeQuietly(loader);
         }
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, Object> personAttributesMap) {
         final Map<String, List<Object>> personAttributes = new HashMap<String, List<Object>>();
         
@@ -146,12 +162,32 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public Set<IPersonAttributes> getPeople(Map<String, Object> query) {
-        return null;
+    public Set<IPersonAttributes> getPeople(Map<String, Object> attributes) {
+        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(attributes));
     }
 
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    @SuppressWarnings("unchecked")
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> attributes) {
+        try {
+            IPersonAttributeScriptDao groovyObject = getScriptObject();
+            logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters "
+                    + attributes);
+
+            @SuppressWarnings("unchecked")
+            final Map<String, List<Object>> personAttributesMap =
+                    groovyObject.getPersonAttributesFromMultivaluedAttributes(attributes, logger);
+
+            logger.debug("Creating person attributes: " + personAttributesMap);
+
+            return Collections.singleton((IPersonAttributes) new AttributeNamedPersonImpl(personAttributesMap));
+        } catch (final Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            // Do we really need to close the class loader every time?  Would we potentially incur memory issues
+            // if we just left it around?
+            IOUtils.closeQuietly(loader);
+        }
         return null;
     }
 
