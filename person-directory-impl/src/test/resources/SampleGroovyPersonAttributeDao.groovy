@@ -1,3 +1,6 @@
+import org.apache.commons.logging.Log
+import org.jasig.services.persondir.IPersonAttributeScriptDao
+
 /**
  * Licensed to Jasig under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
@@ -16,16 +19,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import java.util.List;
-import java.util.Map;
+class SampleGroovyPersonAttributeDao implements IPersonAttributeScriptDao {
 
-class SampleGroovyPersonAttributeDao {
-    def Map<String, List<Object>> run(final Object... args) {
-        
-        def uid = args[0]
-        def logger = args[1];
-        
-        logger.debug("[{}]: The received uid is {}", this.class.simpleName, uid)
+    @Override
+    Map<String, Object> getAttributesForUser(String uid, Log log) {
+        log.debug("[Groovy script " + this.class.getSimpleName() + "] The received uid is " + uid)
         return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
     }
+
+    @Override
+    Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes, Log log) {
+        log.debug("[Groovy script " + this.class.getSimpleName() + "] Input map size is " + attributes.size())
+        Map<String, List<Object>> newMap = new HashMap<>(attributes)
+        newMap.put("foo", Arrays.asList(["value1", "value2"]))
+        return newMap
+    }
+
 }
