@@ -21,7 +21,6 @@ package org.jasig.services.persondir;
 
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.logging.Log;
 
 /**
  * Simplified DAO interface for use by Groovy scripts that provide user attributes.
@@ -33,19 +32,17 @@ public interface IPersonAttributeScriptDao {
     /**
      * Given a username, provide additional attributes.
      * @param username username
-     * @param log logger to log messages to
      * @return Map of attributes to add for the user
      */
-    Map<String, Object> getAttributesForUser(String username, Log log);
+    Map<String, Object> getAttributesForUser(String username);
 
     /**
      * Given a set of attributes, return additional attributes to add to the user's attributes.  Implementations
      * determine whether to return a super-set that includes the original attributes plus additional attributes, or
      * just those additional attributes to add.
      * @param attributes Map of user's attributes
-     * @param log logger to log messages to
      * @return Map of attributes to add to the user (implementations may return super-set that includes original
      *         attributes or just additional attributes to add).
      */
-    Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes, Log log);
+    Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes);
 }

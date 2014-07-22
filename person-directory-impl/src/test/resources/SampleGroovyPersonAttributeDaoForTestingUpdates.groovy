@@ -18,18 +18,16 @@ import org.jasig.services.persondir.IPersonAttributeScriptDao
  * specific language governing permissions and limitations
  * under the License.
  */
-class SampleGroovyPersonAttributeDao implements IPersonAttributeScriptDao {
+class SampleGroovyPersonAttributeDaoForTestingUpdates implements IPersonAttributeScriptDao {
 
     @Override
     Map<String, Object> getAttributesForUser(String uid) {
-        return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
+        return null
     }
 
     @Override
     Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes) {
-        Map<String, List<Object>> newMap = new HashMap<>(attributes)
-        newMap.put("foo", Arrays.asList(["value1", "value2"]))
-        return newMap
+        return null
     }
 
 }
