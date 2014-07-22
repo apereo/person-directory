@@ -18,8 +18,6 @@
  */
 package org.jasig.services.persondir.support;
 
-import groovy.lang.GroovyClassLoader;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import groovy.lang.GroovyClassLoader;
 import org.apache.commons.io.IOUtils;
 import org.jasig.services.persondir.IPersonAttributeScriptDao;
 import org.jasig.services.persondir.IPersonAttributes;
@@ -35,7 +34,8 @@ import org.springframework.core.io.Resource;
 
 /**
  * An implementation of the {@link org.jasig.services.persondir.IPersonAttributeDao} that is able to resolve attributes
- * based on an external groovy script. Changes to the groovy script are to be auto-detected.
+ * based on an external groovy script. Changes to the groovy script are to be auto-detected when providing a script
+ * path.
  * 
  * <p>Groovy file:
  * <pre><code>
@@ -47,13 +47,11 @@ class SampleGroovyPersonAttributeDao implements IPersonAttributeScriptDao {
 
     @Override
     Map<String, Object> getAttributesForUser(String uid, Log log) {
-        log.debug("[Groovy script " + this.class.getSimpleName() + "] The received uid is " + uid)
         return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
     }
 
     @Override
     Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes, Log log) {
-        log.debug("[Groovy script " + this.class.getSimpleName() + "] Input map size is " + attributes.size())
         Map<String, List<Object>> newMap = new HashMap<>(attributes)
         newMap.put("foo", Arrays.asList(["value1", "value2"]))
         return newMap
@@ -65,68 +63,89 @@ class SampleGroovyPersonAttributeDao implements IPersonAttributeScriptDao {
  */
 public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
 
-    private final Resource groovyScriptResource;
-    private final IPersonAttributeScriptDao groovyScriptClass;
+    private final IPersonAttributeScriptDao groovyObject;
+    private long fileLastModifiedTime = 0;
+    private Resource groovyScriptLocation = null;
     private GroovyClassLoader loader = null;
 
     private boolean caseInsensitiveUsername = false;
     
-    public GroovyPersonAttributeDao(final Resource groovyScriptPath) throws IOException {
-        verifyGroovyScriptAndThrowExceptionIfNeeded(groovyScriptPath);
-        this.groovyScriptResource = groovyScriptPath;
-        this.groovyScriptClass = null;
+    public GroovyPersonAttributeDao(final Resource groovyScriptPath) throws Exception {
+        groovyScriptLocation = groovyScriptPath;
+        verifyGroovyScriptAndThrowExceptionIfNeeded();
+        this.groovyObject = getScriptObject(false);
     }
 
-    public GroovyPersonAttributeDao(IPersonAttributeScriptDao scriptClass) {
-        this.groovyScriptResource = null;
-        this.groovyScriptClass = scriptClass;
+    public GroovyPersonAttributeDao(IPersonAttributeScriptDao groovyObject) {
+        this.groovyObject = groovyObject;
     }
     
     public void setCaseInsensitiveUsername(final boolean caseInsensitiveUsername) {
         this.caseInsensitiveUsername = caseInsensitiveUsername;
     }
     
-    private void verifyGroovyScriptAndThrowExceptionIfNeeded(final Resource groovyScriptPath) throws IOException {
-        if (!groovyScriptPath.exists()) {
-            throw new RuntimeException("Groovy script cannot be found at the specifiied location: " + groovyScriptPath.getFilename());
+    private void verifyGroovyScriptAndThrowExceptionIfNeeded() throws IOException {
+        if (!groovyScriptLocation.exists()) {
+            throw new RuntimeException("Groovy script cannot be found at the specified location: " + groovyScriptLocation.getFilename());
         }
-        if (groovyScriptPath.isOpen()) {
+        if (groovyScriptLocation.isOpen()) {
             throw new RuntimeException("Another process/application is busy with the specified groovy script");
         }
-        if (!groovyScriptPath.isReadable()) {
+        if (!groovyScriptLocation.isReadable()) {
             throw new RuntimeException("Groovy script cannot be read");
         }
-        if (groovyScriptPath.contentLength() <= 0) {
+        if (groovyScriptLocation.contentLength() <= 0) {
             throw new RuntimeException("Groovy script is empty and has no content");
         }
         
     }
 
-    private IPersonAttributeScriptDao getScriptObject() throws Exception {
-        IPersonAttributeScriptDao groovyObject = groovyScriptClass;
-        if (groovyObject == null) {
+    private synchronized IPersonAttributeScriptDao getScriptObject(boolean forceReload) throws Exception {
+        IPersonAttributeScriptDao groovyObject = this.groovyObject;
+        if (groovyObject == null || forceReload) {
+            System.out.println("Loading script");
             final ClassLoader parent = getClass().getClassLoader();
             loader = new GroovyClassLoader(parent);
 
-            final Class<?> groovyClass = loader.parseClass(this.groovyScriptResource.getFile());
+            fileLastModifiedTime = groovyScriptLocation.lastModified();
+            final Class<?> groovyClass = loader.parseClass(groovyScriptLocation.getFile());
             logger.debug("Loaded groovy class " + groovyClass.getSimpleName() + " from script " +
-                    this.groovyScriptResource.getFilename());
+                    groovyScriptLocation.getFilename());
 
             groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
             logger.debug("Created groovy object instance from class " +
-                    this.groovyScriptResource.getFilename());
+                    groovyScriptLocation.getFilename());
         }
         return groovyObject;
+    }
+
+    /**
+     * Reloads the groovy script and re-instantiates the object if the script file has changed.  Also closes the
+     * previous GroovyClassLoader to insure there are no resource leaks.
+     * @throws Exception
+     */
+    private synchronized void reloadScriptIfUpdated() throws Exception {
+        System.out.println("Resource location is " + groovyScriptLocation.getFile().getAbsolutePath());
+        System.out.println("modified time was " + fileLastModifiedTime);
+        System.out.println("modified time is " + groovyScriptLocation.lastModified());
+        if (fileLastModifiedTime > 0 && groovyScriptLocation.lastModified() != fileLastModifiedTime) {
+            IOUtils.closeQuietly(loader);
+            System.out.println("Reloading updated script file " + groovyScriptLocation.getFilename());
+            logger.info("Reloading updated script file " + groovyScriptLocation.getFilename());
+            getScriptObject(true);
+            // When successful, update the last modified time.
+            fileLastModifiedTime = groovyScriptLocation.lastModified();
+        }
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public IPersonAttributes getPerson(final String uid) {
         try {
-            IPersonAttributeScriptDao groovyObject = getScriptObject();
+            reloadScriptIfUpdated();
             logger.debug("Executing groovy script's getAttributesForUser method");
             
-            final Map<String, Object> personAttributesMap = groovyObject.getAttributesForUser(uid, logger);
+            final Map<String, Object> personAttributesMap = groovyObject.getAttributesForUser(uid);
             logger.debug("Creating person attributes with the username " + uid + " and attributes " +
                      personAttributesMap);
             
@@ -138,10 +157,6 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
             return new NamedPersonImpl(uid, personAttributes);
         } catch (final Exception e) {
             logger.error(e.getMessage(), e); 
-        } finally {
-            // Do we really need to close the class loader every time?  Would we potentially incur memory issues
-            // if we just left it around?
-            IOUtils.closeQuietly(loader);
         }
         return null;
     }
@@ -170,23 +185,19 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
     @SuppressWarnings("unchecked")
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> attributes) {
         try {
-            IPersonAttributeScriptDao groovyObject = getScriptObject();
+            reloadScriptIfUpdated();
             logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters "
                     + attributes);
 
             @SuppressWarnings("unchecked")
             final Map<String, List<Object>> personAttributesMap =
-                    groovyObject.getPersonAttributesFromMultivaluedAttributes(attributes, logger);
+                    groovyObject.getPersonAttributesFromMultivaluedAttributes(attributes);
 
             logger.debug("Creating person attributes: " + personAttributesMap);
 
             return Collections.singleton((IPersonAttributes) new AttributeNamedPersonImpl(personAttributesMap));
         } catch (final Exception e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            // Do we really need to close the class loader every time?  Would we potentially incur memory issues
-            // if we just left it around?
-            IOUtils.closeQuietly(loader);
         }
         return null;
     }
