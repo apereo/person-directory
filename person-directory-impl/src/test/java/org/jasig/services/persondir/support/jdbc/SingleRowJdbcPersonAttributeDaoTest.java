@@ -20,6 +20,7 @@
 package org.jasig.services.persondir.support.jdbc;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeD
 import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.jasig.services.persondir.util.Util;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 /**
@@ -47,54 +49,60 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
  * @version $Revision$ $Date$
  */
 public class SingleRowJdbcPersonAttributeDaoTest 
-    extends AbstractDefaultQueryPersonAttributeDaoTest {
-    
-    private DataSource testDataSource;
-    
+    extends AbstractCaseSensitivityJdbcPersonAttributeDaoTest {
+
     @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        
-        this.testDataSource = new SimpleDriverDataSource(new jdbcDriver(), "jdbc:hsqldb:mem:adhommemds", "sa", "");
-        Connection con = testDataSource.getConnection();
-        
+    protected void setUpSchema(DataSource dataSource) throws SQLException {
+        Connection con = dataSource.getConnection();
+
         con.prepareStatement("CREATE TABLE user_table " +
-                                  "(netid VARCHAR, " +
-                                  "name VARCHAR, " +
-                                  "email VARCHAR, " +
-                                  "shirt_color VARCHAR)").execute();
+                "(netid VARCHAR, " +
+                "name VARCHAR, " +
+                "email VARCHAR, " +
+                "shirt_color VARCHAR)").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                                  "(netid, name, email, shirt_color) " +
-                                  "VALUES ('awp9', 'Andrew', 'andrew.petro@yale.edu', 'blue')").execute();
+                "(netid, name, email, shirt_color) " +
+                "VALUES ('awp9', 'Andrew', 'andrew.petro@yale.edu', 'blue')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                                 "(netid, name, email, shirt_color) " +
-                                 "VALUES ('edalquist', 'Eric', 'edalquist@unicon.net', 'blue')").execute();
+                "(netid, name, email, shirt_color) " +
+                "VALUES ('edalquist', 'Eric', 'edalquist@unicon.net', 'blue')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                                "(netid, name, email, shirt_color) " +
-                                "VALUES ('atest', 'Andrew', 'andrew.test@test.net', 'red')").execute();
-        
+                "(netid, name, email, shirt_color) " +
+                "VALUES ('atest', 'Andrew', 'andrew.test@test.net', 'red')").execute();
+
         con.prepareStatement("INSERT INTO user_table " +
-                                "(netid, name, email, shirt_color) " +
-                                "VALUES ('susan', 'Susan', 'susan.test@test.net', null)").execute();
-        
+                "(netid, name, email, shirt_color) " +
+                "VALUES ('susan', 'Susan', 'susan.test@test.net', null)").execute();
+
         con.close();
     }
 
     @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        
-        Connection con = this.testDataSource.getConnection();
-        
+    protected void tearDownSchema(DataSource dataSource) throws SQLException {
+        Connection con = dataSource.getConnection();
+
         con.prepareStatement("DROP TABLE user_table").execute();
         con.prepareStatement("SHUTDOWN").execute();
 
         con.close();
-        
-        this.testDataSource = null;
+    }
+
+    @Override
+    protected AbstractJdbcPersonAttributeDao<Map<String, Object>> newDao(DataSource dataSource) {
+        return new SingleRowJdbcPersonAttributeDao(dataSource, "SELECT netid, name, email, shirt_color FROM user_table WHERE {0}");
+    }
+
+    @Override
+    protected boolean supportsPerDataAttributeCaseSensitivity() {
+        return true;
+    }
+
+    @Override
+    protected void beforeNonUsernameQuery(AbstractJdbcPersonAttributeDao<Map<String, Object>> dao) {
+        // no-op
     }
     
     public void testNoQueryAttributeMapping() {
