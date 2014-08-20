@@ -432,27 +432,28 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         }
     }
 
-    /* multiple attribute values are separated by a semicolon, and semicolons in values are escaped with a backslash */
+    /* Multiple attribute values are separated by a semicolon, and semicolons in values are escaped with a backslash */
     /* (https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPAttributeAccess) */
     /* transforms "a;b" into list { "a", "b" } */
     /* transforms "a\;b" into list { "a;b" } */
+    /* transforms "a;b\;" into list { "a", "b;" } */
     private static List<String> splitOnSemiColonHandlingBackslashEscaping(String in) {
 	List<String> result = new LinkedList<String>();
 
-	int i = 1;
-	String prefix = "";
-	String[] l = in.split(";");
-	for (String s : l) {
-	    String s2 = s.replaceFirst("\\\\$", ";");
-	    if (s.equals(s2) || i == l.length) {
-		result.add(prefix + s);
-		prefix = "";
-	    } else {
-		prefix += s2;
-	    }
-	    i++;
-	}
-	return result;
+        int i = 1;
+        String prefix = "";
+        String[] splitStringArr = in.split(";");
+        for (String s : splitStringArr) {
+            String s2 = s.replaceFirst("\\\\$", ";");
+            if (s.equals(s2) || i == splitStringArr.length) {
+                result.add(prefix + s2);
+                prefix = "";
+            } else {
+                prefix += s2;
+            }
+            i++;
+        }
+        return result;
     }
 
     private List<Object> list(final Object value) {
