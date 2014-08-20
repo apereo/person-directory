@@ -380,7 +380,30 @@
                 <configuration>
                     <generateChildNotices>false</generateChildNotices>
                 </configuration>
-            </plugin>        
+            </plugin>
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                    <excludes>
+                        <exclude>**/.gitignore</exclude>
+                        <exclude>target/**</exclude>
+                        <exclude>pom.xml.*</exclude>
+                        <exclude>release.properties</exclude>
+                        <exclude>LICENSE</exclude>
+                        <exclude>**/NOTICE</exclude>
+                        <exclude>NOTICE.template</exclude>
+                        <exclude>bin/**</exclude>
+                        <exclude>**/*.ldif</exclude>
+                        <exclude>.idea/**</exclude> <!-- Exclude intelliJ files -->
+                        <exclude>overlays/**</exclude> <!-- Exclude intelliJ files -->
+                    </excludes>
+                    <mapping>
+                        <toml>SCRIPT_STYLE</toml>
+                    </mapping>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
