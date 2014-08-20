@@ -39,11 +39,12 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
  * The first DAO is queried using the seed {@link Map} passed to this class. The results
  * of the query are merged into a general result map. After the first DAO this general
  * result map used as the query seed for each DAO and each DAOs results are merged into it.
- * If the first DAO returned null/no results and stopIfFirstDaoReturnsNull=true, no child DAO is called and null
- * is the final result.
- * If the first DAO returned null/no results and stopIfFirstDaoReturnsNull=false, each child DAO is called and the
- * first that returns a result is used as the seed to the remaining child DAOs.
- * <br>
+ * <ul>
+ * <li>If the first DAO returned null/no results and <code>stopIfFirstDaoReturnsNull</code>=true, no child DAO is
+ * called and null is the final result.</li>
+ * <li>If the first DAO returned null/no results and <code>stopIfFirstDaoReturnsNull</code>=false, each child DAO is
+ * called and the first that returns a result is used as the seed to the remaining child DAOs.</li>
+ * </ul>
  * This behavior allows a DAO lower on the list to rely on attributes returned by a DAO
  * higher on the list.
  * <br>
@@ -54,7 +55,7 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
  * attribute with a non String value matches a key needed by the DAO for the query it is
  * running.
  * <br>
- * It is <u>highly</u> recomended that the first DAO on the list for this class is
+ * It is <u>highly</u> recommended that the first DAO on the list for this class is
  * the {@link org.jasig.services.persondir.support.EchoPersonAttributeDaoImpl}
  * to ensure the seed gets placed into the general result map.
  * 
@@ -64,6 +65,10 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
  */
 public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQueryPersonAttributeDao {
 
+    /**
+     * Set to true to not invoke child DAOs if first DAO returns null or no results.  Default: false.
+     * @since 1.6.0
+     */
     private boolean stopIfFirstDaoReturnsNull = false;
 
     public void setStopIfFirstDaoReturnsNull(boolean stopIfFirstDaoReturnsNull) {
