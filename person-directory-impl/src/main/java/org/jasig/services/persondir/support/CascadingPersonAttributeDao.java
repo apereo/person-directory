@@ -39,7 +39,12 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
  * The first DAO is queried using the seed {@link Map} passed to this class. The results
  * of the query are merged into a general result map. After the first DAO this general
  * result map used as the query seed for each DAO and each DAOs results are merged into it.
- * <br>
+ * <ul>
+ * <li>If the first DAO returned null/no results and <code>stopIfFirstDaoReturnsNull</code>=true, no child DAO is
+ * called and null is the final result.</li>
+ * <li>If the first DAO returned null/no results and <code>stopIfFirstDaoReturnsNull</code>=false, each child DAO is
+ * called and the first that returns a result is used as the seed to the remaining child DAOs.</li>
+ * </ul>
  * This behavior allows a DAO lower on the list to rely on attributes returned by a DAO
  * higher on the list.
  * <br>
@@ -50,7 +55,7 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
  * attribute with a non String value matches a key needed by the DAO for the query it is
  * running.
  * <br>
- * It is <u>highly</u> recomended that the first DAO on the list for this class is
+ * It is <u>highly</u> recommended that the first DAO on the list for this class is
  * the {@link org.jasig.services.persondir.support.EchoPersonAttributeDaoImpl}
  * to ensure the seed gets placed into the general result map.
  * 
@@ -59,6 +64,17 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
  * @since uPortal 2.5
  */
 public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQueryPersonAttributeDao {
+
+    /**
+     * Set to true to not invoke child DAOs if first DAO returns null or no results.  Default: false.
+     * @since 1.6.0
+     */
+    private boolean stopIfFirstDaoReturnsNull = false;
+
+    public void setStopIfFirstDaoReturnsNull(boolean stopIfFirstDaoReturnsNull) {
+        this.stopIfFirstDaoReturnsNull = stopIfFirstDaoReturnsNull;
+    }
+
     public CascadingPersonAttributeDao() {
         this.attrMerger = new ReplacingAttributeAdder();
     }
@@ -66,15 +82,19 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
     
 
     /**
-     * If this is the first call or there are no results in the resultPeople Set the seed map is used. If not the
-     * attributes of the first user in the resultPeople Set are used.
+     * If this is the first call, or there are no results in the resultPeople Set and stopIfFirstDaoReturnsNull=false,
+     * the seed map is used. If not the attributes of the first user in the resultPeople Set are used for each child
+     * dao.  If stopIfFirstDaoReturnsNull=true and the first query returned no results in the resultPeopleSet,
+     * return null.
      *  
      * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.services.persondir.IPersonAttributeDao, java.util.Set)
      */
     @Override
     protected Set<IPersonAttributes> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Set<IPersonAttributes> resultPeople) {
-        if (isFirstQuery || resultPeople == null || resultPeople.size() == 0) {
+        if (isFirstQuery || (!stopIfFirstDaoReturnsNull && (resultPeople == null || resultPeople.size() == 0))) {
             return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed);
+        } else if (stopIfFirstDaoReturnsNull && !isFirstQuery && (resultPeople == null || resultPeople.size() == 0)) {
+            return null;
         }
         
         Set<IPersonAttributes> mergedPeopleResults = null;
