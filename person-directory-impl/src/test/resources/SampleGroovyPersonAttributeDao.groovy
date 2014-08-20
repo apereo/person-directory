@@ -1,4 +1,4 @@
-import org.jasig.services.persondir.IPersonAttributeScriptDao
+import org.jasig.services.persondir.support.BaseGroovyScriptDaoImpl
 
 /**
  * Licensed to Jasig under one or more contributor license
@@ -18,7 +18,7 @@ import org.jasig.services.persondir.IPersonAttributeScriptDao
  * specific language governing permissions and limitations
  * under the License.
  */
-class SampleGroovyPersonAttributeDao implements IPersonAttributeScriptDao {
+class SampleGroovyPersonAttributeDao extends BaseGroovyScriptDaoImpl {
 
     @Override
     Map<String, Object> getAttributesForUser(String uid) {
