@@ -18,7 +18,6 @@
  */
 package org.jasig.services.persondir.support;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,15 +25,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import groovy.lang.GroovyClassLoader;
 import org.jasig.services.persondir.IPersonAttributeScriptDao;
 import org.jasig.services.persondir.IPersonAttributes;
-import org.springframework.core.io.Resource;
 
 /**
  * An implementation of the {@link org.jasig.services.persondir.IPersonAttributeDao} that is able to resolve attributes
- * based on an external Groovy script, Groovy object, or Java object. Changes to the groovy script are auto-detected
- * when providing a script path.
+ * based on an external Groovy script, Groovy object, or Java object. Changes to the groovy script can be auto-detected
+ * in certain use cases.
  * <p/>
  * There are several ways to use this Dao.
  * <p/>
@@ -66,7 +63,7 @@ class SampleGroovyPersonAttributeDao implements org.jasig.services.persondir.IPe
 }
  * </code></pre>
  * Notes:<ol>
- * <li>Use maven-antrun-plugin to pre-compile groovy classes in maven build process</li>
+ * <li>Use maven-antrun-plugin, gmavenplus-plugin, or similar to pre-compile groovy classes in maven build process</li>
  * <li>Separate groovy source file, so can create unit test of groovy code</li>
  * <li>Does not accommodate groovy source code changes</li>
  * </ol>
@@ -116,31 +113,17 @@ Spring configuration:
  * <li>Cannot create unit test of groovy source file, will not detect changes</li>
  * <li>Useful for embedded configuration</li>
  * </ol>
- * Approach 4: Resource to script file
- * <p/>
- * Not preferred approach.  Deprecated.  Plan to remove.
  * @author Misagh Moayyed
  * @author James Wennmacher
- * @since 1.5.3
+ * @since 1.6.0
  */
 public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
 
     private IPersonAttributeScriptDao groovyObject;
-    private long fileLastModifiedTime = 0;
-    private Resource groovyScriptLocation = null;
-    private GroovyClassLoader groovyClassLoader = null;
     private Set<String> possibleUserAttributeNames = null;
     private Set<String> availableQueryAttributes = null;
 
     private boolean caseInsensitiveUsername = false;
-
-    @Deprecated
-    public GroovyPersonAttributeDao(final Resource groovyScriptPath) throws Exception {
-        groovyScriptLocation = groovyScriptPath;
-        verifyGroovyScriptAndThrowExceptionIfNeeded();
-        groovyClassLoader = new GroovyClassLoader(getClass().getClassLoader());
-        getScriptObject();
-    }
 
     public GroovyPersonAttributeDao(IPersonAttributeScriptDao groovyObject) {
         this.groovyObject = groovyObject;
@@ -150,53 +133,10 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
         this.caseInsensitiveUsername = caseInsensitiveUsername;
     }
 
-    private void verifyGroovyScriptAndThrowExceptionIfNeeded() throws IOException {
-        if (!groovyScriptLocation.exists()) {
-            throw new RuntimeException("Groovy script cannot be found at the specified location: " + groovyScriptLocation.getFilename());
-        }
-        if (groovyScriptLocation.isOpen()) {
-            throw new RuntimeException("Another process/application is busy with the specified groovy script");
-        }
-        if (!groovyScriptLocation.isReadable()) {
-            throw new RuntimeException("Groovy script cannot be read");
-        }
-        if (groovyScriptLocation.contentLength() <= 0) {
-            throw new RuntimeException("Groovy script is empty and has no content");
-        }
-
-    }
-
-    private synchronized void getScriptObject() throws Exception {
-        logger.debug("Loading script");
-
-        // Must clear classLoader's cache or the new parsed script won't be used
-        groovyClassLoader.clearCache();
-        final Class<?> groovyClass = groovyClassLoader.parseClass(groovyScriptLocation.getFile());
-        logger.debug("Loaded groovy class " + groovyClass.getSimpleName() + " from script " +
-                groovyScriptLocation.getFilename());
-
-        groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
-        logger.debug("Created groovy object instance from class " + groovyScriptLocation.getFilename());
-        fileLastModifiedTime = groovyScriptLocation.lastModified();
-    }
-
-    /**
-     * Reloads the groovy script and re-instantiates the object if the script file has changed.
-     *
-     * @throws Exception
-     */
-    private synchronized void reloadScriptIfUpdated() throws Exception {
-        if (groovyScriptLocation != null && groovyScriptLocation.lastModified() != fileLastModifiedTime) {
-            logger.info("Reloading updated script file " + groovyScriptLocation.getFilename());
-            getScriptObject();
-        }
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public IPersonAttributes getPerson(final String uid) {
         try {
-            reloadScriptIfUpdated();
             logger.debug("Executing groovy script's getAttributesForUser method");
 
             final Map<String, Object> personAttributesMap = groovyObject.getAttributesForUser(uid);
@@ -239,7 +179,6 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
     @SuppressWarnings("unchecked")
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> attributes) {
         try {
-            reloadScriptIfUpdated();
             logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters "
                     + attributes);
 

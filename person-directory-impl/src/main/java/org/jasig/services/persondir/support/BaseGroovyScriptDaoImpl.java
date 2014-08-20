@@ -31,28 +31,15 @@ import org.jasig.services.persondir.IPersonAttributeScriptDao;
  * @author James Wennmacher, jwennmacher@unicon.net
  */
 
-public class BaseGroovyScriptDaoImpl implements IPersonAttributeScriptDao {
+public abstract class BaseGroovyScriptDaoImpl implements IPersonAttributeScriptDao {
 
-    /**
-     * Given a username, provide additional attributes.
-     *
-     * @param username username
-     * @return Map of attributes to add for the user
-     */
+    /* Javadoc inherited. See interface. */
     @Override
     public Map<String, Object> getAttributesForUser(String username) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * Given a set of attributes, return additional attributes to add to the user's attributes.  Implementations
-     * determine whether to return a super-set that includes the original attributes plus additional attributes, or
-     * just those additional attributes to add.
-     *
-     * @param attributes Map of user's attributes
-     * @return Map of attributes to add to the user (implementations may return super-set that includes original
-     * attributes or just additional attributes to add).
-     */
+    /* Javadoc inherited. See interface. */
     @Override
     public Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes) {
         throw new UnsupportedOperationException();
