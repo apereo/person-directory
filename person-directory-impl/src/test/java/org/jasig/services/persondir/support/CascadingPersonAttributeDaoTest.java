@@ -162,6 +162,43 @@ public class CascadingPersonAttributeDaoTest
             //expected
         }
     }
+
+    public void testNullFirstResultNoStop() {
+        final List<IPersonAttributeDao> targets = new ArrayList<IPersonAttributeDao>();
+        targets.add(this.nullSource);
+        targets.add(this.sourceOne);
+        targets.add(this.sourceTwo);
+
+        final CascadingPersonAttributeDao targetDao = new CascadingPersonAttributeDao();
+        targetDao.setPersonAttributeDaos(targets);
+        targetDao.setMerger(new MultivaluedAttributeMerger());
+
+        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
+
+        Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        expected.put("username", Util.list("edalquist"));
+        expected.put("studentId", Util.list("123456789"));
+        expected.put("major", Util.list("CS"));
+        expected.put("phone", Util.list("777-7777", "777-7777x777"));
+
+        assertEquals(expected, results);
+    }
+
+    public void testNullFirstResultStop() {
+        final List<IPersonAttributeDao> targets = new ArrayList<IPersonAttributeDao>();
+        targets.add(this.nullSource);
+        targets.add(this.sourceOne);
+        targets.add(this.sourceTwo);
+
+        final CascadingPersonAttributeDao targetDao = new CascadingPersonAttributeDao();
+        targetDao.setStopIfFirstDaoReturnsNull(true);
+        targetDao.setPersonAttributeDaos(targets);
+        targetDao.setMerger(new MultivaluedAttributeMerger());
+
+        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
+
+        assertNull(results);
+    }
     
     /**
      * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao()
