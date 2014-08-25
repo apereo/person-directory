@@ -167,6 +167,11 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
         return possibleUserAttributeNames;
     }
 
+    /**
+     * Sets the set of possible attribute names.
+     * @param possibleUserAttributeNames Set of possible attribute names.
+     * @since 1.6.2
+     */
     public void setPossibleUserAttributeNames(Set<String> possibleUserAttributeNames) {
         this.possibleUserAttributeNames = possibleUserAttributeNames;
     }
