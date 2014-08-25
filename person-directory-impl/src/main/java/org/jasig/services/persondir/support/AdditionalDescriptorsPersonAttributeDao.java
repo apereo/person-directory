@@ -68,6 +68,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     private ICurrentUserProvider currentUserProvider;
     private CaseCanonicalizationMode usernameCaseCanonicalizationMode = AbstractQueryPersonAttributeDao.DEFAULT_USERNAME_CASE_CANONICALIZATION_MODE;
     private Locale usernameCaseCanonicalizationLocale = Locale.getDefault();
+    private Set<String> possibleUserAttributeNames = null;  // default
     
     /*
      * Public API.
@@ -161,12 +162,13 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
         return null;
     }
 
-    /**
-     * Returns <code>null</code>, per the API documentation, because we don't 
-     * know what attributes may be available.
-     */
+    @Override
     public Set<String> getPossibleUserAttributeNames() {
-        return null;
+        return possibleUserAttributeNames;
+    }
+
+    public void setPossibleUserAttributeNames(Set<String> possibleUserAttributeNames) {
+        this.possibleUserAttributeNames = possibleUserAttributeNames;
     }
 
     public CaseCanonicalizationMode getUsernameCaseCanonicalizationMode() {
