@@ -52,24 +52,24 @@ public class RegexGatewayPersonAttributeDaoTest extends TestCase {
 		// attributeName.
 		try {
 			new RegexGatewayPersonAttributeDao(null, ".*@.*", enclosed);
-			fail("IllegalArgumentException should have been thrown with null 'attributeName'.");
-		} catch (IllegalArgumentException iae) {
+			fail("NullPointerException should have been thrown with null 'attributeName'.");
+		} catch (NullPointerException iae) {
 			// expected...
 		}
 
 		// pattern.
 		try {
 			new RegexGatewayPersonAttributeDao("username", null, enclosed);
-			fail("IllegalArgumentException should have been thrown with null 'pattern'.");
-		} catch (IllegalArgumentException iae) {
+			fail("NullPointerException should have been thrown with null 'pattern'.");
+		} catch (NullPointerException iae) {
 			// expected...
 		}
 
 		// enclosed.
 		try {
 			new RegexGatewayPersonAttributeDao("username", ".*@.*", null);
-			fail("IllegalArgumentException should have been thrown with null 'enclosed'.");
-		} catch (IllegalArgumentException iae) {
+			fail("NullPointerException should have been thrown with null 'enclosed'.");
+		} catch (NullPointerException iae) {
 			// expected...
 		}
 

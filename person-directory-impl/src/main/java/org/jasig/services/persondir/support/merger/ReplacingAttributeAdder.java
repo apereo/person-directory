@@ -22,7 +22,7 @@ package org.jasig.services.persondir.support.merger;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Attribute merge strategy whereby considered attributes over-write

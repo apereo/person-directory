@@ -30,8 +30,8 @@ import java.util.Set;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springmodules.cache.key.CacheKeyGenerator;

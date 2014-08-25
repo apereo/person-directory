@@ -147,7 +147,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
             dao.setMerger(null);
             fail("Expected IllegalArgumentException on setMerger(null)");
         } 
-        catch (IllegalArgumentException iae) {
+        catch (NullPointerException iae) {
             //expected
         }
     }
@@ -159,7 +159,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
             dao.setPersonAttributeDaos(null);
             fail("Expected IllegalArgumentException on setPersonAttributeDaos(null)");
         } 
-        catch (IllegalArgumentException iae) {
+        catch (NullPointerException iae) {
             //expected
         }
     }

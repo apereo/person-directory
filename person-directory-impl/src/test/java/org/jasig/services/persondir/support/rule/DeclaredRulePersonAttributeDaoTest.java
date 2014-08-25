@@ -58,7 +58,7 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 		try {
 			new DeclaredRulePersonAttributeDao(null, Arrays.asList(new AttributeRule[] { this.rule }));
 			fail("IllegalArgumentException should have been thrown with null 'attributeName'.");
-		} catch (IllegalArgumentException iae) {
+		} catch (NullPointerException iae) {
 			// expected...
 		}
 
@@ -73,8 +73,8 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 		// rules.
 		try {
 			new DeclaredRulePersonAttributeDao(NAME, null);
-			fail("IllegalArgumentException should have been thrown with null 'pattern'.");
-		} catch (IllegalArgumentException iae) {
+			fail("NullPointerException should have been thrown with null 'pattern'.");
+		} catch (NullPointerException iae) {
 			// expected...
 		}
 

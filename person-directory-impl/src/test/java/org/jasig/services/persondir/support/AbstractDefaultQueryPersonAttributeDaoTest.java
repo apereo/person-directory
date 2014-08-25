@@ -49,9 +49,9 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         AbstractDefaultAttributePersonAttributeDao dao = getAbstractDefaultQueryPersonAttributeDao();
         try {
             dao.setUsernameAttributeProvider(null);
-            fail("Expected IllegalArgumentException on setUsernameAttributeProvider(null)");
+            fail("Expected Exception on setUsernameAttributeProvider(null)");
         } 
-        catch (IllegalArgumentException iae) {
+        catch (Exception iae) {
             return;
         }
     }

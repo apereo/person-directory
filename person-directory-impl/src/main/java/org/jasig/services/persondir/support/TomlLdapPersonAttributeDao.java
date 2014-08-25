@@ -24,7 +24,7 @@ import java.util.Map;
 
 import me.grison.jtoml.impl.Toml;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jasig.services.persondir.support.ldap.LdapPersonAttributeDao;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.LdapTemplate;
@@ -213,7 +213,7 @@ public class TomlLdapPersonAttributeDao extends LdapPersonAttributeDao {
         private List<String> urls;
         private String userDN;
         private String password;
-        private Map<String, String> baseEnvironmentSettings;
+        private Map<String, Object> baseEnvironmentSettings;
         private String unmappedUsernameAttribute;
         private String queryTemplate;
         private Boolean cacheEnvironmentProperties;
@@ -309,11 +309,11 @@ public class TomlLdapPersonAttributeDao extends LdapPersonAttributeDao {
             this.password = password;
         }
 
-        public Map<String, String> getBaseEnvironmentSettings() {
+        public Map<String, Object> getBaseEnvironmentSettings() {
             return this.baseEnvironmentSettings;
         }
 
-        public void setBaseEnvironmentSettings(final Map<String, String> baseEnvironmentSettings) {
+        public void setBaseEnvironmentSettings(final Map<String, Object> baseEnvironmentSettings) {
             this.baseEnvironmentSettings = baseEnvironmentSettings;
         }
 
