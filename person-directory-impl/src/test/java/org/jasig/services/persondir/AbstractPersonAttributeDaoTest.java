@@ -54,7 +54,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         Map<String, List<Object>> nullMap = null;
         try {
             dao.getMultivaluedUserAttributes(nullMap);
-        } catch (IllegalArgumentException iae) {
+        } catch (RuntimeException iae) {
             // good, as expected
             return;
         }
@@ -72,7 +72,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         Map<String, Object> nullMap = null;
         try {
             dao.getUserAttributes(nullMap);
-        } catch (IllegalArgumentException iae) {
+        } catch (NullPointerException iae) {
             // good, as expected
             return;
         }
@@ -90,7 +90,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         String nullString = null;
         try {
             dao.getMultivaluedUserAttributes(nullString);
-        } catch (IllegalArgumentException iae) {
+        } catch (RuntimeException iae) {
             // good, as expected
             return;
         }
@@ -107,7 +107,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         String nullString = null;
         try {
             dao.getUserAttributes(nullString);
-        } catch (IllegalArgumentException iae) {
+        } catch (RuntimeException iae) {
             // good, as expected
             return;
         }

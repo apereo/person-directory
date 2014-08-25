@@ -38,7 +38,7 @@ public abstract class AbstractAttributeMergerTest extends TestCase {
     public void testNullToModify() {
         try {
             getAttributeMerger().mergeAttributes(null, new HashMap<String, List<Object>>());
-        } catch (IllegalArgumentException iae) {
+        } catch (NullPointerException iae) {
             // good
             return;
         }
@@ -52,7 +52,7 @@ public abstract class AbstractAttributeMergerTest extends TestCase {
     public void testNullToConsider() {
         try {
             getAttributeMerger().mergeAttributes(new HashMap<String, List<Object>>(), null);
-        } catch (IllegalArgumentException iae) {
+        } catch (NullPointerException iae) {
             // good
             return;
         }

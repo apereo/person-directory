@@ -18,12 +18,12 @@
  */
 package org.jasig.services.persondir.support;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import groovy.lang.GroovyClassLoader;
 import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
@@ -71,8 +71,8 @@ public class GroovyPersonAttributeDaoTest extends TestCase {
     @Test
     public void testGetPeopleWithMultivaluedAttributes() throws Exception {
         Map<String, List<Object>> items = new HashMap<String, List<Object>>();
-        items.put("dog", Arrays.asList(new String[]{"barks", "eats"}));
-        items.put("cat", Arrays.asList(new String[]{"meows", "scratches"}));
+        items.put("dog", Arrays.asList(new Object[]{"barks", "eats"}));
+        items.put("cat", Arrays.asList(new Object[]{"meows", "scratches"}));
         final Set<IPersonAttributes> results = dao.getPeopleWithMultivaluedAttributes(items);
         assertTrue("script did not add one attribute to passed-in attribute list",
                 results.iterator().next().getAttributes().size() == items.size() + 1);

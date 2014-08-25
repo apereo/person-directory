@@ -33,6 +33,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.test.AbstractDirContextTest;
 
+import static junit.framework.TestCase.*;
+
 
 /**
  * Testcase for LdapPersonAttributeDao.

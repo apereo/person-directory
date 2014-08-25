@@ -69,7 +69,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         
         try {
             MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
-        } catch (IllegalArgumentException iae) {
+        } catch (NullPointerException iae) {
             // good
             return;
         }
@@ -181,7 +181,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     public void testAddResultToNullMap() {
         try {
             MultivaluedPersonAttributeUtils.addResult(null, "key", "value");
-        } catch (IllegalArgumentException iae) {
+        } catch (NullPointerException iae) {
             // good
             return;
         }
@@ -194,7 +194,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     public void testAddResultNullKey() {
         try {
             MultivaluedPersonAttributeUtils.addResult(new HashMap<String, List<String>>(), null, "value");
-        } catch (IllegalArgumentException iae) {
+        } catch (NullPointerException iae) {
             // good
             return;
         }
@@ -331,7 +331,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     public void testFlattenNullCollection() {
         try {
             MultivaluedPersonAttributeUtils.flattenCollection(null);
-        } catch (IllegalArgumentException iae) {
+        } catch (NullPointerException iae) {
             // good
             return;
         }

@@ -48,9 +48,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     @Override
     protected void setUp() throws Exception {
         this.stubDao = new ComplexStubPersonAttributeDao();
-        
-        super.setUp();
-        
+
         Map<String, Map<String, List<Object>>> daoBackingMap = new HashMap<String, Map<String, List<Object>>>();
         
         Map<String, List<Object>> user1 = new HashMap<String, List<Object>>();

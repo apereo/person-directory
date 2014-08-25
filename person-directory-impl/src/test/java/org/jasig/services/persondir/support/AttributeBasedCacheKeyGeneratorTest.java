@@ -23,26 +23,30 @@ import java.util.Collections;
 
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.mock.MapCacheProviderFacade;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.test.AbstractSingleSpringContextTests;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Eric Dalquist
  * @version $Revision$
  */
-@SuppressWarnings("deprecation")
-public class AttributeBasedCacheKeyGeneratorTest extends AbstractSingleSpringContextTests {
-    /* (non-Javadoc)
-     * @see org.springframework.test.AbstractSingleSpringContextTests#getConfigPath()
-     */
-    @Override
-    protected String getConfigPath() {
-        return "/cacheKeyGeneratorTestContext.xml";
-    }
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"/cacheKeyGeneratorTestContext.xml"})
+public class AttributeBasedCacheKeyGeneratorTest {
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Test
     public void testCacheKeyGeneratorWithFactoryBean() {
-        final ConfigurableApplicationContext applicationContext = this.getApplicationContext();
-        
+
         final IPersonAttributeDao personAttributeDao = (IPersonAttributeDao)applicationContext.getBean("personAttributeDao", IPersonAttributeDao.class);
         
         final MapCacheProviderFacade cacheProviderFacade = (MapCacheProviderFacade)applicationContext.getBean("cacheProviderFacade", MapCacheProviderFacade.class);

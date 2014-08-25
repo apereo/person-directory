@@ -21,7 +21,7 @@ package org.jasig.services.persondir.util;
 
 import java.util.Locale;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public enum CaseCanonicalizationMode {
 
