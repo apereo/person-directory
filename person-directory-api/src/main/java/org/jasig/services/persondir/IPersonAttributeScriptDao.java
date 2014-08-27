@@ -31,15 +31,15 @@ import java.util.Map;
 public interface IPersonAttributeScriptDao {
     /**
      * Given a username, provide additional attributes.
-     * @param username username
-     * @return Map of attributes to add for the user. Empty set or null for none.
+     * @param username username to query for
+     * @return Map of attributes for the specified username, null if no person could be found for the username.
      */
     Map<String, Object> getAttributesForUser(String username);
 
     /**
      * Given a set of attributes, return additional attributes to add to the user's attributes.
-     * @param attributes Map of user's attributes
-     * @return Map of attributes to add to the user.  Null or empty set for none.
+     * @param attributes Map of attributes to query on
+     * @return A {@link Map} of attributes that match the query {@link Map}. If no matches are found an empty {@link Map} is returned. If the query could not be run null is returned.
      */
     Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes);
 }
