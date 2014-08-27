@@ -39,8 +39,7 @@ public interface IPersonAttributeScriptDao {
     /**
      * Given a set of attributes, return additional attributes to add to the user's attributes.
      * @param attributes Map of user's attributes
-     * @return Map of attributes to add to the user (implementations may return super-set that includes original
-     *         attributes or just additional attributes to add).  Null or empty set for none.
+     * @return Map of attributes to add to the user.  Null or empty set for none.
      */
     Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes);
 }
