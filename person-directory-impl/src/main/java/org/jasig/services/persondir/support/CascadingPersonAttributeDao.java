@@ -35,26 +35,30 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
  * implementation iterates through an ordered {@link java.util.List} of
  * {@link org.jasig.services.persondir.IPersonAttributeDao} impls
  * when getting user attributes.
- * <br>
+ * <br/>
  * The first DAO is queried using the seed {@link Map} passed to this class. The results
  * of the query are merged into a general result map. After the first DAO this general
- * result map used as the query seed for each DAO and each DAOs results are merged into it.
+ * result map used as the query seed for each DAO and each DAO's results are merged into it.
  * <ul>
- * <li>If the first DAO returned null/no results and <code>stopIfFirstDaoReturnsNull</code>=true, no child DAO is
+ * <li>If the first DAO returned null/no results and <code>stopIfFirstDaoReturnsNull</code>=true, no subsequent DAO is
  * called and null is the final result.</li>
- * <li>If the first DAO returned null/no results and <code>stopIfFirstDaoReturnsNull</code>=false, each child DAO is
- * called and the first that returns a result is used as the seed to the remaining child DAOs.</li>
+ * <li>If the first DAO returned null/no results and <code>stopIfFirstDaoReturnsNull</code>=false, each subsequent DAO is
+ * called and the first that returns a result is used as the seed to the remaining child DAOs.  This is the default
+ * to support legacy behavior.</li>
  * </ul>
  * This behavior allows a DAO lower on the list to rely on attributes returned by a DAO
  * higher on the list.
- * <br>
+ * <br/>
  * The default merger for the general result set is {@link ReplacingAttributeAdder}.
- * <br>
+ * <br/>
+ * Example Use case: Query LDAP for values (LDAP is first DAO), and then feed results into a secondary source
+ * such as an SIS system that has a different key than username and LDAP provides the key for the SIS query.
+ * <br/>
  * Note that most DAOs expect a Map of String->String. Some of the DAOs return a Map of
  * String->Object or String->List. This may cause problems in the DAO if the key for an
  * attribute with a non String value matches a key needed by the DAO for the query it is
  * running.
- * <br>
+ * <br/>
  * It is <u>highly</u> recommended that the first DAO on the list for this class is
  * the {@link org.jasig.services.persondir.support.EchoPersonAttributeDaoImpl}
  * to ensure the seed gets placed into the general result map.
@@ -66,7 +70,8 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
 public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQueryPersonAttributeDao {
 
     /**
-     * Set to true to not invoke child DAOs if first DAO returns null or no results.  Default: false.
+     * Set to true to not invoke child DAOs if first DAO returns null or no results.  Default: false
+     * to support legacy behavior.
      * @since 1.6.0
      */
     private boolean stopIfFirstDaoReturnsNull = false;
