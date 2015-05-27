@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.CaseCanonicalizationMode;
@@ -477,6 +478,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * 
      * @return The name of the attribute corresponding to the  user's username. 
      */
+    @JsonIgnore
     protected String getConfiguredUserNameAttribute() {
         //If configured explicitly use it
         if (this.unmappedUsernameAttribute != null) {
@@ -496,6 +498,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @return <code>true</code> If the 'unmappedUsernameAttribute' property was 
      * set explicitly, otherwise <code>false</code>
      */
+    @JsonIgnore
     protected boolean isUserNameAttributeConfigured() {
         return this.unmappedUsernameAttribute != null;
     }

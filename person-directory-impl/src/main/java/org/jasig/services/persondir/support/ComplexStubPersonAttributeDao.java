@@ -19,19 +19,14 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.PatternHelper;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -113,11 +108,11 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      */
     public void setBackingMap(final Map<String, Map<String, List<Object>>> backingMap) {
         if (backingMap == null) {
-            this.backingMap = Collections.emptyMap();
-            this.possibleUserAttributeNames = Collections.emptySet();
+            this.backingMap = new HashMap<>();
+            this.possibleUserAttributeNames = new HashSet<>();
         }
         else {
-            this.backingMap = Collections.unmodifiableMap(new LinkedHashMap<>(backingMap));
+            this.backingMap = new LinkedHashMap<>(backingMap);
             this.initializePossibleAttributeNames();
         }
     }
@@ -126,6 +121,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPossibleUserAttributeNames()
      */
     @Override
+    @JsonIgnore
     public Set<String> getPossibleUserAttributeNames() {
         return this.possibleUserAttributeNames;
     }
@@ -133,11 +129,16 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @JsonIgnore
     @Override
     public Set<String> getAvailableQueryAttributes() {
         final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
         final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
-        return Collections.singleton(usernameAttribute);
+
+        final Set list = new HashSet();
+        list.add(usernameAttribute);
+        
+        return list;
     }
 
     /* (non-Javadoc)
@@ -199,9 +200,12 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         if (attributes == null) {
             return null;
         }
-        
+
         final IPersonAttributes person = this.createPerson(seedValue, queryUserName, attributes);
-        return Collections.singletonList(person);
+        final List list = new ArrayList();
+        list.add(person);
+
+        return list;
     }
 
     private IPersonAttributes createPerson(final String seedValue, final String queryUserName, final Map<String, List<Object>> attributes) {
