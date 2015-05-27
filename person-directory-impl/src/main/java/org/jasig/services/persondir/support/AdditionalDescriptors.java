@@ -49,7 +49,7 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
     
     // Private Members.
     private String name = null;
-    private Map<String,List<Object>> attributes = new ConcurrentHashMap<String,List<Object>>();
+    private Map<String,List<Object>> attributes = new ConcurrentHashMap<>();
 
     /*
      * Public API.
@@ -90,14 +90,14 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
                 this.attributes.put(name, null);
             }
             else {
-                this.attributes.put(name, new ArrayList<Object>(values));
+                this.attributes.put(name, new ArrayList<>(values));
             }
         }
     }
     
     public void setAttributes(final Map<String, List<Object>> attributes) {
         Validate.notNull(attributes, "Argument 'attributes' cannot be null");
-        final Map<String, List<Object>> newAttributes = new ConcurrentHashMap<String, List<Object>>();
+        final Map<String, List<Object>> newAttributes = new ConcurrentHashMap<>();
         
         for (final Map.Entry<String, List<Object>> newAttribute : attributes.entrySet()) {
             final String name = newAttribute.getKey();
@@ -107,7 +107,7 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
                 newAttributes.put(name, null);
             }
             else {
-                newAttributes.put(name, new ArrayList<Object>(values));
+                newAttributes.put(name, new ArrayList<>(values));
             }
         }
         
@@ -125,7 +125,7 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
             return this.attributes.put(name, null);
         }
 
-        return this.attributes.put(name, new ArrayList<Object>(values));
+        return this.attributes.put(name, new ArrayList<>(values));
     }
     
     public List<Object> removeAttribute(final String name) {

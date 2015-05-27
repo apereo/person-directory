@@ -40,7 +40,7 @@ import org.springmodules.cache.provider.ehcache.EhCacheModelValidator;
  * @version $Revision$
  */
 public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
-    final Map<Serializable, Object> cache = new HashMap<Serializable, Object>();
+    final Map<Serializable, Object> cache = new HashMap<>();
     
     private int hitCount = 0;
     private int missCount = 0;

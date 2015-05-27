@@ -72,7 +72,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     public void testNotFoundQuery() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
-        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
+        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<>();
         ldapAttribsToPortalAttribs.put("mail", "email");
         
         impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
@@ -83,7 +83,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         
         impl.afterPropertiesSet();
         
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("uid", Util.list("unknown"));
         
         try {
@@ -101,7 +101,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     public void testSingleAttrQuery() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
-        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
+        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<>();
         ldapAttribsToPortalAttribs.put("mail", "email");
         
         impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
@@ -112,7 +112,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
 
         impl.afterPropertiesSet();
         
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("uid", Util.list("edalquist"));
 
         try {
@@ -133,8 +133,8 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     public void testMultipleMappings() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
-        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
-        final Set<String> portalAttributes = new HashSet<String>();
+        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<>();
+        final Set<String> portalAttributes = new HashSet<>();
         portalAttributes.add("email");
         portalAttributes.add("work.email");
         ldapAttribsToPortalAttribs.put("mail", portalAttributes);
@@ -147,7 +147,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
 
         impl.afterPropertiesSet();
         
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("uid", Util.list("edalquist"));
 
         try {
@@ -163,7 +163,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     public void testInvalidAttrMap() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
-        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
+        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<>();
         ldapAttribsToPortalAttribs.put("email", "email");
         
         impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
@@ -174,7 +174,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
 
         impl.afterPropertiesSet();
         
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("uid", Util.list("edalquist"));
         
         try {
@@ -189,7 +189,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     public void testDefaultAttrMap() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
-        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
+        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<>();
         ldapAttribsToPortalAttribs.put("mail", null);
         
         impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
@@ -200,7 +200,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
 
         impl.afterPropertiesSet();
         
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("uid", Util.list("edalquist"));
         
         try {
@@ -219,21 +219,21 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     public void testMultiAttrQuery() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
-        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
+        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<>();
         ldapAttribsToPortalAttribs.put("mail", "email");
         
         impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
         
         impl.setContextSource(this.getContextSource());
         
-        final Map<String, String> queryAttrs = new HashMap<String, String>();
+        final Map<String, String> queryAttrs = new HashMap<>();
         queryAttrs.put("uid", "uid");
         queryAttrs.put("alias", "alias");
         impl.setQueryAttributeMapping(queryAttrs);
 
         impl.afterPropertiesSet();
         
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("uid", Util.list("edalquist"));
         queryMap.put("givenname", Util.list("Eric"));
         queryMap.put("email", Util.list("edalquist@unicon.net"));
@@ -254,19 +254,19 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     public void testInsufficientAttrQuery() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
-        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
+        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<>();
         ldapAttribsToPortalAttribs.put("mail", "email");
         
         impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
         impl.setContextSource(this.getContextSource());
         
-        final Map<String, String> queryAttrs = new HashMap<String, String>();
+        final Map<String, String> queryAttrs = new HashMap<>();
         queryAttrs.put("uid", null);
         queryAttrs.put("alias", null);
         impl.setQueryAttributeMapping(queryAttrs);
         impl.setRequireAllQueryAttributes(true);
         
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("uid", Util.list("edalquist"));
         queryMap.put("email", Util.list("edalquist@example.net"));
         
@@ -280,11 +280,11 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     public void testAttributeNames() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
         
-        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<String, Object>();
+        final Map<String, Object> ldapAttribsToPortalAttribs = new HashMap<>();
         ldapAttribsToPortalAttribs.put("mail", "email");
         ldapAttribsToPortalAttribs.put("shirtColor", "dressShirtColor");
         
-        final Set<String> surNameAttributeNames = new HashSet<String>();
+        final Set<String> surNameAttributeNames = new HashSet<>();
         surNameAttributeNames.add("surName");
         surNameAttributeNames.add("lastName");
         surNameAttributeNames.add("familyName");
@@ -293,7 +293,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         
         impl.setResultAttributeMapping(ldapAttribsToPortalAttribs);
         
-        final Set<String> expectedAttributeNames = new HashSet<String>();
+        final Set<String> expectedAttributeNames = new HashSet<>();
         expectedAttributeNames.addAll(surNameAttributeNames);
         expectedAttributeNames.add("email");
         expectedAttributeNames.add("dressShirtColor");
@@ -312,11 +312,11 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         
         
         assertNull(impl.getResultAttributeMapping());
-        final Map<String, Object> attrMap = new HashMap<String, Object>();
+        final Map<String, Object> attrMap = new HashMap<>();
         attrMap.put("mail", "email");
         impl.setResultAttributeMapping(attrMap);
         
-        final Map<String, Set<String>> expectedAttrMap = new HashMap<String, Set<String>>();
+        final Map<String, Set<String>> expectedAttrMap = new HashMap<>();
         expectedAttrMap.put("mail", Collections.singleton("email"));
         assertEquals(expectedAttrMap, impl.getResultAttributeMapping());
         

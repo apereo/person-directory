@@ -272,7 +272,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         }
         
         //Build the cache key based on the attribute Set
-        final HashMap<String, Object> cacheKey = new HashMap<String, Object>(cacheAttributes.size());
+        final HashMap<String, Object> cacheKey = new HashMap<>(cacheAttributes.size());
         for (final String attr : cacheAttributes) {
             if (seed.containsKey(attr)) {
                 final Object value = seed.get(attr);

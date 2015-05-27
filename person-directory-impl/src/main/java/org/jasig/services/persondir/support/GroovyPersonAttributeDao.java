@@ -157,7 +157,7 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
 
     @SuppressWarnings("unchecked")
     private Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, Object> personAttributesMap) {
-        final Map<String, List<Object>> personAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> personAttributes = new HashMap<>();
 
         for (final String key : personAttributesMap.keySet()) {
             final Object value = personAttributesMap.get(key);

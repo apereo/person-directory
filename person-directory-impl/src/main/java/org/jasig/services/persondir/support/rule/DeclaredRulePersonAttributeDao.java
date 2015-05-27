@@ -103,7 +103,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     public void setRules(final List<AttributeRule> rules) {
         Validate.notEmpty(rules, "Argument 'rules' cannot be null or empty.");
 
-        this.rules = Collections.unmodifiableList(new ArrayList<AttributeRule>(rules));
+        this.rules = Collections.unmodifiableList(new ArrayList<>(rules));
     }
 
     /* (non-Javadoc)
@@ -132,7 +132,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
     public Set<String> getPossibleUserAttributeNames() {
-        final Set<String> rslt = new LinkedHashSet<String>();
+        final Set<String> rslt = new LinkedHashSet<>();
 
         for (final AttributeRule rule : this.rules) {
             final Set<String> possibleUserAttributeNames = rule.getPossibleUserAttributeNames();
@@ -146,7 +146,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
     public Set<String> getAvailableQueryAttributes() {
-        final Set<String> rslt = new LinkedHashSet<String>();
+        final Set<String> rslt = new LinkedHashSet<>();
 
         for (final AttributeRule rule : this.rules) {
             final Set<String> possibleUserAttributeNames = rule.getAvailableQueryAttributes();

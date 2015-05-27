@@ -109,7 +109,7 @@ public final class StringFormatAttributeRule implements AttributeRule {
         final String outputAttributeValue = String.format(this.formatString, args);
         
         
-        final Map<String, List<Object>> rslt = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> rslt = new HashMap<>();
         rslt.put(this.outputAttribute, Arrays.asList(new Object[] { outputAttributeValue }));
         
         final String username = this.usernameAttributeProvider.getUsernameFromQuery(userInfo);
@@ -120,7 +120,7 @@ public final class StringFormatAttributeRule implements AttributeRule {
 
 	@Override
 	public Set<String> getAvailableQueryAttributes() {
-		return new HashSet<String>(formatArguments);
+		return new HashSet<>(formatArguments);
 	}
 
 	@Override

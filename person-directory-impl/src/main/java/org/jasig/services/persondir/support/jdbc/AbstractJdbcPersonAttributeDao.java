@@ -244,7 +244,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
         if (caseInsensitiveDataAttributes == null || caseInsensitiveDataAttributes.isEmpty()) {
             setCaseInsensitiveDataAttributes(null);
         } else {
-            final Map<String, CaseCanonicalizationMode> asMap = new HashMap<String, CaseCanonicalizationMode>();
+            final Map<String, CaseCanonicalizationMode> asMap = new HashMap<>();
             for ( final String attrib : caseInsensitiveDataAttributes ) {
                 asMap.put(attrib, null);
             }

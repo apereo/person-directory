@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.IPersonAttributeDao;
@@ -156,7 +157,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             if (currentPeople != null) {
                 if (resultPeople == null) {
                     //If this is the first valid result set just use it.
-                    resultPeople = new LinkedHashSet<IPersonAttributes>(currentPeople);
+                    resultPeople = new LinkedHashSet<>(currentPeople);
                 }
                 else {
                     //Merge the Sets of IPersons
@@ -205,6 +206,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * 
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @JsonIgnore
     public final Set<String> getPossibleUserAttributeNames() {
         Set<String> attrNames = null;
         
@@ -231,7 +233,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             
             if (currentDaoAttrNames != null) {
                 if (attrNames == null) {
-                    attrNames = new LinkedHashSet<String>();
+                    attrNames = new LinkedHashSet<>();
                 }
 
                 attrNames = this.attrMerger.mergePossibleUserAttributeNames(attrNames, currentDaoAttrNames);
@@ -290,7 +292,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             
             if (currentDaoQueryAttrs != null) {
                 if (queryAttrs == null) {
-                    queryAttrs = new LinkedHashSet<String>();
+                    queryAttrs = new LinkedHashSet<>();
                 }
 
                 queryAttrs = this.attrMerger.mergeAvailableQueryAttributes(queryAttrs, currentDaoQueryAttrs);

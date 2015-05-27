@@ -127,7 +127,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
             return null;
         }
         
-        final Map<String, String> toReturn = new LinkedHashMap<String, String>(this.patterns.size());
+        final Map<String, String> toReturn = new LinkedHashMap<>(this.patterns.size());
         
         for (final Map.Entry<String, Pattern> patternEntry : this.patterns.entrySet()) {
             final String attribute = patternEntry.getKey();
@@ -143,7 +143,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
     public void setPatterns(final Map<String, String> patterns) {
         Validate.notEmpty(patterns, "patterns Map may not be null and must contain at least 1 mapping.");
         
-        final Map<String, Pattern> newPatterns = new LinkedHashMap<String, Pattern>(patterns.size());
+        final Map<String, Pattern> newPatterns = new LinkedHashMap<>(patterns.size());
         
         //Pre-compile patterns for performance
         for (final Map.Entry<String, String> patternEntry : patterns.entrySet()) {

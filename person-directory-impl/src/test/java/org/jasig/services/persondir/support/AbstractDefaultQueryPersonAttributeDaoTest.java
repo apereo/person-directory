@@ -60,7 +60,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
     public void testGetAttributesByString() {
         final AbstractDefaultAttributePersonAttributeDao dao = new SimpleDefaultQueryPersonAttributeDao();
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("TestAttrName"));
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("TestAttrName", Util.list("edalquist"));
         
         assertEquals(expected, dao.getMultivaluedUserAttributes("edalquist"));

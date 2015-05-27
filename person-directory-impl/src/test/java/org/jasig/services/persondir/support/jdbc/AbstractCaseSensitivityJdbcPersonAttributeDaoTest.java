@@ -79,10 +79,10 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     public void testCaseSensitiveUsernameQuery() {
         final AbstractJdbcPersonAttributeDao<Map<String, Object>> impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
         impl.setResultAttributeMapping(columnsToAttributes);
-        final Map<String, Object> attributesToColumns = new LinkedHashMap<String, Object>();
+        final Map<String, Object> attributesToColumns = new LinkedHashMap<>();
         attributesToColumns.put("username", "netid");
         impl.setQueryAttributeMapping(attributesToColumns);
 
@@ -96,10 +96,10 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     public void testCaseSensitiveUsernameQuery_CanonicalizedUsernameResult() {
         final AbstractJdbcPersonAttributeDao<Map<String, Object>> impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
         impl.setResultAttributeMapping(columnsToAttributes);
-        final Map<String, Object> attributesToColumns = new LinkedHashMap<String, Object>();
+        final Map<String, Object> attributesToColumns = new LinkedHashMap<>();
         attributesToColumns.put("username", "netid");
         impl.setQueryAttributeMapping(attributesToColumns);
         // above was all boilerplate... here's the important stuff...
@@ -115,10 +115,10 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     public void testCaseInsensitiveUsernameQuery() {
         final AbstractJdbcPersonAttributeDao<Map<String, Object>> impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
         impl.setResultAttributeMapping(columnsToAttributes);
-        final Map<String, Object> attributesToColumns = new LinkedHashMap<String, Object>();
+        final Map<String, Object> attributesToColumns = new LinkedHashMap<>();
         attributesToColumns.put("username", "netid");
         impl.setQueryAttributeMapping(attributesToColumns);
         // above was all boilerplate... here's the important stuff...
@@ -137,10 +137,10 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     public void testCaseInsensitiveUsernameQuery_CanonicalizedUsernameResult() {
         final AbstractJdbcPersonAttributeDao<Map<String, Object>> impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
         impl.setResultAttributeMapping(columnsToAttributes);
-        final Map<String, Object> attributesToColumns = new LinkedHashMap<String, Object>();
+        final Map<String, Object> attributesToColumns = new LinkedHashMap<>();
         attributesToColumns.put("username", "netid");
         impl.setQueryAttributeMapping(attributesToColumns);
         // above was all boilerplate... here's the important stuff...
@@ -165,22 +165,22 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     public void testCaseSensitiveNonUsernameAttributeQuery() {
         final AbstractJdbcPersonAttributeDao<Map<String, Object>> impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
         columnsToAttributes.put("name", "firstName");
         impl.setResultAttributeMapping(columnsToAttributes);
-        final Map<String, Object> attributesToColumns = new LinkedHashMap<String, Object>();
+        final Map<String, Object> attributesToColumns = new LinkedHashMap<>();
         attributesToColumns.put("username", "netid");
         attributesToColumns.put("firstName", "name");
         impl.setQueryAttributeMapping(attributesToColumns);
         beforeNonUsernameQuery(impl);
 
-        final Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> wrongCase = new LinkedHashMap<>();
         wrongCase.put("firstName", "ANDREW");
         final Set<IPersonAttributes> wrongCaseResult = impl.getPeople(wrongCase);
         assertEquals(0, wrongCaseResult.size());
 
-        final Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> correctCase = new LinkedHashMap<>();
         correctCase.put("firstName", "Andrew");
         final Set<IPersonAttributes> correctCaseResult = impl.getPeople(correctCase);
         assertEquals(2, correctCaseResult.size());
@@ -198,23 +198,23 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     public void testCaseSensitiveNonUsernameAttributeQuery_CanonicalizedResult() {
         final AbstractJdbcPersonAttributeDao<Map<String, Object>> impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
         columnsToAttributes.put("name", "firstName");
         impl.setResultAttributeMapping(columnsToAttributes);
-        final Map<String, Object> attributesToColumns = new LinkedHashMap<String, Object>();
+        final Map<String, Object> attributesToColumns = new LinkedHashMap<>();
         attributesToColumns.put("username", "netid");
         attributesToColumns.put("firstName", "name");
         impl.setQueryAttributeMapping(attributesToColumns);
         impl.setCaseInsensitiveResultAttributesAsCollection(Util.genList("firstName"));
         beforeNonUsernameQuery(impl);
 
-        final Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> wrongCase = new LinkedHashMap<>();
         wrongCase.put("firstName", "ANDREW");
         final Set<IPersonAttributes> wrongCaseResult = impl.getPeople(wrongCase);
         assertEquals(0, wrongCaseResult.size());
 
-        final Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> correctCase = new LinkedHashMap<>();
         correctCase.put("firstName", "Andrew");
         final Set<IPersonAttributes> correctCaseResult = impl.getPeople(correctCase);
         assertEquals(2, correctCaseResult.size());
@@ -232,11 +232,11 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     public void testCaseInsensitiveNonUsernameAttributeQuery() {
         final AbstractJdbcPersonAttributeDao<Map<String, Object>> impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
         columnsToAttributes.put("name", "firstName");
         impl.setResultAttributeMapping(columnsToAttributes);
-        final Map<String, Object> attributesToColumns = new LinkedHashMap<String, Object>();
+        final Map<String, Object> attributesToColumns = new LinkedHashMap<>();
         attributesToColumns.put("username", "netid");
         attributesToColumns.put("firstName", "name");
         impl.setQueryAttributeMapping(attributesToColumns);
@@ -249,7 +249,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         impl.setCaseInsensitiveDataAttributesAsCollection(Util.genList("name"));
         beforeNonUsernameQuery(impl);
 
-        final Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> wrongCase = new LinkedHashMap<>();
         wrongCase.put("firstName", "ANDREW");
         final Set<IPersonAttributes> wrongCaseResult = impl.getPeople(wrongCase);
         assertEquals(2, wrongCaseResult.size());
@@ -263,7 +263,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         // make sure it preserved data-layer casing
         assertEquals("Andrew", currentResult.getAttributeValue("firstName"));
 
-        final Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> correctCase = new LinkedHashMap<>();
         correctCase.put("firstName", "Andrew");
         final Set<IPersonAttributes> correctCaseResult = impl.getPeople(correctCase);
         assertEquals(2, correctCaseResult.size());
@@ -281,11 +281,11 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     public void testCaseInsensitiveNonUsernameAttributeQuery_CanonicalizedResult() {
         final AbstractJdbcPersonAttributeDao<Map<String, Object>> impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
         columnsToAttributes.put("name", "firstName");
         impl.setResultAttributeMapping(columnsToAttributes);
-        final Map<String, Object> attributesToColumns = new LinkedHashMap<String, Object>();
+        final Map<String, Object> attributesToColumns = new LinkedHashMap<>();
         attributesToColumns.put("username", "netid");
         attributesToColumns.put("firstName", "name");
         impl.setQueryAttributeMapping(attributesToColumns);
@@ -297,7 +297,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         impl.setCaseInsensitiveResultAttributesAsCollection(Util.genList("firstName"));
         beforeNonUsernameQuery(impl);
 
-        final Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> wrongCase = new LinkedHashMap<>();
         wrongCase.put("firstName", "ANDREW");
         final Set<IPersonAttributes> wrongCaseResult = impl.getPeople(wrongCase);
         assertEquals(2, wrongCaseResult.size());
@@ -311,7 +311,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         // make sure it overrode data-layer casing
         assertEquals("andrew", currentResult.getAttributeValue("firstName"));
 
-        final Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> correctCase = new LinkedHashMap<>();
         correctCase.put("firstName", "Andrew");
         final Set<IPersonAttributes> correctCaseResult = impl.getPeople(correctCase);
         assertEquals(2, correctCaseResult.size());
@@ -337,12 +337,12 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         }
         final AbstractJdbcPersonAttributeDao<Map<String, Object>> impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
         columnsToAttributes.put("name", "firstName");
         columnsToAttributes.put("email", "emailAddr");
         impl.setResultAttributeMapping(columnsToAttributes);
-        final Map<String, Object> attributesToColumns = new LinkedHashMap<String, Object>();
+        final Map<String, Object> attributesToColumns = new LinkedHashMap<>();
         attributesToColumns.put("username", "netid");
         attributesToColumns.put("firstName", "name");
         attributesToColumns.put("emailAddr", "email");
@@ -350,12 +350,12 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         impl.setCaseInsensitiveDataAttributesAsCollection(Util.genList("email"));
         beforeNonUsernameQuery(impl);
 
-        final Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> wrongCase = new LinkedHashMap<>();
         wrongCase.put("firstName", "ANDREW");
         final Set<IPersonAttributes> wrongCaseResult = impl.getPeople(wrongCase);
         assertEquals(0, wrongCaseResult.size());
 
-        final Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> correctCase = new LinkedHashMap<>();
         correctCase.put("firstName", "Andrew");
         final Set<IPersonAttributes> correctCaseResult = impl.getPeople(correctCase);
         assertEquals(2, correctCaseResult.size());

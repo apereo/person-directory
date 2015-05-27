@@ -62,7 +62,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
         partitionConfiguration.setSuffix("o=" + partitionName);
 
         // Create some indices
-        final Set<Object> indexedAttrs = new HashSet<Object>();
+        final Set<Object> indexedAttrs = new HashSet<>();
         indexedAttrs.add("objectClass");
         indexedAttrs.add("o");
         partitionConfiguration.setIndexedAttributes(indexedAttrs);
@@ -86,7 +86,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
 
         // As we can create more than one partition, we must store
         // each created partition in a Set before initialization
-        final Set<MutablePartitionConfiguration> partitionConfigurations = new HashSet<MutablePartitionConfiguration>();
+        final Set<MutablePartitionConfiguration> partitionConfigurations = new HashSet<>();
         partitionConfigurations.add(partitionConfiguration);
 
         this.configuration.setContextPartitionConfigurations(partitionConfigurations);
@@ -138,7 +138,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
     @SuppressWarnings("unchecked")
     protected final DirContext createContext() throws NamingException {
         // Create a environment container
-        final Hashtable<Object, Object> env = new Hashtable<Object, Object>(configuration.toJndiEnvironment());
+        final Hashtable<Object, Object> env = new Hashtable<>(configuration.toJndiEnvironment());
         
         final String partitionName = this.getPartitionName();
 

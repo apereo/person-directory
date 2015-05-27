@@ -80,7 +80,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     }
     
     public void testInsuffcientSeed() {
-        final Map<String, String> queryAttributes = new LinkedHashMap<String, String>();
+        final Map<String, String> queryAttributes = new LinkedHashMap<>();
         queryAttributes.put("userid", null);
         
         this.testQueryPersonAttributeDao.setQueryAttributeMapping(queryAttributes);
@@ -90,12 +90,12 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     }
     
     public void testCustomAttributes() {
-        final Map<String, String> queryAttributes = new LinkedHashMap<String, String>();
+        final Map<String, String> queryAttributes = new LinkedHashMap<>();
         queryAttributes.put("name.first", null);
         queryAttributes.put("name.last", null);
         this.testQueryPersonAttributeDao.setQueryAttributeMapping(queryAttributes);
         
-        final Map<String, List<Object>> seed = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("name.first", Collections.singletonList((Object)"eric"));
         seed.put("name.last", Collections.singletonList((Object)"dalquist"));
         this.testQueryPersonAttributeDao.getMultivaluedUserAttributes(seed);
@@ -107,14 +107,14 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     }
 
     public void testMapPersonAttributes_AsIs() {
-        final Map<String, List<Object>> storedAttrs = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("edalquist"));
         storedAttrs.put("name.first", Util.list("eric"));
         storedAttrs.put("name.last", Util.list("dalquist"));
 
         final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
 
-        final Map<String, List<Object>> seed = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList((Object)"edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
@@ -129,19 +129,19 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     }
 
     public void testMapPersonAttributes_Mapped() {
-        final Map<String, List<Object>> storedAttrs = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("edalquist"));
         storedAttrs.put("name.first", Util.list("eric"));
         storedAttrs.put("name.last", Util.list("dalquist"));
 
         final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
 
-        final Map<String, String> resultAttributeMappings = new LinkedHashMap<String, String>();
+        final Map<String, String> resultAttributeMappings = new LinkedHashMap<>();
         resultAttributeMappings.put("name.first", "fname");
         resultAttributeMappings.put("name.last", "lname");
         dao.setResultAttributeMapping(resultAttributeMappings);
 
-        final Map<String, List<Object>> seed = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList((Object)"edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
@@ -158,17 +158,17 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     }
 
     public void testMapPersonAttributes_CaseInsensitive() {
-        final Map<String, List<Object>> storedAttrs = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("edalquist"));
         storedAttrs.put("name.first", Util.list("eric"));
         storedAttrs.put("name.last", Util.list("dalquist"));
 
         final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
-        final Map<String, CaseCanonicalizationMode> caseInsensitiveAttributes = new HashMap<String, CaseCanonicalizationMode>();
+        final Map<String, CaseCanonicalizationMode> caseInsensitiveAttributes = new HashMap<>();
         caseInsensitiveAttributes.put("name.first", CaseCanonicalizationMode.UPPER);
         dao.setCaseInsensitiveResultAttributes(caseInsensitiveAttributes);
 
-        final Map<String, List<Object>> seed = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList((Object)"edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
@@ -183,22 +183,22 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     }
 
     public void testMapPersonAttributes_MappedCaseInsensitive() {
-        final Map<String, List<Object>> storedAttrs = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("edalquist"));
         storedAttrs.put("name.first", Util.list("eric"));
         storedAttrs.put("name.last", Util.list("dalquist"));
 
         final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
-        final Map<String, CaseCanonicalizationMode> caseInsensitiveAttributes = new HashMap<String, CaseCanonicalizationMode>();
+        final Map<String, CaseCanonicalizationMode> caseInsensitiveAttributes = new HashMap<>();
         caseInsensitiveAttributes.put("fname", CaseCanonicalizationMode.UPPER);
         dao.setCaseInsensitiveResultAttributes(caseInsensitiveAttributes);
 
-        final Map<String, String> resultAttributeMappings = new LinkedHashMap<String, String>();
+        final Map<String, String> resultAttributeMappings = new LinkedHashMap<>();
         resultAttributeMappings.put("name.first", "fname");
         resultAttributeMappings.put("name.last", "lname");
         dao.setResultAttributeMapping(resultAttributeMappings);
 
-        final Map<String, List<Object>> seed = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList((Object)"edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
@@ -215,7 +215,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     }
 
     public void testMapPersonAttributes_CaseInsensitiveDefaultCanonicalization() {
-        final Map<String, List<Object>> storedAttrs = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("EDALQUIST"));
         storedAttrs.put("name.first", Util.list("ERIC"));
         storedAttrs.put("name.last", Util.list("dalquist"));
@@ -223,7 +223,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
         // Not setting the CaseCanonicalizationMode here nor with an explicit
         // setter
-        final Collection<String> caseInsensitiveAttributes = new HashSet<String>();
+        final Collection<String> caseInsensitiveAttributes = new HashSet<>();
         caseInsensitiveAttributes.add("username");
         caseInsensitiveAttributes.add("name.first");
         dao.setCaseInsensitiveResultAttributesAsCollection(caseInsensitiveAttributes);
@@ -233,7 +233,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         // IPersonAttributes won't be. See test below
         dao.setUsernameCaseCanonicalizationMode(CaseCanonicalizationMode.LOWER);
 
-        final Map<String, List<Object>> seed = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList((Object)"edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
@@ -248,7 +248,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
     }
 
     public void testMapPersonAttributes_IndependentUsernameCanonicalization() {
-        final Map<String, List<Object>> storedAttrs = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("EDALQUIST"));
         storedAttrs.put("name.first", Util.list("ERIC"));
         storedAttrs.put("name.last", Util.list("dalquist"));
@@ -256,13 +256,13 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
         // Not setting the CaseCanonicalizationMode here nor with an explicit
         // setter
-        final Collection<String> caseInsensitiveAttributes = new HashSet<String>();
+        final Collection<String> caseInsensitiveAttributes = new HashSet<>();
         caseInsensitiveAttributes.add("username");
         caseInsensitiveAttributes.add("name.first");
         dao.setCaseInsensitiveResultAttributesAsCollection(caseInsensitiveAttributes);
         // Intentionally *not* calling setUsernameCaseCanonicalizationMode()
 
-        final Map<String, List<Object>> seed = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList((Object)"edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
@@ -294,7 +294,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         protected List<List<Object>> appendAttributeToQuery(List<List<Object>> queryBuilder, final String dataAttribute, final List<Object> queryValues) {
             // copy/paste from TestQueryPersonAttributeDao. Don't really care what this does, though
             if (queryBuilder == null) {
-                queryBuilder = new LinkedList<List<Object>>();
+                queryBuilder = new LinkedList<>();
             }
 
             queryBuilder.add(queryValues);
@@ -319,7 +319,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         @Override
         protected List<List<Object>> appendAttributeToQuery(List<List<Object>> queryBuilder, final String dataAttribute, final List<Object> queryValues) {
             if (queryBuilder == null) {
-                queryBuilder = new LinkedList<List<Object>>();
+                queryBuilder = new LinkedList<>();
             }
             
             queryBuilder.add(queryValues);

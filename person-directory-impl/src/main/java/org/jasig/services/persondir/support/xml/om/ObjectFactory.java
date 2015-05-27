@@ -89,7 +89,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "value")
     public JAXBElement<String> createValue(final String value) {
-        return new JAXBElement<String>(_Value_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Value_QNAME, String.class, null, value);
     }
 
 }

@@ -42,19 +42,19 @@ public class ComplexStubPersonAttributeDaoTest
     @Override
     protected void setUp() throws Exception {
         // built the user attributes for awp9
-        final Map<String, List<Object>> awp9Map = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> awp9Map = new HashMap<>();
         awp9Map.put("shirtColor", Util.list("blue"));
         awp9Map.put("phone", Util.list("777-7777"));
         awp9Map.put("wearsTie", Util.list("false"));
         
         // build the user attributes for aam26
-        final Map<String, List<Object>> aam26Map = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> aam26Map = new HashMap<>();
         aam26Map.put("shirtColor", Util.list("white"));
         aam26Map.put("phone",Util.list( "666-6666"));
         aam26Map.put("musicalInstrumentOfChoice", Util.list("trumpet"));
         
         // build the backing map, which maps from username to attribute map
-        final Map<String, Map<String, List<Object>>> bMap = new HashMap<String, Map<String, List<Object>>>();
+        final Map<String, Map<String, List<Object>>> bMap = new HashMap<>();
         bMap.put("awp9", awp9Map);
         bMap.put("aam26", aam26Map);
         
@@ -71,7 +71,7 @@ public class ComplexStubPersonAttributeDaoTest
      * possible attribute names.
      */
     public void testGetPossibleUserAttributeNames() {
-        final HashSet<String> expectedAttributeNames = new HashSet<String>();
+        final HashSet<String> expectedAttributeNames = new HashSet<>();
         expectedAttributeNames.add("shirtColor");
         expectedAttributeNames.add("phone");
         expectedAttributeNames.add("musicalInstrumentOfChoice");
@@ -95,11 +95,11 @@ public class ComplexStubPersonAttributeDaoTest
      * Test getting user attributes using a Map key.
      */
     public void testGetUserAttributesMap() {
-        final Map<String, List<Object>> awp9Key = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> awp9Key = new HashMap<>();
         awp9Key.put("username", Util.list("awp9"));
         assertEquals(this.backingMap.get("awp9"), this.testInstance.getMultivaluedUserAttributes(awp9Key));
         
-        final Map<String, List<Object>> unknownUserKey = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> unknownUserKey = new HashMap<>();
         unknownUserKey.put("uid", Util.list("unknownUser"));
         
         assertNull(this.testInstance.getMultivaluedUserAttributes(unknownUserKey));

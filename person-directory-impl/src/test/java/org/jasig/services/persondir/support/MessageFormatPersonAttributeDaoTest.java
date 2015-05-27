@@ -52,14 +52,14 @@ public class MessageFormatPersonAttributeDaoTest extends AbstractPersonAttribute
     public void testMessageFormatAttributes() throws Exception {
 
         
-        final Map<String, List<Object>> query = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("firstName", Util.list("Eric"));
         query.put("lastName", Util.list("Dalquist"));
         
         final Map<String, List<Object>> result = messageFormatPersonAttributeDao.getMultivaluedUserAttributes(query);
         
         
-        final Map<String, List<Object>> expectedResult = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> expectedResult = new LinkedHashMap<>();
         expectedResult.put("displayName", Util.list("Eric Dalquist"));
         
         assertEquals(expectedResult, result);

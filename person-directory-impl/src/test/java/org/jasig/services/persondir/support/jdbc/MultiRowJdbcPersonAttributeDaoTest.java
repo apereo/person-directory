@@ -140,9 +140,9 @@ public class MultiRowJdbcPersonAttributeDaoTest
         if ( origMappings == null || origMappings.isEmpty() ) {
             return;
         }
-        final Map<String, Set<String>> newMappings = new LinkedHashMap<String, Set<String>>();
+        final Map<String, Set<String>> newMappings = new LinkedHashMap<>();
         for ( final Map.Entry<String,Set<String>> origMapping : origMappings.entrySet() ) {
-            final Set<String> newMappingValue = new LinkedHashSet<String>();
+            final Set<String> newMappingValue = new LinkedHashSet<>();
             // multi-row dao maps all non-username attr values to the same
             // data layer column
             for ( final String origMappingValue : origMapping.getValue() ) {
@@ -162,7 +162,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         if ( origMappings == null || origMappings.isEmpty() ) {
             return;
         }
-        final Map<String, CaseCanonicalizationMode> newMappings = new LinkedHashMap<String, CaseCanonicalizationMode>();
+        final Map<String, CaseCanonicalizationMode> newMappings = new LinkedHashMap<>();
         for ( final Map.Entry<String,CaseCanonicalizationMode> origMapping : origMappings.entrySet() ) {
             // that's right, it's all or nothing for the multi-row DAO w/r/t
             // case sensitivity of non-username attribs b/c the canonicalization
@@ -185,9 +185,9 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
         impl.setUnmappedUsernameAttribute("netid");
         
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("name", "firstName");
-        final Set<String> emailAttributeNames = new LinkedHashSet<String>();
+        final Set<String> emailAttributeNames = new LinkedHashSet<>();
         emailAttributeNames.add("email");
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
@@ -214,17 +214,17 @@ public class MultiRowJdbcPersonAttributeDaoTest
        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT attr_name, attr_val FROM user_table WHERE {0}");
        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
        
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
        columnsToAttributes.put("name", "firstName");
 
-       final Set<String> emailAttributeNames = new LinkedHashSet<String>();
+       final Set<String> emailAttributeNames = new LinkedHashSet<>();
        emailAttributeNames.add("email");
        emailAttributeNames.add("emailAddress");
        columnsToAttributes.put("email", emailAttributeNames);
        columnsToAttributes.put("shirt_color", "dressShirtColor");
        impl.setResultAttributeMapping(columnsToAttributes);
 
-       final Set<String> expectedAttributeNames = new LinkedHashSet<String>();
+       final Set<String> expectedAttributeNames = new LinkedHashSet<>();
        expectedAttributeNames.add("firstName");
        expectedAttributeNames.add("email");
        expectedAttributeNames.add("emailAddress");
@@ -244,9 +244,9 @@ public class MultiRowJdbcPersonAttributeDaoTest
        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
        impl.setUnmappedUsernameAttribute("netid");
        
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
        columnsToAttributes.put("name", "firstName");
-       final Set<String> emailAttributeNames = new LinkedHashSet<String>();
+       final Set<String> emailAttributeNames = new LinkedHashSet<>();
        emailAttributeNames.add("email");
        emailAttributeNames.add("emailAddress");
        columnsToAttributes.put("email", emailAttributeNames);
@@ -275,7 +275,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
        impl.setUnmappedUsernameAttribute("netid");
 
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
        columnsToAttributes.put("name", "firstName");
 
        columnsToAttributes.put("email", "emailAddress");
@@ -313,10 +313,10 @@ public class MultiRowJdbcPersonAttributeDaoTest
        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
        impl.setUnmappedUsernameAttribute("netid");
        
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
        columnsToAttributes.put("name", "firstName");
 
-       final Set<String> emailAttributeNames = new LinkedHashSet<String>();
+       final Set<String> emailAttributeNames = new LinkedHashSet<>();
        emailAttributeNames.add("email");
        emailAttributeNames.add("emailAddress");
        columnsToAttributes.put("email", emailAttributeNames);
@@ -342,7 +342,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
        impl.setUnmappedUsernameAttribute("netid");
 
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
        columnsToAttributes.put("", "dressShirtColor");
        
        try {
@@ -364,7 +364,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
        impl.setUnmappedUsernameAttribute("netid");
        
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
        columnsToAttributes.put("name", "firstName");
        columnsToAttributes.put("shirt_color", "dressShirtColor");
        impl.setResultAttributeMapping(columnsToAttributes);
@@ -381,7 +381,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
      * more attributes than are needed to complete are passed to it.
      */
     public void testMultiAttrQuery() {
-        final Map<String, String> queryAttributeMapping = new LinkedHashMap<String, String>();
+        final Map<String, String> queryAttributeMapping = new LinkedHashMap<>();
         queryAttributeMapping.put("uid", "netid");
         queryAttributeMapping.put("shirtColor", "attr_val");
 
@@ -391,13 +391,13 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
         impl.setUnmappedUsernameAttribute("netid");
         
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("shirt_color", "color");
         impl.setResultAttributeMapping(columnsToAttributes);
         
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-        final Map<String, List<Object>> queryMap = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new LinkedHashMap<>();
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("shirtColor", Util.list("blue"));
         queryMap.put("Name",Util.list("John"));
@@ -411,7 +411,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
      * attributes aren't passed to it.
      */
     public void testInsufficientAttrQuery() {
-        final Map<String, String> queryAttributeMapping = new LinkedHashMap<String, String>();
+        final Map<String, String> queryAttributeMapping = new LinkedHashMap<>();
         queryAttributeMapping.put("uid", "netid");
         queryAttributeMapping.put("shirtColor", "attr_val");
 
@@ -422,10 +422,10 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setUnmappedUsernameAttribute("netid");
         impl.setRequireAllQueryAttributes(true);
 
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("name", "firstName");
 
-        final Set<String> emailAttributeNames = new LinkedHashSet<String>();
+        final Set<String> emailAttributeNames = new LinkedHashSet<>();
         emailAttributeNames.add("email");
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
@@ -433,7 +433,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-        final Map<String, List<Object>> queryMap = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new LinkedHashMap<>();
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("Name", Util.list("John"));
 
@@ -449,11 +449,11 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setUnmappedUsernameAttribute("netid");
         
         
-        final Map<String, Object> columnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "uid");
         columnsToAttributes.put("name", "firstName");
         
-        final Map<String, Object> expectedColumnsToAttributes = new LinkedHashMap<String, Object>();
+        final Map<String, Object> expectedColumnsToAttributes = new LinkedHashMap<>();
         expectedColumnsToAttributes.put("netid", Collections.singleton("uid"));
         expectedColumnsToAttributes.put("name", Collections.singleton("firstName"));
 

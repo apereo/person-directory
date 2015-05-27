@@ -32,12 +32,12 @@ public class Util {
      */
     public static List<Object> list(final Object... objects) {
         if (objects == null) {
-            final List<Object> list = new ArrayList<Object>(1);
+            final List<Object> list = new ArrayList<>(1);
             list.add(null);
             return list;
         }
         
-        final List<Object> list = new ArrayList<Object>(objects.length);
+        final List<Object> list = new ArrayList<>(objects.length);
         
         for (final Object obj : objects) {
             list.add(obj);
@@ -51,12 +51,12 @@ public class Util {
      */
     public static <T> List<T> genList(final T... objects) {
         if (objects == null) {
-            final List<T> list = new ArrayList<T>(1);
+            final List<T> list = new ArrayList<>(1);
             list.add(null);
             return list;
         }
         
-        final List<T> list = new ArrayList<T>(objects.length);
+        final List<T> list = new ArrayList<>(objects.length);
         
         for (final T obj : objects) {
             list.add(obj);

@@ -98,7 +98,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
         }
         
         if (this.jaxbLoader == null) {
-            this.jaxbLoader = new CachingJaxbLoaderImpl<PersonData>(PersonData.class);
+            this.jaxbLoader = new CachingJaxbLoaderImpl<>(PersonData.class);
             ((CachingJaxbLoaderImpl<PersonData>)this.jaxbLoader).setMappedXmlResource(this.mappedXmlResource);
         }
     }
@@ -136,7 +136,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
         
         //Tracks persons that could match the query
-        final Map<String, IPersonAttributes> canidatePersons = new LinkedHashMap<String, IPersonAttributes>();
+        final Map<String, IPersonAttributes> canidatePersons = new LinkedHashMap<>();
         
         boolean firstAttribute = true;
         for (final Map.Entry<String, List<Object>> queryEntry : query.entrySet()) {
@@ -148,7 +148,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
             }
             
             //Build list of non-blank attribute values
-            final List<String> entryValues = new LinkedList<String>();
+            final List<String> entryValues = new LinkedList<>();
             for (final Object entryValue : queryEntry.getValue()) {
                 //Skip null and blank values
                 final String entry;
@@ -173,8 +173,8 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
                 }
             }
             
-            final Map<String, IPersonAttributes> attributeCanidatePersons = new LinkedHashMap<String, IPersonAttributes>();
-            final Set<String> attributeMissPersons = new HashSet<String>();
+            final Map<String, IPersonAttributes> attributeCanidatePersons = new LinkedHashMap<>();
+            final Set<String> attributeMissPersons = new HashSet<>();
             
             //Iterate over each possible value for an attribute checking for a match in the personsForAttribute 
             for (final String queryString : entryValues) {
@@ -234,7 +234,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
             }
         }
         
-        return new LinkedHashSet<IPersonAttributes>(canidatePersons.values());
+        return new LinkedHashSet<>(canidatePersons.values());
     }
     
     
@@ -248,16 +248,16 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
          * @see org.jasig.services.persondir.support.xml.CachingJaxbLoader.UnmarshallingCallback#postProcessUnmarshalling(java.lang.Object)
          */
         public synchronized void postProcessUnmarshalling(final PersonData unmarshalledObject) {
-            final Set<String> attributeNames = new LinkedHashSet<String>();
-            final Map<String, Set<IPersonAttributes>> personByAttributeCache = new LinkedHashMap<String, Set<IPersonAttributes>>();
-            final Map<String, IPersonAttributes> personByNameCache = new LinkedHashMap<String, IPersonAttributes>();
+            final Set<String> attributeNames = new LinkedHashSet<>();
+            final Map<String, Set<IPersonAttributes>> personByAttributeCache = new LinkedHashMap<>();
+            final Map<String, IPersonAttributes> personByNameCache = new LinkedHashMap<>();
 
             final IUsernameAttributeProvider usernameAttributeProvider = XmlPersonAttributeDao.this.getUsernameAttributeProvider();
             final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
             attributeNames.add(usernameAttribute);
             
             for (final Person xmlPerson : unmarshalledObject.getPerson()) {
-                final Map<String, List<Object>> attributes = new LinkedHashMap<String, List<Object>>();
+                final Map<String, List<Object>> attributes = new LinkedHashMap<>();
                 
                 for (final Attribute xmlAttribute : xmlPerson.getAttribute()) {
                     final String key = xmlAttribute.getKey();
@@ -272,7 +272,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
                 for (final String key : personAttributes.getAttributes().keySet()) {
                     Set<IPersonAttributes> personsForAttribute = personByAttributeCache.get(key);
                     if (personsForAttribute == null) {
-                        personsForAttribute = new LinkedHashSet<IPersonAttributes>();
+                        personsForAttribute = new LinkedHashSet<>();
                         personByAttributeCache.put(key, personsForAttribute);
                     }
                     personsForAttribute.add(personAttributes);

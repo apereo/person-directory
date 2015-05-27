@@ -56,28 +56,28 @@ public class MergingPersonAttributeDaoImplTest
         this.sourceNull = new StubPersonAttributeDao();
         
         this.sourceOne = new StubPersonAttributeDao();
-        final Map<String, List<Object>> sourceOneMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> sourceOneMap = new HashMap<>();
         sourceOneMap.put("shirtColor", Util.list("blue"));
         sourceOneMap.put("favoriteColor", Util.list("purple"));
         this.sourceOne.setBackingMap(sourceOneMap);
         
         this.sourceTwo = new StubPersonAttributeDao();
-        final Map<String, List<Object>> sourceTwoMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> sourceTwoMap = new HashMap<>();
         sourceTwoMap.put("tieColor", Util.list("black"));
         sourceTwoMap.put("shoeType", Util.list("closed-toe"));
         this.sourceTwo.setBackingMap(sourceTwoMap);
         
-        this.oneAndTwo = new HashMap<String, List<Object>>();
+        this.oneAndTwo = new HashMap<>();
         this.oneAndTwo.putAll(sourceOneMap);
         this.oneAndTwo.putAll(sourceTwoMap);
         
         this.collidesWithOne = new StubPersonAttributeDao();
-        final Map<String, List<Object>> collidingMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> collidingMap = new HashMap<>();
         collidingMap.put("shirtColor", Util.list("white"));
         collidingMap.put("favoriteColor", Util.list("red"));
         this.collidesWithOne.setBackingMap(collidingMap);
         
-        this.oneAndTwoAndThree = new HashMap<String, List<Object>>();
+        this.oneAndTwoAndThree = new HashMap<>();
         final MultivaluedAttributeMerger merger = new MultivaluedAttributeMerger();
         this.oneAndTwoAndThree = merger.mergeAttributes(this.oneAndTwoAndThree, sourceOneMap);
         this.oneAndTwoAndThree = merger.mergeAttributes(this.oneAndTwoAndThree, sourceTwoMap);
@@ -89,7 +89,7 @@ public class MergingPersonAttributeDaoImplTest
      */
     @Override
     protected AbstractAggregatingDefaultQueryPersonAttributeDao getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao() {
-        final List<IPersonAttributeDao> attributeSources = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> attributeSources = new ArrayList<>();
         
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
@@ -113,7 +113,7 @@ public class MergingPersonAttributeDaoImplTest
      * Test basic usage to merge attributes from a couple of sources.
      */
     public void testBasics() {
-        final List<IPersonAttributeDao> attributeSources = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> attributeSources = new ArrayList<>();
         
         attributeSources.add(this.sourceNull);
         attributeSources.add(this.sourceOne);
@@ -123,7 +123,7 @@ public class MergingPersonAttributeDaoImplTest
         final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
         
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
         
         final Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap);
@@ -134,7 +134,7 @@ public class MergingPersonAttributeDaoImplTest
      * Test basic merging of attribute names.
      */
     public void testAttributeNames() {
-        final List<IPersonAttributeDao> attributeSources = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> attributeSources = new ArrayList<>();
         
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
@@ -152,7 +152,7 @@ public class MergingPersonAttributeDaoImplTest
      * of individual attribute sources on the merge list.
      */
     public void testExceptionHandling() {
-        final List<IPersonAttributeDao> attributeSources = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> attributeSources = new ArrayList<>();
         
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
@@ -162,7 +162,7 @@ public class MergingPersonAttributeDaoImplTest
         final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
         
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
         
         final Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap);
@@ -174,7 +174,7 @@ public class MergingPersonAttributeDaoImplTest
      * getPossibleUserAttributeNames().
      */
     public void testNullAttribNames() {
-        final List<IPersonAttributeDao> attributeSources = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> attributeSources = new ArrayList<>();
         
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
@@ -186,7 +186,7 @@ public class MergingPersonAttributeDaoImplTest
         
         final Set<String> attribNames = impl.getPossibleUserAttributeNames();
         
-        final Set<String> expectedAttribNames = new HashSet<String>();
+        final Set<String> expectedAttribNames = new HashSet<>();
         expectedAttribNames.addAll(this.sourceOne.getPossibleUserAttributeNames());
         expectedAttribNames.addAll(this.sourceTwo.getPossibleUserAttributeNames());
         expectedAttribNames.addAll(this.collidesWithOne.getPossibleUserAttributeNames());
@@ -199,7 +199,7 @@ public class MergingPersonAttributeDaoImplTest
      * propogates RuntimeExceptions generated by its attribute sources.
      */
     public void testExceptionThrowing() {
-        final List<IPersonAttributeDao> attributeSources = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> attributeSources = new ArrayList<>();
         
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
@@ -211,7 +211,7 @@ public class MergingPersonAttributeDaoImplTest
         impl.setRecoverExceptions(false);
         
         try {
-            final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+            final Map<String, List<Object>> queryMap = new HashMap<>();
             queryMap.put(queryAttr, Util.list("awp9"));
             
             impl.getMultivaluedUserAttributes(queryMap);
@@ -227,7 +227,7 @@ public class MergingPersonAttributeDaoImplTest
      *
      */
     public void testAlternativeMerging() {
-        final List<IPersonAttributeDao> attributeSources = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> attributeSources = new ArrayList<>();
         
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
@@ -237,7 +237,7 @@ public class MergingPersonAttributeDaoImplTest
         impl.setPersonAttributeDaos(attributeSources);
         impl.setMerger(new NoncollidingAttributeAdder());
         
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
         
         final Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap);
@@ -246,7 +246,7 @@ public class MergingPersonAttributeDaoImplTest
     
     public void testNoChildDaos() {
         final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
         
         try {
@@ -262,18 +262,18 @@ public class MergingPersonAttributeDaoImplTest
      * getPossibleUserAttributeNames().
      */
     public void testUsernameWildcardQuery() {
-        final List<IPersonAttributeDao> attributeSources = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> attributeSources = new ArrayList<>();
         
         final ComplexStubPersonAttributeDao complexSourceOne = new ComplexStubPersonAttributeDao();
-        final Map<String, Map<String, List<Object>>> backingMapOne = new HashMap<String, Map<String,List<Object>>>();
+        final Map<String, Map<String, List<Object>>> backingMapOne = new HashMap<>();
         
-        final Map<String, List<Object>> loHomeAttrs = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> loHomeAttrs = new HashMap<>();
         loHomeAttrs.put("username", Arrays.asList((Object)"lo-home"));
         loHomeAttrs.put("givenName", Arrays.asList((Object)"Home"));
         loHomeAttrs.put("familyName", Arrays.asList((Object)"Layout Owner"));
         backingMapOne.put("lo-home", loHomeAttrs);
         
-        final Map<String, List<Object>> loWelcomeAttrs = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> loWelcomeAttrs = new HashMap<>();
         loWelcomeAttrs.put("username", Arrays.asList((Object)"lo-welcome"));
         loWelcomeAttrs.put("givenName", Arrays.asList((Object)"Welcome"));
         loWelcomeAttrs.put("familyName", Arrays.asList((Object)"Layout Owner"));
@@ -285,15 +285,15 @@ public class MergingPersonAttributeDaoImplTest
         
         
         final ComplexStubPersonAttributeDao complexSourceTwo = new ComplexStubPersonAttributeDao();
-        final Map<String, Map<String, List<Object>>> backingMapTwo = new HashMap<String, Map<String,List<Object>>>();
+        final Map<String, Map<String, List<Object>>> backingMapTwo = new HashMap<>();
         
-        final Map<String, List<Object>> edalquistAttrs = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> edalquistAttrs = new HashMap<>();
         edalquistAttrs.put("username", Arrays.asList((Object)"edalquist"));
         edalquistAttrs.put("givenName", Arrays.asList((Object)"Eric"));
         edalquistAttrs.put("familyName", Arrays.asList((Object)"Dalquist"));
         backingMapTwo.put("edalquist", edalquistAttrs);
         
-        final Map<String, List<Object>> jshomeAttrs = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> jshomeAttrs = new HashMap<>();
         jshomeAttrs.put("username", Arrays.asList((Object)"jshome"));
         jshomeAttrs.put("givenName", Arrays.asList((Object)"Joe"));
         jshomeAttrs.put("familyName", Arrays.asList((Object)"Shome"));
@@ -308,7 +308,7 @@ public class MergingPersonAttributeDaoImplTest
         
         final Set<IPersonAttributes> layoutOwners = impl.getPeople(Collections.singletonMap("username", (Object)"lo-*"));
 
-        final Set<IPersonAttributes> excepectedLayoutOwners = new HashSet<IPersonAttributes>();
+        final Set<IPersonAttributes> excepectedLayoutOwners = new HashSet<>();
         excepectedLayoutOwners.add(new NamedPersonImpl("lo-welcome", loWelcomeAttrs));
         excepectedLayoutOwners.add(new NamedPersonImpl("lo-home", loHomeAttrs));
         
@@ -318,7 +318,7 @@ public class MergingPersonAttributeDaoImplTest
         
         final Set<IPersonAttributes> homeUsers = impl.getPeople(Collections.singletonMap("username", (Object)"*home"));
 
-        final Set<IPersonAttributes> excepectedHomeUsers = new HashSet<IPersonAttributes>();
+        final Set<IPersonAttributes> excepectedHomeUsers = new HashSet<>();
         excepectedHomeUsers.add(new NamedPersonImpl("jshome", jshomeAttrs));
         excepectedHomeUsers.add(new NamedPersonImpl("lo-home", loHomeAttrs));
         

@@ -338,7 +338,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         if (servletRequest instanceof HttpServletRequest) {
             final HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
             
-            final Map<String, List<Object>> attributes = new LinkedHashMap<String, List<Object>>();
+            final Map<String, List<Object>> attributes = new LinkedHashMap<>();
             
             this.addRequestProperties(httpServletRequest, attributes);
 
@@ -438,7 +438,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /* transforms "a\;b" into list { "a;b" } */
     /* transforms "a;b\;" into list { "a", "b;" } */
     private static List<String> splitOnSemiColonHandlingBackslashEscaping(final String in) {
-	final List<String> result = new LinkedList<String>();
+	final List<String> result = new LinkedList<>();
 
         int i = 1;
         String prefix = "";

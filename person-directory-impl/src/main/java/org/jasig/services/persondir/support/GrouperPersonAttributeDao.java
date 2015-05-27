@@ -55,8 +55,8 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     public IPersonAttributes getPerson(final String subjectId) {
         final GcGetGroups groupsClient = new GcGetGroups().addSubjectId(subjectId);
-        final Map<String, List<Object>> grouperGroupsAsAttributesMap = new HashMap<String, List<Object>>(1);
-        final List<Object> groupsList = new ArrayList<Object>();
+        final Map<String, List<Object>> grouperGroupsAsAttributesMap = new HashMap<>(1);
+        final List<Object> groupsList = new ArrayList<>();
         grouperGroupsAsAttributesMap.put("grouperGroups", groupsList);
         final IPersonAttributes personAttributes = new AttributeNamedPersonImpl(grouperGroupsAsAttributesMap);
 

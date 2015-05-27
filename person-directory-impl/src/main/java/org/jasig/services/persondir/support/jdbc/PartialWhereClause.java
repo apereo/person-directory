@@ -24,7 +24,7 @@ import java.util.List;
 
 class PartialWhereClause {
     public final StringBuilder sql = new StringBuilder();
-    public final List<String> arguments = new LinkedList<String>();
+    public final List<String> arguments = new LinkedList<>();
     
     /* (non-Javadoc)
      * @see java.lang.Object#toString()

@@ -53,7 +53,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
     }
     
     public void testAvailableAttributes() {
-        final Set<String> expectedAttributes = new LinkedHashSet<String>(
+        final Set<String> expectedAttributes = new LinkedHashSet<>(
                 Arrays.asList("username", "givenName", "familyName", "email", "sisID", "portalId", "emplid"));
 
         final Set<String> availableQueryAttributes = this.xmlPersonAttributeDao.getAvailableQueryAttributes();
@@ -74,7 +74,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
         assertNotNull(mstaffPerson);
         assertEquals("mstaff", mstaffPerson.getName());
         
-        final Map<String, List<String>> mstaffAttributes = new LinkedHashMap<String, List<String>>();
+        final Map<String, List<String>> mstaffAttributes = new LinkedHashMap<>();
         mstaffAttributes.put("givenName", Arrays.asList("Mary"));
         mstaffAttributes.put("familyName", Arrays.asList("Staff"));
         mstaffAttributes.put("email", Arrays.asList("mstaff@example.edu"));
@@ -88,7 +88,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
     }
     
     public void testAttributeSearch1() {
-        final Map<String, List<Object>> query = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("email", Util.list("*@example.edu", "*@faculty.org"));
         
         final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query);
@@ -96,7 +96,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
     }
     
     public void testAttributeSearch2() {
-        final Map<String, List<Object>> query = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("email", Util.list("*@example.edu", "j*"));
         
         final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query);
@@ -104,7 +104,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
     }
     
     public void testAttributeSearch3() {
-        final Map<String, List<Object>> query = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("email", Util.list("*@example.edu", "*@faculty.org"));
         query.put("emplid", Util.list("*"));
         
@@ -113,7 +113,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
     }
     
     public void testAttributeSearch4() {
-        final Map<String, List<Object>> query = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("email", Util.list("*@example.edu", "*@faculty.org"));
         query.put("emplid", Util.list(""));
         
@@ -122,7 +122,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
     }
     
     public void testAttributeSearch5() {
-        final Map<String, List<Object>> query = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("emplid", Util.list(""));
         query.put("email", Util.list("*@example.edu", "*@faculty.org"));
         

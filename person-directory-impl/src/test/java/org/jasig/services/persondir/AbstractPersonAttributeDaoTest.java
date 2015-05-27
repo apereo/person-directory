@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a
  * copy of the License at:
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -58,10 +58,10 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
     /**
      * Get an instance of the type of IPersonAttributeDao the implementing
      * testcase is intended to test.
-     * 
+     *
      * This method will be invoked exactly once per invocation of each test method
      * implemented in this abstract class.
-     
+
      * @return an IPersonAttributeDao instance for us to test
      */
     protected abstract IPersonAttributeDao getPersonAttributeDaoInstance();
@@ -101,7 +101,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         fail("Expected IllegalArgumentException on getUserAttributes((Map)null)");
 
     }
-    
+
     /**
      * Test that invocation of getMultivaluedUserAttributes(String null) throws
      * IllegalArgumentException as specified in IPersonAttributeDao's
@@ -118,7 +118,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         }
         fail("Expected IllegalArgumentException on getMultivaluedUserAttributes((String)null)");
     }
-    
+
     /**
      * Test that invocation of getUserAttributes(String null) throws
      * IllegalArgumentException as specified in IPersonAttributeDao's
@@ -135,7 +135,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         }
         fail("Expected IllegalArgumentException on getUserAttributes((String)null)");
     }
-    
+
     /**
      * Test that invocation of getPersonAttributeDaoInstance() is not
      * null and immutable
@@ -143,12 +143,14 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
     public void testPossibleSetConstraints() {
         final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
         final Set<String> possibleNames = dao.getPossibleUserAttributeNames();
-        
-        if (possibleNames != null) {
-            final String newObj = new String();
-            possibleNames.add(newObj);
+        try {
+            if (possibleNames != null) {
+                final String newObj = new String();
+                possibleNames.add(newObj);
 
-            assertTrue(dao.getPossibleUserAttributeNames().size() == possibleNames.size());
+                assertTrue(dao.getPossibleUserAttributeNames().size() == possibleNames.size());
+            }
+        } catch (UnsupportedOperationException e) {
         }
     }
 

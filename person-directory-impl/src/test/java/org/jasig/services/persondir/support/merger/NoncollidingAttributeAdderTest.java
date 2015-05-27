@@ -38,11 +38,11 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
      * Test identity of adding an empty map.
      */
     public void testAddEmpty() {
-        final Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
         
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(someAttributes);
         
         final Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
@@ -55,15 +55,15 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
      * no collisions.
      */
     public void testAddNoncolliding() {
-        final Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
         
-        final Map<String, List<Object>> otherAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> otherAttributes = new HashMap<>();
         otherAttributes.put("attName3", Util.list("attValue3"));
         otherAttributes.put("attName4", Util.list("attValue4"));
         
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(someAttributes);
         expected.putAll(otherAttributes);
         
@@ -77,15 +77,15 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
      * Test that colliding attributes are not added.
      */
     public void testColliding() {
-        final Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
         
-        final Map<String, List<Object>> otherAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> otherAttributes = new HashMap<>();
         otherAttributes.put("attName", Util.list("attValue3"));
         otherAttributes.put("attName4", Util.list("attValue4"));
         
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(someAttributes);
         expected.put("attName4", Util.list("attValue4"));
         
