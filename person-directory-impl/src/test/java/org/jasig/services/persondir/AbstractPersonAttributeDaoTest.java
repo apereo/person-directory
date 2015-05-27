@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import junit.framework.TestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.StringWriter;
 import java.util.List;
@@ -40,6 +42,7 @@ import java.util.Set;
  */
 @SuppressWarnings("deprecation")
 public abstract class AbstractPersonAttributeDaoTest extends TestCase {
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected final ObjectMapper mapper = new ObjectMapper();
 
@@ -164,8 +167,9 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         try {
             final StringWriter writer = new StringWriter();
             getJsonWriter().writeValue(writer, obj);
-            return writer.getBuffer().toString();
-
+            final String output = writer.getBuffer().toString();
+            logger.debug(output);
+            return output;
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
