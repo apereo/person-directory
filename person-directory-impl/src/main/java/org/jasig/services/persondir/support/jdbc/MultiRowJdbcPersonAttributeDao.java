@@ -109,7 +109,11 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      * Keys are Strings, Values are Strings or List of Strings 
      */
     private Map<String, Set<String>> nameValueColumnMappings = null;
-    
+
+    public MultiRowJdbcPersonAttributeDao() {
+        super();
+    }
+
     /**
      * Creates a new MultiRowJdbcPersonAttributeDao specifying the DataSource and SQL to use.
      * 

@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.CaseCanonicalizationMode;
@@ -113,6 +114,8 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
      * Returns an empty <code>Set</code>, per the API documentation, because we 
      * don't use any attributes in queries.
      */
+    @Override
+    @JsonIgnore
     public Set<String> getAvailableQueryAttributes() {
         final IUsernameAttributeProvider usernameAttributeProvider = super.getUsernameAttributeProvider();
         return Collections.singleton(usernameAttributeProvider.getUsernameAttribute());
@@ -121,6 +124,8 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
+    @Override
+    @JsonIgnore
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("invoking getPeopleWithMultivaluedAttributes(" + query + ")");

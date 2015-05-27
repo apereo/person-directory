@@ -35,6 +35,10 @@ import org.jasig.services.persondir.IPersonAttributes;
  */
 public abstract class AbstractFlatteningPersonAttributeDao extends BasePersonAttributeDao {
 
+    public AbstractFlatteningPersonAttributeDao() {
+        super();
+    }
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeople(java.util.Map)
      */

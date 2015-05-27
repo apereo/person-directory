@@ -19,10 +19,7 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -45,7 +42,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
         
         final Map<String, List<Object>> immutableValuesBuilder = this.buildImmutableAttributeMap(attributes);
         
-        this.attributes = Collections.unmodifiableMap(immutableValuesBuilder);
+        this.attributes = new HashMap<>(immutableValuesBuilder);
     }
 
     /**

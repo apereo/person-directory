@@ -19,14 +19,7 @@
 
 package org.jasig.services.persondir.support;
 
-import java.io.Serializable;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.logging.Log;
@@ -36,6 +29,11 @@ import org.jasig.services.persondir.IPersonAttributes;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springmodules.cache.key.CacheKeyGenerator;
+
+import java.io.Serializable;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * A configurable caching implementation of {@link IPersonAttributeDao} 
@@ -106,13 +104,17 @@ import org.springmodules.cache.key.CacheKeyGenerator;
  * @version $Id
  */
 public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao implements InitializingBean, BeanNameAware {
-    protected static final Set<IPersonAttributes> NULL_RESULTS_OBJECT = Collections.singleton((IPersonAttributes)new SingletonPersonImpl());
+    protected static final Set<IPersonAttributes> NULL_RESULTS_OBJECT;
             
     protected Log statsLogger = LogFactory.getLog(this.getClass().getName() + ".statistics");
 
     private long queries = 0;
     private long misses = 0;
-    
+
+    static {
+        NULL_RESULTS_OBJECT = new HashSet();
+        NULL_RESULTS_OBJECT.add(new SingletonPersonImpl());
+    }
     /*
      * The IPersonAttributeDao to delegate cache misses to.
      */
@@ -184,6 +186,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /**
      * @return Returns the userInfoCache.
      */
+    @JsonIgnore
     public Map<Serializable, Set<IPersonAttributes>> getUserInfoCache() {
         return this.userInfoCache;
     }
@@ -193,6 +196,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @param userInfoCache The userInfoCache to set.
      */
+    @JsonIgnore
     public void setUserInfoCache(final Map<Serializable, Set<IPersonAttributes>> userInfoCache) {
         if (userInfoCache == null) {
             throw new IllegalArgumentException("userInfoCache may not be null");
@@ -228,6 +232,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @param nullResultsObject the nullResultsObject to set
      */
+    @JsonIgnore
     public void setNullResultsObject(final Set<IPersonAttributes> nullResultsObject) {
         if (nullResultsObject == null) {
             throw new IllegalArgumentException("nullResultsObject may not be null");
@@ -373,6 +378,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @Override
+    @JsonIgnore
     public Set<String> getPossibleUserAttributeNames() {
         return this.cachedPersonAttributesDao.getPossibleUserAttributeNames();
     }
@@ -380,6 +387,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @Override
+    @JsonIgnore
     public Set<String> getAvailableQueryAttributes() {
         return this.cachedPersonAttributesDao.getAvailableQueryAttributes();
     }
@@ -443,13 +452,13 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
             throw new UnsupportedOperationException("This is a fake MethodInvocation, proceed() is not supported.");
         }
     }
-    
-    private static final class SingletonPersonImpl extends BasePersonImpl {
+
+    private static final class SingletonPersonImpl extends BasePersonImpl implements Serializable {
         private static final long serialVersionUID = 1L;
 
         @SuppressWarnings("unchecked")
         public SingletonPersonImpl() {
-            super(Collections.EMPTY_MAP);
+            super(new HashMap<String, List<Object>>());
         }
 
         /* (non-Javadoc)

@@ -148,7 +148,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
                 final String newObj = new String();
                 possibleNames.add(newObj);
 
-                assertTrue(dao.getPossibleUserAttributeNames().size() == possibleNames.size());
+                assertTrue(dao.getPossibleUserAttributeNames().size() != possibleNames.size());
             }
         } catch (UnsupportedOperationException e) {
         }
@@ -160,9 +160,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
 
     protected String serializeJson(final Object obj) {
         try {
-            final StringWriter writer = new StringWriter();
-            getJsonWriter().writeValue(writer, obj);
-            final String output = writer.getBuffer().toString();
+            final String output = getJsonWriter().writeValueAsString(obj);
             logger.debug(output);
             return output;
         } catch (final Exception e) {

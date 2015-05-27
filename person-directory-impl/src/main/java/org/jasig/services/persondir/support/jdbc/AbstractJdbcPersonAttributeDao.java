@@ -19,18 +19,7 @@
 
 package org.jasig.services.persondir.support.jdbc;
 
-import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.sql.DataSource;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.jasig.services.persondir.IPersonAttributeDao;
@@ -38,8 +27,17 @@ import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.QueryType;
 import org.jasig.services.persondir.util.CaseCanonicalizationMode;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
+
+import javax.sql.DataSource;
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Provides common logic for executing a JDBC based query including building the WHERE clause SQL string.
@@ -67,21 +65,36 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @version $Revision$
  */
 public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPersonAttributeDao<PartialWhereClause> {
+    private static final Map<CaseCanonicalizationMode, MessageFormat>
+            DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS;
+
+    static {
+        DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS = new HashMap();
+
+        DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS.put(CaseCanonicalizationMode.LOWER, new MessageFormat("lower({0})"));
+        DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS.put(CaseCanonicalizationMode.UPPER, new MessageFormat("upper({0})"));
+        DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS.put(CaseCanonicalizationMode.NONE, new MessageFormat("{0}"));
+
+    }
+
     private static final Pattern WHERE_PLACEHOLDER = Pattern.compile("\\{0\\}");
-    private static final Map<CaseCanonicalizationMode,MessageFormat> DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS =
-            Collections.unmodifiableMap(new LinkedHashMap<CaseCanonicalizationMode, MessageFormat>() {{
-                put(CaseCanonicalizationMode.LOWER, new MessageFormat("lower({0})"));
-                put(CaseCanonicalizationMode.UPPER, new MessageFormat("upper({0})"));
-                put(CaseCanonicalizationMode.NONE, new MessageFormat("{0}"));
-            }});
+
+
     
     private final JdbcTemplate simpleJdbcTemplate;
     private final String queryTemplate;
     private QueryType queryType = QueryType.AND;
     private Map<String,CaseCanonicalizationMode> caseInsensitiveDataAttributes;
 
-    private Map<CaseCanonicalizationMode,MessageFormat> dataAttributeCaseCanonicalizationFunctions = DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS;
-    
+    private Map<CaseCanonicalizationMode,MessageFormat> dataAttributeCaseCanonicalizationFunctions =
+            DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS;
+
+    public AbstractJdbcPersonAttributeDao() {
+        super();
+        this.simpleJdbcTemplate = null;
+        this.queryTemplate = null;
+    }
+
     /**
      * @param ds The DataSource to use for queries
      * @param queryTemplate Template to use for SQL query generation. Use {0} as the placeholder for where the generated portion of the WHERE clause should be inserted. 
@@ -129,6 +142,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     /**
      * @return The ParameterizedRowMapper to handle the results of the SQL query.
      */
+    @JsonIgnore
     protected abstract ParameterizedRowMapper<R> getRowMapper();
     
     /* (non-Javadoc)
@@ -265,10 +279,12 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
      *
      * @param dataAttributeCaseCanonicalizationFunctions
      */
+    @JsonIgnore
     public void setDataAttributeCaseCanonicalizationFunctions(final Map<CaseCanonicalizationMode, MessageFormat> dataAttributeCaseCanonicalizationFunctions) {
         this.dataAttributeCaseCanonicalizationFunctions = dataAttributeCaseCanonicalizationFunctions;
     }
 
+    @JsonIgnore
     public Map<CaseCanonicalizationMode, MessageFormat> getDataAttributeCaseCanonicalizationFunctions() {
         return dataAttributeCaseCanonicalizationFunctions;
     }

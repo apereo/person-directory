@@ -31,8 +31,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import junit.framework.TestCase;
 
+import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
+import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 import org.jasig.services.persondir.util.Util;
@@ -41,7 +44,7 @@ import org.jasig.services.persondir.util.Util;
  * @author Eric Dalquist 
  * @version $Revision$
  */
-public class AbstractQueryPersonAttributeDaoTest extends TestCase {
+public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
     private TestQueryPersonAttributeDao testQueryPersonAttributeDao;
     
     /**
@@ -277,6 +280,11 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         assertEquals(Util.genList("dalquist"), result.getAttributeValues("name.last"));
     }
 
+    @Override
+    protected IPersonAttributeDao getPersonAttributeDaoInstance() {
+        return testQueryPersonAttributeDao;
+    }
+
     private static class InMemoryAbstractQueryPersonAttributeDao extends AbstractQueryPersonAttributeDao<List<List<Object>>> {
 
         private StubPersonAttributeDao storage;
@@ -303,9 +311,14 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         }
     }
 
-    private class TestQueryPersonAttributeDao extends AbstractQueryPersonAttributeDao<List<List<Object>>> {
+    public static class TestQueryPersonAttributeDao extends AbstractQueryPersonAttributeDao<List<List<Object>>> {
         private List<List<Object>> args = null;
-        
+
+        @JsonCreator
+        public TestQueryPersonAttributeDao() {
+            super();
+        }
+
         /**
          * @return the args
          */

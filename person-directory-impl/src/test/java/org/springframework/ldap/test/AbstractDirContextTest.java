@@ -21,21 +21,32 @@ package org.springframework.ldap.test;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.InvalidNameException;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.directory.server.core.configuration.MutablePartitionConfiguration;
 import org.apache.directory.server.unit.AbstractServerTest;
+import org.jasig.services.persondir.IPersonAttributeDao;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -48,7 +59,7 @@ import org.springframework.ldap.core.support.LdapContextSource;
  */
 public abstract class AbstractDirContextTest extends AbstractServerTest {
     private ContextSource contextSource;
-    
+
     /**
      * Initialize the server.
      */
@@ -211,4 +222,5 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
         assertTrue(attribute.contains("organization"));
         // Ok, everything is fine
     }
+
 }

@@ -40,7 +40,12 @@ import org.springframework.dao.support.DataAccessUtils;
  */
 public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     protected final Log logger = LogFactory.getLog(getClass());
-    
+
+
+    public BasePersonAttributeDao() {
+        super();
+    }
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
      */
@@ -69,7 +74,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
             return null;
         }
 
-        //Make a mutable copy of the peron's attributes
+        //Make a mutable copy of the person's attributes
         return new LinkedHashMap<>(person.getAttributes());
     }
 

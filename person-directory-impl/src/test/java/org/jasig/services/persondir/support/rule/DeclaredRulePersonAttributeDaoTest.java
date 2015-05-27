@@ -28,11 +28,12 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.util.Util;
 
 @SuppressWarnings("deprecation")
-public class DeclaredRulePersonAttributeDaoTest extends TestCase {
+public class DeclaredRulePersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
 
 	private static final String NAME = "eduPersonPrimaryAffiliation"; 
 	private static final String VALUE = "(480) 555-1212"; 
@@ -50,6 +51,11 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 							"records-staff", "userName", "fax", VALUE);
 		this.target = new DeclaredRulePersonAttributeDao(NAME, 
 								Arrays.asList(new AttributeRule[] { this.rule }));
+	}
+
+	@Override
+	protected IPersonAttributeDao getPersonAttributeDaoInstance() {
+		return this.target;
 	}
 
 	public void testConstructorParameters() {

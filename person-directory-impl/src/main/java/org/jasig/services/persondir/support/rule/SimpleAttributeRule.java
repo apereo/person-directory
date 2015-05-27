@@ -19,13 +19,10 @@
 
 package org.jasig.services.persondir.support.rule;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.NamedPersonImpl;
 
@@ -43,10 +40,18 @@ public final class SimpleAttributeRule implements AttributeRule {
     private final String setValue;
     private final Set<String> possibleAttributeNames;
 
+    public SimpleAttributeRule() {
+        whenKey = null;
+        whenPattern = null;
+        setUserName = null;
+        setKey = null;
+        setValue = null;
+        possibleAttributeNames = new HashSet<>();
+    }
+
     /*
      * Public API.
      */
-
     public SimpleAttributeRule(final String whenKey, final String whenPattern, final String setUserName,
                             final String setKey, final String setValue) {
 
@@ -79,7 +84,10 @@ public final class SimpleAttributeRule implements AttributeRule {
         this.setKey = setKey;
         this.setValue = setValue;
         
-        this.possibleAttributeNames = Collections.singleton(this.setKey);
+        final Set list = new HashSet();
+        list.add(this.setKey);
+        
+        this.possibleAttributeNames = list;
     }
 
     public boolean appliesTo(final Map<String, List<Object>> userInfo) {
@@ -138,11 +146,16 @@ public final class SimpleAttributeRule implements AttributeRule {
         return Collections.singleton(person);
     }
 
+    @JsonIgnore
     public Set<String> getPossibleUserAttributeNames() {
         return this.possibleAttributeNames;
     }
 
+    @JsonIgnore
     public Set<String> getAvailableQueryAttributes() {
-        return Collections.singleton(this.whenKey);
+        final Set list = new HashSet();
+        list.add(this.whenKey);
+        
+        return list;
     }
 }

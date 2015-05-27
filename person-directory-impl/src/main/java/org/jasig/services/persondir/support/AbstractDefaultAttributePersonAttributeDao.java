@@ -63,6 +63,10 @@ import org.springframework.dao.support.DataAccessUtils;
 public abstract class AbstractDefaultAttributePersonAttributeDao extends AbstractFlatteningPersonAttributeDao {
     private IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
 
+    public AbstractDefaultAttributePersonAttributeDao() {
+        super();
+    }
+
     /**
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
      * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one matching {@link IPersonAttributes} is found.

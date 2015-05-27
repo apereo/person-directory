@@ -19,13 +19,6 @@
 
 package org.jasig.services.persondir.support.ldap;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.jasig.services.persondir.util.Util;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.core.io.ClassPathResource;
@@ -33,7 +26,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.ldap.test.AbstractDirContextTest;
 
-import static junit.framework.TestCase.*;
+import java.util.*;
 
 
 /**
