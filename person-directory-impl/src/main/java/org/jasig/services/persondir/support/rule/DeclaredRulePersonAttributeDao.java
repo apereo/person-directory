@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
@@ -65,6 +67,9 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      */
     private List<AttributeRule> rules;
 
+    public DeclaredRulePersonAttributeDao() {
+        super();
+    }
 
     /**
      * Creates a new DeclaredRulePersonAttributeDao specifying the attributeName to pass to
@@ -118,7 +123,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
                     logger.debug("Evaluating rule='" + rule + "' from the rules List");
                 }
 
-            	return rule.evaluate(seed);
+                return rule.evaluate(seed);
             }
         }
         
@@ -131,6 +136,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * 
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @JsonIgnore
     public Set<String> getPossibleUserAttributeNames() {
         final Set<String> rslt = new LinkedHashSet<>();
 
@@ -145,6 +151,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @JsonIgnore
     public Set<String> getAvailableQueryAttributes() {
         final Set<String> rslt = new LinkedHashSet<>();
 

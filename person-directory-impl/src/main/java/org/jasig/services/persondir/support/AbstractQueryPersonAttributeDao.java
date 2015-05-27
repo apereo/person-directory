@@ -19,16 +19,7 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
@@ -110,6 +101,10 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     private String unmappedUsernameAttribute = null;
     
 
+    public AbstractQueryPersonAttributeDao() {
+        super();
+    }
+
     public boolean isUseAllQueryAttributes() {
         return this.useAllQueryAttributes;
     }
@@ -137,7 +132,8 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @param queryAttributeMapping the queryAttributeMapping to set
      */
     public void setQueryAttributeMapping(final Map<String, ?> queryAttributeMapping) {
-        final Map<String, Set<String>> parsedQueryAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(queryAttributeMapping);
+        final Map<String, Set<String>> parsedQueryAttributeMapping =
+                MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(queryAttributeMapping);
         
         if (parsedQueryAttributeMapping.containsKey("")) {
             throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
@@ -174,7 +170,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         final Collection<String> userAttributes = MultivaluedPersonAttributeUtils.flattenCollection(parsedResultAttributeMapping.values());
         
         this.resultAttributeMapping = parsedResultAttributeMapping;
-        this.possibleUserAttributes = Collections.unmodifiableSet(new LinkedHashSet<>(userAttributes));
+        this.possibleUserAttributes = new LinkedHashSet<>(userAttributes);
     }
     
     /**
@@ -246,17 +242,20 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @JsonIgnore
     public Set<String> getAvailableQueryAttributes() {
         if (this.queryAttributeMapping == null) {
-            return Collections.emptySet();
+            return new HashSet<>();
         }
-        
-        return Collections.unmodifiableSet(this.queryAttributeMapping.keySet());
+
+        final Set list = new HashSet(this.queryAttributeMapping.keySet());
+        return list;
     }
-    
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @JsonIgnore
     public Set<String> getPossibleUserAttributeNames() {
         return this.possibleUserAttributes;
     }

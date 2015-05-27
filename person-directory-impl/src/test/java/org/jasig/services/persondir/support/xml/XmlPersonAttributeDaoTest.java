@@ -19,19 +19,14 @@
 
 package org.jasig.services.persondir.support.xml;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
+import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
+import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.Util;
 import org.springframework.core.io.ClassPathResource;
+
+import java.util.*;
 
 /**
  * @author Eric Dalquist
@@ -129,4 +124,5 @@ public class XmlPersonAttributeDaoTest extends TestCase {
         final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query);
         assertEquals(3, results.size());
     }
+
 }

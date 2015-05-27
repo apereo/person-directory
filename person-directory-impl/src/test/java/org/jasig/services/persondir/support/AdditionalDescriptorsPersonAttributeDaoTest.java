@@ -26,39 +26,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
+import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 
 import junit.framework.TestCase;
 
-public class AdditionalDescriptorsPersonAttributeDaoTest extends TestCase {
+public class AdditionalDescriptorsPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
     
     private static final String USERNAME = "user";
     private static final String USERNAME_ATTRIBUTE = "username";
     private static final IUsernameAttributeProvider UAP = new SimpleUsernameAttributeProvider(USERNAME_ATTRIBUTE);
-    private static final ICurrentUserProvider CUP = new ICurrentUserProvider() {
-        public String getCurrentUserName() {
-            return USERNAME;
-        }
-    };
+    private static final ICurrentUserProvider CUP = new CurrentUserProvider();
+
     private static final String ATTRIBUTE_NAME = "attribute";
     private static final List<Object> ATTRIBUTE_VALUES = Arrays.asList(new Object[] {"foo", "bar"});
-    
 
     /*
      * Public API.
      */
     
     public void testGetAvailableQueryAttributes() {
-        
-        final AdditionalDescriptors ad = new AdditionalDescriptors();
-        ad.setName(USERNAME);
-        
-        final AdditionalDescriptorsPersonAttributeDao adpad = new AdditionalDescriptorsPersonAttributeDao();
-        adpad.setUsernameAttributeProvider(UAP);
-        adpad.setCurrentUserProvider(CUP);
-        adpad.setDescriptors(ad);
-        
-        TestCase.assertEquals(adpad.getAvailableQueryAttributes(), Collections.singleton(USERNAME_ATTRIBUTE));
+        TestCase.assertEquals(getPersonAttributeDaoInstance()
+                .getAvailableQueryAttributes(), Collections.singleton(USERNAME_ATTRIBUTE));
         
     }
     
@@ -88,4 +79,24 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends TestCase {
 
     }
 
+    @Override
+    protected IPersonAttributeDao getPersonAttributeDaoInstance() {
+        final AdditionalDescriptors ad = new AdditionalDescriptors();
+        ad.setName(USERNAME);
+
+        final AdditionalDescriptorsPersonAttributeDao adpad = new AdditionalDescriptorsPersonAttributeDao();
+        adpad.setUsernameAttributeProvider(UAP);
+        adpad.setCurrentUserProvider(CUP);
+        adpad.setDescriptors(ad);
+
+        return adpad;
+    }
+
+    private static final class CurrentUserProvider implements ICurrentUserProvider {
+        @JsonIgnore
+        @Override
+        public String getCurrentUserName() {
+            return USERNAME;
+        }
+    }
 }

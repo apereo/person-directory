@@ -19,14 +19,7 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang3.Validate;
 
@@ -71,7 +64,7 @@ public final class MultivaluedPersonAttributeUtils {
     public static Map<String, Set<String>> parseAttributeToAttributeMapping(final Map<String, ? extends Object> mapping) {
         //null is assumed to be an empty map
         if (mapping == null) {
-            return Collections.emptyMap();
+            return new HashMap<>();
         }
         
         final Map<String, Set<String>> mappedAttributesBuilder = new LinkedHashMap<>();
@@ -88,7 +81,8 @@ public final class MultivaluedPersonAttributeUtils {
             }
             //Create a single item set for the string mapping
             else if (mappedAttribute instanceof String) {
-                final Set<String> mappedSet = Collections.singleton((String)mappedAttribute);
+                final Set<String> mappedSet = new HashSet<>();
+                mappedSet.add(mappedAttribute.toString());
                 mappedAttributesBuilder.put(sourceAttrName, mappedSet);
             }
             //Create a defenisve copy of the mapped set & verify its contents are strings
@@ -106,7 +100,7 @@ public final class MultivaluedPersonAttributeUtils {
                     }
                 }
                 
-                mappedAttributesBuilder.put(sourceAttrName, Collections.unmodifiableSet(mappedSet));
+                mappedAttributesBuilder.put(sourceAttrName, mappedSet);
             }
             //Not a valid type for the mapping
             else {
@@ -114,7 +108,7 @@ public final class MultivaluedPersonAttributeUtils {
             }
         }
         
-        return Collections.unmodifiableMap(mappedAttributesBuilder);
+        return new HashMap<>(mappedAttributesBuilder);
     }
     
     /**

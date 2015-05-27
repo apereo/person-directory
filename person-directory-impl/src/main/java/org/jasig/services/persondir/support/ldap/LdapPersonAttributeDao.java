@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import javax.naming.directory.SearchControls;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
@@ -130,7 +131,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     private String queryTemplate = null;
     private ContextSource contextSource = null;
     private SearchControls searchControls = new SearchControls();
-    private boolean setReturningAttributes = true;
+    private final boolean setReturningAttributes = true;
     private QueryType queryType = QueryType.AND;
     
     
@@ -279,6 +280,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     /**
      * @return The ContextSource to get DirContext objects for queries from.
      */
+
     public ContextSource getContextSource() {
         return this.contextSource;
     }

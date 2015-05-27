@@ -266,6 +266,8 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * 
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @JsonIgnore
+    @Override
     public Set<String> getAvailableQueryAttributes() {
         Set<String> queryAttrs = null;
         

@@ -19,26 +19,17 @@
 
 package org.jasig.services.persondir.support.jdbc;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.sql.DataSource;
-
-import org.hsqldb.jdbcDriver;
+import com.google.common.collect.ImmutableMap;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
-import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
 import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 import org.jasig.services.persondir.util.Util;
 import org.springframework.jdbc.BadSqlGrammarException;
-import org.springframework.jdbc.core.ConnectionCallback;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Test the {@link MultiRowJdbcPersonAttributeDao} against a dummy DataSource.
@@ -114,7 +105,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
     @Override
     protected AbstractJdbcPersonAttributeDao<Map<String, Object>> newDao(final DataSource dataSource) {
         final MultiRowJdbcPersonAttributeDao dao = new MultiRowJdbcPersonAttributeDao(dataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
-        dao.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
+        dao.setNameValueColumnMappings(ImmutableMap.of("attr_name", "attr_val"));
         return dao;
     }
 
