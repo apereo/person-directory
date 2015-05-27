@@ -19,16 +19,11 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.util.Util;
+
+import java.util.*;
 
 
 /**
@@ -44,7 +39,7 @@ public class StubPersonAttributeDaoTest
     
     @Override
     protected void setUp() throws Exception {
-        Map<String, List<Object>> map = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> map = new HashMap<String, List<Object>>();
         map.put("shirtColor", Util.list("blue"));
         map.put("phone", Util.list("777-7777"));
         
@@ -62,13 +57,13 @@ public class StubPersonAttributeDaoTest
      * possible attribute names.
      */
     public void testGetPossibleUserAttributeNames() {
-        Set<String> expectedAttributeNames = new HashSet<String>();
+        final Set<String> expectedAttributeNames = new HashSet<String>();
         expectedAttributeNames.add("shirtColor");
         expectedAttributeNames.add("phone");
-        Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
+        final Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
         assertEquals(expectedAttributeNames, possibleAttributeNames);
         
-        StubPersonAttributeDao nullBacking = new StubPersonAttributeDao();
+        final StubPersonAttributeDao nullBacking = new StubPersonAttributeDao();
         assertEquals(Collections.EMPTY_SET, nullBacking.getPossibleUserAttributeNames());
     }
 
@@ -84,6 +79,10 @@ public class StubPersonAttributeDaoTest
     @Override
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {
         return this.testInstance;
+    }
+
+    public void testSerilization() {
+        assertNotNull(evalJson(this.testInstance));
     }
 
 }

@@ -73,7 +73,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
     /**
      * @param formatAttributes the formatAttributes to set
      */
-    public void setFormatAttributes(Set<FormatAttribute> formatAttributes) {
+    public void setFormatAttributes(final Set<FormatAttribute> formatAttributes) {
         Validate.notNull(formatAttributes, "formatAttributes can not be null");
         
         final Set<String> possibleUserAttributeNames = new LinkedHashSet<String>();
@@ -96,7 +96,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         final Map<String, List<Object>> formattedAttributes = new LinkedHashMap<String, List<Object>>();
         
         for (final FormatAttribute formatAttribute : this.formatAttributes) {
@@ -166,7 +166,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
         public FormatAttribute() {
         }
         
-        public FormatAttribute(Set<String> attributeNames, String format, List<String> sourceAttributes) {
+        public FormatAttribute(final Set<String> attributeNames, final String format, final List<String> sourceAttributes) {
             this.attributeNames = attributeNames;
             this.format = format;
             this.sourceAttributes = sourceAttributes;
@@ -180,7 +180,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
         /**
          * @param attributeNames The resulting attributes the formatted string should be returned under
          */
-        public void setAttributeNames(Set<String> attributeNames) {
+        public void setAttributeNames(final Set<String> attributeNames) {
             this.attributeNames = attributeNames;
         }
 
@@ -190,7 +190,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
         /**
          * @param format The {@link java.text.MessageFormat} string used to generate the attribute
          */
-        public void setFormat(String format) {
+        public void setFormat(final String format) {
             this.format = format;
         }
 
@@ -200,7 +200,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
         /**
          * @param sourceAttributes The attributes to pass as arguments to the {@link java.text.MessageFormat}
          */
-        public void setSourceAttributes(List<String> sourceAttributes) {
+        public void setSourceAttributes(final List<String> sourceAttributes) {
             this.sourceAttributes = sourceAttributes;
         }
         
@@ -209,14 +209,14 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
          * @see java.lang.Object#equals(Object)
          */
         @Override
-        public boolean equals(Object object) {
+        public boolean equals(final Object object) {
             if (object == this) {
                 return true;
             }
             if (!(object instanceof FormatAttribute)) {
                 return false;
             }
-            FormatAttribute rhs = (FormatAttribute) object;
+            final FormatAttribute rhs = (FormatAttribute) object;
             return new EqualsBuilder()
                 .append(this.attributeNames, rhs.attributeNames)
                 .append(this.format, rhs.format)

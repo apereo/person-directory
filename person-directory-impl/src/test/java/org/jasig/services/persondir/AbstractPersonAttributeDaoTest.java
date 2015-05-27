@@ -19,11 +19,19 @@
 
 package org.jasig.services.persondir;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import junit.framework.TestCase;
+
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 /**
  * Test conformance to IPersonAttributeDao interface specified 
@@ -32,7 +40,18 @@ import junit.framework.TestCase;
  */
 @SuppressWarnings("deprecation")
 public abstract class AbstractPersonAttributeDaoTest extends TestCase {
-    
+
+    protected final ObjectMapper mapper = new ObjectMapper();
+
+    public AbstractPersonAttributeDaoTest() {
+
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        mapper.setVisibility(PropertyAccessor.SETTER, JsonAutoDetect.Visibility.PROTECTED_AND_PUBLIC);
+        mapper.setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.PROTECTED_AND_PUBLIC);
+        mapper.setVisibility(PropertyAccessor.IS_GETTER, JsonAutoDetect.Visibility.PROTECTED_AND_PUBLIC);
+        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+    }
+
     /**
      * Get an instance of the type of IPersonAttributeDao the implementing
      * testcase is intended to test.
@@ -50,11 +69,11 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * interface declaration.
      */
     public void testNullSeed() {
-        IPersonAttributeDao dao = getPersonAttributeDaoInstance();
-        Map<String, List<Object>> nullMap = null;
+        final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        final Map<String, List<Object>> nullMap = null;
         try {
             dao.getMultivaluedUserAttributes(nullMap);
-        } catch (RuntimeException iae) {
+        } catch (final RuntimeException iae) {
             // good, as expected
             return;
         }
@@ -68,11 +87,11 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * interface declaration.
      */
     public void testMultiNullSeed() {
-        IPersonAttributeDao dao = getPersonAttributeDaoInstance();
-        Map<String, Object> nullMap = null;
+        final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        final Map<String, Object> nullMap = null;
         try {
             dao.getUserAttributes(nullMap);
-        } catch (NullPointerException iae) {
+        } catch (final NullPointerException iae) {
             // good, as expected
             return;
         }
@@ -86,11 +105,11 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * interface declaration.
      */
     public void testMultiNullUid() {
-        IPersonAttributeDao dao = getPersonAttributeDaoInstance();
-        String nullString = null;
+        final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        final String nullString = null;
         try {
             dao.getMultivaluedUserAttributes(nullString);
-        } catch (RuntimeException iae) {
+        } catch (final RuntimeException iae) {
             // good, as expected
             return;
         }
@@ -103,11 +122,11 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * interface declaration.
      */
     public void testNullUid() {
-        IPersonAttributeDao dao = getPersonAttributeDaoInstance();
-        String nullString = null;
+        final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        final String nullString = null;
         try {
             dao.getUserAttributes(nullString);
-        } catch (RuntimeException iae) {
+        } catch (final RuntimeException iae) {
             // good, as expected
             return;
         }
@@ -119,8 +138,8 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * null and immutable
      */
     public void testPossibleSetConstraints() {
-        IPersonAttributeDao dao = getPersonAttributeDaoInstance();
-        Set<String> possibleNames = dao.getPossibleUserAttributeNames();
+        final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        final Set<String> possibleNames = dao.getPossibleUserAttributeNames();
         
         if (possibleNames != null) {
             try {
@@ -131,10 +150,41 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
                 
                 assertEquals(originalSize, possibleNames.size());
             }
-            catch (Exception e) {
+            catch (final Exception e) {
                 //An exception may be thrown since the Set should be immutable.
             }
         }
     }
+
+    protected ObjectWriter getJsonWriter() {
+        return this.mapper.writer(new DefaultPrettyPrinter());
+    }
+
+    protected String serializeJson(final Object obj) {
+        try {
+            final StringWriter writer = new StringWriter();
+            getJsonWriter().writeValue(writer, obj);
+            return writer.getBuffer().toString();
+
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected <T> T deserializeJson(final String json, final Class<T> clz) {
+        try {
+            final StringWriter writer = new StringWriter();
+            return this.mapper.readValue(json, clz);
+
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected <T> T evalJson(final T obj) {
+        final Class<T> clz = (Class<T>) obj.getClass();
+        return deserializeJson(serializeJson(obj), clz);
+    }
+
 }
 

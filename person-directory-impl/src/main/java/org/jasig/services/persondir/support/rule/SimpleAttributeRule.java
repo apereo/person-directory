@@ -47,28 +47,28 @@ public final class SimpleAttributeRule implements AttributeRule {
      * Public API.
      */
 
-    public SimpleAttributeRule(String whenKey, String whenPattern, String setUserName,
-                            String setKey, String setValue) {
+    public SimpleAttributeRule(final String whenKey, final String whenPattern, final String setUserName,
+                            final String setKey, final String setValue) {
 
         // Assertions.
         if (whenKey == null) {
-            String msg = "Argument 'whenKey' cannot be null.";
+            final String msg = "Argument 'whenKey' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (whenPattern == null) {
-            String msg = "Argument 'whenPattern' cannot be null.";
+            final String msg = "Argument 'whenPattern' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (setKey == null) {
-            String msg = "Argument 'setKey' cannot be null.";
+            final String msg = "Argument 'setKey' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (setUserName == null) {
-            String msg = "Argument 'setUserName' cannot be null.";
+            final String msg = "Argument 'setUserName' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (setValue == null) {
-            String msg = "Argument 'setValue' cannot be null.";
+            final String msg = "Argument 'setValue' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
 
@@ -82,11 +82,11 @@ public final class SimpleAttributeRule implements AttributeRule {
         this.possibleAttributeNames = Collections.singleton(this.setKey);
     }
 
-    public boolean appliesTo(Map<String, List<Object>> userInfo) {
+    public boolean appliesTo(final Map<String, List<Object>> userInfo) {
 
         // Assertions.
         if (userInfo == null) {
-            String msg = "Argument 'userInfo' cannot be null.";
+            final String msg = "Argument 'userInfo' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
 
@@ -100,8 +100,8 @@ public final class SimpleAttributeRule implements AttributeRule {
         String[] compare = null;
         try {
             compare = value.toArray(new String[value.size()]);
-        } catch (ClassCastException cce) {
-            String msg = "List values may contain only String instances.";
+        } catch (final ClassCastException cce) {
+            final String msg = "List values may contain only String instances.";
             throw new RuntimeException(msg, cce);
         }
 
@@ -117,20 +117,20 @@ public final class SimpleAttributeRule implements AttributeRule {
 
     }
 
-    public Set<IPersonAttributes> evaluate(Map<String, List<Object>> userInfo) {
+    public Set<IPersonAttributes> evaluate(final Map<String, List<Object>> userInfo) {
 
         // Assertions.
         if (userInfo == null) {
-            String msg = "Argument 'userInfo' cannot be null.";
+            final String msg = "Argument 'userInfo' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (!appliesTo(userInfo)) {
-            String msg = "May not evaluate.  This rule does not apply.";
+            final String msg = "May not evaluate.  This rule does not apply.";
             throw new IllegalArgumentException(msg);
         }
         
-        Map<String, List<Object>> rslt = new LinkedHashMap<String, List<Object>>();
-        List<Object> value = new ArrayList<Object>(1);
+        final Map<String, List<Object>> rslt = new LinkedHashMap<String, List<Object>>();
+        final List<Object> value = new ArrayList<Object>(1);
         value.add(setValue);
         rslt.put(setKey, value);
         

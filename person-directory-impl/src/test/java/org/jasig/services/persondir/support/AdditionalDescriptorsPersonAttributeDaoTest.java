@@ -50,10 +50,10 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends TestCase {
     
     public void testGetAvailableQueryAttributes() {
         
-        AdditionalDescriptors ad = new AdditionalDescriptors();
+        final AdditionalDescriptors ad = new AdditionalDescriptors();
         ad.setName(USERNAME);
         
-        AdditionalDescriptorsPersonAttributeDao adpad = new AdditionalDescriptorsPersonAttributeDao();
+        final AdditionalDescriptorsPersonAttributeDao adpad = new AdditionalDescriptorsPersonAttributeDao();
         adpad.setUsernameAttributeProvider(UAP);
         adpad.setCurrentUserProvider(CUP);
         adpad.setDescriptors(ad);
@@ -64,16 +64,16 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends TestCase {
     
     public void testGetPeopleWithMultivaluedAttributes() {
         
-        AdditionalDescriptors ad = new AdditionalDescriptors();
+        final AdditionalDescriptors ad = new AdditionalDescriptors();
         ad.setName(USERNAME);
         ad.setAttributeValues(ATTRIBUTE_NAME, ATTRIBUTE_VALUES);
         
-        AdditionalDescriptorsPersonAttributeDao adpad = new AdditionalDescriptorsPersonAttributeDao();
+        final AdditionalDescriptorsPersonAttributeDao adpad = new AdditionalDescriptorsPersonAttributeDao();
         adpad.setUsernameAttributeProvider(UAP);
         adpad.setCurrentUserProvider(CUP);
         adpad.setDescriptors(ad);
         
-        Map<String,List<Object>> query = new HashMap<String,List<Object>>();
+        final Map<String,List<Object>> query = new HashMap<String,List<Object>>();
         query.put(ATTRIBUTE_NAME, ATTRIBUTE_VALUES);
 
         Set<IPersonAttributes> rslt = adpad.getPeopleWithMultivaluedAttributes(query);

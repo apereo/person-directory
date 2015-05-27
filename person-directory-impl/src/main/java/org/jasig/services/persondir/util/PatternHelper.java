@@ -34,7 +34,7 @@ public class PatternHelper {
      * {@link Pattern} with the {@link IPersonAttributeDao#WILDCARD} replaced by .* and the rest of the
      * string escaped using {@link Pattern#quote(String)}
      */
-    public static Pattern compilePattern(String queryString) {
+    public static Pattern compilePattern(final String queryString) {
         final StringBuilder queryBuilder = new StringBuilder();
         
         final Matcher queryMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);

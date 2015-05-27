@@ -22,8 +22,8 @@ package org.jasig.services.persondir.support;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.CaseInsensitiveMap;
-import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.collections4.map.ListOrderedMap;
 
 /**
  * Custom IPersonAttributes that uses a case insensitive Map to hide attribute name case
@@ -31,7 +31,7 @@ import org.apache.commons.collections.map.ListOrderedMap;
 public class CaseInsensitiveNamedPersonImpl extends NamedPersonImpl {
     private static final long serialVersionUID = 1L;
 
-    public CaseInsensitiveNamedPersonImpl(String userName, Map<String, List<Object>> attributes) {
+    public CaseInsensitiveNamedPersonImpl(final String userName, final Map<String, List<Object>> attributes) {
         super(userName, attributes);
     }
 
@@ -40,7 +40,7 @@ public class CaseInsensitiveNamedPersonImpl extends NamedPersonImpl {
      */
     @SuppressWarnings("unchecked")
     @Override
-    protected Map<String, List<Object>> createImmutableAttributeMap(int size) {
-        return ListOrderedMap.decorate(new CaseInsensitiveMap(size > 0 ? size : 1));
+    protected Map<String, List<Object>> createImmutableAttributeMap(final int size) {
+        return ListOrderedMap.listOrderedMap(new CaseInsensitiveMap(size > 0 ? size : 1));
     }
 }

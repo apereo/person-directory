@@ -22,8 +22,8 @@ package org.jasig.services.persondir.support;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.CaseInsensitiveMap;
-import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.collections4.map.ListOrderedMap;
 import org.jasig.services.persondir.IPersonAttributes;
 
 /**
@@ -32,15 +32,15 @@ import org.jasig.services.persondir.IPersonAttributes;
 public class CaseInsensitiveAttributeNamedPersonImpl extends AttributeNamedPersonImpl {
     private static final long serialVersionUID = 1L;
 
-    public CaseInsensitiveAttributeNamedPersonImpl(Map<String, List<Object>> attributes) {
+    public CaseInsensitiveAttributeNamedPersonImpl(final Map<String, List<Object>> attributes) {
         super(attributes);
     }
 
-    public CaseInsensitiveAttributeNamedPersonImpl(String userNameAttribute, Map<String, List<Object>> attributes) {
+    public CaseInsensitiveAttributeNamedPersonImpl(final String userNameAttribute, final Map<String, List<Object>> attributes) {
         super(userNameAttribute, attributes);
     }
 
-    public CaseInsensitiveAttributeNamedPersonImpl(IPersonAttributes personAttributes) {
+    public CaseInsensitiveAttributeNamedPersonImpl(final IPersonAttributes personAttributes) {
         super(personAttributes);
     }
 
@@ -49,7 +49,7 @@ public class CaseInsensitiveAttributeNamedPersonImpl extends AttributeNamedPerso
      */
     @SuppressWarnings("unchecked")
     @Override
-    protected Map<String, List<Object>> createImmutableAttributeMap(int size) {
-        return ListOrderedMap.decorate(new CaseInsensitiveMap(size > 0 ? size : 1));
+    protected Map<String, List<Object>> createImmutableAttributeMap(final int size) {
+        return ListOrderedMap.listOrderedMap(new CaseInsensitiveMap(size > 0 ? size : 1));
     }
 }

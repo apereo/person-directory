@@ -58,7 +58,7 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 		try {
 			new DeclaredRulePersonAttributeDao(null, Arrays.asList(new AttributeRule[] { this.rule }));
 			fail("IllegalArgumentException should have been thrown with null 'attributeName'.");
-		} catch (NullPointerException iae) {
+		} catch (final NullPointerException iae) {
 			// expected...
 		}
 
@@ -66,7 +66,7 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 		try {
 			new DeclaredRulePersonAttributeDao(NAME, new ArrayList<AttributeRule>());
 			fail("IllegalArgumentException should have been thrown with null 'attributeName'.");
-		} catch (IllegalArgumentException iae) {
+		} catch (final IllegalArgumentException iae) {
 			// expected...
 		}
 
@@ -74,25 +74,25 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 		try {
 			new DeclaredRulePersonAttributeDao(NAME, null);
 			fail("NullPointerException should have been thrown with null 'pattern'.");
-		} catch (NullPointerException iae) {
+		} catch (final NullPointerException iae) {
 			// expected...
 		}
 
 	}
 
 	public void testMatches() {
-        Map<String, List<Object>> results = target.getMultivaluedUserAttributes("records-staff");
+        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("records-staff");
         assertNotNull(results);
         assertEquals(Util.list(VALUE), results.get("fax"));
 	}
 	
 	public void testDoesNotMatch() {
-        Map<String, List<Object>> results = target.getMultivaluedUserAttributes("faculty");
+        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("faculty");
 		assertNull(results);
 	}
 
 	public void testGetPossibleNames() {
-		Set<String> s = new HashSet<String>();
+		final Set<String> s = new HashSet<String>();
 		s.add("fax");
 		assertEquals(s, target.getPossibleUserAttributeNames());
 	}

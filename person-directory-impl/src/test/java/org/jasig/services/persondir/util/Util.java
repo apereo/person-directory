@@ -30,7 +30,7 @@ public class Util {
     /**
      * Utility for making a mutable list of objects
      */
-    public static List<Object> list(Object... objects) {
+    public static List<Object> list(final Object... objects) {
         if (objects == null) {
             final List<Object> list = new ArrayList<Object>(1);
             list.add(null);
@@ -49,7 +49,7 @@ public class Util {
     /**
      * Utility for making a mutable list of Ts
      */
-    public static <T> List<T> genList(T... objects) {
+    public static <T> List<T> genList(final T... objects) {
         if (objects == null) {
             final List<T> list = new ArrayList<T>(1);
             list.add(null);

@@ -55,12 +55,12 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
      * Public API.
      */
 
-    public Object getAttributeValue(String name) {
-        List<Object> values = attributes.get(name);
+    public Object getAttributeValue(final String name) {
+        final List<Object> values = attributes.get(name);
         return values == null || values.size() == 0 ? null : values.get(0);
     }
 
-    public List<Object> getAttributeValues(String name) {
+    public List<Object> getAttributeValues(final String name) {
         final List<Object> values = this.attributes.get(name);
         if (values == null) {
             return null;
@@ -77,11 +77,11 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         return this.name;
     }
     
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
     
-    public void addAttributes(Map<String, List<Object>> attributes) {
+    public void addAttributes(final Map<String, List<Object>> attributes) {
         for (final Map.Entry<String, List<Object>> newAttribute : attributes.entrySet()) {
             final String name = newAttribute.getKey();
             final List<Object> values = newAttribute.getValue();
@@ -95,7 +95,7 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         }
     }
     
-    public void setAttributes(Map<String, List<Object>> attributes) {
+    public void setAttributes(final Map<String, List<Object>> attributes) {
         Validate.notNull(attributes, "Argument 'attributes' cannot be null");
         final Map<String, List<Object>> newAttributes = new ConcurrentHashMap<String, List<Object>>();
         
@@ -114,10 +114,10 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         this.attributes = newAttributes;
     }
     
-    public List<Object> setAttributeValues(String name, List<Object> values) {
+    public List<Object> setAttributeValues(final String name, final List<Object> values) {
         // Assertions.
         if (name == null) {
-            String msg = "Argument 'name' cannot be null.";
+            final String msg = "Argument 'name' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
 
@@ -128,7 +128,7 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         return this.attributes.put(name, new ArrayList<Object>(values));
     }
     
-    public List<Object> removeAttribute(String name) {
+    public List<Object> removeAttribute(final String name) {
         Validate.notNull(name, "Argument 'name' cannot be null");
         return this.attributes.remove(name);
     }
@@ -138,14 +138,14 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
      * @see java.lang.Object#equals(Object)
      */
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object == this) {
             return true;
         }
         if (!(object instanceof IPersonAttributes)) {
             return false;
         }
-        IPersonAttributes rhs = (IPersonAttributes) object;
+        final IPersonAttributes rhs = (IPersonAttributes) object;
         return new EqualsBuilder()
             .append(this.name, rhs.getName())
             .isEquals();

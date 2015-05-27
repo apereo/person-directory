@@ -61,8 +61,8 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
         final IPersonAttributes personAttributes = new AttributeNamedPersonImpl(grouperGroupsAsAttributesMap);
 
         //Now retrieve and populate the attributes (groups from Grouper)
-        for (WsGetGroupsResult groupsResult : groupsClient.execute().getResults()) {
-            for (WsGroup group : groupsResult.getWsGroups()) {
+        for (final WsGetGroupsResult groupsResult : groupsClient.execute().getResults()) {
+            for (final WsGroup group : groupsResult.getWsGroups()) {
                 groupsList.add(group.getName());
             }
         }

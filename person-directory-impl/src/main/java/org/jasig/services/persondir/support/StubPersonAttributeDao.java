@@ -19,11 +19,10 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableSet;
 import org.jasig.services.persondir.IPersonAttributes;
 
 /**
@@ -59,16 +58,17 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
     public StubPersonAttributeDao() {
     }
 
-    public StubPersonAttributeDao(Map<String, List<Object>> backingMap) {
+    public StubPersonAttributeDao(final Map<String, List<Object>> backingMap) {
         this.setBackingMap(backingMap);
     }
 
+    @JsonIgnore
     public Set<String> getPossibleUserAttributeNames() {
         if (this.backingPerson == null) {
-            return Collections.emptySet();
+            return new HashSet<>();
         }
 
-        return Collections.unmodifiableSet(this.backingPerson.getAttributes().keySet());
+        return ImmutableSet.copyOf(this.backingPerson.getAttributes().keySet());
     }
     
     public Set<String> getAvailableQueryAttributes() {
@@ -79,7 +79,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         if (query == null) {
             throw new IllegalArgumentException("Illegal to invoke getPeople(Map) with a null argument.");
         }
@@ -87,14 +87,13 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
         if (this.backingPerson == null) {
             return null;
         }
-
         return Collections.singleton(this.backingPerson);
     }
 
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
      */
-    public IPersonAttributes getPerson(String uid) {
+    public IPersonAttributes getPerson(final String uid) {
         if (uid == null) {
             throw new IllegalArgumentException("Illegal to invoke getPerson(String) with a null argument.");
         }
@@ -108,7 +107,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
      * @return Returns the backingMap.
      */
     public Map<String, List<Object>> getBackingMap() {
-        return this.backingPerson.getAttributes();
+        return new HashMap(this.backingPerson.getAttributes());
     }
 
     /**

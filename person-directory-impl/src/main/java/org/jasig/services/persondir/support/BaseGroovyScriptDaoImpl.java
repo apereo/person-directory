@@ -35,13 +35,13 @@ public abstract class BaseGroovyScriptDaoImpl implements IPersonAttributeScriptD
 
     /* Javadoc inherited. See interface. */
     @Override
-    public Map<String, Object> getAttributesForUser(String username) {
+    public Map<String, Object> getAttributesForUser(final String username) {
         throw new UnsupportedOperationException();
     }
 
     /* Javadoc inherited. See interface. */
     @Override
-    public Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes) {
+    public Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(final Map<String, List<Object>> attributes) {
         throw new UnsupportedOperationException();
     }
 }

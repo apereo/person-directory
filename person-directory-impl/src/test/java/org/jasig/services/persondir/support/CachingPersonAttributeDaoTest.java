@@ -49,19 +49,19 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     protected void setUp() throws Exception {
         this.stubDao = new ComplexStubPersonAttributeDao();
 
-        Map<String, Map<String, List<Object>>> daoBackingMap = new HashMap<String, Map<String, List<Object>>>();
+        final Map<String, Map<String, List<Object>>> daoBackingMap = new HashMap<String, Map<String, List<Object>>>();
         
-        Map<String, List<Object>> user1 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> user1 = new HashMap<String, List<Object>>();
         user1.put("phone", Util.list("777-7777"));
         user1.put("displayName", Util.list("Display Name"));
         daoBackingMap.put("edalquist", user1);
         
-        Map<String, List<Object>> user2 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> user2 = new HashMap<String, List<Object>>();
         user2.put("phone", Util.list("888-8888"));
         user2.put("displayName", Util.list(""));
         daoBackingMap.put("awp9", user2);
         
-        Map<String, List<Object>> user3 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> user3 = new HashMap<String, List<Object>>();
         user3.put("phone", Util.list("666-6666"));
         user3.put("givenName", Util.list("Howard"));
         daoBackingMap.put("erider", user3);
@@ -73,13 +73,13 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         super.setUp();
     }
     
-    private void validateUser1(Map<String, List<Object>> attrs) {
+    private void validateUser1(final Map<String, List<Object>> attrs) {
         assertNotNull("Attribute Map for User1 May not be null", attrs);
         assertEquals(Util.list("777-7777"), attrs.get("phone"));
         assertEquals(Util.list("Display Name"), attrs.get("displayName"));
     }
     
-    private void validateUser2(Map<String, List<Object>> attrs) {
+    private void validateUser2(final Map<String, List<Object>> attrs) {
         assertNotNull("Attribute Map for User2 May not be null", attrs);
         assertEquals(Util.list("888-8888"), attrs.get("phone"));
         assertEquals(Util.list(""), attrs.get("displayName"));
@@ -97,7 +97,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     
     
     public void testCacheStats() throws Exception {
-        CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
+        final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
         dao.setUserInfoCache(new HashMap<Serializable, Set<IPersonAttributes>>());
@@ -143,9 +143,9 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
     
     public void testCaching() throws Exception {
-        Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<Serializable, Set<IPersonAttributes>>();
+        final Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<Serializable, Set<IPersonAttributes>>();
         
-        CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
+        final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
         dao.setUserInfoCache(cacheMap);
@@ -180,7 +180,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         assertEquals("Incorrect number of items in cache", 2, cacheMap.size());
         
         
-        Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(defaultAttr, Util.list("edalquist"));
         queryMap.put("name.first", Util.list("Eric"));
         queryMap.put("name.last", Util.list("Dalquist"));
@@ -200,13 +200,13 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
     
     public void testMulipleAttributeKeys() throws Exception {
-        Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<Serializable, Set<IPersonAttributes>>();
+        final Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<Serializable, Set<IPersonAttributes>>();
         
-        Set<String> keyAttrs = new HashSet<String>();
+        final Set<String> keyAttrs = new HashSet<String>();
         keyAttrs.add("name.first");
         keyAttrs.add("name.last");
         
-        CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
+        final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setCacheKeyAttributes(keyAttrs);
         dao.setUserInfoCache(cacheMap);
@@ -226,7 +226,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         assertNull(result);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
-        Map<String, List<Object>> queryMap1 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap1 = new HashMap<String, List<Object>>();
         queryMap1.put(defaultAttr, Util.list("edalquist"));
         queryMap1.put("name.first", Util.list("Eric"));
         queryMap1.put("name.last", Util.list("Dalquist"));
@@ -236,7 +236,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
         
         
-        Map<String, List<Object>> queryMap2 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap2 = new HashMap<String, List<Object>>();
         queryMap2.put("name.first", Util.list("John"));
         queryMap2.put("name.last", Util.list("Doe"));
         
@@ -251,13 +251,13 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
     
     public void testPropertyConstraints() {
-        CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
+        final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         
         try {
             dao.setCachedPersonAttributesDao(null);
             fail("setCachedPersonAttributesDao(null) should have thrown an IllegalArgumentException.");
         }
-        catch (IllegalArgumentException iae) {
+        catch (final IllegalArgumentException iae) {
             //expected
         }
         dao.setCachedPersonAttributesDao(this.stubDao);
@@ -278,7 +278,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
             dao.setUserInfoCache(null);
             fail("setUserInfoCache(null) should have thrown an IllegalArgumentException.");
         }
-        catch (IllegalArgumentException iae) {
+        catch (final IllegalArgumentException iae) {
             //expected
         }
         final Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<Serializable, Set<IPersonAttributes>>();
@@ -294,7 +294,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
             dao.getMultivaluedUserAttributes(Collections.EMPTY_MAP);
             fail("Calling getUserAttributes(Map) with no initialization should result in an IllegalStateException");
         }
-        catch (IllegalStateException ise) {
+        catch (final IllegalStateException ise) {
             //expected
         }
         
@@ -304,7 +304,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
             dao.getMultivaluedUserAttributes(Collections.EMPTY_MAP);
             fail("Calling getUserAttributes(Map) with only setCachedPersonAttributesDao initialized should result in an IllegalStateException");
         }
-        catch (IllegalStateException ise) {
+        catch (final IllegalStateException ise) {
             //expected
         }
         
@@ -314,15 +314,15 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
             dao.getMultivaluedUserAttributes(Collections.EMPTY_MAP);
             fail("Calling getUserAttributes(Map) with no initialization should result in an IllegalStateException");
         }
-        catch (IllegalStateException ise) {
+        catch (final IllegalStateException ise) {
             //expected
         }
     }
     
     public void testEmptyCacheKeyWithDefaultAttr() throws Exception {
-        Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<Serializable, Set<IPersonAttributes>>();
+        final Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<Serializable, Set<IPersonAttributes>>();
         
-        CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
+        final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("UNUSED_ATTR_NAME"));
         dao.setUserInfoCache(cacheMap);
@@ -347,7 +347,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
         
-        Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(defaultAttr, Util.list("edalquist"));
         queryMap.put("name.first", Util.list("Eric"));
         queryMap.put("name.last", Util.list("Dalquist"));
@@ -358,9 +358,9 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
     
     public void testEmptyCacheKeyWithKeyAttrs() throws Exception {
-        Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<Serializable, Set<IPersonAttributes>>();
+        final Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<Serializable, Set<IPersonAttributes>>();
         
-        CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
+        final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("UNUSED_ATTR_NAME"));
         dao.setCacheKeyAttributes(Collections.singleton("UNUSED_ATTR_NAME"));
@@ -387,7 +387,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
         
         
-        Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
         queryMap.put(defaultAttr, Util.list("edalquist"));
         queryMap.put("name.first", Util.list("Eric"));
         queryMap.put("name.last", Util.list("Dalquist"));
@@ -401,7 +401,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
     @Override
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
-        CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
+        final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
         dao.setUserInfoCache(new HashMap<Serializable, Set<IPersonAttributes>>());

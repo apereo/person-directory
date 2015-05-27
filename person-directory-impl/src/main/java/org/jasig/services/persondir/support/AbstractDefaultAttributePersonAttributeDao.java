@@ -67,7 +67,7 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
      * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one matching {@link IPersonAttributes} is found.
      */
-    public IPersonAttributes getPerson(String uid) {
+    public IPersonAttributes getPerson(final String uid) {
         Validate.notNull(uid, "uid may not be null.");
         
         //Generate the seed map for the uid
@@ -95,7 +95,7 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      * Converts the uid to a multi-valued seed Map using the value from {@link #getDefaultAttributeName()}
      * as the key.
      */
-    protected Map<String, List<Object>> toSeedMap(String uid) {
+    protected Map<String, List<Object>> toSeedMap(final String uid) {
         final List<Object> values = Collections.singletonList((Object)uid);
         final String usernameAttribute = this.usernameAttributeProvider.getUsernameAttribute();
         final Map<String, List<Object>> seed = Collections.singletonMap(usernameAttribute, values);
@@ -116,7 +116,7 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      * 
      * @param usernameAttributeProvider the usernameAttributeProvider to set
      */
-    public void setUsernameAttributeProvider(IUsernameAttributeProvider usernameAttributeProvider) {
+    public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
         Validate.notNull(usernameAttributeProvider);
         this.usernameAttributeProvider = usernameAttributeProvider;
     }

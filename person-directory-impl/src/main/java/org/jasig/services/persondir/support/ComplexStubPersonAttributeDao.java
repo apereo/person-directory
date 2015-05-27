@@ -79,7 +79,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      * Creates a new DAO with the specified backing map.
      * @param backingMap The backingMap to call {@link #setBackingMap(Map)} with.
      */
-    public ComplexStubPersonAttributeDao(Map<String, Map<String, List<Object>>> backingMap) {
+    public ComplexStubPersonAttributeDao(final Map<String, Map<String, List<Object>>> backingMap) {
         this.setBackingMap(backingMap);
     }
     
@@ -88,7 +88,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      * @param queryAttributeName The queryAttributeName to call {@link #setQueryAttributeName(String)} with.
      * @param backingMap The backingMap to call {@link #setBackingMap(Map)} with.
      */
-    public ComplexStubPersonAttributeDao(String queryAttributeName, Map<String, Map<String, List<Object>>> backingMap) {
+    public ComplexStubPersonAttributeDao(final String queryAttributeName, final Map<String, Map<String, List<Object>>> backingMap) {
         this.setQueryAttributeName(queryAttributeName);
         this.setBackingMap(backingMap);
     }
@@ -100,7 +100,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      * Name of the attribute to look for to key into the backing map. If not set the value returned by
      * {@link #getUsernameAttributeProvider()} will be used.
      */
-    public void setQueryAttributeName(String queryAttributeName) {
+    public void setQueryAttributeName(final String queryAttributeName) {
         this.queryAttributeName = queryAttributeName;
     }
 
@@ -111,7 +111,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      * The backing Map to use for queries, the outer map is keyed on the query attribute. The inner
      * Map is the set of user attributes to be returned for the query attribute.
      */
-    public void setBackingMap(Map<String, Map<String, List<Object>>> backingMap) {
+    public void setBackingMap(final Map<String, Map<String, List<Object>>> backingMap) {
         if (backingMap == null) {
             this.backingMap = Collections.emptyMap();
             this.possibleUserAttributeNames = Collections.emptySet();
@@ -144,7 +144,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
      */
     @Override
-    protected String appendAttributeToQuery(String queryBuilder, String dataAttribute, List<Object> queryValues) {
+    protected String appendAttributeToQuery(final String queryBuilder, final String dataAttribute, final List<Object> queryValues) {
         if (queryBuilder != null) {
             return queryBuilder;
         }
@@ -169,7 +169,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object, java.lang.String)
      */
     @Override
-    protected List<IPersonAttributes> getPeopleForQuery(String seedValue, String queryUserName) {
+    protected List<IPersonAttributes> getPeopleForQuery(final String seedValue, final String queryUserName) {
         if (seedValue != null && seedValue.contains(IPersonAttributeDao.WILDCARD)) {
             final Pattern seedPattern = PatternHelper.compilePattern(seedValue);
             
@@ -204,7 +204,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         return Collections.singletonList(person);
     }
 
-    private IPersonAttributes createPerson(String seedValue, String queryUserName, Map<String, List<Object>> attributes) {
+    private IPersonAttributes createPerson(final String seedValue, final String queryUserName, final Map<String, List<Object>> attributes) {
         final IPersonAttributes person;
         final String userNameAttribute = this.getConfiguredUserNameAttribute();
         if (this.isUserNameAttributeConfigured() && attributes.containsKey(userNameAttribute)) {

@@ -44,7 +44,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
      */
-    public final Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed) {
+    public final Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
         final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
 
         //Get the first IPersonAttributes to return data for
@@ -62,7 +62,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.lang.String)
      */
-    public final Map<String, List<Object>> getMultivaluedUserAttributes(String uid) {
+    public final Map<String, List<Object>> getMultivaluedUserAttributes(final String uid) {
         final IPersonAttributes person = this.getPerson(uid);
         
         if (person == null) {
@@ -76,7 +76,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
-    public final Map<String, Object> getUserAttributes(Map<String, Object> seed) {
+    public final Map<String, Object> getUserAttributes(final Map<String, Object> seed) {
         final Set<IPersonAttributes> people = this.getPeople(seed);
 
         //Get the first IPersonAttributes to return data for
@@ -94,7 +94,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.lang.String)
      */
-    public final Map<String, Object> getUserAttributes(String uid) {
+    public final Map<String, Object> getUserAttributes(final String uid) {
         Validate.notNull(uid, "uid may not be null.");
         
         //Get the attributes from the subclass
@@ -112,7 +112,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
      * @deprecated This method is just used internally and will be removed with this class in 1.6
      */
     @Deprecated
-    protected Map<String, Object> flattenResults(Map<String, List<Object>> multivaluedUserAttributes) {
+    protected Map<String, Object> flattenResults(final Map<String, List<Object>> multivaluedUserAttributes) {
         if (multivaluedUserAttributes == null) {
             return null;
         }

@@ -53,7 +53,7 @@ public class RegexGatewayPersonAttributeDaoTest extends TestCase {
 		try {
 			new RegexGatewayPersonAttributeDao(null, ".*@.*", enclosed);
 			fail("NullPointerException should have been thrown with null 'attributeName'.");
-		} catch (NullPointerException iae) {
+		} catch (final NullPointerException iae) {
 			// expected...
 		}
 
@@ -61,7 +61,7 @@ public class RegexGatewayPersonAttributeDaoTest extends TestCase {
 		try {
 			new RegexGatewayPersonAttributeDao("username", null, enclosed);
 			fail("NullPointerException should have been thrown with null 'pattern'.");
-		} catch (NullPointerException iae) {
+		} catch (final NullPointerException iae) {
 			// expected...
 		}
 
@@ -69,19 +69,19 @@ public class RegexGatewayPersonAttributeDaoTest extends TestCase {
 		try {
 			new RegexGatewayPersonAttributeDao("username", ".*@.*", null);
 			fail("NullPointerException should have been thrown with null 'enclosed'.");
-		} catch (NullPointerException iae) {
+		} catch (final NullPointerException iae) {
 			// expected...
 		}
 
 	}
 	
 	public void testMatches() {
-        Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey@yahoo.com");
+        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey@yahoo.com");
 		assertEquals(results, attributes);
 	}
 	
 	public void testDoesNotMatch() {
-        Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey");
+        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey");
 		assertFalse(attributes.equals(results));
 	}
 	

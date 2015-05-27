@@ -121,7 +121,7 @@ public class Attribute {
      *     {@link String }
      *     
      */
-    public void setKey(String value) {
+    public void setKey(final String value) {
         this.key = value;
     }
 

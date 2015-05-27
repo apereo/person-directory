@@ -97,7 +97,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
      * @see org.springmodules.cache.provider.AbstractCacheProviderFacade#onFlushCache(org.springmodules.cache.FlushingModel)
      */
     @Override
-    protected void onFlushCache(FlushingModel model) throws CacheException {
+    protected void onFlushCache(final FlushingModel model) throws CacheException {
         this.flushCount++;
         this.cache.clear();
     }
@@ -106,7 +106,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
      * @see org.springmodules.cache.provider.AbstractCacheProviderFacade#onGetFromCache(java.io.Serializable, org.springmodules.cache.CachingModel)
      */
     @Override
-    protected Object onGetFromCache(Serializable key, CachingModel model) throws CacheException {
+    protected Object onGetFromCache(final Serializable key, final CachingModel model) throws CacheException {
         if (this.cache.containsKey(key)) {
             this.hitCount++;
         }
@@ -121,7 +121,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
      * @see org.springmodules.cache.provider.AbstractCacheProviderFacade#onPutInCache(java.io.Serializable, org.springmodules.cache.CachingModel, java.lang.Object)
      */
     @Override
-    protected void onPutInCache(Serializable key, CachingModel model, Object obj) throws CacheException {
+    protected void onPutInCache(final Serializable key, final CachingModel model, final Object obj) throws CacheException {
         this.putCount++;
         this.cache.put(key, obj);
     }
@@ -130,7 +130,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
      * @see org.springmodules.cache.provider.AbstractCacheProviderFacade#onRemoveFromCache(java.io.Serializable, org.springmodules.cache.CachingModel)
      */
     @Override
-    protected void onRemoveFromCache(Serializable key, CachingModel model) throws CacheException {
+    protected void onRemoveFromCache(final Serializable key, final CachingModel model) throws CacheException {
         this.removeCount++;
         this.cache.remove(key);
     }
@@ -147,7 +147,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
      * @see org.springmodules.cache.provider.CacheProviderFacade#getCachingModelEditor()
      */
     public PropertyEditor getCachingModelEditor() {
-        ReflectionCacheModelEditor editor = new ReflectionCacheModelEditor();
+        final ReflectionCacheModelEditor editor = new ReflectionCacheModelEditor();
         editor.setCacheModelClass(EhCacheCachingModel.class);
         return editor;
     }
@@ -156,7 +156,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
      * @see org.springmodules.cache.provider.CacheProviderFacade#getFlushingModelEditor()
      */
     public PropertyEditor getFlushingModelEditor() {
-        ReflectionCacheModelEditor editor = new ReflectionCacheModelEditor();
+        final ReflectionCacheModelEditor editor = new ReflectionCacheModelEditor();
         editor.setCacheModelClass(EhCacheFlushingModel.class);
         return editor;
     }

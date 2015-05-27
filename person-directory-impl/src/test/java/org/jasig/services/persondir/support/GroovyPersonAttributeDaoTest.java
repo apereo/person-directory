@@ -45,10 +45,10 @@ public class GroovyPersonAttributeDaoTest extends TestCase {
         final ClassLoader parent = getClass().getClassLoader();
         loader = new GroovyClassLoader(parent);
 
-        ClassPathResource scriptFile = new ClassPathResource("SampleGroovyPersonAttributeDao.groovy");
+        final ClassPathResource scriptFile = new ClassPathResource("SampleGroovyPersonAttributeDao.groovy");
         final Class<?> groovyClass = loader.parseClass(scriptFile.getFile());
 
-        IPersonAttributeScriptDao groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
+        final IPersonAttributeScriptDao groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
 
         dao = new GroovyPersonAttributeDao(groovyObject);
     }
@@ -70,7 +70,7 @@ public class GroovyPersonAttributeDaoTest extends TestCase {
 
     @Test
     public void testGetPeopleWithMultivaluedAttributes() throws Exception {
-        Map<String, List<Object>> items = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> items = new HashMap<String, List<Object>>();
         items.put("dog", Arrays.asList(new Object[]{"barks", "eats"}));
         items.put("cat", Arrays.asList(new Object[]{"meows", "scratches"}));
         final Set<IPersonAttributes> results = dao.getPeopleWithMultivaluedAttributes(items);

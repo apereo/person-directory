@@ -27,34 +27,34 @@ public enum CaseCanonicalizationMode {
 
     LOWER {
         @Override
-        public String canonicalize(String value) {
+        public String canonicalize(final String value) {
             return StringUtils.lowerCase(value);
         }
 
         @Override
-        public String canonicalize(String value, Locale locale) {
+        public String canonicalize(final String value, final Locale locale) {
             return StringUtils.lowerCase(value, locale);
         }
     },
     UPPER {
         @Override
-        public String canonicalize(String value) {
+        public String canonicalize(final String value) {
             return StringUtils.upperCase(value);
         }
 
         @Override
-        public String canonicalize(String value, Locale locale) {
+        public String canonicalize(final String value, final Locale locale) {
             return StringUtils.upperCase(value, locale);
         }
     },
     NONE {
         @Override
-        public String canonicalize(String value) {
+        public String canonicalize(final String value) {
             return value;
         }
 
         @Override
-        public String canonicalize(String value, Locale locale) {
+        public String canonicalize(final String value, final Locale locale) {
             return value;
         }
     };

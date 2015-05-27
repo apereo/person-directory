@@ -62,7 +62,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
         partitionConfiguration.setSuffix("o=" + partitionName);
 
         // Create some indices
-        final Set<String> indexedAttrs = new HashSet<String>();
+        final Set<Object> indexedAttrs = new HashSet<Object>();
         indexedAttrs.add("objectClass");
         indexedAttrs.add("o");
         partitionConfiguration.setIndexedAttributes(indexedAttrs);
@@ -138,7 +138,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
     @SuppressWarnings("unchecked")
     protected final DirContext createContext() throws NamingException {
         // Create a environment container
-        Hashtable<Object, Object> env = new Hashtable<Object, Object>(configuration.toJndiEnvironment());
+        final Hashtable<Object, Object> env = new Hashtable<Object, Object>(configuration.toJndiEnvironment());
         
         final String partitionName = this.getPartitionName();
 
@@ -150,10 +150,10 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
         env.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.directory.server.jndi.ServerContextFactory");
 
         // Let's open a connection on this partition
-        InitialContext initialContext = new InitialContext(env);
+        final InitialContext initialContext = new InitialContext(env);
 
         // We should be able to read it
-        DirContext appRoot = (DirContext) initialContext.lookup("");
+        final DirContext appRoot = (DirContext) initialContext.lookup("");
         assertNotNull(appRoot);
 
         return appRoot;

@@ -76,7 +76,7 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
      */
     private boolean stopIfFirstDaoReturnsNull = false;
 
-    public void setStopIfFirstDaoReturnsNull(boolean stopIfFirstDaoReturnsNull) {
+    public void setStopIfFirstDaoReturnsNull(final boolean stopIfFirstDaoReturnsNull) {
         this.stopIfFirstDaoReturnsNull = stopIfFirstDaoReturnsNull;
     }
 
@@ -95,7 +95,7 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
      * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.services.persondir.IPersonAttributeDao, java.util.Set)
      */
     @Override
-    protected Set<IPersonAttributes> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Set<IPersonAttributes> resultPeople) {
+    protected Set<IPersonAttributes> getAttributesFromDao(final Map<String, List<Object>> seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Set<IPersonAttributes> resultPeople) {
         if (isFirstQuery || (!stopIfFirstDaoReturnsNull && (resultPeople == null || resultPeople.size() == 0))) {
             return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed);
         } else if (stopIfFirstDaoReturnsNull && !isFirstQuery && (resultPeople == null || resultPeople.size() == 0)) {

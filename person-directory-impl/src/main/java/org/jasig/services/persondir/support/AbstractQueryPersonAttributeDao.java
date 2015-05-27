@@ -116,7 +116,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * If {@link #setQueryAttributeMapping(Map)} is null this determines if no parameters should be specified 
      * or if all query attributes should be used as parameters. Defaults to true.
      */
-    public void setUseAllQueryAttributes(boolean useAllQueryAttributes) {
+    public void setUseAllQueryAttributes(final boolean useAllQueryAttributes) {
         this.useAllQueryAttributes = useAllQueryAttributes;
     }
     
@@ -163,7 +163,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
      * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
      */
-    public void setResultAttributeMapping(Map<String, ?> resultAttributeMapping) {
+    public void setResultAttributeMapping(final Map<String, ?> resultAttributeMapping) {
         final Map<String, Set<String>> parsedResultAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(resultAttributeMapping);
         
         if (parsedResultAttributeMapping.containsKey("")) {
@@ -187,7 +187,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * 
      * @param requireAllQueryAttributes the requireAllQueryAttributes to set
      */
-    public void setRequireAllQueryAttributes(boolean requireAllQueryAttributes) {
+    public void setRequireAllQueryAttributes(final boolean requireAllQueryAttributes) {
         this.requireAllQueryAttributes = requireAllQueryAttributes;
     }
     
@@ -204,14 +204,14 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * 
      * @param userNameAttribute the userNameAttribute to set
      */
-    public void setUnmappedUsernameAttribute(String userNameAttribute) {
+    public void setUnmappedUsernameAttribute(final String userNameAttribute) {
         this.unmappedUsernameAttribute = userNameAttribute;
     }
     
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public final Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    public final Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         Validate.notNull(query, "query may not be null.");
         
         //Generate the query to pass to the subclass
@@ -297,7 +297,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @param queryValues
      * @return
      */
-    protected QB appendCanonicalizedAttributeToQuery(QB queryBuilder, String queryAttribute, String dataAttribute, List<Object> queryValues) {
+    protected QB appendCanonicalizedAttributeToQuery(final QB queryBuilder, final String queryAttribute, final String dataAttribute, final List<Object> queryValues) {
         // All logging messages were previously in generateQuery() and were
         // copy/pasted verbatim
         final List<Object> canonicalizedQueryValues = this.canonicalizeAttribute(queryAttribute, queryValues, caseInsensitiveQueryAttributes);
@@ -334,7 +334,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @param query The query Map to populate the queryBuilder with.
      * @return The fully populated query builder.
      */
-    protected final QB generateQuery(Map<String, List<Object>> query) {
+    protected final QB generateQuery(final Map<String, List<Object>> query) {
         QB queryBuilder = null;
 
         if (this.queryAttributeMapping != null) {
@@ -389,8 +389,8 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         if (this.resultAttributeMapping == null) {
             if (caseInsensitiveResultAttributes != null && !(caseInsensitiveResultAttributes.isEmpty())) {
                 mappedAttributes = new LinkedHashMap<String, List<Object>>();
-                for ( Map.Entry<String,List<Object>> attribute : personAttributes.entrySet() ) {
-                    String attributeName = attribute.getKey();
+                for ( final Map.Entry<String,List<Object>> attribute : personAttributes.entrySet() ) {
+                    final String attributeName = attribute.getKey();
                     mappedAttributes.put(attributeName, canonicalizeAttribute(attributeName, attribute.getValue(), caseInsensitiveResultAttributes));
                 }
             } else {
@@ -445,7 +445,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         return newPerson;
     }
 
-    protected List<Object> canonicalizeAttribute(String key, List<Object> value, Map<String, CaseCanonicalizationMode> config) {
+    protected List<Object> canonicalizeAttribute(final String key, final List<Object> value, final Map<String, CaseCanonicalizationMode> config) {
         if (value == null || value.isEmpty() || config == null || !(config.containsKey(key))) {
             return value;
         }
@@ -457,8 +457,8 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             // of case-insensitive fields
             canonicalizationMode = defaultCaseCanonicalizationMode;
         }
-        List<Object> canonicalizedValues = new ArrayList<Object>(value.size());
-        for ( Object origValue : value ) {
+        final List<Object> canonicalizedValues = new ArrayList<Object>(value.size());
+        for ( final Object origValue : value ) {
             if ( origValue instanceof String ) {
                 canonicalizedValues.add(canonicalizationMode.canonicalize((String) origValue, caseCanonicalizationLocale));
             } else {
@@ -532,7 +532,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      *
      * @param caseInsensitiveResultAttributes
      */
-    public void setCaseInsensitiveResultAttributes(Map<String, CaseCanonicalizationMode> caseInsensitiveResultAttributes) {
+    public void setCaseInsensitiveResultAttributes(final Map<String, CaseCanonicalizationMode> caseInsensitiveResultAttributes) {
         this.caseInsensitiveResultAttributes = caseInsensitiveResultAttributes;
     }
 
@@ -547,12 +547,12 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      *
      * @param caseInsensitiveResultAttributes
      */
-    public void setCaseInsensitiveResultAttributesAsCollection(Collection<String> caseInsensitiveResultAttributes) {
+    public void setCaseInsensitiveResultAttributesAsCollection(final Collection<String> caseInsensitiveResultAttributes) {
         if (caseInsensitiveResultAttributes == null || caseInsensitiveResultAttributes.isEmpty()) {
             setCaseInsensitiveResultAttributes(null);
         } else {
-            Map<String, CaseCanonicalizationMode> asMap = new HashMap<String, CaseCanonicalizationMode>();
-            for ( String attrib : caseInsensitiveResultAttributes ) {
+            final Map<String, CaseCanonicalizationMode> asMap = new HashMap<String, CaseCanonicalizationMode>();
+            for ( final String attrib : caseInsensitiveResultAttributes ) {
                 asMap.put(attrib, null);
             }
             setCaseInsensitiveResultAttributes(asMap);
@@ -570,12 +570,12 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      *
      * @param caseInsensitiveQueryAttributes
      */
-    public void setCaseInsensitiveQueryAttributesAsCollection(Collection<String> caseInsensitiveQueryAttributes) {
+    public void setCaseInsensitiveQueryAttributesAsCollection(final Collection<String> caseInsensitiveQueryAttributes) {
         if (caseInsensitiveQueryAttributes == null || caseInsensitiveQueryAttributes.isEmpty()) {
             setCaseInsensitiveQueryAttributes(null);
         } else {
-            Map<String, CaseCanonicalizationMode> asMap = new HashMap<String, CaseCanonicalizationMode>();
-            for ( String attrib : caseInsensitiveQueryAttributes ) {
+            final Map<String, CaseCanonicalizationMode> asMap = new HashMap<String, CaseCanonicalizationMode>();
+            for ( final String attrib : caseInsensitiveQueryAttributes ) {
                 asMap.put(attrib, null);
             }
             setCaseInsensitiveQueryAttributes(asMap);
@@ -604,7 +604,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      *
      * @param caseInsensitiveQueryAttributes
      */
-    public void setCaseInsensitiveQueryAttributes(Map<String, CaseCanonicalizationMode> caseInsensitiveQueryAttributes) {
+    public void setCaseInsensitiveQueryAttributes(final Map<String, CaseCanonicalizationMode> caseInsensitiveQueryAttributes) {
         this.caseInsensitiveQueryAttributes = caseInsensitiveQueryAttributes;
     }
 
@@ -622,7 +622,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      *
      * @param caseCanonicalizationLocale
      */
-    public void setCaseCanonicalizationLocale(Locale caseCanonicalizationLocale) {
+    public void setCaseCanonicalizationLocale(final Locale caseCanonicalizationLocale) {
         if ( caseCanonicalizationLocale == null ) {
             this.caseCanonicalizationLocale = Locale.getDefault();
         } else {
@@ -641,7 +641,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      *
      * @param defaultCaseCanonicalizationMode
      */
-    public void setDefaultCaseCanonicalizationMode(CaseCanonicalizationMode defaultCaseCanonicalizationMode) {
+    public void setDefaultCaseCanonicalizationMode(final CaseCanonicalizationMode defaultCaseCanonicalizationMode) {
         if ( defaultCaseCanonicalizationMode == null ) {
             this.defaultCaseCanonicalizationMode = DEFAULT_CASE_CANONICALIZATION_MODE;
         } else {
@@ -676,7 +676,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      *
      * @param usernameCaseCanonicalizationMode
      */
-    public void setUsernameCaseCanonicalizationMode(CaseCanonicalizationMode usernameCaseCanonicalizationMode) {
+    public void setUsernameCaseCanonicalizationMode(final CaseCanonicalizationMode usernameCaseCanonicalizationMode) {
         if ( usernameCaseCanonicalizationMode == null ) {
             this.usernameCaseCanonicalizationMode = DEFAULT_USERNAME_CASE_CANONICALIZATION_MODE;
         } else {

@@ -87,7 +87,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
             dao.getPossibleUserAttributeNames();
             fail("Expected RuntimeException on getPossibleUserAttributeNames() with ThrowingPersonAttributeDao as a child DAO");
         } 
-        catch (RuntimeException re) {
+        catch (final RuntimeException re) {
             //expected
         }
     }
@@ -147,7 +147,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
             dao.setMerger(null);
             fail("Expected IllegalArgumentException on setMerger(null)");
         } 
-        catch (NullPointerException iae) {
+        catch (final NullPointerException iae) {
             //expected
         }
     }
@@ -159,7 +159,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
             dao.setPersonAttributeDaos(null);
             fail("Expected IllegalArgumentException on setPersonAttributeDaos(null)");
         } 
-        catch (NullPointerException iae) {
+        catch (final NullPointerException iae) {
             //expected
         }
     }

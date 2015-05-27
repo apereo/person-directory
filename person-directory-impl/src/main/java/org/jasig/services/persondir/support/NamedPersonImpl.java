@@ -31,7 +31,7 @@ public class NamedPersonImpl extends BasePersonImpl {
 
     private final String userName;
 
-    public NamedPersonImpl(String userName, Map<String, List<Object>> attributes) {
+    public NamedPersonImpl(final String userName, final Map<String, List<Object>> attributes) {
         super(attributes);
         
         this.userName = userName;

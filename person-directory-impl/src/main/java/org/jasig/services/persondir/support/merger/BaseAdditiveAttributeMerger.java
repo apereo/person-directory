@@ -41,7 +41,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergeAvailableQueryAttributes(java.util.Set, java.util.Set)
      */
-    public Set<String> mergeAvailableQueryAttributes(Set<String> toModify, Set<String> toConsider) {
+    public Set<String> mergeAvailableQueryAttributes(final Set<String> toModify, final Set<String> toConsider) {
         toModify.addAll(toConsider);
         return toModify;
     }
@@ -49,7 +49,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergePossibleUserAttributeNames(java.util.Set, java.util.Set)
      */
-    public Set<String> mergePossibleUserAttributeNames(Set<String> toModify, Set<String> toConsider) {
+    public Set<String> mergePossibleUserAttributeNames(final Set<String> toModify, final Set<String> toConsider) {
         toModify.addAll(toConsider);
         return toModify;
     }
@@ -57,7 +57,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergeResults(java.util.Set, java.util.Set)
      */
-    public final Set<IPersonAttributes> mergeResults(Set<IPersonAttributes> toModify, Set<IPersonAttributes> toConsider) {
+    public final Set<IPersonAttributes> mergeResults(final Set<IPersonAttributes> toModify, final Set<IPersonAttributes> toConsider) {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
         
@@ -94,7 +94,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /**
      * Do a deep clone of an attribute Map to ensure it is completley mutable.
      */
-    protected Map<String, List<Object>> buildMutableAttributeMap(Map<String, List<Object>> attributes) {
+    protected Map<String, List<Object>> buildMutableAttributeMap(final Map<String, List<Object>> attributes) {
         final Map<String, List<Object>> mutableValuesBuilder = this.createMutableAttributeMap(attributes.size());
 
         for (final Map.Entry<String, List<Object>> attrEntry : attributes.entrySet()) {
@@ -114,7 +114,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /**
      * Create the Map used when merging attributes
      */
-    protected Map<String, List<Object>> createMutableAttributeMap(int size) {
+    protected Map<String, List<Object>> createMutableAttributeMap(final int size) {
         return new LinkedHashMap<String, List<Object>>(size > 0 ? size : 1);
     }
 
@@ -135,7 +135,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergeAttributes(java.util.Map, java.util.Map)
      */
-    public Map<String, List<Object>> mergeAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider) {
+    public Map<String, List<Object>> mergeAttributes(final Map<String, List<Object>> toModify, final Map<String, List<Object>> toConsider) {
         return this.mergePersonAttributes(toModify, toConsider);
     }
 }

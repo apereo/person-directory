@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.logging.Log;
@@ -77,7 +77,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         private final String name;
         private final Class<?>[] args;
         
-        private CachableMethod(String name, Class<?>... args) {
+        private CachableMethod(final String name, final Class<?>... args) {
             this.name = name;
             this.args = args;
         }
@@ -120,7 +120,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     /**
      * @param cacheKeyAttributes the cacheKeyAttributes to set
      */
-    public void setCacheKeyAttributes(Set<String> cacheKeyAttributes) {
+    public void setCacheKeyAttributes(final Set<String> cacheKeyAttributes) {
         this.cacheKeyAttributes = cacheKeyAttributes;
     }
 
@@ -133,7 +133,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     /**
      * @param defaultAttributeName the defaultAttributeName to set
      */
-    public void setDefaultAttributeName(String defaultAttributeName) {
+    public void setDefaultAttributeName(final String defaultAttributeName) {
         Validate.notNull(defaultAttributeName);
         this.defaultAttributeName = defaultAttributeName;
         this.defaultAttributeNameSet = Collections.singleton(this.defaultAttributeName);
@@ -146,7 +146,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * If all seed attributes should be used. If true cacheKeyAttributes and defaultAttributeName are ignored. Defaults
      * to false.
      */
-    public void setUseAllAttributes(boolean useAllAttributes) {
+    public void setUseAllAttributes(final boolean useAllAttributes) {
         this.useAllAttributes = useAllAttributes;
     }
 
@@ -157,7 +157,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * If seed attributes with empty values (null, empty string or empty list values) should be ignored when generating
      * the cache key. Defaults to false. 
      */
-    public void setIgnoreEmptyAttributes(boolean ignoreEmptyAttributes) {
+    public void setIgnoreEmptyAttributes(final boolean ignoreEmptyAttributes) {
         this.ignoreEmptyAttributes = ignoreEmptyAttributes;
     }
     
@@ -165,7 +165,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     /* (non-Javadoc)
      * @see org.springmodules.cache.key.CacheKeyGenerator#generateKey(org.aopalliance.intercept.MethodInvocation)
      */
-    public Serializable generateKey(MethodInvocation methodInvocation) {
+    public Serializable generateKey(final MethodInvocation methodInvocation) {
         //Determine the tareted CachableMethod
         final CachableMethod cachableMethod = this.resolveCacheableMethod(methodInvocation);
 
@@ -207,7 +207,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * @return The seed Map for the method call
      */
     @SuppressWarnings("unchecked")
-    protected Map<String, Object> getSeed(Object[] methodArguments, CachableMethod cachableMethod) {
+    protected Map<String, Object> getSeed(final Object[] methodArguments, final CachableMethod cachableMethod) {
         final Map<String, Object> seed;
         switch (cachableMethod) {
             //Both methods that take a Map argument can just have the first argument returned
@@ -258,7 +258,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * the <code>cacheKeyAttributes</code> {@link Set} or if it is <code>null</code> the
      * <code>defaultAttributeName</code> is used as the key attribute.
      */
-    protected Integer getKeyHash(Map<String, Object> seed) {
+    protected Integer getKeyHash(final Map<String, Object> seed) {
         //Determine the attributes to build the cache key with
         final Set<String> cacheAttributes;
         if (this.useAllAttributes) {
@@ -281,7 +281,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
                     cacheKey.put(attr, value);
                 }
                 else if (value instanceof Collection) {
-                    if (CollectionUtils.isNotEmpty((Collection<?>)value)) {
+                    if (CollectionUtils.isNotEmpty((Collection<?>) value)) {
                         cacheKey.put(attr, value);
                     }
                 }
@@ -313,7 +313,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * Iterates over the {@link CachableMethod} instances to determine which instance the
      * passed {@link MethodInvocation} applies to.
      */
-    protected CachableMethod resolveCacheableMethod(MethodInvocation methodInvocation) {
+    protected CachableMethod resolveCacheableMethod(final MethodInvocation methodInvocation) {
         final Method targetMethod = methodInvocation.getMethod();
         final Class<?> targetClass = targetMethod.getDeclaringClass();
         
@@ -322,10 +322,10 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
             try {
                 cacheableMethod = targetClass.getMethod(cachableMethod.getName(), cachableMethod.getArgs());
             }
-            catch (SecurityException e) {
+            catch (final SecurityException e) {
                 this.logger.warn("Security exception while attempting to if the target class '" + targetClass + "' implements the cachable method '" + cachableMethod + "'", e);
             }
-            catch (NoSuchMethodException e) {
+            catch (final NoSuchMethodException e) {
                 final String message = "Taret class '" + targetClass + "' does not implement possible cachable method '" + cachableMethod + "'. Is the advice applied to the correct bean and methods?";
                 
                 if (this.logger.isDebugEnabled()) {

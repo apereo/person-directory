@@ -74,7 +74,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * @param attributeName
      * @param rules
      */
-    public DeclaredRulePersonAttributeDao(String attributeName, List<AttributeRule> rules) {
+    public DeclaredRulePersonAttributeDao(final String attributeName, final List<AttributeRule> rules) {
         // PersonDirectory won't stop for anything... we need decent logging.
         if (logger.isDebugEnabled()) {
             logger.debug("Creating DeclaredRulePersonAttributeDao with attributeName='" + attributeName + "' and rules='" + rules + "'");
@@ -100,7 +100,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     /**
      * @param rules the rules to set
      */
-    public void setRules(List<AttributeRule> rules) {
+    public void setRules(final List<AttributeRule> rules) {
         Validate.notEmpty(rules, "Argument 'rules' cannot be null or empty.");
 
         this.rules = Collections.unmodifiableList(new ArrayList<AttributeRule>(rules));
@@ -109,7 +109,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> seed) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> seed) {
         Validate.notNull(seed, "Argument 'seed' cannot be null.");
 
         for (final AttributeRule rule : this.rules) {
@@ -132,7 +132,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
     public Set<String> getPossibleUserAttributeNames() {
-        Set<String> rslt = new LinkedHashSet<String>();
+        final Set<String> rslt = new LinkedHashSet<String>();
 
         for (final AttributeRule rule : this.rules) {
             final Set<String> possibleUserAttributeNames = rule.getPossibleUserAttributeNames();
@@ -146,7 +146,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
     public Set<String> getAvailableQueryAttributes() {
-        Set<String> rslt = new LinkedHashSet<String>();
+        final Set<String> rslt = new LinkedHashSet<String>();
 
         for (final AttributeRule rule : this.rules) {
             final Set<String> possibleUserAttributeNames = rule.getAvailableQueryAttributes();

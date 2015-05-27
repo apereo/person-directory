@@ -34,7 +34,7 @@ public class AdditionalDescriptorsTest extends TestCase {
     
     public void testGetAttributeValue() {
         
-        AdditionalDescriptors ad = new AdditionalDescriptors();
+        final AdditionalDescriptors ad = new AdditionalDescriptors();
         ad.setAttributeValues("foo", VALUES_LIST);
         
         TestCase.assertEquals(ad.getAttributeValue("foo"), VALUES_LIST.get(0));
@@ -47,7 +47,7 @@ public class AdditionalDescriptorsTest extends TestCase {
     
     public void testGetAttributeValues() {
         
-        AdditionalDescriptors ad = new AdditionalDescriptors();
+        final AdditionalDescriptors ad = new AdditionalDescriptors();
         ad.setAttributeValues("foo", VALUES_LIST);
 
         TestCase.assertEquals(ad.getAttributeValues("foo"), VALUES_LIST);
@@ -58,12 +58,12 @@ public class AdditionalDescriptorsTest extends TestCase {
     
     public void testSetAttributeValues() {
         
-        AdditionalDescriptors ad = new AdditionalDescriptors();
+        final AdditionalDescriptors ad = new AdditionalDescriptors();
         
         boolean caught = false;
         try {
             ad.setAttributeValues(null, VALUES_LIST);
-        } catch (IllegalArgumentException iae) {
+        } catch (final IllegalArgumentException iae) {
             caught = true;
         }
         

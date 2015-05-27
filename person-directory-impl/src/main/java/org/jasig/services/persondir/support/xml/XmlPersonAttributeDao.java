@@ -75,7 +75,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
      * The {@link CachingJaxbLoader} to use to load the {@link PersonData}, if set the mappedXmlResource property is
      * ignored.
      */
-    public void setJaxbLoader(CachingJaxbLoader<PersonData> jaxbLoader) {
+    public void setJaxbLoader(final CachingJaxbLoader<PersonData> jaxbLoader) {
         this.jaxbLoader = jaxbLoader;
     }
 
@@ -85,7 +85,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     /**
      * The XML {@link Resource} to load the {@link PersonData} from, required if the jaxbLoader property is not set.
      */
-    public void setMappedXmlResource(Resource mappedXmlResource) {
+    public void setMappedXmlResource(final Resource mappedXmlResource) {
         this.mappedXmlResource = mappedXmlResource;
     }
     
@@ -124,7 +124,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
      * @see org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao#getPerson(java.lang.String)
      */
     @Override
-    public IPersonAttributes getPerson(String uid) {
+    public IPersonAttributes getPerson(final String uid) {
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
         return this.personByNameCache.get(uid);
     }
@@ -132,7 +132,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
         
         //Tracks persons that could match the query
@@ -247,7 +247,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
         /* (non-Javadoc)
          * @see org.jasig.services.persondir.support.xml.CachingJaxbLoader.UnmarshallingCallback#postProcessUnmarshalling(java.lang.Object)
          */
-        public synchronized void postProcessUnmarshalling(PersonData unmarshalledObject) {
+        public synchronized void postProcessUnmarshalling(final PersonData unmarshalledObject) {
             final Set<String> attributeNames = new LinkedHashSet<String>();
             final Map<String, Set<IPersonAttributes>> personByAttributeCache = new LinkedHashMap<String, Set<IPersonAttributes>>();
             final Map<String, IPersonAttributes> personByNameCache = new LinkedHashMap<String, IPersonAttributes>();
