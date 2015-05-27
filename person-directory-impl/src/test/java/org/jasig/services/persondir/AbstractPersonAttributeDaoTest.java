@@ -145,17 +145,10 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         final Set<String> possibleNames = dao.getPossibleUserAttributeNames();
         
         if (possibleNames != null) {
-            try {
-                final int originalSize = possibleNames.size();
-                
-                final String newObj = new String();
-                possibleNames.add(newObj);
-                
-                assertEquals(originalSize, possibleNames.size());
-            }
-            catch (final Exception e) {
-                //An exception may be thrown since the Set should be immutable.
-            }
+            final String newObj = new String();
+            possibleNames.add(newObj);
+
+            assertTrue(dao.getPossibleUserAttributeNames().size() == possibleNames.size());
         }
     }
 
@@ -185,9 +178,9 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         }
     }
 
-    protected <T> T evalJson(final T obj) {
-        final Class<T> clz = (Class<T>) obj.getClass();
-        return deserializeJson(serializeJson(obj), clz);
+    public void testJson() {
+        final IPersonAttributeDao obj = getPersonAttributeDaoInstance();
+        deserializeJson(serializeJson(obj), obj.getClass());
     }
 
 }

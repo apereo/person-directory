@@ -19,29 +19,38 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.ImmutableSet;
+import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
+import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.util.Util;
 
-import junit.framework.TestCase;
+import java.util.*;
 
 /**
  * @author Eric Dalquist
  * @version $Revision$
  */
-public class MessageFormatPersonAttributeDaoTest extends TestCase {
-    public void testMessageFormatAttributes() throws Exception {
-        final MessageFormatPersonAttributeDao messageFormatPersonAttributeDao = new MessageFormatPersonAttributeDao();
-        
+public class MessageFormatPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
+    private final MessageFormatPersonAttributeDao messageFormatPersonAttributeDao = new MessageFormatPersonAttributeDao();
+
+    public MessageFormatPersonAttributeDaoTest() {
+
         final MessageFormatPersonAttributeDao.FormatAttribute formatAttribute = new MessageFormatPersonAttributeDao.FormatAttribute();
-        formatAttribute.setAttributeNames(Collections.singleton("displayName"));
+        final Set<String> set2 =
+                new HashSet<>();
+        set2.add("displayName");
+        formatAttribute.setAttributeNames(set2);
         formatAttribute.setFormat("{0} {1}");
         formatAttribute.setSourceAttributes(Util.genList("firstName", "lastName"));
-        
-        messageFormatPersonAttributeDao.setFormatAttributes(Collections.singleton(formatAttribute));
+
+        final Set<MessageFormatPersonAttributeDao.FormatAttribute> set =
+                new HashSet<>();
+        set.add(formatAttribute);
+        messageFormatPersonAttributeDao.setFormatAttributes(set);
+    }
+
+    public void testMessageFormatAttributes() throws Exception {
+
         
         final Map<String, List<Object>> query = new LinkedHashMap<String, List<Object>>();
         query.put("firstName", Util.list("Eric"));
@@ -54,5 +63,11 @@ public class MessageFormatPersonAttributeDaoTest extends TestCase {
         expectedResult.put("displayName", Util.list("Eric Dalquist"));
         
         assertEquals(expectedResult, result);
+    }
+
+
+    @Override
+    protected IPersonAttributeDao getPersonAttributeDaoInstance() {
+        return this.messageFormatPersonAttributeDao;
     }
 }
