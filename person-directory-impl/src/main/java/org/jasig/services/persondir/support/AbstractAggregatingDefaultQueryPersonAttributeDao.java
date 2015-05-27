@@ -117,7 +117,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * 
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         Validate.notNull(query, "query may not be null.");
         
         //Initialize null, so that if none of the sub-DAOs find any people null is returned appropriately
@@ -376,7 +376,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * 
      * @param recover whether you would like exceptions recovered internally
      */
-    public final void setRecoverExceptions(boolean recover) {
+    public final void setRecoverExceptions(final boolean recover) {
         this.recoverExceptions = recover;
     }
 
@@ -390,7 +390,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      *  
      * @param stopOnSuccess If the first valid results should be returned, defaults to false
      */
-    public void setStopOnSuccess(boolean stopOnSuccess) {
+    public void setStopOnSuccess(final boolean stopOnSuccess) {
         this.stopOnSuccess = stopOnSuccess;
     }
 }

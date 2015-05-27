@@ -46,14 +46,14 @@ public abstract class AbstractFlatteningPersonAttributeDaoTest extends AbstractP
     
     
     public void testFlattenMap() throws Exception {
-        Map<String, List<Object>> backingMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> backingMap = new HashMap<String, List<Object>>();
         backingMap.put("name", Util.list("edalquist"));
         backingMap.put("emails", Util.list("edalquist@foo.com", "ebd@none.org"));
         backingMap.put("phone", Util.list((Object)null));
         backingMap.put("title", null);
         backingMap.put("address", Collections.emptyList());
         
-        Map<String, Object> expected = new HashMap<String, Object>();
+        final Map<String, Object> expected = new HashMap<String, Object>();
         expected.put("name", "edalquist");
         expected.put("emails", "edalquist@foo.com");
         expected.put("phone", null);

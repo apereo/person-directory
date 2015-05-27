@@ -46,21 +46,21 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
     protected abstract AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao();
 
     public void testNullDefaultAttributeName() {
-        AbstractDefaultAttributePersonAttributeDao dao = getAbstractDefaultQueryPersonAttributeDao();
+        final AbstractDefaultAttributePersonAttributeDao dao = getAbstractDefaultQueryPersonAttributeDao();
         try {
             dao.setUsernameAttributeProvider(null);
             fail("Expected Exception on setUsernameAttributeProvider(null)");
         } 
-        catch (Exception iae) {
+        catch (final Exception iae) {
             return;
         }
     }
     
     
     public void testGetAttributesByString() {
-        AbstractDefaultAttributePersonAttributeDao dao = new SimpleDefaultQueryPersonAttributeDao();
+        final AbstractDefaultAttributePersonAttributeDao dao = new SimpleDefaultQueryPersonAttributeDao();
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("TestAttrName"));
-        Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
         expected.put("TestAttrName", Util.list("edalquist"));
         
         assertEquals(expected, dao.getMultivaluedUserAttributes("edalquist"));
@@ -84,7 +84,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         /* (non-Javadoc)
          * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
          */
-        public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+        public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
             return Collections.singleton((IPersonAttributes)new AttributeNamedPersonImpl(query));
         }
     }

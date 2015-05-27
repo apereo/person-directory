@@ -86,26 +86,26 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
     private Set<String> userAttributeNames = null;  // default
 
     @Required
-    public void setDataSource(DataSource dataSource) {
+    public void setDataSource(final DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Required
-    public void setSql(String sql) {
+    public void setSql(final String sql) {
         this.sql = sql;
     }
     
     @Required
-    public void setUsernameAttributeProvider(IUsernameAttributeProvider usernameAttributeProvider) {
+    public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
         this.usernameAttributeProvider = usernameAttributeProvider;
     }
     
-    public void setAvailableQueryAttributes(Set<String> availableQueryAttributes) {
+    public void setAvailableQueryAttributes(final Set<String> availableQueryAttributes) {
         this.availableQueryAttributes = Collections.unmodifiableSet(availableQueryAttributes);
     }
     
     @Required
-    public void setUserAttributeNames(Set<String> userAttributeNames) {
+    public void setUserAttributeNames(final Set<String> userAttributeNames) {
         this.userAttributeNames = Collections.unmodifiableSet(userAttributeNames);
     }
     
@@ -124,9 +124,9 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
     }
 
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> queryParameters) {
-        String username = usernameAttributeProvider.getUsernameFromQuery(queryParameters);
-        RowCallbackHandlerImpl rslt = new RowCallbackHandlerImpl(username);
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> queryParameters) {
+        final String username = usernameAttributeProvider.getUsernameFromQuery(queryParameters);
+        final RowCallbackHandlerImpl rslt = new RowCallbackHandlerImpl(username);
         jdbcTemplate.query(sql, new SqlParameterSourceImpl(queryParameters), rslt);
         return rslt.getResults();
     }
@@ -145,22 +145,22 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
         // Instance Members.
         private final Map<String, List<Object>> queryParameters;
         
-        public SqlParameterSourceImpl(Map<String, List<Object>> queryParameters) {
+        public SqlParameterSourceImpl(final Map<String, List<Object>> queryParameters) {
             this.queryParameters = queryParameters;
         }
 
         @Override
-        public Object getValue(String paramName) throws IllegalArgumentException {
+        public Object getValue(final String paramName) throws IllegalArgumentException {
             // Use the first one
-            List<Object> val = queryParameters.get(paramName);
+            final List<Object> val = queryParameters.get(paramName);
             return val != null && val.size() != 0
                         ? val.get(0) 
                         : null;
         }
 
         @Override
-        public boolean hasValue(String paramName) {
-            List<Object> val = queryParameters.get(paramName);
+        public boolean hasValue(final String paramName) {
+            final List<Object> val = queryParameters.get(paramName);
             return val != null && val.size() != 0;
         }
         
@@ -172,20 +172,20 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
         final String username;
         final Map<String,Set<Object>> attributes = new HashMap<String,Set<Object>>();
         
-        public RowCallbackHandlerImpl(String username) {
+        public RowCallbackHandlerImpl(final String username) {
             this.username = username;
         }
 
         @Override
-        public void processRow(ResultSet rs) throws SQLException {
+        public void processRow(final ResultSet rs) throws SQLException {
 
-            for (String attrName : userAttributeNames) {
+            for (final String attrName : userAttributeNames) {
                 Set<Object> values = attributes.get(attrName);
                 if (values == null) {
                     values = new HashSet<Object>();
                     attributes.put(attrName, values);
                 }
-                Object val = rs.getObject(attrName);
+                final Object val = rs.getObject(attrName);
                 if (val != null) {
                     values.add(val);
                 }
@@ -194,11 +194,11 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
         }
         
         public Set<IPersonAttributes> getResults() {
-            Map<String,List<Object>> mapOfLists = new HashMap<String,List<Object>>();
-            for (Map.Entry<String,Set<Object>> y : attributes.entrySet()) {
+            final Map<String,List<Object>> mapOfLists = new HashMap<String,List<Object>>();
+            for (final Map.Entry<String,Set<Object>> y : attributes.entrySet()) {
                 mapOfLists.put(y.getKey(), new ArrayList<Object>(y.getValue()));
             }
-            IPersonAttributes person = new CaseInsensitiveNamedPersonImpl(username, mapOfLists);
+            final IPersonAttributes person = new CaseInsensitiveNamedPersonImpl(username, mapOfLists);
             return Collections.singleton(person);
         }
         

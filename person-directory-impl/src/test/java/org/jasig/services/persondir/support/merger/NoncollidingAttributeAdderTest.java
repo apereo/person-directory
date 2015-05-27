@@ -38,14 +38,14 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
      * Test identity of adding an empty map.
      */
     public void testAddEmpty() {
-        Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
         
-        Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
         expected.putAll(someAttributes);
         
-        Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
+        final Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
         
         assertEquals(expected, result);
     }
@@ -55,19 +55,19 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
      * no collisions.
      */
     public void testAddNoncolliding() {
-        Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
         
-        Map<String, List<Object>> otherAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> otherAttributes = new HashMap<String, List<Object>>();
         otherAttributes.put("attName3", Util.list("attValue3"));
         otherAttributes.put("attName4", Util.list("attValue4"));
         
-        Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
         expected.putAll(someAttributes);
         expected.putAll(otherAttributes);
         
-        Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, otherAttributes);
+        final Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, otherAttributes);
         assertEquals(expected, result);
     }
     
@@ -77,19 +77,19 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
      * Test that colliding attributes are not added.
      */
     public void testColliding() {
-        Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
         
-        Map<String, List<Object>> otherAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> otherAttributes = new HashMap<String, List<Object>>();
         otherAttributes.put("attName", Util.list("attValue3"));
         otherAttributes.put("attName4", Util.list("attValue4"));
         
-        Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
         expected.putAll(someAttributes);
         expected.put("attName4", Util.list("attValue4"));
         
-        Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, otherAttributes);
+        final Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, otherAttributes);
         assertEquals(expected, result);
     }
 

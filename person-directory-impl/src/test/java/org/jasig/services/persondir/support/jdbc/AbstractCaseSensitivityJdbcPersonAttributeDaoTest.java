@@ -175,16 +175,16 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         impl.setQueryAttributeMapping(attributesToColumns);
         beforeNonUsernameQuery(impl);
 
-        Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
         wrongCase.put("firstName", "ANDREW");
         final Set<IPersonAttributes> wrongCaseResult = impl.getPeople(wrongCase);
         assertEquals(0, wrongCaseResult.size());
 
-        Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
         correctCase.put("firstName", "Andrew");
         final Set<IPersonAttributes> correctCaseResult = impl.getPeople(correctCase);
         assertEquals(2, correctCaseResult.size());
-        Iterator<IPersonAttributes> correctCaseResultIterator = correctCaseResult.iterator();
+        final Iterator<IPersonAttributes> correctCaseResultIterator = correctCaseResult.iterator();
         IPersonAttributes currentResult = correctCaseResultIterator.next();
         assertEquals("awp9", currentResult.getName());
         // make sure it preserved data-layer casing
@@ -209,16 +209,16 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         impl.setCaseInsensitiveResultAttributesAsCollection(Util.genList("firstName"));
         beforeNonUsernameQuery(impl);
 
-        Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
         wrongCase.put("firstName", "ANDREW");
         final Set<IPersonAttributes> wrongCaseResult = impl.getPeople(wrongCase);
         assertEquals(0, wrongCaseResult.size());
 
-        Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
         correctCase.put("firstName", "Andrew");
         final Set<IPersonAttributes> correctCaseResult = impl.getPeople(correctCase);
         assertEquals(2, correctCaseResult.size());
-        Iterator<IPersonAttributes> correctCaseResultIterator = correctCaseResult.iterator();
+        final Iterator<IPersonAttributes> correctCaseResultIterator = correctCaseResult.iterator();
         IPersonAttributes currentResult = correctCaseResultIterator.next();
         assertEquals("awp9", currentResult.getName());
         // make sure it overrode data-layer casing
@@ -249,7 +249,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         impl.setCaseInsensitiveDataAttributesAsCollection(Util.genList("name"));
         beforeNonUsernameQuery(impl);
 
-        Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
         wrongCase.put("firstName", "ANDREW");
         final Set<IPersonAttributes> wrongCaseResult = impl.getPeople(wrongCase);
         assertEquals(2, wrongCaseResult.size());
@@ -263,7 +263,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         // make sure it preserved data-layer casing
         assertEquals("Andrew", currentResult.getAttributeValue("firstName"));
 
-        Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
         correctCase.put("firstName", "Andrew");
         final Set<IPersonAttributes> correctCaseResult = impl.getPeople(correctCase);
         assertEquals(2, correctCaseResult.size());
@@ -297,7 +297,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         impl.setCaseInsensitiveResultAttributesAsCollection(Util.genList("firstName"));
         beforeNonUsernameQuery(impl);
 
-        Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
         wrongCase.put("firstName", "ANDREW");
         final Set<IPersonAttributes> wrongCaseResult = impl.getPeople(wrongCase);
         assertEquals(2, wrongCaseResult.size());
@@ -311,7 +311,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         // make sure it overrode data-layer casing
         assertEquals("andrew", currentResult.getAttributeValue("firstName"));
 
-        Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
         correctCase.put("firstName", "Andrew");
         final Set<IPersonAttributes> correctCaseResult = impl.getPeople(correctCase);
         assertEquals(2, correctCaseResult.size());
@@ -350,16 +350,16 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         impl.setCaseInsensitiveDataAttributesAsCollection(Util.genList("email"));
         beforeNonUsernameQuery(impl);
 
-        Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> wrongCase = new LinkedHashMap<String, Object>();
         wrongCase.put("firstName", "ANDREW");
         final Set<IPersonAttributes> wrongCaseResult = impl.getPeople(wrongCase);
         assertEquals(0, wrongCaseResult.size());
 
-        Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
+        final Map<String,Object> correctCase = new LinkedHashMap<String, Object>();
         correctCase.put("firstName", "Andrew");
         final Set<IPersonAttributes> correctCaseResult = impl.getPeople(correctCase);
         assertEquals(2, correctCaseResult.size());
-        Iterator<IPersonAttributes> correctCaseResultIterator = correctCaseResult.iterator();
+        final Iterator<IPersonAttributes> correctCaseResultIterator = correctCaseResult.iterator();
         IPersonAttributes currentResult = correctCaseResultIterator.next();
         assertEquals("awp9", currentResult.getName());
         // make sure it preserved data-layer casing

@@ -80,11 +80,11 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
      * be a session-scoped bean.
      */
     @Required
-    public void setDescriptors(IPersonAttributes descriptors) {
+    public void setDescriptors(final IPersonAttributes descriptors) {
         
         // Assertions.
         if (descriptors == null) {
-            String msg = "Argument 'descriptors' cannot be null";
+            final String msg = "Argument 'descriptors' cannot be null";
             throw new IllegalArgumentException(msg);
         }
         
@@ -103,7 +103,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
      * Sets the {@link ICurrentUserProvider} to use when determining if the additional attributes should be returned,
      * this is an optional property.
      */
-    public void setCurrentUserProvider(ICurrentUserProvider currentUserProvider) {
+    public void setCurrentUserProvider(final ICurrentUserProvider currentUserProvider) {
         this.currentUserProvider = currentUserProvider;
     }
 
@@ -121,7 +121,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("invoking getPeopleWithMultivaluedAttributes(" + query + ")");
         }
@@ -172,7 +172,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
      * @param possibleUserAttributeNames Set of possible attribute names.
      * @since 1.6.2
      */
-    public void setPossibleUserAttributeNames(Set<String> possibleUserAttributeNames) {
+    public void setPossibleUserAttributeNames(final Set<String> possibleUserAttributeNames) {
         this.possibleUserAttributeNames = possibleUserAttributeNames;
     }
 
@@ -180,7 +180,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
         return usernameCaseCanonicalizationMode;
     }
 
-    public void setUsernameCaseCanonicalizationMode(CaseCanonicalizationMode usernameCaseCanonicalizationMode) {
+    public void setUsernameCaseCanonicalizationMode(final CaseCanonicalizationMode usernameCaseCanonicalizationMode) {
         if ( usernameCaseCanonicalizationMode == null ) {
             this.usernameCaseCanonicalizationMode = AbstractQueryPersonAttributeDao.DEFAULT_USERNAME_CASE_CANONICALIZATION_MODE;
         } else {
@@ -192,7 +192,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
         return usernameCaseCanonicalizationLocale;
     }
 
-    public void setUsernameCaseCanonicalizationLocale(Locale usernameCaseCanonicalizationLocale) {
+    public void setUsernameCaseCanonicalizationLocale(final Locale usernameCaseCanonicalizationLocale) {
         if ( usernameCaseCanonicalizationLocale == null ) {
             this.usernameCaseCanonicalizationLocale = Locale.getDefault();
         } else {

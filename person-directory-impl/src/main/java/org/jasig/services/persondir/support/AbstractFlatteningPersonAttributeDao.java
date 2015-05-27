@@ -38,7 +38,7 @@ public abstract class AbstractFlatteningPersonAttributeDao extends BasePersonAtt
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeople(java.util.Map)
      */
-    public final Set<IPersonAttributes> getPeople(Map<String, Object> query) {
+    public final Set<IPersonAttributes> getPeople(final Map<String, Object> query) {
         final Map<String, List<Object>> multivaluedSeed = MultivaluedPersonAttributeUtils.toMultivaluedMap(query);
         return this.getPeopleWithMultivaluedAttributes(multivaluedSeed);
     }
@@ -47,7 +47,7 @@ public abstract class AbstractFlatteningPersonAttributeDao extends BasePersonAtt
      * @deprecated Use {@link MultivaluedPersonAttributeUtils#toMultivaluedMap(Map)} instead. This will be removed in 1.6
      */
     @Deprecated
-    protected Map<String, List<Object>> toMultivaluedSeed(Map<String, Object> seed) {
+    protected Map<String, List<Object>> toMultivaluedSeed(final Map<String, Object> seed) {
         return MultivaluedPersonAttributeUtils.toMultivaluedMap(seed);
     }
 }

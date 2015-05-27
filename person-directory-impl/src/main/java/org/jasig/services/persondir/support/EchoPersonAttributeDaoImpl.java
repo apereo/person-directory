@@ -41,7 +41,7 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
      * @return a Map equal to but not the same reference as the seed.
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         if (query == null) {
             throw new IllegalArgumentException("seed may not be null");
         }

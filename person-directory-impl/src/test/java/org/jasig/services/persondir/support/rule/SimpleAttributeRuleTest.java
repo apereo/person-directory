@@ -47,7 +47,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 		try {
 			new SimpleAttributeRule(null, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
 			fail("IllegalArgumentException should have been thrown with null 'whenKey'.");
-		} catch (IllegalArgumentException iae) {
+		} catch (final IllegalArgumentException iae) {
 			// expected...
 		}
 
@@ -55,7 +55,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 		try {
 			new SimpleAttributeRule(WHEN_KEY, null, SET_UID, SET_KEY, SET_VALUE);
 			fail("IllegalArgumentException should have been thrown with null 'whenPattern'.");
-		} catch (IllegalArgumentException iae) {
+		} catch (final IllegalArgumentException iae) {
 			// expected...
 		}
 
@@ -63,7 +63,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 		try {
 			new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, null, SET_VALUE);
 			fail("IllegalArgumentException should have been thrown with null 'setKey'.");
-		} catch (IllegalArgumentException iae) {
+		} catch (final IllegalArgumentException iae) {
 			// expected...
 		}
 
@@ -71,7 +71,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 		try {
 			new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, null);
 			fail("IllegalArgumentException should have been thrown with null 'setValue'.");
-		} catch (IllegalArgumentException iae) {
+		} catch (final IllegalArgumentException iae) {
 			// expected...
 		}
 
@@ -80,17 +80,17 @@ public class SimpleAttributeRuleTest extends TestCase {
 
 	public void testAppliesToParameters() {
         
-		AttributeRule r = new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
+		final AttributeRule r = new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
 		
 		// null.
 		try {
 			r.appliesTo(null);
 			fail("IllegalArgumentException should have been thrown with null 'userInfo'.");
-		} catch (IllegalArgumentException iae) {
+		} catch (final IllegalArgumentException iae) {
 			// expected...
 		}
 
-		Map<String, List<Object>> m = new HashMap<String, List<Object>>();
+		final Map<String, List<Object>> m = new HashMap<String, List<Object>>();
 		
 		// String --> true.
 		m.put(WHEN_KEY, Util.list(WHEN_PATTERN));

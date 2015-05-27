@@ -37,7 +37,7 @@ public class ReplacingAttributeAdder extends BaseAdditiveAttributeMerger {
      * @see org.jasig.services.persondir.support.merger.BaseAdditiveAttributeMerger#mergePersonAttributes(java.util.Map, java.util.Map)
      */
     @Override
-    protected Map<String, List<Object>> mergePersonAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider) {
+    protected Map<String, List<Object>> mergePersonAttributes(final Map<String, List<Object>> toModify, final Map<String, List<Object>> toConsider) {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
         

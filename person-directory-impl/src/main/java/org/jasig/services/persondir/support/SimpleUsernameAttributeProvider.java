@@ -40,14 +40,14 @@ public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvid
     public SimpleUsernameAttributeProvider() {
     }
     
-    public SimpleUsernameAttributeProvider(String usernameAttribute) {
+    public SimpleUsernameAttributeProvider(final String usernameAttribute) {
         this.setUsernameAttribute(usernameAttribute);
     }
     
     /**
      * The usernameAttribute to use
      */
-    public void setUsernameAttribute(String usernameAttribute) {
+    public void setUsernameAttribute(final String usernameAttribute) {
         Validate.notNull(usernameAttribute);
         this.usernameAttribute = usernameAttribute;
     }
@@ -62,7 +62,7 @@ public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvid
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.IUsernameAttributeProvider#getUsernameFromQuery(java.util.Map)
      */
-    public String getUsernameFromQuery(Map<String, List<Object>> query) {
+    public String getUsernameFromQuery(final Map<String, List<Object>> query) {
         final List<Object> usernameAttributeValues = query.get(this.usernameAttribute);
         
         if (usernameAttributeValues == null || usernameAttributeValues.size() == 0) {

@@ -27,8 +27,8 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.collections.Factory;
-import org.apache.commons.collections.map.LazyMap;
+import org.apache.commons.collections4.Factory;
+import org.apache.commons.collections4.map.LazyMap;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.jasig.services.persondir.support.NamedPersonImpl;
@@ -116,7 +116,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      * @param ds The DataSource to get connections from for executing queries, may not be null.
      * @param sql The SQL to execute for user attributes, may not be null.
      */
-    public MultiRowJdbcPersonAttributeDao(DataSource ds, String sql) {
+    public MultiRowJdbcPersonAttributeDao(final DataSource ds, final String sql) {
         super(ds, sql);
     }
     
@@ -165,8 +165,8 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      */
     @Override
     @SuppressWarnings("unchecked")
-    protected List<IPersonAttributes> parseAttributeMapFromResults(List<Map<String, Object>> queryResults, String queryUserName) {
-        final Map<String, Map<String, List<Object>>> peopleAttributesBuilder = LazyMap.decorate(new LinkedHashMap<String, Map<String, List<Object>>>(), new LinkedHashMapFactory<String, List<Object>>());
+    protected List<IPersonAttributes> parseAttributeMapFromResults(final List<Map<String, Object>> queryResults, final String queryUserName) {
+        final Map<String, Map<String, List<Object>>> peopleAttributesBuilder = LazyMap.lazyMap(new LinkedHashMap<String, Map<String, List<Object>>>(), new LinkedHashMapFactory<String, List<Object>>());
 
         final String userNameAttribute = this.getConfiguredUserNameAttribute();
         

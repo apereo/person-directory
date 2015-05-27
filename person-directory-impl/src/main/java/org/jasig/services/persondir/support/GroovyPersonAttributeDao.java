@@ -125,7 +125,7 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
 
     private boolean caseInsensitiveUsername = false;
 
-    public GroovyPersonAttributeDao(IPersonAttributeScriptDao groovyObject) {
+    public GroovyPersonAttributeDao(final IPersonAttributeScriptDao groovyObject) {
         this.groovyObject = groovyObject;
     }
 
@@ -171,13 +171,13 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public Set<IPersonAttributes> getPeople(Map<String, Object> attributes) {
+    public Set<IPersonAttributes> getPeople(final Map<String, Object> attributes) {
         return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(attributes));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> attributes) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> attributes) {
         try {
             logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters "
                     + attributes);
@@ -195,11 +195,11 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
         return null;
     }
 
-    public void setPossibleUserAttributeNames(Set<String> possibleUserAttributeNames) {
+    public void setPossibleUserAttributeNames(final Set<String> possibleUserAttributeNames) {
         this.possibleUserAttributeNames = possibleUserAttributeNames;
     }
 
-    public void setAvailableQueryAttributes(Set<String> availableQueryAttributes) {
+    public void setAvailableQueryAttributes(final Set<String> availableQueryAttributes) {
         this.availableQueryAttributes = availableQueryAttributes;
     }
 

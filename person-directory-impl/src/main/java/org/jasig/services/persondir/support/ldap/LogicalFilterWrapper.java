@@ -36,7 +36,7 @@ class LogicalFilterWrapper implements Filter {
     private final OrFilter orFilter;
     private final Filter delegateFilter;
     
-    public LogicalFilterWrapper(QueryType queryType) {
+    public LogicalFilterWrapper(final QueryType queryType) {
         this.queryType = queryType;
 
         switch (this.queryType) {
@@ -60,7 +60,7 @@ class LogicalFilterWrapper implements Filter {
     /**
      * Append the query Filter to the underlying logical Filter
      */
-    public void append(Filter query) {
+    public void append(final Filter query) {
         switch (this.queryType) {
             case OR: {
                 this.orFilter.or(query);
@@ -83,7 +83,7 @@ class LogicalFilterWrapper implements Filter {
     /* (non-Javadoc)
      * @see org.springframework.ldap.filter.Filter#encode(java.lang.StringBuffer)
      */
-    public StringBuffer encode(StringBuffer buf) {
+    public StringBuffer encode(final StringBuffer buf) {
         return this.delegateFilter.encode(buf);
     }
 
@@ -91,7 +91,7 @@ class LogicalFilterWrapper implements Filter {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         return this.delegateFilter.equals(o);
     }
 

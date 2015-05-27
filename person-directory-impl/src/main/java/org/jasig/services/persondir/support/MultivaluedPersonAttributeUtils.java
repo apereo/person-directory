@@ -185,7 +185,7 @@ public final class MultivaluedPersonAttributeUtils {
      * Convert the <String, Object> map to a <String, List<Object>> map by simply wrapping
      * each value in a singleton (read-only) List
      */
-    public static Map<String, List<Object>> toMultivaluedMap(Map<String, Object> seed) {
+    public static Map<String, List<Object>> toMultivaluedMap(final Map<String, Object> seed) {
         Validate.notNull(seed, "seed can not be null");
         
         final Map<String, List<Object>> multiSeed = new LinkedHashMap<String, List<Object>>(seed.size());

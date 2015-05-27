@@ -156,7 +156,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @param cachedPersonAttributesDao The cachedPersonAttributesDao to set.
      */
-    public void setCachedPersonAttributesDao(IPersonAttributeDao cachedPersonAttributesDao) {
+    public void setCachedPersonAttributesDao(final IPersonAttributeDao cachedPersonAttributesDao) {
         if (cachedPersonAttributesDao == null) {
             throw new IllegalArgumentException("cachedPersonAttributesDao may not be null");
         }
@@ -177,7 +177,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * @deprecated these should be set on the provided {@link CacheKeyGenerator} if applicable
      */
     @Deprecated
-    public void setCacheKeyAttributes(Set<String> cacheKeyAttributes) {
+    public void setCacheKeyAttributes(final Set<String> cacheKeyAttributes) {
         this.cacheKeyAttributes = cacheKeyAttributes;
     }
 
@@ -193,7 +193,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @param userInfoCache The userInfoCache to set.
      */
-    public void setUserInfoCache(Map<Serializable, Set<IPersonAttributes>> userInfoCache) {
+    public void setUserInfoCache(final Map<Serializable, Set<IPersonAttributes>> userInfoCache) {
         if (userInfoCache == null) {
             throw new IllegalArgumentException("userInfoCache may not be null");
         }
@@ -212,7 +212,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @param cacheNullResults the cacheNullResults to set
      */
-    public void setCacheNullResults(boolean cacheNullResults) {
+    public void setCacheNullResults(final boolean cacheNullResults) {
         this.cacheNullResults = cacheNullResults;
     }
     
@@ -228,7 +228,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @param nullResultsObject the nullResultsObject to set
      */
-    public void setNullResultsObject(Set<IPersonAttributes> nullResultsObject) {
+    public void setNullResultsObject(final Set<IPersonAttributes> nullResultsObject) {
         if (nullResultsObject == null) {
             throw new IllegalArgumentException("nullResultsObject may not be null");
         }
@@ -247,12 +247,12 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @param cacheKeyGenerator the cacheKeyGenerator to set
      */
-    public void setCacheKeyGenerator(CacheKeyGenerator cacheKeyGenerator) {
+    public void setCacheKeyGenerator(final CacheKeyGenerator cacheKeyGenerator) {
         this.cacheKeyGenerator = cacheKeyGenerator;
     }
     
     @Override
-    public void setBeanName(String name) {
+    public void setBeanName(final String name) {
         this.beanName = name;
     }
     
@@ -291,7 +291,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> seed) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> seed) {
         //Ensure the arguments and state are valid
         if (seed == null) {
             throw new IllegalArgumentException("The query seed Map cannot be null.");
@@ -353,18 +353,18 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         return queryResults;
     }
     
-    public void removeUserAttributes(String uid) {
+    public void removeUserAttributes(final String uid) {
         Validate.notNull(uid, "uid may not be null.");
         final Map<String, List<Object>> seed = this.toSeedMap(uid);
         this.removeUserAttributesMultivaluedSeed(seed);
     }
     
-    public void removeUserAttributes(Map<String, Object> seed) {
+    public void removeUserAttributes(final Map<String, Object> seed) {
         final Map<String, List<Object>> multiSeed = MultivaluedPersonAttributeUtils.toMultivaluedMap(seed);
         this.removeUserAttributesMultivaluedSeed(multiSeed);
     }
     
-    public void removeUserAttributesMultivaluedSeed(Map<String, List<Object>> seed) {
+    public void removeUserAttributesMultivaluedSeed(final Map<String, List<Object>> seed) {
         final MethodInvocation methodInvocation = new PersonAttributeDaoMethodInvocation(seed);
         final Serializable cacheKey = this.cacheKeyGenerator.generateKey(methodInvocation);
         this.userInfoCache.remove(cacheKey);
@@ -390,12 +390,12 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
             try {
                 getPeopleWithMultivaluedAttributesMethod = IPersonAttributeDao.class.getMethod("getPeopleWithMultivaluedAttributes", Map.class);
             }
-            catch (SecurityException e) {
+            catch (final SecurityException e) {
                 final NoSuchMethodError nsme = new NoSuchMethodError("The 'getPeopleWithMultivaluedAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' is not accessible due to a security policy.");
                 nsme.initCause(e);
                 throw nsme;
             }
-            catch (NoSuchMethodException e) {
+            catch (final NoSuchMethodException e) {
                 final NoSuchMethodError nsme = new NoSuchMethodError("The 'getPeopleWithMultivaluedAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' does not exist.");
                 nsme.initCause(e);
                 throw nsme;
@@ -404,7 +404,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         
         private final Object[] args;
         
-        public PersonAttributeDaoMethodInvocation(Object... args) {
+        public PersonAttributeDaoMethodInvocation(final Object... args) {
             this.args = args;
         }
         

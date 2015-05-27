@@ -16,7 +16,11 @@
     
     <dependencies>
         <!--========== Compile Dependencies ==========-->
-        
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
@@ -28,8 +32,8 @@
             <scope>compile</scope>
         </dependency> 
         <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>

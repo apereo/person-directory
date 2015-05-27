@@ -27,9 +27,9 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
-import org.apache.commons.collections.EnumerationUtils;
-import org.apache.commons.collections.map.CaseInsensitiveMap;
-import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.collections4.EnumerationUtils;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.collections4.map.ListOrderedMap;
 import org.springframework.ldap.core.AttributesMapper;
 
 /**
@@ -46,14 +46,14 @@ class AttributeMapAttributesMapper implements AttributesMapper {
         this(false);
     }
     
-    public AttributeMapAttributesMapper(boolean ignoreNull) {
+    public AttributeMapAttributesMapper(final boolean ignoreNull) {
         this.ignoreNull = ignoreNull;
     }
 
     /* (non-Javadoc)
      * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
      */
-    public Object mapFromAttributes(Attributes attributes) throws NamingException {
+    public Object mapFromAttributes(final Attributes attributes) throws NamingException {
         final int attributeCount = attributes.size();
         final Map<String, Object> mapOfAttrValues = this.createAttributeMap(attributeCount);
         
@@ -83,8 +83,8 @@ class AttributeMapAttributesMapper implements AttributesMapper {
      * @return the new Map instance
      */
     @SuppressWarnings("unchecked")
-    protected Map<String, Object> createAttributeMap(int attributeCount) {
-        return ListOrderedMap.decorate(new CaseInsensitiveMap(attributeCount > 0 ? attributeCount : 1));
+    protected Map<String, Object> createAttributeMap(final int attributeCount) {
+        return ListOrderedMap.listOrderedMap(new CaseInsensitiveMap(attributeCount > 0 ? attributeCount : 1));
     }
 
     /**
@@ -93,7 +93,7 @@ class AttributeMapAttributesMapper implements AttributesMapper {
      * @param attributeName the attribute name as returned by the Attributes
      * @return the attribute key to use
      */
-    protected String getAttributeKey(String attributeName) {
+    protected String getAttributeKey(final String attributeName) {
         return attributeName;
     }
 
@@ -103,7 +103,7 @@ class AttributeMapAttributesMapper implements AttributesMapper {
      * @param values The enumeration of Attribute values
      * @return The List version of the values enumeration
      */
-    protected List<?> getAttributeValues(NamingEnumeration<?> values) {
+    protected List<?> getAttributeValues(final NamingEnumeration<?> values) {
         return EnumerationUtils.toList(values);
     }
 }

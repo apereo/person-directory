@@ -40,7 +40,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     private List<IAdditionalDescriptors> delegateDescriptors = Collections.emptyList();
     
 
-    public void setDelegateDescriptors(List<IAdditionalDescriptors> delegateDescriptors) {
+    public void setDelegateDescriptors(final List<IAdditionalDescriptors> delegateDescriptors) {
         Validate.noNullElements(delegateDescriptors, "delegateDescriptors List cannot be null or contain null attributes");
         this.delegateDescriptors = new ArrayList<IAdditionalDescriptors>(delegateDescriptors);
     }
@@ -48,7 +48,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#addAttributes(java.util.Map)
      */
-    public void addAttributes(Map<String, List<Object>> attributes) {
+    public void addAttributes(final Map<String, List<Object>> attributes) {
         for (final IAdditionalDescriptors additionalDescriptors : this.delegateDescriptors) {
             additionalDescriptors.addAttributes(attributes);
         }
@@ -59,7 +59,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      * 
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#removeAttribute(java.lang.String)
      */
-    public List<Object> removeAttribute(String name) {
+    public List<Object> removeAttribute(final String name) {
         List<Object> removedValues = null;
         
         for (final IAdditionalDescriptors additionalDescriptors : this.delegateDescriptors) {
@@ -82,7 +82,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      * 
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#setAttributeValues(java.lang.String, java.util.List)
      */
-    public List<Object> setAttributeValues(String name, List<Object> values) {
+    public List<Object> setAttributeValues(final String name, final List<Object> values) {
         List<Object> replacedValues = null;
         
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
@@ -103,7 +103,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#setAttributes(java.util.Map)
      */
-    public void setAttributes(Map<String, List<Object>> attributes) {
+    public void setAttributes(final Map<String, List<Object>> attributes) {
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             additionalDescriptors.setAttributes(attributes);
         }
@@ -112,7 +112,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#setName(java.lang.String)
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             additionalDescriptors.setName(name);
         }
@@ -121,7 +121,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributes#getAttributeValue(java.lang.String)
      */
-    public Object getAttributeValue(String name) {
+    public Object getAttributeValue(final String name) {
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             final Map<String, List<Object>> attributes = additionalDescriptors.getAttributes();
             if (attributes != null && attributes.containsKey(name)) {
@@ -135,7 +135,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributes#getAttributeValues(java.lang.String)
      */
-    public List<Object> getAttributeValues(String name) {
+    public List<Object> getAttributeValues(final String name) {
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             final Map<String, List<Object>> attributes = additionalDescriptors.getAttributes();
             if (attributes != null && attributes.containsKey(name)) {

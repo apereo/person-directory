@@ -176,7 +176,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /**
      * The name of the attribute from the request to use as the username
      */
-    public void setUsernameAttribute(String usernameAttribute) {
+    public void setUsernameAttribute(final String usernameAttribute) {
         this.usernameAttribute = usernameAttribute;
     }
 
@@ -186,7 +186,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /**
      * If specified {@link HttpServletRequest#getRemoteUser()} is added as an attribute under the provided name
      */
-    public void setRemoteUserAttribute(String remoteUserAttribute) {
+    public void setRemoteUserAttribute(final String remoteUserAttribute) {
         this.remoteUserAttribute = remoteUserAttribute;
     }
 
@@ -196,7 +196,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /**
      * If specified {@link HttpServletRequest#getRemoteAddr()} is added as an attribute under the provided name
      */
-    public void setRemoteAddrAttribute(String remoteAddrAttribute) {
+    public void setRemoteAddrAttribute(final String remoteAddrAttribute) {
         this.remoteAddrAttribute = remoteAddrAttribute;
     }
 
@@ -206,7 +206,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /**
      * If specified {@link HttpServletRequest#getRemoteHost()} is added as an attribute under the provided name
      */
-    public void setRemoteHostAttribute(String remoteHostAttribute) {
+    public void setRemoteHostAttribute(final String remoteHostAttribute) {
         this.remoteHostAttribute = remoteHostAttribute;
     }
     
@@ -216,7 +216,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /**
      * If specified {@link HttpServletRequest#getServerName()} is added as an attribute under the provided name
      */
-    public void setServerNameAttribute(String serverNameAttribute) {
+    public void setServerNameAttribute(final String serverNameAttribute) {
         this.serverNameAttribute = serverNameAttribute;
     }
 
@@ -226,7 +226,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /**
      * If specified {@link HttpServletRequest#getServerPort()} is added as an attribute under the provided name
      */
-    public void setServerPortAttribute(String serverPortAttribute) {
+    public void setServerPortAttribute(final String serverPortAttribute) {
         this.serverPortAttribute = serverPortAttribute;
     }
     
@@ -238,7 +238,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * The {@link IAdditionalDescriptors} instance to set request attributes on. This should be a Spring session-scoped
      * proxy to allow each session to have its own set of request-populated attributes.
      */
-    public void setAdditionalDescriptors(IAdditionalDescriptors additionalDescriptors) {
+    public void setAdditionalDescriptors(final IAdditionalDescriptors additionalDescriptors) {
         this.additionalDescriptors = additionalDescriptors;
     }
 
@@ -249,7 +249,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * @param clearExistingAttributes If existing all attributes should be cleared when any new attributes are found.
      * Defaults to false. 
      */
-    public void setClearExistingAttributes(boolean clearExistingAttributes) {
+    public void setClearExistingAttributes(final boolean clearExistingAttributes) {
         this.clearExistingAttributes = clearExistingAttributes;
     }
     
@@ -262,7 +262,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * POST means the attribute processing happens after the doFilter call
      * BOTH means the attribute processing happens before and after the doFilter call
      */
-    public void setProcessingPosition(ProcessingPosition processingPosition) {
+    public void setProcessingPosition(final ProcessingPosition processingPosition) {
         this.processingPosition = processingPosition;
     }
     
@@ -322,7 +322,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /* (non-Javadoc)
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
-    public final void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+    public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain chain) throws IOException, ServletException {
         if (ProcessingPosition.PRE == this.processingPosition || ProcessingPosition.BOTH == this.processingPosition) {
             this.doProcessing(servletRequest);
         }
@@ -334,7 +334,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         }
     }
 
-    private void doProcessing(ServletRequest servletRequest) {
+    private void doProcessing(final ServletRequest servletRequest) {
         if (servletRequest instanceof HttpServletRequest) {
             final HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
             
@@ -437,14 +437,14 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /* transforms "a;b" into list { "a", "b" } */
     /* transforms "a\;b" into list { "a;b" } */
     /* transforms "a;b\;" into list { "a", "b;" } */
-    private static List<String> splitOnSemiColonHandlingBackslashEscaping(String in) {
-	List<String> result = new LinkedList<String>();
+    private static List<String> splitOnSemiColonHandlingBackslashEscaping(final String in) {
+	final List<String> result = new LinkedList<String>();
 
         int i = 1;
         String prefix = "";
-        String[] splitStringArr = in.split(";");
-        for (String s : splitStringArr) {
-            String s2 = s.replaceFirst("\\\\$", ";");
+        final String[] splitStringArr = in.split(";");
+        for (final String s : splitStringArr) {
+            final String s2 = s.replaceFirst("\\\\$", ";");
             if (s.equals(s2) || i == splitStringArr.length) {
                 result.add(prefix + s2);
                 prefix = "";

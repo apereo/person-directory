@@ -120,7 +120,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
         assertEquals(1, allResults.size());
-        IPersonAttributes result = allResults.iterator().next();
+        final IPersonAttributes result = allResults.iterator().next();
         // By default should just echo attribs from data layer as-is
         assertEquals("edalquist", result.getName());
         assertEquals(Util.genList("edalquist"), result.getAttributeValues("username"));
@@ -147,7 +147,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
         assertEquals(1, allResults.size());
-        IPersonAttributes result = allResults.iterator().next();
+        final IPersonAttributes result = allResults.iterator().next();
         assertEquals("edalquist", result.getName());
         // Don't actually get a username attribute in this case because it's
         // not in the result attribute mappings. But it *is* successfully mapped
@@ -174,7 +174,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
         assertEquals(1, allResults.size());
-        IPersonAttributes result = allResults.iterator().next();
+        final IPersonAttributes result = allResults.iterator().next();
         // By default should just echo attribs from data layer as-is
         assertEquals("edalquist", result.getName());
         assertEquals(Util.genList("edalquist"), result.getAttributeValues("username"));
@@ -204,7 +204,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
         assertEquals(1, allResults.size());
-        IPersonAttributes result = allResults.iterator().next();
+        final IPersonAttributes result = allResults.iterator().next();
         assertEquals("edalquist", result.getName());
         // Don't actually get a username attribute in this case because it's
         // not in the result attribute mappings. But it *is* successfully mapped
@@ -239,7 +239,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
         assertEquals(1, allResults.size());
-        IPersonAttributes result = allResults.iterator().next();
+        final IPersonAttributes result = allResults.iterator().next();
         // By default should just echo attribs from data layer as-is
         assertEquals("edalquist", result.getName());
         assertEquals(Util.genList("edalquist"), result.getAttributeValues("username"));
@@ -268,7 +268,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
         assertEquals(1, allResults.size());
-        IPersonAttributes result = allResults.iterator().next();
+        final IPersonAttributes result = allResults.iterator().next();
         // Username canonicalization always independent, for better or worse,
         // of attribute canonicalization. See setUsernameCaseCanonicalizationMode()
         assertEquals("EDALQUIST", result.getName());
@@ -281,17 +281,17 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
 
         private StubPersonAttributeDao storage;
 
-        InMemoryAbstractQueryPersonAttributeDao(Map<String, List<Object>> backingMap) {
+        InMemoryAbstractQueryPersonAttributeDao(final Map<String, List<Object>> backingMap) {
             storage = new StubPersonAttributeDao(backingMap);
         }
 
         @Override
-        protected List<IPersonAttributes> getPeopleForQuery(List<List<Object>> queryBuilder, String queryUserName) {
+        protected List<IPersonAttributes> getPeopleForQuery(final List<List<Object>> queryBuilder, final String queryUserName) {
             return new ArrayList(storage.getPeopleWithMultivaluedAttributes(new HashMap<String,List<Object>>()));
         }
 
         @Override
-        protected List<List<Object>> appendAttributeToQuery(List<List<Object>> queryBuilder, String dataAttribute, List<Object> queryValues) {
+        protected List<List<Object>> appendAttributeToQuery(List<List<Object>> queryBuilder, final String dataAttribute, final List<Object> queryValues) {
             // copy/paste from TestQueryPersonAttributeDao. Don't really care what this does, though
             if (queryBuilder == null) {
                 queryBuilder = new LinkedList<List<Object>>();
@@ -317,7 +317,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
          * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
          */
         @Override
-        protected List<List<Object>> appendAttributeToQuery(List<List<Object>> queryBuilder, String dataAttribute, List<Object> queryValues) {
+        protected List<List<Object>> appendAttributeToQuery(List<List<Object>> queryBuilder, final String dataAttribute, final List<Object> queryValues) {
             if (queryBuilder == null) {
                 queryBuilder = new LinkedList<List<Object>>();
             }
@@ -331,7 +331,7 @@ public class AbstractQueryPersonAttributeDaoTest extends TestCase {
          * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object, java.lang.String)
          */
         @Override
-        protected List<IPersonAttributes> getPeopleForQuery(List<List<Object>> queryBuilder, String queryUserName) {
+        protected List<IPersonAttributes> getPeopleForQuery(final List<List<Object>> queryBuilder, final String queryUserName) {
             this.args = queryBuilder;
             return null;
         }

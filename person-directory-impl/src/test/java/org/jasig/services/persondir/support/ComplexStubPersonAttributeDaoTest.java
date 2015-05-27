@@ -42,19 +42,19 @@ public class ComplexStubPersonAttributeDaoTest
     @Override
     protected void setUp() throws Exception {
         // built the user attributes for awp9
-        Map<String, List<Object>> awp9Map = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> awp9Map = new HashMap<String, List<Object>>();
         awp9Map.put("shirtColor", Util.list("blue"));
         awp9Map.put("phone", Util.list("777-7777"));
         awp9Map.put("wearsTie", Util.list("false"));
         
         // build the user attributes for aam26
-        Map<String, List<Object>> aam26Map = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> aam26Map = new HashMap<String, List<Object>>();
         aam26Map.put("shirtColor", Util.list("white"));
         aam26Map.put("phone",Util.list( "666-6666"));
         aam26Map.put("musicalInstrumentOfChoice", Util.list("trumpet"));
         
         // build the backing map, which maps from username to attribute map
-        Map<String, Map<String, List<Object>>> bMap = new HashMap<String, Map<String, List<Object>>>();
+        final Map<String, Map<String, List<Object>>> bMap = new HashMap<String, Map<String, List<Object>>>();
         bMap.put("awp9", awp9Map);
         bMap.put("aam26", aam26Map);
         
@@ -71,12 +71,12 @@ public class ComplexStubPersonAttributeDaoTest
      * possible attribute names.
      */
     public void testGetPossibleUserAttributeNames() {
-        HashSet<String> expectedAttributeNames = new HashSet<String>();
+        final HashSet<String> expectedAttributeNames = new HashSet<String>();
         expectedAttributeNames.add("shirtColor");
         expectedAttributeNames.add("phone");
         expectedAttributeNames.add("musicalInstrumentOfChoice");
         expectedAttributeNames.add("wearsTie");
-        Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
+        final Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
         
         // test that it properly computed the set of possible attribute names
         
@@ -95,11 +95,11 @@ public class ComplexStubPersonAttributeDaoTest
      * Test getting user attributes using a Map key.
      */
     public void testGetUserAttributesMap() {
-        Map<String, List<Object>> awp9Key = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> awp9Key = new HashMap<String, List<Object>>();
         awp9Key.put("username", Util.list("awp9"));
         assertEquals(this.backingMap.get("awp9"), this.testInstance.getMultivaluedUserAttributes(awp9Key));
         
-        Map<String, List<Object>> unknownUserKey = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> unknownUserKey = new HashMap<String, List<Object>>();
         unknownUserKey.put("uid", Util.list("unknownUser"));
         
         assertNull(this.testInstance.getMultivaluedUserAttributes(unknownUserKey));

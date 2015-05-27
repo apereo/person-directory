@@ -38,7 +38,7 @@ import org.springframework.ldap.core.DirContextProxy;
 public class SingleContextSource implements ContextSource  {
     private final DirContext ctx;
 
-    public SingleContextSource(DirContext ctx) {
+    public SingleContextSource(final DirContext ctx) {
         this.ctx = ctx;
     }
 
@@ -56,7 +56,7 @@ public class SingleContextSource implements ContextSource  {
         return getNonClosingDirContextProxy(ctx);
     }
 
-    private DirContext getNonClosingDirContextProxy(DirContext context) {
+    private DirContext getNonClosingDirContextProxy(final DirContext context) {
         return (DirContext) Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(),
                 new Class[] { getActualTargetClass(context), DirContextProxy.class },
                 new NonClosingDirContextInvocationHandler(context));
@@ -66,13 +66,13 @@ public class SingleContextSource implements ContextSource  {
     public static class NonClosingDirContextInvocationHandler implements InvocationHandler {
         private final DirContext target;
 
-        public NonClosingDirContextInvocationHandler(DirContext target) {
+        public NonClosingDirContextInvocationHandler(final DirContext target) {
             this.target = target;
         }
 
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 
-            String methodName = method.getName();
+            final String methodName = method.getName();
             if (methodName.equals("getTargetContext")) {
                 return target;
             }
@@ -93,7 +93,7 @@ public class SingleContextSource implements ContextSource  {
             try {
                 return method.invoke(target, args);
             }
-            catch (InvocationTargetException e) {
+            catch (final InvocationTargetException e) {
                 throw e.getTargetException();
             }
         }
@@ -117,7 +117,7 @@ public class SingleContextSource implements ContextSource  {
     }
 
     @Override
-    public DirContext getContext(String principal, String credentials) throws NamingException {
+    public DirContext getContext(final String principal, final String credentials) throws NamingException {
         throw new UnsupportedOperationException();
     }
 }

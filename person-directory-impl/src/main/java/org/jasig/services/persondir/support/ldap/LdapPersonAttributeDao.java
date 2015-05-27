@@ -158,7 +158,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
      */
     @Override
-    protected LogicalFilterWrapper appendAttributeToQuery(LogicalFilterWrapper queryBuilder, String dataAttribute, List<Object> queryValues) {
+    protected LogicalFilterWrapper appendAttributeToQuery(LogicalFilterWrapper queryBuilder, final String dataAttribute, final List<Object> queryValues) {
         if (queryBuilder == null) {
             queryBuilder = new LogicalFilterWrapper(this.queryType);
         }
@@ -186,7 +186,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object, java.lang.String)
      */
     @Override
-    protected List<IPersonAttributes> getPeopleForQuery(LogicalFilterWrapper queryBuilder, String queryUserName) {
+    protected List<IPersonAttributes> getPeopleForQuery(final LogicalFilterWrapper queryBuilder, final String queryUserName) {
         final String generatedLdapQuery = queryBuilder.encode();
 
         //If no query is generated return null since the query cannot be run
@@ -254,7 +254,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
      * @deprecated
      */
     @Deprecated
-    public void setTimeLimit(int ms) {
+    public void setTimeLimit(final int ms) {
         this.searchControls.setTimeLimit(ms);
     }
     
@@ -312,7 +312,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     /**
      * @param searchControls Search controls to use for LDAP queries
      */
-    public void setSearchControls(SearchControls searchControls) {
+    public void setSearchControls(final SearchControls searchControls) {
         Assert.notNull(searchControls, "searchControls can not be null");
         this.searchControls = searchControls;
     }
@@ -328,7 +328,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
      * 
      * @param queryType the queryType to set
      */
-    public void setQueryType(QueryType queryType) {
+    public void setQueryType(final QueryType queryType) {
         this.queryType = queryType;
     }
 
@@ -338,7 +338,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     /**
      * Optional wrapper template for the generated part of the query. Use {0} as a placeholder for where the generated query should be inserted.
      */
-    public void setQueryTemplate(String queryTemplate) {
+    public void setQueryTemplate(final String queryTemplate) {
         this.queryTemplate = queryTemplate;
     }
 }

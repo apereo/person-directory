@@ -47,8 +47,8 @@
         <!-- Project Dependency Versions -->
         <aopalliance.version>1.0</aopalliance.version>
         <apacheds.version>1.0.2</apacheds.version>
-        <commons-collections.version>3.2.1</commons-collections.version>
-        <commons-lang.version>3.3.2</commons-lang.version>
+        <commons-collections.version>4.0</commons-collections.version>
+        <commons-lang.version>3.4</commons-lang.version>
         <easymock.version>3.2</easymock.version>
         <hsqldb.version>1.8.0.7</hsqldb.version>
         <jaxb-impl.version>2.2.7</jaxb-impl.version>
@@ -61,12 +61,13 @@
         <spring-modules.version>0.8a</spring-modules.version>
         <groovy.version>2.3.2</groovy.version>
         <grouper.client.version>2.1.0</grouper.client.version>
+        <guava.version>18.0</guava.version>
         <toml.version>1.0.0</toml.version>
         <xerces.version>2.11.0</xerces.version>
-        <jackson.version>2.4.0</jackson.version>
+        <jackson.version>2.5.3</jackson.version>
         <commons-io.version>2.4</commons-io.version>
-        <project.build.sourceVersion>1.6</project.build.sourceVersion>
-        <project.build.targetVersion>1.6</project.build.targetVersion>
+        <project.build.sourceVersion>1.7</project.build.sourceVersion>
+        <project.build.targetVersion>1.7</project.build.targetVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
@@ -78,6 +79,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>aopalliance</groupId>
                 <artifactId>aopalliance</artifactId>
                 <version>${aopalliance.version}</version>
@@ -88,8 +95,8 @@
                 <version>${jaxb-impl.version}</version>
             </dependency> 
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
                 <version>${commons-collections.version}</version>
             </dependency>
             <dependency>

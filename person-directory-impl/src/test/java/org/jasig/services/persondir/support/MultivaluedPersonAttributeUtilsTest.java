@@ -54,7 +54,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that an attempt to parse a null Map results in an empty Map.
      */
     public void testParseNullMapping() {
-        Map<String, Set<String>> emptyMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(null);
+        final Map<String, Set<String>> emptyMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(null);
         assertEquals(Collections.EMPTY_MAP, emptyMap);
     }
     
@@ -63,13 +63,13 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * IllegalArgumentException.
      */
     public void testNullKeyMapping() {
-        Map<String, String> nullKeyMap = new HashMap<String, String>();
+        final Map<String, String> nullKeyMap = new HashMap<String, String>();
         nullKeyMap.put("A", "B");
         nullKeyMap.put(null, "wombat");
         
         try {
             MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
-        } catch (NullPointerException iae) {
+        } catch (final NullPointerException iae) {
             // good
             return;
         }
@@ -81,7 +81,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * IllegalArgumentException.
      */
     public void testNullValueMapping() {
-        Map<String, String> nullKeyMap = new HashMap<String, String>();
+        final Map<String, String> nullKeyMap = new HashMap<String, String>();
         nullKeyMap.put("A", "B");
         nullKeyMap.put("wombat", null);
         
@@ -99,10 +99,10 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * something other than a String fails with an IllegalArgumentException.
      */
     public void testNonStringContentsInValueSet() {
-        Map<String, Object> nullKeyMap = new HashMap<String, Object>();
+        final Map<String, Object> nullKeyMap = new HashMap<String, Object>();
         nullKeyMap.put("A", "B");
         
-        Set<Object> badSet = new HashSet<Object>();
+        final Set<Object> badSet = new HashSet<Object>();
         badSet.add("goodString");
         badSet.add(new Long(1234));
         badSet.add("anotherGoodString");
@@ -121,10 +121,10 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test a mapping for which no change is required.
      */
     public void testSimpleMapping() {
-        Map<String, Object> simpleMapping = new HashMap<String, Object>();
+        final Map<String, Object> simpleMapping = new HashMap<String, Object>();
         simpleMapping.put("displayName", Collections.singleton("display_name"));
         
-        Set<String> uPortalEmailAttributeNames = new HashSet<String>();
+        final Set<String> uPortalEmailAttributeNames = new HashSet<String>();
         uPortalEmailAttributeNames.add("mail");
         uPortalEmailAttributeNames.add("user.home-info.online.email");
         
@@ -135,10 +135,10 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         
         // test that the returned Map is immutable
         
-        Map<String, Set<String>> returnedMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(simpleMapping);
+        final Map<String, Set<String>> returnedMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(simpleMapping);
         try {
             returnedMap.put("foo", Collections.singleton("bar"));
-        } catch (UnsupportedOperationException uoe) {
+        } catch (final UnsupportedOperationException uoe) {
             // good, map was immutable
             return;
         }
@@ -150,8 +150,8 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test parsing a more complex mapping in which Sets need to be created.
      */
     public void testComplexMapping() {
-        Map<String, Object> testMap = new HashMap<String, Object>();
-        Map<String, Set<String>> expectedResult = new HashMap<String, Set<String>>();
+        final Map<String, Object> testMap = new HashMap<String, Object>();
+        final Map<String, Set<String>> expectedResult = new HashMap<String, Set<String>>();
         
         // we expect translation from Strings to Set containing the String
         testMap.put("display_name", "displayName");
@@ -161,7 +161,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         testMap.put("template_name", Collections.singleton("uPortalTemplateUserName"));
         expectedResult.put("template_name", Collections.singleton("uPortalTemplateUserName"));
         
-        Set<String> severalAttributes = new HashSet<String>();
+        final Set<String> severalAttributes = new HashSet<String>();
         
         severalAttributes.add("user.name.given");
         severalAttributes.add("givenName");
@@ -181,7 +181,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     public void testAddResultToNullMap() {
         try {
             MultivaluedPersonAttributeUtils.addResult(null, "key", "value");
-        } catch (NullPointerException iae) {
+        } catch (final NullPointerException iae) {
             // good
             return;
         }
@@ -194,7 +194,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     public void testAddResultNullKey() {
         try {
             MultivaluedPersonAttributeUtils.addResult(new HashMap<String, List<String>>(), null, "value");
-        } catch (NullPointerException iae) {
+        } catch (final NullPointerException iae) {
             // good
             return;
         }
@@ -205,7 +205,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that attempting to add a result with a null value yields no change.
      */
     public void testAddResultNullValue() {
-        Map<String, List<String>> immutableMap = Collections.unmodifiableMap(new HashMap<String, List<String>>());
+        final Map<String, List<String>> immutableMap = Collections.unmodifiableMap(new HashMap<String, List<String>>());
         MultivaluedPersonAttributeUtils.addResult(immutableMap, "key", null);
    }
 
@@ -213,8 +213,8 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test a simple non-colliding add.
      */
     public void testSimpleAdd() {
-        Map<String, List<String>> testMap = new HashMap<String, List<String>>();
-        Map<String, List<String>> expectedResult = new HashMap<String, List<String>>();
+        final Map<String, List<String>> testMap = new HashMap<String, List<String>>();
+        final Map<String, List<String>> expectedResult = new HashMap<String, List<String>>();
         expectedResult.put("mail", Collections.singletonList("andrew.petro@yale.edu"));
         
         MultivaluedPersonAttributeUtils.addResult(testMap, "mail", "andrew.petro@yale.edu");
@@ -228,18 +228,18 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * attribute value to a List.
      */
     public void testCollidingAdd() {
-        Map<String, List<String>> testMap = new HashMap<String, List<String>>();
+        final Map<String, List<String>> testMap = new HashMap<String, List<String>>();
         
-        List<String> phoneNumbers = new ArrayList<String>();
+        final List<String> phoneNumbers = new ArrayList<String>();
         phoneNumbers.add("555-1234");
         phoneNumbers.add("555-4321");
         testMap.put("phone", phoneNumbers);
         
-        List<Object> emailAddys = new ArrayList<Object>();
+        final List<Object> emailAddys = new ArrayList<Object>();
         emailAddys.add("andrew.petro@yale.edu");
         emailAddys.add("awp9@pantheon.yale.edu");
         
-        Map<String, List<Object>> expectedMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expectedMap = new HashMap<String, List<Object>>();
         expectedMap.put("mail", Util.list("andrew.petro@yale.edu"));
         expectedMap.put("phone", new ArrayList<Object>(phoneNumbers));
         
@@ -254,7 +254,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         MultivaluedPersonAttributeUtils.addResult(testMap, "phone", "555-0000");
         assertEquals(expectedMap, testMap);
         
-        List<String> moreNumbers = new ArrayList<String>();
+        final List<String> moreNumbers = new ArrayList<String>();
         moreNumbers.add("555-3145");
         moreNumbers.add("555-1337");
         
@@ -268,16 +268,16 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      */
     public void testAddListToNonList() {
         
-        Map<String, List<Object>> testMap = new HashMap<String, List<Object>>();
-        Map<String, List<Object>> expectedMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> testMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expectedMap = new HashMap<String, List<Object>>();
         
         testMap.put("mail", Util.list("andrew.petro@yale.edu"));
         
-        List<Object> additionalEmails = new ArrayList<Object>();
+        final List<Object> additionalEmails = new ArrayList<Object>();
         additionalEmails.add("awp9@pantheon.yale.edu");
         additionalEmails.add("awp9@tp.its.yale.edu");
         
-        List<Object> expectedList = new ArrayList<Object>();
+        final List<Object> expectedList = new ArrayList<Object>();
         expectedList.add("andrew.petro@yale.edu");
         expectedList.addAll(additionalEmails);
         
@@ -293,10 +293,10 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test adding a non-List to an attribute that is currently a List.
      */
     public void testAddStringToList() {
-        Map<String, List<Object>> testMap = new HashMap<String, List<Object>>();
-        Map<String, List<Object>> expectedMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> testMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expectedMap = new HashMap<String, List<Object>>();
         
-        Date loginDate = new Date();
+        final Date loginDate = new Date();
         
         expectedMap.put("loginTimes", Util.list(loginDate));
         
@@ -304,15 +304,15 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         
         assertEquals(expectedMap, testMap);
         
-        Date anotherLoginDate = new Date();
+        final Date anotherLoginDate = new Date();
         
-        Date yetAnotherLoginDate = new Date();
+        final Date yetAnotherLoginDate = new Date();
         
-        List<Object> dateList = new ArrayList<Object>();
+        final List<Object> dateList = new ArrayList<Object>();
         dateList.add( anotherLoginDate);
         dateList.add(yetAnotherLoginDate);
         
-        List<Object> expectedDateList = new ArrayList<Object>();
+        final List<Object> expectedDateList = new ArrayList<Object>();
         expectedDateList.add(loginDate);
         expectedDateList.add(anotherLoginDate);
         expectedDateList.add(yetAnotherLoginDate);
@@ -331,7 +331,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     public void testFlattenNullCollection() {
         try {
             MultivaluedPersonAttributeUtils.flattenCollection(null);
-        } catch (NullPointerException iae) {
+        } catch (final NullPointerException iae) {
             // good
             return;
         }
@@ -343,17 +343,17 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      *
      */
     public void testFlattenCollection() {
-        Set<Object> setOfSets = new HashSet<Object>();
-        Set<Object> setOfLists = new HashSet<Object>();
-        List<Object> listOfStrings = new ArrayList<Object>();
+        final Set<Object> setOfSets = new HashSet<Object>();
+        final Set<Object> setOfLists = new HashSet<Object>();
+        final List<Object> listOfStrings = new ArrayList<Object>();
         listOfStrings.add("wombat");
         listOfStrings.add("fido");
         listOfStrings.add("foo");
         listOfStrings.add("bar");
         
-        List<Object> listOfDates = new ArrayList<Object>();
-        Date date1 = new Date();
-        Date date2 = new Date();
+        final List<Object> listOfDates = new ArrayList<Object>();
+        final Date date1 = new Date();
+        final Date date2 = new Date();
         // ensure that date2 does not equal date1.
         date2.setTime(date1.getTime() + 100);
         
@@ -365,11 +365,11 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         
         setOfSets.add(setOfLists);
         
-        Set<Object> expectedResult = new HashSet<Object>();
+        final Set<Object> expectedResult = new HashSet<Object>();
         expectedResult.addAll(listOfStrings);
         expectedResult.addAll(listOfDates);
         
-        Collection<Object> flattened = MultivaluedPersonAttributeUtils.flattenCollection(setOfSets);
+        final Collection<Object> flattened = MultivaluedPersonAttributeUtils.flattenCollection(setOfSets);
         assertTrue(expectedResult.containsAll(flattened));
         assertTrue(flattened.containsAll(expectedResult));
         assertEquals(expectedResult.size(), flattened.size());

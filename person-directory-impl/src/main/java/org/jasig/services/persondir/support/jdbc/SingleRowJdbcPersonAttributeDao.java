@@ -75,7 +75,7 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
      * @param attrList Sets the query attribute list
      * @param sql The SQL to execute for user attributes, may not be null.
      */
-    public SingleRowJdbcPersonAttributeDao(DataSource ds, String sql) {
+    public SingleRowJdbcPersonAttributeDao(final DataSource ds, final String sql) {
         super(ds, sql);
     }
 
@@ -92,7 +92,7 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
      * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#parseAttributeMapFromResults(java.util.List, java.lang.String)
      */
     @Override
-    protected List<IPersonAttributes> parseAttributeMapFromResults(List<Map<String, Object>> queryResults, String queryUserName) {
+    protected List<IPersonAttributes> parseAttributeMapFromResults(final List<Map<String, Object>> queryResults, final String queryUserName) {
         final List<IPersonAttributes> peopleAttributes = new ArrayList<IPersonAttributes>(queryResults.size());
         
         for (final Map<String, Object> queryResult : queryResults) {

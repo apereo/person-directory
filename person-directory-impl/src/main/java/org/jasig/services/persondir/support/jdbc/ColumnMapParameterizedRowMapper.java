@@ -24,8 +24,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 
-import org.apache.commons.collections.map.CaseInsensitiveMap;
-import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.collections4.map.ListOrderedMap;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
 
@@ -42,7 +42,7 @@ public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<M
         this(false);
     }
     
-    public ColumnMapParameterizedRowMapper(boolean ignoreNull) {
+    public ColumnMapParameterizedRowMapper(final boolean ignoreNull) {
         this.ignoreNull = ignoreNull;
     }
     
@@ -50,7 +50,7 @@ public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<M
     /* (non-Javadoc)
      * @see org.springframework.jdbc.core.simple.ParameterizedRowMapper#mapRow(java.sql.ResultSet, int)
      */
-    public final Map<String, Object> mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public final Map<String, Object> mapRow(final ResultSet rs, final int rowNum) throws SQLException {
         final ResultSetMetaData rsmd = rs.getMetaData();
         final int columnCount = rsmd.getColumnCount();
         final Map<String, Object> mapOfColValues = this.createColumnMap(columnCount);
@@ -76,8 +76,8 @@ public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<M
      * @return the new Map instance
      */
     @SuppressWarnings("unchecked")
-    protected Map<String, Object> createColumnMap(int columnCount) {
-        return ListOrderedMap.decorate(new CaseInsensitiveMap(columnCount > 0 ? columnCount : 1));
+    protected Map<String, Object> createColumnMap(final int columnCount) {
+        return ListOrderedMap.listOrderedMap(new CaseInsensitiveMap(columnCount > 0 ? columnCount : 1));
     }
 
     /**
@@ -87,7 +87,7 @@ public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<M
      * @return the column key to use
      * @see java.sql.ResultSetMetaData#getColumnName
      */
-    protected String getColumnKey(String columnName) {
+    protected String getColumnKey(final String columnName) {
         return columnName;
     }
 
@@ -103,7 +103,7 @@ public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<M
      * @return the Object returned
      * @see org.springframework.jdbc.support.JdbcUtils#getResultSetValue
      */
-    protected Object getColumnValue(ResultSet rs, int index) throws SQLException {
+    protected Object getColumnValue(final ResultSet rs, final int index) throws SQLException {
         return JdbcUtils.getResultSetValue(rs, index);
     }
 }

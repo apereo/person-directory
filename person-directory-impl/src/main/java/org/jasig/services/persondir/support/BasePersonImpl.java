@@ -40,7 +40,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
 
     private final Map<String, List<Object>> attributes;
     
-    public BasePersonImpl(Map<String, List<Object>> attributes) {
+    public BasePersonImpl(final Map<String, List<Object>> attributes) {
         Validate.notNull(attributes, "attributes can not be null");
         
         final Map<String, List<Object>> immutableValuesBuilder = this.buildImmutableAttributeMap(attributes);
@@ -51,7 +51,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     /**
      * Take the constructor argument and convert the Map and List values into read-only form
      */
-    protected Map<String, List<Object>> buildImmutableAttributeMap(Map<String, List<Object>> attributes) {
+    protected Map<String, List<Object>> buildImmutableAttributeMap(final Map<String, List<Object>> attributes) {
         final Map<String, List<Object>> immutableValuesBuilder = this.createImmutableAttributeMap(attributes.size());
 
         for (final Map.Entry<String, List<Object>> attrEntry : attributes.entrySet()) {
@@ -71,14 +71,14 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     /**
      * Create the Map used to store the attributes internally for this IPersonAttributes
      */
-    protected Map<String, List<Object>> createImmutableAttributeMap(int size) {
+    protected Map<String, List<Object>> createImmutableAttributeMap(final int size) {
         return new LinkedHashMap<String, List<Object>>(size > 0 ? size : 1);
     }
 
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributes#getAttributeValue(java.lang.String)
      */
-    public Object getAttributeValue(String name) {
+    public Object getAttributeValue(final String name) {
         final List<Object> values = this.attributes.get(name);
         if (values == null || values.size() == 0) {
             return null;
@@ -90,7 +90,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributes#getAttributeValues(java.lang.String)
      */
-    public List<Object> getAttributeValues(String name) {
+    public List<Object> getAttributeValues(final String name) {
         final List<Object> values = this.attributes.get(name);
         if (values == null) {
             return null;
@@ -110,14 +110,14 @@ public abstract class BasePersonImpl implements IPersonAttributes {
      * @see java.lang.Object#equals(Object)
      */
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object == this) {
             return true;
         }
         if (!(object instanceof IPersonAttributes)) {
             return false;
         }
-        IPersonAttributes rhs = (IPersonAttributes) object;
+        final IPersonAttributes rhs = (IPersonAttributes) object;
         return new EqualsBuilder()
             .append(this.getName(), rhs.getName())
             .isEquals();

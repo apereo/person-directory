@@ -35,19 +35,19 @@ public class AttributeNamedPersonImpl extends BasePersonImpl {
     
     private final String userNameAttribute;
 
-    public AttributeNamedPersonImpl(Map<String, List<Object>> attributes) {
+    public AttributeNamedPersonImpl(final Map<String, List<Object>> attributes) {
         super(attributes);
         
         this.userNameAttribute = DEFAULT_USER_NAME_ATTRIBUTE;
     }
     
-    public AttributeNamedPersonImpl(String userNameAttribute, Map<String, List<Object>> attributes) {
+    public AttributeNamedPersonImpl(final String userNameAttribute, final Map<String, List<Object>> attributes) {
         super(attributes);
         
         this.userNameAttribute = userNameAttribute;
     }
 
-    public AttributeNamedPersonImpl(IPersonAttributes personAttributes) {
+    public AttributeNamedPersonImpl(final IPersonAttributes personAttributes) {
         this(personAttributes.getName(), personAttributes.getAttributes());
     }
 
