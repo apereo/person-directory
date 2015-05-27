@@ -39,7 +39,7 @@ public class StubPersonAttributeDaoTest
     
     @Override
     protected void setUp() throws Exception {
-        final Map<String, List<Object>> map = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> map = new HashMap<>();
         map.put("shirtColor", Util.list("blue"));
         map.put("phone", Util.list("777-7777"));
         
@@ -57,7 +57,7 @@ public class StubPersonAttributeDaoTest
      * possible attribute names.
      */
     public void testGetPossibleUserAttributeNames() {
-        final Set<String> expectedAttributeNames = new HashSet<String>();
+        final Set<String> expectedAttributeNames = new HashSet<>();
         expectedAttributeNames.add("shirtColor");
         expectedAttributeNames.add("phone");
         final Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();

@@ -46,19 +46,19 @@ public class CascadingPersonAttributeDaoTest
         final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider("username");
         
         
-        final Map<String, Map<String, List<Object>>> daoBackingMap1 = new HashMap<String, Map<String, List<Object>>>();
+        final Map<String, Map<String, List<Object>>> daoBackingMap1 = new HashMap<>();
         
-        final Map<String, List<Object>> user1 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> user1 = new HashMap<>();
         user1.put("phone", Util.list("777-7777"));
         user1.put("studentId", Util.list("123456789"));
         daoBackingMap1.put("edalquist", user1);
         
-        final Map<String, List<Object>> user2 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> user2 = new HashMap<>();
         user2.put("phone", Util.list("888-8888"));
         user2.put("studentId", Util.list("987654321"));
         daoBackingMap1.put("awp9", user2);
         
-        final Map<String, List<Object>> user3 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> user3 = new HashMap<>();
         user3.put("phone", Util.list("666-6666"));
         user3.put("studentId", Util.list("000000000"));
         daoBackingMap1.put("erider", user3);
@@ -68,21 +68,21 @@ public class CascadingPersonAttributeDaoTest
         this.sourceOne.setUsernameAttributeProvider(usernameAttributeProvider);
         
 
-        final Map<String, Map<String, List<Object>>> daoBackingMap2 = new HashMap<String, Map<String, List<Object>>>();
+        final Map<String, Map<String, List<Object>>> daoBackingMap2 = new HashMap<>();
         
-        final Map<String, List<Object>> user1a = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> user1a = new HashMap<>();
         user1a.put("phone", Util.list("777-7777x777"));
         user1a.put("major", Util.list("CS"));
         user1a.put("username", Util.list("edalquist"));
         daoBackingMap2.put("123456789", user1a);
         
-        final Map<String, List<Object>> user2a = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> user2a = new HashMap<>();
         user2a.put("phone", Util.list("888-8887x888"));
         user2a.put("major", Util.list("ME"));
         user2a.put("username", Util.list("awp9"));
         daoBackingMap2.put("987654321", user2a);
         
-        final Map<String, List<Object>> user3a = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> user3a = new HashMap<>();
         user3a.put("phone", Util.list("666-6666x666"));
         user3a.put("major", Util.list("EE"));
         user3a.put("username", Util.list("erider"));
@@ -97,7 +97,7 @@ public class CascadingPersonAttributeDaoTest
     }
     
     public void testCascadingQuery() {
-        final List<IPersonAttributeDao> targets = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> targets = new ArrayList<>();
         targets.add(this.sourceOne);
         targets.add(this.nullSource);
         targets.add(this.sourceTwo);
@@ -108,7 +108,7 @@ public class CascadingPersonAttributeDaoTest
         
         final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
         
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("username", Util.list("edalquist"));
         expected.put("studentId", Util.list("123456789"));
         expected.put("major", Util.list("CS"));
@@ -130,7 +130,7 @@ public class CascadingPersonAttributeDaoTest
     }
     
     public void testThrowingChildDao() {
-        final List<IPersonAttributeDao> targets = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> targets = new ArrayList<>();
         targets.add(this.sourceOne);
         targets.add(new ThrowingPersonAttributeDao());
         targets.add(this.sourceTwo);
@@ -143,7 +143,7 @@ public class CascadingPersonAttributeDaoTest
         targetDao.setRecoverExceptions(true);
         final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
         
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("studentId", Util.list("123456789"));
         expected.put("major", Util.list("CS"));
         expected.put("username", Util.list("edalquist"));
@@ -164,7 +164,7 @@ public class CascadingPersonAttributeDaoTest
     }
 
     public void testNullFirstResultNoStop() {
-        final List<IPersonAttributeDao> targets = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> targets = new ArrayList<>();
         targets.add(this.nullSource);
         targets.add(this.sourceOne);
         targets.add(this.sourceTwo);
@@ -175,7 +175,7 @@ public class CascadingPersonAttributeDaoTest
 
         final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
 
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("username", Util.list("edalquist"));
         expected.put("studentId", Util.list("123456789"));
         expected.put("major", Util.list("CS"));
@@ -185,7 +185,7 @@ public class CascadingPersonAttributeDaoTest
     }
 
     public void testNullFirstResultStop() {
-        final List<IPersonAttributeDao> targets = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> targets = new ArrayList<>();
         targets.add(this.nullSource);
         targets.add(this.sourceOne);
         targets.add(this.sourceTwo);
@@ -205,7 +205,7 @@ public class CascadingPersonAttributeDaoTest
      */
     @Override
     protected AbstractAggregatingDefaultQueryPersonAttributeDao getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao() {
-        final List<IPersonAttributeDao> attributeSources = new ArrayList<IPersonAttributeDao>();
+        final List<IPersonAttributeDao> attributeSources = new ArrayList<>();
         
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);

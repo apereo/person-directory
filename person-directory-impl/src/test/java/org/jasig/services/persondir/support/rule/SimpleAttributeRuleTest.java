@@ -90,7 +90,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 			// expected...
 		}
 
-		final Map<String, List<Object>> m = new HashMap<String, List<Object>>();
+		final Map<String, List<Object>> m = new HashMap<>();
 		
 		// String --> true.
 		m.put(WHEN_KEY, Util.list(WHEN_PATTERN));

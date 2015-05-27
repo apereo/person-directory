@@ -129,8 +129,8 @@ public final class SimpleAttributeRule implements AttributeRule {
             throw new IllegalArgumentException(msg);
         }
         
-        final Map<String, List<Object>> rslt = new LinkedHashMap<String, List<Object>>();
-        final List<Object> value = new ArrayList<Object>(1);
+        final Map<String, List<Object>> rslt = new LinkedHashMap<>();
+        final List<Object> value = new ArrayList<>(1);
         value.add(setValue);
         rslt.put(setKey, value);
         

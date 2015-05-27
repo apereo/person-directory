@@ -42,7 +42,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
 
     public void setDelegateDescriptors(final List<IAdditionalDescriptors> delegateDescriptors) {
         Validate.noNullElements(delegateDescriptors, "delegateDescriptors List cannot be null or contain null attributes");
-        this.delegateDescriptors = new ArrayList<IAdditionalDescriptors>(delegateDescriptors);
+        this.delegateDescriptors = new ArrayList<>(delegateDescriptors);
     }
 
     /* (non-Javadoc)
@@ -66,7 +66,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
             final List<Object> values = additionalDescriptors.removeAttribute(name);
             if (values != null) {
                 if (removedValues == null) {
-                    removedValues = new ArrayList<Object>(values);
+                    removedValues = new ArrayList<>(values);
                 }
                 else {
                     removedValues.addAll(values);
@@ -89,7 +89,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
             final List<Object> oldValues = additionalDescriptors.setAttributeValues(name, values);
             if (oldValues != null) {
                 if (replacedValues == null) {
-                    replacedValues = new ArrayList<Object>(oldValues);
+                    replacedValues = new ArrayList<>(oldValues);
                 }
                 else {
                     replacedValues.addAll(oldValues);

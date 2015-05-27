@@ -76,7 +76,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
     public void setFormatAttributes(final Set<FormatAttribute> formatAttributes) {
         Validate.notNull(formatAttributes, "formatAttributes can not be null");
         
-        final Set<String> possibleUserAttributeNames = new LinkedHashSet<String>();
+        final Set<String> possibleUserAttributeNames = new LinkedHashSet<>();
         for (final FormatAttribute formatAttribute : formatAttributes) {
             possibleUserAttributeNames.addAll(formatAttribute.attributeNames);
         }
@@ -97,7 +97,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
-        final Map<String, List<Object>> formattedAttributes = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> formattedAttributes = new LinkedHashMap<>();
         
         for (final FormatAttribute formatAttribute : this.formatAttributes) {
             final String format = formatAttribute.getFormat();
@@ -110,7 +110,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
             }
             
             //Add attribute values to list
-            final List<Object> sourceValues = new ArrayList<Object>(sourceAttributes.size());
+            final List<Object> sourceValues = new ArrayList<>(sourceAttributes.size());
             for (final String sourceAttribute : sourceAttributes) {
                 final List<Object> values = query.get(sourceAttribute);
                 sourceValues.add(values == null || values.size() == 0 ? null : values.get(0));

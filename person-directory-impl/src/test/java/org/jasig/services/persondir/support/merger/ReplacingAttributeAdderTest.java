@@ -39,15 +39,15 @@ public class ReplacingAttributeAdderTest extends AbstractAttributeMergerTest {
      * attribute values.
      */
     public void testReplacement() {
-        final Map<String, List<Object>> mapOne = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> mapOne = new HashMap<>();
         mapOne.put("aaa", Util.list("111"));
         mapOne.put("bbb", Util.list("222"));
         
-        final Map<String, List<Object>> mapTwo = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> mapTwo = new HashMap<>();
         mapTwo.put("bbb", Util.list("bbb"));
         mapTwo.put("ccc", Util.list("333"));
         
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(mapOne);
         expected.putAll(mapTwo);
         

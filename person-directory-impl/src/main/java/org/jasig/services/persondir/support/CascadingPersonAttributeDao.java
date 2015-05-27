@@ -104,7 +104,7 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
         
         Set<IPersonAttributes> mergedPeopleResults = null;
         for (final IPersonAttributes person : resultPeople) {
-            final Map<String, List<Object>> queryAttributes = new LinkedHashMap<String, List<Object>>();
+            final Map<String, List<Object>> queryAttributes = new LinkedHashMap<>();
             
             //Add the userName into the query map
             final String userName = person.getName();
@@ -121,7 +121,7 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
             if (newResults != null) {
                 if (mergedPeopleResults == null) {
                     //If this is the first valid result set just use it.
-                    mergedPeopleResults = new LinkedHashSet<IPersonAttributes>(newResults);
+                    mergedPeopleResults = new LinkedHashSet<>(newResults);
                 }
                 else {
                     //Merge the Sets of IPersons

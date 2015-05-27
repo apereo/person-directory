@@ -52,7 +52,7 @@ public class MultivaluedAttributeMerger extends BaseAdditiveAttributeMerger {
             
             List<Object> destList = toModify.get(sourceKey);
             if (destList == null) {
-                destList = new LinkedList<Object>();
+                destList = new LinkedList<>();
                 toModify.put(sourceKey, destList);
             }
             

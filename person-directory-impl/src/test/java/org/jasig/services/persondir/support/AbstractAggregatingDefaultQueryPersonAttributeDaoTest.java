@@ -57,19 +57,19 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
     public void testGetPossibleNamesWithException() {
         final AbstractAggregatingDefaultQueryPersonAttributeDao dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
         
-        final Map<String, List<Object>> attrMap1 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> attrMap1 = new HashMap<>();
         attrMap1.put("key1.1", Util.list("val1.1"));
         attrMap1.put("key1.2", Util.list("val1.2"));
         
-        final Map<String, List<Object>> attrMap2 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> attrMap2 = new HashMap<>();
         attrMap1.put("key2.1", Util.list("val2.1"));
         attrMap1.put("key2.2", Util.list("val2.2"));
         
-        final Set<String> expectedNames = new HashSet<String>();
+        final Set<String> expectedNames = new HashSet<>();
         expectedNames.addAll(attrMap1.keySet());
         expectedNames.addAll(attrMap2.keySet());
         
-        final List<IPersonAttributeDao> childDaos = new ArrayList<IPersonAttributeDao>(3);
+        final List<IPersonAttributeDao> childDaos = new ArrayList<>(3);
         childDaos.add(new StubPersonAttributeDao(attrMap1));
         childDaos.add(new ThrowingPersonAttributeDao());
         childDaos.add(new StubPersonAttributeDao(attrMap2));
@@ -96,24 +96,24 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
     public void testStopOnSuccess() {
         final AbstractAggregatingDefaultQueryPersonAttributeDao dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
         
-        final Map<String, List<Object>> attrMap1 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> attrMap1 = new HashMap<>();
         attrMap1.put("username", Util.list("test"));
         attrMap1.put("key1.1", Util.list("val1.1"));
         attrMap1.put("key1.2", Util.list("val1.2"));
         
-        final Map<String, List<Object>> attrMap2 = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> attrMap2 = new HashMap<>();
         attrMap2.put("username", Util.list("test"));
         attrMap2.put("key2.1", Util.list("val2.1"));
         attrMap2.put("key2.2", Util.list("val2.2"));
         
-        final Set<String> expectedNamesWithStop = new HashSet<String>();
+        final Set<String> expectedNamesWithStop = new HashSet<>();
         expectedNamesWithStop.addAll(attrMap1.keySet());
         
-        final Set<String> expectedNamesWithoutStop = new HashSet<String>();
+        final Set<String> expectedNamesWithoutStop = new HashSet<>();
         expectedNamesWithoutStop.addAll(attrMap1.keySet());
         expectedNamesWithoutStop.addAll(attrMap2.keySet());
         
-        final List<IPersonAttributeDao> childDaos = new ArrayList<IPersonAttributeDao>(3);
+        final List<IPersonAttributeDao> childDaos = new ArrayList<>(3);
         childDaos.add(new ThrowingPersonAttributeDao());
         childDaos.add(new StubPersonAttributeDao(attrMap1));
         childDaos.add(new StubPersonAttributeDao(attrMap2));

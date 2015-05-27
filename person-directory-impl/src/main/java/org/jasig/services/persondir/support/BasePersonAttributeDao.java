@@ -56,7 +56,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         }
         
         //Make a mutable copy of the peron's attributes
-        return new LinkedHashMap<String, List<Object>>(person.getAttributes());
+        return new LinkedHashMap<>(person.getAttributes());
     }
 
     /* (non-Javadoc)
@@ -70,7 +70,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         }
 
         //Make a mutable copy of the peron's attributes
-        return new LinkedHashMap<String, List<Object>>(person.getAttributes());
+        return new LinkedHashMap<>(person.getAttributes());
     }
 
     /* (non-Javadoc)
@@ -87,7 +87,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
             return null;
         }
 
-        final Map<String, List<Object>> multivaluedUserAttributes = new LinkedHashMap<String, List<Object>>(person.getAttributes());
+        final Map<String, List<Object>> multivaluedUserAttributes = new LinkedHashMap<>(person.getAttributes());
         return this.flattenResults(multivaluedUserAttributes);
     }
 
@@ -118,7 +118,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         }
         
         //Convert the <String, List<Object> results map to a <String, Object> map using the first value of each List
-        final Map<String, Object> userAttributes = new LinkedHashMap<String, Object>(multivaluedUserAttributes.size());
+        final Map<String, Object> userAttributes = new LinkedHashMap<>(multivaluedUserAttributes.size());
         
         for (final Map.Entry<String, List<Object>> attrEntry : multivaluedUserAttributes.entrySet()) {
             final String attrName = attrEntry.getKey();

@@ -92,7 +92,7 @@ public class DeclaredRulePersonAttributeDaoTest extends TestCase {
 	}
 
 	public void testGetPossibleNames() {
-		final Set<String> s = new HashSet<String>();
+		final Set<String> s = new HashSet<>();
 		s.add("fax");
 		assertEquals(s, target.getPossibleUserAttributeNames());
 	}

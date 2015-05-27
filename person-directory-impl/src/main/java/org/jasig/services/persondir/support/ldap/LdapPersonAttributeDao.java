@@ -211,7 +211,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         @SuppressWarnings("unchecked")
         final List<Map<String, List<Object>>> queryResults = this.ldapTemplate.search(this.baseDN, ldapQuery, this.searchControls, MAPPER);
         
-        final List<IPersonAttributes> peopleAttributes = new ArrayList<IPersonAttributes>(queryResults.size());
+        final List<IPersonAttributes> peopleAttributes = new ArrayList<>(queryResults.size());
         for (final Map<String, List<Object>> queryResult : queryResults) {
             final IPersonAttributes person;
 

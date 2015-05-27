@@ -87,7 +87,7 @@ public class PersonData {
      */
     public List<Person> getPerson() {
         if (person == null) {
-            person = new ArrayList<Person>();
+            person = new ArrayList<>();
         }
         return this.person;
     }

@@ -49,13 +49,13 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         final AdditionalDescriptors additionalDescriptors = new AdditionalDescriptors();
         requestAttributeSourceFilter.setAdditionalDescriptors(additionalDescriptors);
         
-        final Map<String, Object>  cookieAttributeMapping = new LinkedHashMap<String, Object>();
+        final Map<String, Object>  cookieAttributeMapping = new LinkedHashMap<>();
         cookieAttributeMapping.put("foo", new LinkedHashSet<Object>(Arrays.asList("foo", "baz")));
         cookieAttributeMapping.put("ding", "ding");
         cookieAttributeMapping.put("boo", "boo");
         requestAttributeSourceFilter.setCookieAttributeMapping(cookieAttributeMapping);
 
-        final Map<String, Object>  headerAttributeMapping = new LinkedHashMap<String, Object>();
+        final Map<String, Object>  headerAttributeMapping = new LinkedHashMap<>();
         headerAttributeMapping.put("user.mail", new LinkedHashSet<Object>(Arrays.asList("user.mail", "email")));
         headerAttributeMapping.put("user.name.given", "user.name.given");
         headerAttributeMapping.put("user.name.family", "user.name.family");
@@ -91,7 +91,7 @@ public class RequestAttributeSourceFilterTest extends TestCase {
 
         assertEquals("user1", additionalDescriptors.getName());
         
-        final Map<String, List<Object>> expectedAttributes = new LinkedHashMap<String, List<Object>>();
+        final Map<String, List<Object>> expectedAttributes = new LinkedHashMap<>();
         expectedAttributes.put("remoteUser", Util.list("user1"));
         expectedAttributes.put("remoteAddr", Util.list("127.0.0.1"));
         expectedAttributes.put("remoteHost", Util.list((Object[])null));

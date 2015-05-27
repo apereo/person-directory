@@ -170,7 +170,7 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
         
         // Instance Members
         final String username;
-        final Map<String,Set<Object>> attributes = new HashMap<String,Set<Object>>();
+        final Map<String,Set<Object>> attributes = new HashMap<>();
         
         public RowCallbackHandlerImpl(final String username) {
             this.username = username;
@@ -182,7 +182,7 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
             for (final String attrName : userAttributeNames) {
                 Set<Object> values = attributes.get(attrName);
                 if (values == null) {
-                    values = new HashSet<Object>();
+                    values = new HashSet<>();
                     attributes.put(attrName, values);
                 }
                 final Object val = rs.getObject(attrName);
@@ -194,9 +194,9 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
         }
         
         public Set<IPersonAttributes> getResults() {
-            final Map<String,List<Object>> mapOfLists = new HashMap<String,List<Object>>();
+            final Map<String,List<Object>> mapOfLists = new HashMap<>();
             for (final Map.Entry<String,Set<Object>> y : attributes.entrySet()) {
-                mapOfLists.put(y.getKey(), new ArrayList<Object>(y.getValue()));
+                mapOfLists.put(y.getKey(), new ArrayList<>(y.getValue()));
             }
             final IPersonAttributes person = new CaseInsensitiveNamedPersonImpl(username, mapOfLists);
             return Collections.singleton(person);

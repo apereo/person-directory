@@ -111,10 +111,10 @@ public class SingleRowJdbcPersonAttributeDaoTest
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("name", "firstName");
 
-        final Set<String> emailAttributeNames = new HashSet<String>();
+        final Set<String> emailAttributeNames = new HashSet<>();
         emailAttributeNames.add("email");
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
@@ -137,17 +137,17 @@ public class SingleRowJdbcPersonAttributeDaoTest
         final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("name", "firstName");
 
-        final Set<String> emailAttributeNames = new HashSet<String>();
+        final Set<String> emailAttributeNames = new HashSet<>();
         emailAttributeNames.add("email");
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final Set<String> expectedAttributeNames = new HashSet<String>();
+        final Set<String> expectedAttributeNames = new HashSet<>();
         expectedAttributeNames.add("firstName");
         expectedAttributeNames.add("email");
         expectedAttributeNames.add("emailAddress");
@@ -166,10 +166,10 @@ public class SingleRowJdbcPersonAttributeDaoTest
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("name", "firstName");
 
-        final Set<String> emailAttributeNames = new HashSet<String>();
+        final Set<String> emailAttributeNames = new HashSet<>();
         emailAttributeNames.add("email");
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
@@ -193,7 +193,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("name", "firstName");
 
         columnsToAttributes.put("email", "emailAddress");
@@ -213,10 +213,10 @@ public class SingleRowJdbcPersonAttributeDaoTest
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("name", "firstName");
 
-        final Set<String> emailAttributeNames = new HashSet<String>();
+        final Set<String> emailAttributeNames = new HashSet<>();
         emailAttributeNames.add("email");
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
@@ -237,7 +237,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("", "dressShirtColor");
 
         try {
@@ -258,7 +258,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("name", "firstName");
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
@@ -273,7 +273,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * more attributes than are needed to complete are passed to it.
      */
     public void testMultiAttrQuery() {
-        final Map<String, String> queryAttributeMapping = new LinkedHashMap<String, String>();
+        final Map<String, String> queryAttributeMapping = new LinkedHashMap<>();
         queryAttributeMapping.put("uid", "netid");
         queryAttributeMapping.put("shirtColor", "shirt_color");
 
@@ -281,16 +281,16 @@ public class SingleRowJdbcPersonAttributeDaoTest
         impl.setQueryAttributeMapping(queryAttributeMapping);
 
         
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("name", "firstName");
 
-        final Set<String> emailAttributeNames = new HashSet<String>();
+        final Set<String> emailAttributeNames = new HashSet<>();
         emailAttributeNames.add("email");
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("shirtColor", Util.list("blue"));
         queryMap.put("Name", Util.list("John"));
@@ -307,7 +307,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * attributes aren't passed to it.
      */
     public void testInsufficientAttrQuery() {
-        final Map<String, String> queryAttributeMapping = new LinkedHashMap<String, String>();
+        final Map<String, String> queryAttributeMapping = new LinkedHashMap<>();
         queryAttributeMapping.put("uid", "netid");
         queryAttributeMapping.put("shirtColor", "shirt_color");
 
@@ -315,16 +315,16 @@ public class SingleRowJdbcPersonAttributeDaoTest
         impl.setQueryAttributeMapping(queryAttributeMapping);
         impl.setRequireAllQueryAttributes(true);
         
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("name", "firstName");
 
-        final Set<String> emailAttributeNames = new HashSet<String>();
+        final Set<String> emailAttributeNames = new HashSet<>();
         emailAttributeNames.add("email");
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("Name", Util.list("John"));
 
@@ -340,18 +340,18 @@ public class SingleRowJdbcPersonAttributeDaoTest
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("netid", "uid");
         columnsToAttributes.put("name", "firstName");
 
-        final Set<String> emailAttributeNames = new HashSet<String>();
+        final Set<String> emailAttributeNames = new HashSet<>();
         emailAttributeNames.add("email");
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
 
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final Map<String, List<Object>> queryMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("shirt", Util.list("blue"));
 
         try {
@@ -371,11 +371,11 @@ public class SingleRowJdbcPersonAttributeDaoTest
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
         assertEquals(Collections.singletonMap("shirt", Collections.singleton("shirt_color")), impl.getQueryAttributeMapping());
         
-        final Map<String, Object> columnsToAttributes = new HashMap<String, Object>();
+        final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("netid", "uid");
         columnsToAttributes.put("name", "firstName");
 
-        final Map<String, Set<String>> expectedColumnsToAttributes = new HashMap<String, Set<String>>();
+        final Map<String, Set<String>> expectedColumnsToAttributes = new HashMap<>();
         expectedColumnsToAttributes.put("netid", Collections.singleton("uid"));
         expectedColumnsToAttributes.put("name", Collections.singleton("firstName"));
 
@@ -386,7 +386,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     @Override
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
         final String queryAttr = "shirt";
-        final List<String> queryAttrList = new LinkedList<String>();
+        final List<String> queryAttrList = new LinkedList<>();
         queryAttrList.add(queryAttr);
         
         // shirt_color = ?

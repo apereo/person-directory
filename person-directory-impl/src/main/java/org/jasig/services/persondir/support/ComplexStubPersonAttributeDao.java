@@ -117,7 +117,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
             this.possibleUserAttributeNames = Collections.emptySet();
         }
         else {
-            this.backingMap = Collections.unmodifiableMap(new LinkedHashMap<String, Map<String, List<Object>>>(backingMap));
+            this.backingMap = Collections.unmodifiableMap(new LinkedHashMap<>(backingMap));
             this.initializePossibleAttributeNames();
         }
     }
@@ -173,7 +173,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         if (seedValue != null && seedValue.contains(IPersonAttributeDao.WILDCARD)) {
             final Pattern seedPattern = PatternHelper.compilePattern(seedValue);
             
-            final List<IPersonAttributes> results = new LinkedList<IPersonAttributes>();
+            final List<IPersonAttributes> results = new LinkedList<>();
             
             for (final Map.Entry<String, Map<String, List<Object>>> attributesEntry : this.backingMap.entrySet()) {
                 final String attributesKey = attributesEntry.getKey();
@@ -238,7 +238,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      * possibleUserAttributeNames.
      */
     private void initializePossibleAttributeNames() {
-        final Set<String> possibleAttribNames = new LinkedHashSet<String>();
+        final Set<String> possibleAttribNames = new LinkedHashSet<>();
         
         for (final Map<String, List<Object>> attributeMapForSomeUser : this.backingMap.values()) {
             final Set<String> keySet = attributeMapForSomeUser.keySet();

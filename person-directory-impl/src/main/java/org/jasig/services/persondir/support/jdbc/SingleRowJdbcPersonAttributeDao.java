@@ -93,7 +93,7 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
      */
     @Override
     protected List<IPersonAttributes> parseAttributeMapFromResults(final List<Map<String, Object>> queryResults, final String queryUserName) {
-        final List<IPersonAttributes> peopleAttributes = new ArrayList<IPersonAttributes>(queryResults.size());
+        final List<IPersonAttributes> peopleAttributes = new ArrayList<>(queryResults.size());
         
         for (final Map<String, Object> queryResult : queryResults) {
             final Map<String, List<Object>> multivaluedQueryResult = MultivaluedPersonAttributeUtils.toMultivaluedMap(queryResult);

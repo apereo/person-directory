@@ -74,7 +74,7 @@ public final class MultivaluedPersonAttributeUtils {
             return Collections.emptyMap();
         }
         
-        final Map<String, Set<String>> mappedAttributesBuilder = new LinkedHashMap<String, Set<String>>();
+        final Map<String, Set<String>> mappedAttributesBuilder = new LinkedHashMap<>();
         
         for (final Map.Entry<String, ? extends Object> mappingEntry : mapping.entrySet()) {
             final String sourceAttrName = mappingEntry.getKey();
@@ -96,7 +96,7 @@ public final class MultivaluedPersonAttributeUtils {
                 final Collection<?> sourceSet = (Collection<?>)mappedAttribute;
                 
                 //Ensure the collection only contains strings.
-                final Set<String> mappedSet = new LinkedHashSet<String>();
+                final Set<String> mappedSet = new LinkedHashSet<>();
                 for (final Object sourceObj : sourceSet) {
                     if (sourceObj != null) {
                         mappedSet.add(sourceObj.toString());
@@ -143,7 +143,7 @@ public final class MultivaluedPersonAttributeUtils {
         
         List<V> currentValue = results.get(key);
         if (currentValue == null) {
-            currentValue = new LinkedList<V>();
+            currentValue = new LinkedList<>();
             results.put(key, currentValue);
         }
         
@@ -166,7 +166,7 @@ public final class MultivaluedPersonAttributeUtils {
     public static <T> Collection<T> flattenCollection(final Collection<? extends Object> source) {
         Validate.notNull(source, "Cannot flatten a null collection.");
         
-        final Collection<T> result = new LinkedList<T>();
+        final Collection<T> result = new LinkedList<>();
         
         for (final Object value : source) {
             if (value instanceof Collection) {
@@ -188,7 +188,7 @@ public final class MultivaluedPersonAttributeUtils {
     public static Map<String, List<Object>> toMultivaluedMap(final Map<String, Object> seed) {
         Validate.notNull(seed, "seed can not be null");
         
-        final Map<String, List<Object>> multiSeed = new LinkedHashMap<String, List<Object>>(seed.size());
+        final Map<String, List<Object>> multiSeed = new LinkedHashMap<>(seed.size());
         for (final Map.Entry<String, Object> seedEntry : seed.entrySet()) {
             final String seedName = seedEntry.getKey();
             final Object seedValue = seedEntry.getValue();

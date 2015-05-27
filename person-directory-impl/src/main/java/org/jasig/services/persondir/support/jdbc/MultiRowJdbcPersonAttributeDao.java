@@ -208,7 +208,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
                 
                 //Get the columns containing the values and add all values to a List
                 final Set<String> valueColumns = columnMapping.getValue();
-                final List<Object> attrValues = new ArrayList<Object>(valueColumns.size());
+                final List<Object> attrValues = new ArrayList<>(valueColumns.size());
                 for (final String valueColumn : valueColumns) {
                     final Object attrValue = queryResult.get(valueColumn);
                     if (attrValue == null && !queryResult.containsKey(valueColumn)) {
@@ -225,7 +225,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         
         
         //Convert the builder structure into a List of IPersons
-        final List<IPersonAttributes> people = new ArrayList<IPersonAttributes>(peopleAttributesBuilder.size());
+        final List<IPersonAttributes> people = new ArrayList<>(peopleAttributesBuilder.size());
         
         for (final Map.Entry<String, Map<String, List<Object>>> mappedAttributesEntry : peopleAttributesBuilder.entrySet()) {
             final String userName = mappedAttributesEntry.getKey();
@@ -239,7 +239,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     
     private static final class LinkedHashMapFactory<K, V> implements Factory {
         public Map<K, V> create() {
-            return new LinkedHashMap<K, V>();
+            return new LinkedHashMap<>();
         }
     }
 }

@@ -173,7 +173,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         final Collection<String> userAttributes = MultivaluedPersonAttributeUtils.flattenCollection(parsedResultAttributeMapping.values());
         
         this.resultAttributeMapping = parsedResultAttributeMapping;
-        this.possibleUserAttributes = Collections.unmodifiableSet(new LinkedHashSet<String>(userAttributes));
+        this.possibleUserAttributes = Collections.unmodifiableSet(new LinkedHashSet<>(userAttributes));
     }
     
     /**
@@ -233,7 +233,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         }
 
         //Map the attributes of the found people according to resultAttributeMapping if it is set
-        final Set<IPersonAttributes> mappedPeople = new LinkedHashSet<IPersonAttributes>();
+        final Set<IPersonAttributes> mappedPeople = new LinkedHashSet<>();
         for (final IPersonAttributes unmappedPerson : unmappedPeople) {
             final IPersonAttributes mappedPerson = this.mapPersonAttributes(unmappedPerson);
             mappedPeople.add(mappedPerson);
@@ -388,7 +388,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         //If no mapping just use the attributes as-is
         if (this.resultAttributeMapping == null) {
             if (caseInsensitiveResultAttributes != null && !(caseInsensitiveResultAttributes.isEmpty())) {
-                mappedAttributes = new LinkedHashMap<String, List<Object>>();
+                mappedAttributes = new LinkedHashMap<>();
                 for ( final Map.Entry<String,List<Object>> attribute : personAttributes.entrySet() ) {
                     final String attributeName = attribute.getKey();
                     mappedAttributes.put(attributeName, canonicalizeAttribute(attributeName, attribute.getValue(), caseInsensitiveResultAttributes));
@@ -399,7 +399,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         }
         //Map the attribute names via the resultAttributeMapping
         else {
-            mappedAttributes = new LinkedHashMap<String, List<Object>>(); 
+            mappedAttributes = new LinkedHashMap<>();
             
             for (final Map.Entry<String, Set<String>> resultAttrEntry : this.resultAttributeMapping.entrySet()) {
                 final String dataKey = resultAttrEntry.getKey();
@@ -457,7 +457,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             // of case-insensitive fields
             canonicalizationMode = defaultCaseCanonicalizationMode;
         }
-        final List<Object> canonicalizedValues = new ArrayList<Object>(value.size());
+        final List<Object> canonicalizedValues = new ArrayList<>(value.size());
         for ( final Object origValue : value ) {
             if ( origValue instanceof String ) {
                 canonicalizedValues.add(canonicalizationMode.canonicalize((String) origValue, caseCanonicalizationLocale));
@@ -551,7 +551,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         if (caseInsensitiveResultAttributes == null || caseInsensitiveResultAttributes.isEmpty()) {
             setCaseInsensitiveResultAttributes(null);
         } else {
-            final Map<String, CaseCanonicalizationMode> asMap = new HashMap<String, CaseCanonicalizationMode>();
+            final Map<String, CaseCanonicalizationMode> asMap = new HashMap<>();
             for ( final String attrib : caseInsensitiveResultAttributes ) {
                 asMap.put(attrib, null);
             }
@@ -574,7 +574,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         if (caseInsensitiveQueryAttributes == null || caseInsensitiveQueryAttributes.isEmpty()) {
             setCaseInsensitiveQueryAttributes(null);
         } else {
-            final Map<String, CaseCanonicalizationMode> asMap = new HashMap<String, CaseCanonicalizationMode>();
+            final Map<String, CaseCanonicalizationMode> asMap = new HashMap<>();
             for ( final String attrib : caseInsensitiveQueryAttributes ) {
                 asMap.put(attrib, null);
             }

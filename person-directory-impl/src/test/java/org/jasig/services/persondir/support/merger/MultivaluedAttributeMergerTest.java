@@ -38,11 +38,11 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
      * Test identity of adding an empty map.
      */
     public void testAddEmpty() {
-        final Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
         
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(someAttributes);
         
         final Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
@@ -55,15 +55,15 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
      * no collisions.
      */
     public void testAddNoncolliding() {
-        final Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
         
-        final Map<String, List<Object>> otherAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> otherAttributes = new HashMap<>();
         otherAttributes.put("attName3", Util.list("attValue3"));
         otherAttributes.put("attName4", Util.list("attValue4"));
         
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(someAttributes);
         expected.putAll(otherAttributes);
         
@@ -75,7 +75,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
      * Test that colliding attributes are not added.
      */
     public void testColliding() {
-        final Map<String, List<Object>> someAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName1", Util.list((Object)null));
         someAttributes.put("attName2", Util.list("attValue2"));
         
@@ -91,7 +91,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         someAttributes.put("attName13", Util.list("attValue13.1.1", "attValue13.1.2"));
         
         
-        final Map<String, List<Object>> otherAttributes = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> otherAttributes = new HashMap<>();
         otherAttributes.put("attName3", Util.list((Object)null));
         otherAttributes.put("attName4", Util.list("attValue4"));
         
@@ -107,7 +107,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         otherAttributes.put("attName13", Util.list("attValue13.2.1", "attValue13.2.2"));
 
         
-        final Map<String, List<Object>> expected = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("attName1", Util.list((Object)null));
         expected.put("attName2", Util.list("attValue2"));
         expected.put("attName3", Util.list((Object)null));

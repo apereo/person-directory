@@ -44,11 +44,11 @@ public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTe
     public void testMapEcho() {
         final EchoPersonAttributeDaoImpl dao = new EchoPersonAttributeDaoImpl();
         
-        final Map<String, List<Object>> testMap = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> testMap = new HashMap<>();
         testMap.put("key1", Util.list("val1"));
         testMap.put("key2", Util.list("val2"));
         
-        final Map<String, List<Object>> goalMap = new HashMap<String, List<Object>>(testMap);
+        final Map<String, List<Object>> goalMap = new HashMap<>(testMap);
         
         final Map<String, List<Object>> resultMap = dao.getMultivaluedUserAttributes(testMap);
         

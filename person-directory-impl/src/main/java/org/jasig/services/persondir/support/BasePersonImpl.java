@@ -72,7 +72,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
      * Create the Map used to store the attributes internally for this IPersonAttributes
      */
     protected Map<String, List<Object>> createImmutableAttributeMap(final int size) {
-        return new LinkedHashMap<String, List<Object>>(size > 0 ? size : 1);
+        return new LinkedHashMap<>(size > 0 ? size : 1);
     }
 
     /* (non-Javadoc)

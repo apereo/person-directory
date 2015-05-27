@@ -73,7 +73,7 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends TestCase {
         adpad.setCurrentUserProvider(CUP);
         adpad.setDescriptors(ad);
         
-        final Map<String,List<Object>> query = new HashMap<String,List<Object>>();
+        final Map<String,List<Object>> query = new HashMap<>();
         query.put(ATTRIBUTE_NAME, ATTRIBUTE_VALUES);
 
         Set<IPersonAttributes> rslt = adpad.getPeopleWithMultivaluedAttributes(query);

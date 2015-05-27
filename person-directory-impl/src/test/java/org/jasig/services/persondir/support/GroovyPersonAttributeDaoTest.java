@@ -18,24 +18,23 @@
  */
 package org.jasig.services.persondir.support;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import groovy.lang.GroovyClassLoader;
-import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
+import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
+import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributeScriptDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.springframework.core.io.ClassPathResource;
 
-//@RunWith(JUnit4.class)
-public class GroovyPersonAttributeDaoTest extends TestCase {
+import java.util.*;
+
+@RunWith(JUnit4.class)
+public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
 
     private GroovyPersonAttributeDao dao;
     private GroovyClassLoader loader;
@@ -70,7 +69,7 @@ public class GroovyPersonAttributeDaoTest extends TestCase {
 
     @Test
     public void testGetPeopleWithMultivaluedAttributes() throws Exception {
-        final Map<String, List<Object>> items = new HashMap<String, List<Object>>();
+        final Map<String, List<Object>> items = new HashMap<>();
         items.put("dog", Arrays.asList(new Object[]{"barks", "eats"}));
         items.put("cat", Arrays.asList(new Object[]{"meows", "scratches"}));
         final Set<IPersonAttributes> results = dao.getPeopleWithMultivaluedAttributes(items);
@@ -83,5 +82,10 @@ public class GroovyPersonAttributeDaoTest extends TestCase {
     }
     private Object getAttributeAsSingleValue(final IPersonAttributes attrs, final String name) {
         return getAttributeAsList(attrs, name).get(0);
+    }
+
+    @Override
+    protected IPersonAttributeDao getPersonAttributeDaoInstance() {
+        return this.dao;
     }
 }

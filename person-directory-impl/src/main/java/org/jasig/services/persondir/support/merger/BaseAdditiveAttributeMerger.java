@@ -62,7 +62,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
         Validate.notNull(toConsider, "toConsider cannot be null");
         
         //Convert the toModify Set into a Map to allow for easier lookups
-        final Map<String, IPersonAttributes> toModfyPeople = new LinkedHashMap<String, IPersonAttributes>();
+        final Map<String, IPersonAttributes> toModfyPeople = new LinkedHashMap<>();
         for (final IPersonAttributes toModifyPerson : toModify) {
             toModfyPeople.put(toModifyPerson.getName(), toModifyPerson);
         }
@@ -102,7 +102,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
             List<Object> value = attrEntry.getValue();
             
             if (value != null) {
-                value = new ArrayList<Object>(value);
+                value = new ArrayList<>(value);
             }
             
             mutableValuesBuilder.put(key, value);
@@ -115,7 +115,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
      * Create the Map used when merging attributes
      */
     protected Map<String, List<Object>> createMutableAttributeMap(final int size) {
-        return new LinkedHashMap<String, List<Object>>(size > 0 ? size : 1);
+        return new LinkedHashMap<>(size > 0 ? size : 1);
     }
 
     /**
