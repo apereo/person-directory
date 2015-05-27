@@ -18,9 +18,8 @@
  */
 package org.jasig.services.persondir.support;
 
-import static org.junit.Assert.*;
-
-import org.jasig.services.persondir.support.TomlLdapPersonAttributeDao;
+import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
+import org.jasig.services.persondir.IPersonAttributeDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,17 +27,34 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 @RunWith(JUnit4.class)
-public class TomlLdapPersonAttributeDaoTests {
+public class TomlLdapPersonAttributeDaoTests extends AbstractPersonAttributeDaoTest {
+
+    private final TomlLdapPersonAttributeDao dao;
+
+
+    public TomlLdapPersonAttributeDaoTests() throws Exception {
+        final Resource tomlConfigFile = new FileSystemResource("src/test/resources/ldap.toml");
+        this.dao = new TomlLdapPersonAttributeDao(tomlConfigFile);
+    }
 
     @Test
     public void testTomlConfigFileStuffedIntoDao() throws Exception {
-        final Resource tomlConfigFile = new FileSystemResource("src/test/resources/ldap.toml");
-        final TomlLdapPersonAttributeDao dao = new TomlLdapPersonAttributeDao(tomlConfigFile);
+
         
         assertNotNull(dao.getBaseDN());
         assertNotNull(dao.getQueryAttributeMapping());
         assertNotNull(dao.getQueryType());
         assertNotNull(dao.getResultAttributeMapping());
         assertNotNull(dao.getContextSource());
+    }
+
+
+    public void testSerilization() {
+        assertNotNull(evalJson(this.dao));
+    }
+
+    @Override
+    protected IPersonAttributeDao getPersonAttributeDaoInstance() {
+        return this.dao;
     }
 }

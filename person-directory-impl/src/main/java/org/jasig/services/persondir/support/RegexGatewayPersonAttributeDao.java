@@ -19,17 +19,14 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This DAO wraps another DAO and only executes the wrapped DAO if the data in the seed matches
@@ -138,7 +135,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
             toReturn.put(attribute, pattern.pattern());
         }
         
-        return Collections.unmodifiableMap(toReturn);
+        return toReturn;
     }
     /**
      * @param patterns the patterns to set
@@ -340,6 +337,8 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
     /*
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @JsonIgnore
+    @Override
     public Set<String> getPossibleUserAttributeNames() {
         return targetPersonAttributeDao.getPossibleUserAttributeNames();
     }
@@ -347,6 +346,8 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @JsonIgnore
+    @Override
     public Set<String> getAvailableQueryAttributes() {
         return this.targetPersonAttributeDao.getAvailableQueryAttributes();
     }
