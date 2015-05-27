@@ -81,9 +81,6 @@ public class StubPersonAttributeDaoTest
         return this.testInstance;
     }
 
-    public void testSerilization() {
-        assertNotNull(evalJson(this.testInstance));
-    }
 
 }
 

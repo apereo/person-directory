@@ -92,10 +92,6 @@ public class RegexGatewayPersonAttributeDaoTest extends AbstractPersonAttributeD
     }
 
 
-    public void testSerilization() {
-        assertNotNull(evalJson(this.target));
-    }
-
     @Override
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {
         return this.target;

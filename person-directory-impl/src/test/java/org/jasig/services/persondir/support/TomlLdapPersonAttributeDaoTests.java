@@ -49,10 +49,6 @@ public class TomlLdapPersonAttributeDaoTests extends AbstractPersonAttributeDaoT
     }
 
 
-    public void testSerilization() {
-        assertNotNull(evalJson(this.dao));
-    }
-
     @Override
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {
         return this.dao;
