@@ -53,14 +53,14 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
 
         //Get the first IPersonAttributes to return data for
-        final IPersonAttributes person = (IPersonAttributes)DataAccessUtils.singleResult(people);
+        final IPersonAttributes person = DataAccessUtils.singleResult(people);
         
         //If null or no results return null
         if (person == null) {
             return null;
         }
         
-        //Make a mutable copy of the peron's attributes
+        //Make a mutable copy of the person's attributes
         return new LinkedHashMap<>(person.getAttributes());
     }
 

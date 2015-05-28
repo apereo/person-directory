@@ -22,6 +22,7 @@ package org.jasig.services.persondir.support;
 import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.Validate;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.CaseCanonicalizationMode;
@@ -410,7 +411,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                     
                     //If dataKey has no mapped resultKeys just use the dataKey
                     if (resultKeys == null) {
-                        resultKeys = Collections.singleton(dataKey);
+                        resultKeys = ImmutableSet.of(dataKey);
                     }
                     
                     //Add the value to the mapped attributes for each mapped key,
