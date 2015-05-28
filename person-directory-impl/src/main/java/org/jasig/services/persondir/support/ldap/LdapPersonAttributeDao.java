@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 
 import javax.naming.directory.SearchControls;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;

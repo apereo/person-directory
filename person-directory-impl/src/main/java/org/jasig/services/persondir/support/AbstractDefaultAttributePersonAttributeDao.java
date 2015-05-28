@@ -81,7 +81,7 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
         final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
         
         //Ensure a single result is returned
-        IPersonAttributes person = (IPersonAttributes)DataAccessUtils.singleResult(people);
+        IPersonAttributes person = DataAccessUtils.singleResult(people);
         if (person == null) {
             return null;
         }

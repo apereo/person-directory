@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import junit.framework.TestCase;
 
 import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
 import org.jasig.services.persondir.IPersonAttributeDao;
@@ -106,7 +105,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         final Object[] expectedArgs = new Object[] { Collections.singletonList("eric"), Collections.singletonList("dalquist") };
         
         //Do asList for an easy comparison
-        assertEquals(Arrays.asList(expectedArgs), args);
+        assertTrue(Arrays.asList(expectedArgs).containsAll(args));
     }
 
     public void testMapPersonAttributes_AsIs() {

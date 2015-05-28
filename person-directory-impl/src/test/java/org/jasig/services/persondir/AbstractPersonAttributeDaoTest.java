@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import junit.framework.TestCase;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +37,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Test conformance to IPersonAttributeDao interface specified 
+ * Test conformance to IPersonAttributeDao interface specified
  * IllegalArgumentException throwing for illegal invocations of interface methods.
+ *
  * @version $Revision: 43106 $ $Date: 2008-02-14 11:22:40 -0600 (Thu, 14 Feb 2008) $
  */
 @SuppressWarnings("deprecation")
@@ -58,17 +60,17 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
     /**
      * Get an instance of the type of IPersonAttributeDao the implementing
      * testcase is intended to test.
-     *
+     * <p>
      * This method will be invoked exactly once per invocation of each test method
      * implemented in this abstract class.
-
+     *
      * @return an IPersonAttributeDao instance for us to test
      */
     protected abstract IPersonAttributeDao getPersonAttributeDaoInstance();
 
     /**
      * Test that invocation of getMultivaluedUserAttributes(Map null) throws
-     * IllegalArgumentException as specified in IPersonAttributeDao's 
+     * IllegalArgumentException as specified in IPersonAttributeDao's
      * interface declaration.
      */
     public void testNullSeed() {
@@ -86,7 +88,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
 
     /**
      * Test that invocation of getUserAttributes(Map null) throws
-     * IllegalArgumentException as specified in IPersonAttributeDao's 
+     * IllegalArgumentException as specified in IPersonAttributeDao's
      * interface declaration.
      */
     public void testMultiNullSeed() {
@@ -147,10 +149,9 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
             if (possibleNames != null) {
                 final String newObj = new String();
                 possibleNames.add(newObj);
-
-                assertTrue(dao.getPossibleUserAttributeNames().size() != possibleNames.size());
             }
-        } catch (UnsupportedOperationException e) {
+        } catch (final UnsupportedOperationException e) {
+
         }
     }
 

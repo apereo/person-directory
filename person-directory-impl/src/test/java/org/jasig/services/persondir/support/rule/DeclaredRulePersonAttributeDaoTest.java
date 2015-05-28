@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.util.Util;

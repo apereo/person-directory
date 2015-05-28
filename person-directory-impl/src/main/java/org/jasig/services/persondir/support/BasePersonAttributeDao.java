@@ -85,7 +85,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         final Set<IPersonAttributes> people = this.getPeople(seed);
 
         //Get the first IPersonAttributes to return data for
-        final IPersonAttributes person = (IPersonAttributes)DataAccessUtils.singleResult(people);
+        final IPersonAttributes person = DataAccessUtils.singleResult(people);
         
         //If null or no results return null
         if (person == null) {

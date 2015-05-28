@@ -32,14 +32,10 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
-import org.hsqldb.jdbcDriver;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
-import org.jasig.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
 import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.jasig.services.persondir.util.Util;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.jdbc.core.ConnectionCallback;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 /**
  * Test the {@link SingleRowJdbcPersonAttributeDao} against a dummy DataSource.

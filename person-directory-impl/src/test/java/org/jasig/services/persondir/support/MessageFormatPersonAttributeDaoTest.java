@@ -19,7 +19,6 @@
 
 package org.jasig.services.persondir.support;
 
-import com.google.common.collect.ImmutableSet;
 import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.util.Util;
