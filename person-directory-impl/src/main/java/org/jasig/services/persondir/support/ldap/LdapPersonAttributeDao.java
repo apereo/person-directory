@@ -46,9 +46,9 @@ import org.springframework.util.Assert;
 
 /**
  * LDAP implementation of {@link org.jasig.services.persondir.IPersonAttributeDao}.
- * 
+ *
  * In the case of multi valued attributes a {@link java.util.List} is set as the value.
- * 
+ *
  * <br>
  * <br>
  * Configuration:
@@ -111,7 +111,7 @@ import org.springframework.util.Assert;
  *         <td valign="top">null</td>
  *     </tr>
  * </table>
- * 
+ *
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist
  * @version $Revision$ $Date$
@@ -132,13 +132,13 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     private SearchControls searchControls = new SearchControls();
     private final boolean setReturningAttributes = true;
     private QueryType queryType = QueryType.AND;
-    
-    
+
+
     public LdapPersonAttributeDao() {
         this.searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         this.searchControls.setReturningObjFlag(false);
     }
-    
+
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
@@ -147,13 +147,13 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         if (this.setReturningAttributes && resultAttributeMapping != null) {
             this.searchControls.setReturningAttributes(resultAttributeMapping.keySet().toArray(new String[resultAttributeMapping.size()]));
         }
-        
+
         if (this.contextSource == null) {
             throw new BeanCreationException("contextSource must be set");
         }
     }
 
-    
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
      */
@@ -162,10 +162,10 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         if (queryBuilder == null) {
             queryBuilder = new LogicalFilterWrapper(this.queryType);
         }
-        
+
         for (final Object queryValue : queryValues) {
             final String queryValueString = queryValue == null ? null : queryValue.toString();
-            
+
             if (StringUtils.isNotBlank(queryValueString)) {
                 final Filter filter;
                 if (!queryValueString.contains("*")) {
@@ -174,11 +174,11 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
                 else {
                     filter = new LikeFilter(dataAttribute, queryValueString);
                 }
-                
+
                 queryBuilder.append(filter);
             }
         }
-        
+
         return queryBuilder;
     }
 
@@ -193,7 +193,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         if (StringUtils.isBlank(generatedLdapQuery)) {
             return null;
         }
-        
+
         //Insert the generated query into the template if it is configured
         final String ldapQuery;
         if (this.queryTemplate == null) {
@@ -210,7 +210,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         //Execute the query
         @SuppressWarnings("unchecked")
         final List<Map<String, List<Object>>> queryResults = this.ldapTemplate.search(this.baseDN, ldapQuery, this.searchControls, MAPPER);
-        
+
         final List<IPersonAttributes> peopleAttributes = new ArrayList<>(queryResults.size());
         for (final Map<String, List<Object>> queryResult : queryResults) {
             final IPersonAttributes person;
@@ -233,10 +233,10 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
                 // at a userName attribute
                 person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, queryResult);
             }
-            
+
             peopleAttributes.add(person);
         }
-        
+
         return peopleAttributes;
     }
 
@@ -257,7 +257,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     public void setTimeLimit(final int ms) {
         this.searchControls.setTimeLimit(ms);
     }
-    
+
     /**
      * @return The base distinguished name to use for queries.
      */
@@ -283,7 +283,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     public ContextSource getContextSource() {
         return this.contextSource;
     }
-    
+
     /**
      * @param contextSource The ContextSource to get DirContext objects for queries from.
      */
@@ -326,7 +326,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     }
     /**
      * Type of logical operator to use when joining WHERE clause components
-     * 
+     *
      * @param queryType the queryType to set
      */
     public void setQueryType(final QueryType queryType) {

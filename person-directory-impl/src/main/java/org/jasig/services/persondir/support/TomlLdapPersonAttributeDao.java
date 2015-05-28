@@ -25,13 +25,14 @@ import java.util.Map;
 import me.grison.jtoml.impl.Toml;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jasig.services.persondir.support.ldap.LdaptivePersonAttributeDao;
 import org.jasig.services.persondir.support.ldap.LdapPersonAttributeDao;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 
 /**
- * This is an implementation of the {@link LdapPersonAttributeDao} that is able
+ * This is an implementation of the {@link LdaptivePersonAttributeDao} that is able
  * to insert the ldap and context source settings from an external Toml file. To learn
  * more about the Toml format, please see this link:
  * <a href="https://github.com/mojombo/toml/blob/master/README.md">
