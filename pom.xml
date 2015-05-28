@@ -46,7 +46,7 @@
     <properties>
         <!-- Project Dependency Versions -->
         <aopalliance.version>1.0</aopalliance.version>
-        <apacheds.version>1.5.0</apacheds.version>
+        <apacheds.version>1.0.2</apacheds.version>
         <commons-collections.version>4.0</commons-collections.version>
         <commons-lang.version>3.4</commons-lang.version>
         <easymock.version>3.3.1</easymock.version>
@@ -66,6 +66,7 @@
         <xerces.version>2.11.0</xerces.version>
         <jackson.version>2.5.3</jackson.version>
         <commons-io.version>2.4</commons-io.version>
+        <ldaptive.version>1.0.6</ldaptive.version>
         <project.build.sourceVersion>1.7</project.build.sourceVersion>
         <project.build.targetVersion>1.7</project.build.targetVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -84,6 +85,11 @@
                 <version>${guava.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.ldaptive</groupId>
+                <artifactId>ldaptive</artifactId>
+                <version>${ldaptive.version}</version>
+            </dependency>
             <dependency>
                 <groupId>aopalliance</groupId>
                 <artifactId>aopalliance</artifactId>

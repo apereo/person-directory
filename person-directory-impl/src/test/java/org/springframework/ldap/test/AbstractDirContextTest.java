@@ -89,7 +89,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
         final Set<MutablePartitionConfiguration> partitionConfigurations = new HashSet<>();
         partitionConfigurations.add(partitionConfiguration);
 
-        this.configuration.setPartitionConfigurations(partitionConfigurations);
+        this.configuration.setContextPartitionConfigurations(partitionConfigurations);
 
         // Create a working directory
         final File workingDirectory = File.createTempFile(this.getClass().getName() + ".", ".apacheds-server-work");

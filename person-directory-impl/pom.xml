@@ -22,6 +22,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.ldaptive</groupId>
+            <artifactId>ldaptive</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
             <scope>compile</scope>
