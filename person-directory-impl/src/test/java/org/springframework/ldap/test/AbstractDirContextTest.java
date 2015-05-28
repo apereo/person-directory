@@ -89,7 +89,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
         final Set<MutablePartitionConfiguration> partitionConfigurations = new HashSet<>();
         partitionConfigurations.add(partitionConfiguration);
 
-        this.configuration.setContextPartitionConfigurations(partitionConfigurations);
+        this.configuration.setPartitionConfigurations(partitionConfigurations);
 
         // Create a working directory
         final File workingDirectory = File.createTempFile(this.getClass().getName() + ".", ".apacheds-server-work");
@@ -101,7 +101,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
         // partitions creation
         super.setUp();
 
-        // Load initializationg ldif data
+        // Load initializating ldif data
         final Resource[] initializationData = this.initializationData();
         for (final Resource data : initializationData) {
             final InputStream dataStream = data.getInputStream();
@@ -138,7 +138,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
     @SuppressWarnings("unchecked")
     protected final DirContext createContext() throws NamingException {
         // Create a environment container
-        final Hashtable<Object, Object> env = new Hashtable<>(configuration.toJndiEnvironment());
+        final Hashtable<String, Object> env = new Hashtable<>(configuration.toJndiEnvironment());
         
         final String partitionName = this.getPartitionName();
 
