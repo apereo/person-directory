@@ -54,6 +54,7 @@ public class AttributeNamedPersonImpl extends BasePersonImpl {
     /* (non-Javadoc)
      * @see java.security.Principal#getName()
      */
+    @Override
     public String getName() {
         final Object attributeValue = this.getAttributeValue(this.userNameAttribute);
         if (attributeValue == null) { 
