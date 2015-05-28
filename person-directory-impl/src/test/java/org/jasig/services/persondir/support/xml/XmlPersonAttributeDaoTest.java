@@ -20,8 +20,6 @@
 package org.jasig.services.persondir.support.xml;
 
 import junit.framework.TestCase;
-import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
-import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.Util;
 import org.springframework.core.io.ClassPathResource;

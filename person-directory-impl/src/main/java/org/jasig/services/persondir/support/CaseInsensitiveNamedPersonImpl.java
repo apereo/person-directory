@@ -19,11 +19,10 @@
 
 package org.jasig.services.persondir.support;
 
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.collections4.map.CaseInsensitiveMap;
-import org.apache.commons.collections4.map.ListOrderedMap;
 
 /**
  * Custom IPersonAttributes that uses a case insensitive Map to hide attribute name case
@@ -41,6 +40,6 @@ public class CaseInsensitiveNamedPersonImpl extends NamedPersonImpl {
     @SuppressWarnings("unchecked")
     @Override
     protected Map<String, List<Object>> createImmutableAttributeMap(final int size) {
-        return ListOrderedMap.listOrderedMap(new CaseInsensitiveMap(size > 0 ? size : 1));
+        return new CaseInsensitiveMap(size > 0 ? size : 1);
     }
 }

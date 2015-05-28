@@ -20,14 +20,9 @@
 package org.jasig.services.persondir.support;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -142,18 +137,16 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
             personAttributes = new AttributeNamedPersonImpl(usernameAttribute, formattedAttributes);
         }
         
-        return Collections.singleton(personAttributes);
+        return ImmutableSet.of(personAttributes);
     }
 
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @Override
     public Set<String> getPossibleUserAttributeNames() {
-        return this.possibleUserAttributeNames;
+        return new HashSet<>(this.possibleUserAttributeNames);
     }
-
-    
-    
 
     /**
      * Sets up a formatted attribute

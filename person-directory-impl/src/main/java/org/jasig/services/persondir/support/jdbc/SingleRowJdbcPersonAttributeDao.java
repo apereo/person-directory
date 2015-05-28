@@ -68,6 +68,10 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeDao<Map<String, Object>> {
     private static final ParameterizedRowMapper<Map<String, Object>> MAPPER = new ColumnMapParameterizedRowMapper(true);
 
+    public SingleRowJdbcPersonAttributeDao() {
+        super();
+    }
+
     /**
      * Creates a new MultiRowJdbcPersonAttributeDao specifying the DataSource and SQL to use.
      * 

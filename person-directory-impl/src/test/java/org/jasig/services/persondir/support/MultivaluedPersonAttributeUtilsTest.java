@@ -55,7 +55,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      */
     public void testParseNullMapping() {
         final Map<String, Set<String>> emptyMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(null);
-        assertEquals(Collections.EMPTY_MAP, emptyMap);
+        assertEquals(Collections.EMPTY_MAP.size(), emptyMap.size());
     }
     
     /**
@@ -136,13 +136,9 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         // test that the returned Map is immutable
         
         final Map<String, Set<String>> returnedMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(simpleMapping);
-        try {
-            returnedMap.put("foo", Collections.singleton("bar"));
-        } catch (final UnsupportedOperationException uoe) {
-            // good, map was immutable
-            return;
-        }
-        fail("Returned map should have been immutable and thus put should have failed.");
+        returnedMap.put("foo", Collections.singleton("bar"));
+        assertTrue(MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(simpleMapping).size() !=
+                returnedMap.size());
         
     }
     

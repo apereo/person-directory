@@ -21,8 +21,6 @@ package org.jasig.services.persondir.support;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.core.io.Resource;
 

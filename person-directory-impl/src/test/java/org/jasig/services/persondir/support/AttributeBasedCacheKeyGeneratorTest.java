@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -47,9 +46,9 @@ public class AttributeBasedCacheKeyGeneratorTest {
     @Test
     public void testCacheKeyGeneratorWithFactoryBean() {
 
-        final IPersonAttributeDao personAttributeDao = (IPersonAttributeDao)applicationContext.getBean("personAttributeDao", IPersonAttributeDao.class);
+        final IPersonAttributeDao personAttributeDao = applicationContext.getBean("personAttributeDao", IPersonAttributeDao.class);
         
-        final MapCacheProviderFacade cacheProviderFacade = (MapCacheProviderFacade)applicationContext.getBean("cacheProviderFacade", MapCacheProviderFacade.class);
+        final MapCacheProviderFacade cacheProviderFacade = applicationContext.getBean("cacheProviderFacade", MapCacheProviderFacade.class);
         
         assertEquals(0, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());

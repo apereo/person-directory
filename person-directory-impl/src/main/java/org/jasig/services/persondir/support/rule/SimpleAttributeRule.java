@@ -21,7 +21,6 @@ package org.jasig.services.persondir.support.rule;
 
 import java.util.*;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.NamedPersonImpl;

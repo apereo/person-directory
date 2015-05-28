@@ -78,7 +78,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     }
 
     private List<?> getAttributeAsList(final IPersonAttributes attrs, final String name) {
-        return ((List<?>) attrs.getAttributes().get(name));
+        return attrs.getAttributes().get(name);
     }
     private Object getAttributeAsSingleValue(final IPersonAttributes attrs, final String name) {
         return getAttributeAsList(attrs, name).get(0);
