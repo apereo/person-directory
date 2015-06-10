@@ -139,7 +139,9 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                 isFirstQuery = false;
 
                 if (this.logger.isDebugEnabled()) {
-                    this.logger.debug("Retrieved attributes='" + currentPeople + "' for query='" + query + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='" + currentlyConsidering + "', resultAttributes='" + resultPeople + "'");
+                    this.logger.debug("Retrieved attributes='" + currentPeople + "' for query='"
+                            + query + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='"
+                            + currentlyConsidering + "', resultAttributes='" + resultPeople + "'");
                 }
             }
             catch (final RuntimeException rte) {

@@ -406,9 +406,8 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                 final String dataKey = resultAttrEntry.getKey();
                 
                 // Only map found data attributes.
-                // Need case-insensitive comparison.  Per https://issues.jasig.org/browse/PERSONDIR-89
-                // either have BasePersonImpl return ImmutableMap instead of HashMap or do
-                // containsKey(dataKey) || containsKey(dataKey.toLowerCase) to respect CaseInsensitive*NamedPersonImpl.
+                // .  See https://issues.jasig.org/browse/PERSONDIR-89
+                // Currently respects CaseInsensitive*NamedPersonImpl because BasePersonImpl's constructor
                 if (personAttributes.containsKey(dataKey)) {
                     Set<String> resultKeys = resultAttrEntry.getValue();
                     
