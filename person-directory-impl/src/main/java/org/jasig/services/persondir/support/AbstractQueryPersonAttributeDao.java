@@ -86,6 +86,7 @@ import org.jasig.services.persondir.util.CaseCanonicalizationMode;
  * @version $Revision$
  */
 public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaultAttributePersonAttributeDao {
+    // DEFAULT_CASE_CANONICALIZATION_MODE is default for canonicalizing the values
     public static final CaseCanonicalizationMode DEFAULT_CASE_CANONICALIZATION_MODE = CaseCanonicalizationMode.LOWER;
     public static final CaseCanonicalizationMode DEFAULT_USERNAME_CASE_CANONICALIZATION_MODE = CaseCanonicalizationMode.NONE;
     private Map<String, Set<String>> queryAttributeMapping;
@@ -404,7 +405,10 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             for (final Map.Entry<String, Set<String>> resultAttrEntry : this.resultAttributeMapping.entrySet()) {
                 final String dataKey = resultAttrEntry.getKey();
                 
-                //Only map found data attributes
+                // Only map found data attributes.
+                // Need case-insensitive comparison.  Per https://issues.jasig.org/browse/PERSONDIR-89
+                // either have BasePersonImpl return ImmutableMap instead of HashMap or do
+                // containsKey(dataKey) || containsKey(dataKey.toLowerCase) to respect CaseInsensitive*NamedPersonImpl.
                 if (personAttributes.containsKey(dataKey)) {
                     Set<String> resultKeys = resultAttrEntry.getValue();
                     
@@ -445,6 +449,13 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         return newPerson;
     }
 
+    /**
+     * Canonicalize the attribute values if they are present in the config map.
+     * @param key attribute key
+     * @param value list of attribute values
+     * @param config map of attribute names to canonicalization key for the attribute
+     * @return if configured to do so, returns a canonicalized list of values.
+     */
     protected List<Object> canonicalizeAttribute(final String key, final List<Object> value, final Map<String, CaseCanonicalizationMode> config) {
         if (value == null || value.isEmpty() || config == null || !(config.containsKey(key))) {
             return value;

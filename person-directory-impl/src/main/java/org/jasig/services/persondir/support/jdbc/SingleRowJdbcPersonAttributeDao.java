@@ -105,7 +105,7 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
             final String userNameAttribute = this.getConfiguredUserNameAttribute();
             if (this.isUserNameAttributeConfigured() && queryResult.containsKey(userNameAttribute)) {
                 // Option #1:  An attribute is named explicitly in the config, 
-                // and that attribute is present in the results from LDAP;  use it
+                // and that attribute is present in the results from JDBC;  use it
                 person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, multivaluedQueryResult);
             } else if (queryUserName != null) {
                 // Option #2:  Use the userName attribute provided in the query 

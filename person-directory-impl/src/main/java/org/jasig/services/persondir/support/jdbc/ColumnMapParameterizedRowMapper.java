@@ -76,6 +76,14 @@ public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<M
      */
     @SuppressWarnings("unchecked")
     protected Map<String, Object> createColumnMap(final int columnCount) {
+        // NOTE:  Collections4 API for ListOrderedMap indicates it should not wrap CaseInsensitiveMap.  I found
+        // that if you do not wrap the CaseInsensitiveMap with the ListOrderedMap, the attribute names become
+        // all lower case which at this point breaks backwards compatibility.
+        // To remove the ListOrderedMap you must make default person directory behavior the case-sensitive
+        // behavior, but also insure case-insensitive comparison in
+        // AbstractQueryPersonAttributeDao.mapPersonAttributes.  James W 6/15
+        // See https://issues.jasig.org/browse/PERSONDIR-89
+        // https://commons.apache.org/proper/commons-collections/apidocs/index.html?org/apache/commons/collections4/map/ListOrderedMap.html
         return ListOrderedMap.listOrderedMap(new CaseInsensitiveMap(columnCount > 0 ? columnCount : 1));
     }
 
