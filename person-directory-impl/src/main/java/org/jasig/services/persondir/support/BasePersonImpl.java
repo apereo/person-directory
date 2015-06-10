@@ -40,8 +40,12 @@ public abstract class BasePersonImpl implements IPersonAttributes {
         Validate.notNull(attributes, "attributes can not be null");
         
         final Map<String, List<Object>> immutableValuesBuilder = this.buildImmutableAttributeMap(attributes);
-        
-        this.attributes = new HashMap<>(immutableValuesBuilder);
+
+        // NOTE:  This must wrap the map with an unmodifiable map so the underlying map still operates as
+        // case-insensitive in AbstractQueryPersonAttributeDao.mapPersonAttributes when the
+        // CaseInsensitive*Impl.java subclasses are used.  Do not return a different map. James W 6/15
+        // See https://issues.jasig.org/browse/PERSONDIR-89
+        this.attributes = Collections.unmodifiableMap(immutableValuesBuilder);
     }
 
     /**

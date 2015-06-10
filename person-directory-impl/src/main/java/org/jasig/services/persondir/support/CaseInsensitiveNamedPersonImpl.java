@@ -18,13 +18,15 @@
  */
 package org.jasig.services.persondir.support;
 
-import org.apache.commons.collections4.map.CaseInsensitiveMap;
-
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.collections4.map.ListOrderedMap;
+
 /**
- * Custom IPersonAttributes that uses a case insensitive Map to hide attribute name case
+ * Custom IPersonAttributes that uses a case insensitive Map to hide attribute name case.  The attribute names
+ * remain in case-specific form.
  */
 public class CaseInsensitiveNamedPersonImpl extends NamedPersonImpl {
     private static final long serialVersionUID = 1L;
@@ -39,6 +41,14 @@ public class CaseInsensitiveNamedPersonImpl extends NamedPersonImpl {
     @SuppressWarnings("unchecked")
     @Override
     protected Map<String, List<Object>> createImmutableAttributeMap(final int size) {
-        return new CaseInsensitiveMap(size > 0 ? size : 1);
+        // NOTE:  Collections4 API for ListOrderedMap indicates it should not wrap CaseInsensitiveMap.  I found
+        // that if you do not wrap the CaseInsensitiveMap with the ListOrderedMap, the attribute names become
+        // all lower case which at this point breaks backwards compatibility.
+        // To remove the ListOrderedMap you must make default person directory behavior the case-sensitive
+        // behavior, but also insure case-insensitive comparison in
+        // AbstractQueryPersonAttributeDao.mapPersonAttributes.  James W 6/15
+        // See https://issues.jasig.org/browse/PERSONDIR-89
+        // https://commons.apache.org/proper/commons-collections/apidocs/index.html?org/apache/commons/collections4/map/ListOrderedMap.html
+        return ListOrderedMap.listOrderedMap(new CaseInsensitiveMap(size > 0 ? size : 1));
     }
 }
