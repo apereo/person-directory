@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -518,7 +519,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
 
     /* Multiple attribute values are separated by a semicolon, and semicolons in values are escaped with a backslash */
-    /* (https://wiki.shibboleth.net/confluence/displa)y/SHIB2/NativeSPAttributeAccess) */
+    /* (https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPAttributeAccess) */
     /* transforms "a;b" into list { "a", "b" } */
     /* transforms "a\;b" into list { "a;b" } */
     /* transforms "a;b\;" into list { "a", "b;" } */
