@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
 import org.jasig.services.persondir.support.AdditionalDescriptors;
 import org.jasig.services.persondir.util.Util;
@@ -80,11 +79,17 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         headerAttributeMapping.put("user.name.family", "user.name.family");
         requestAttributeSourceFilter.setHeaderAttributeMapping(headerAttributeMapping);
 
+        final Map<String, Object>  parameterAttributeMapping = new LinkedHashMap<>();
+        parameterAttributeMapping.put("nativeClient", new LinkedHashSet<Object>(Arrays.asList("uMobile", "nativeClient")));
+        parameterAttributeMapping.put("siteProfile", "siteProfile");
+        parameterAttributeMapping.put("notPresent", "notPresent");
+        requestAttributeSourceFilter.setParameterAttributeMapping(parameterAttributeMapping);
+
         final Map<String, Object>  requestAttributeMapping = new LinkedHashMap<>();
-        requestAttributeMapping.put("nativeClient", new LinkedHashSet<Object>(Arrays.asList("uMobile", "nativeClient")));
-        requestAttributeMapping.put("siteProfile", "siteProfile");
+        requestAttributeMapping.put("reqAttr", new LinkedHashSet<Object>(Arrays.asList("attr1", "attr2")));
+        requestAttributeMapping.put("eduPersonAffiliation", "eduPersonAffiliation");
         requestAttributeMapping.put("notPresent", "notPresent");
-        requestAttributeSourceFilter.setParameterAttributeMapping(requestAttributeMapping);
+        requestAttributeSourceFilter.setRequestAttributeMapping(requestAttributeMapping);
 
         requestAttributeSourceFilter.setRemoteUserAttribute("remoteUser");
         requestAttributeSourceFilter.setRemoteAddrAttribute("remoteAddr");
@@ -103,12 +108,16 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         expect(servletRequest.getParameter("nativeClient")).andReturn("true");
         expect(servletRequest.getParameter("siteProfile")).andReturn("foxtrot");
         expect(servletRequest.getParameter("notPresent")).andReturn(null);
-        
+
+        expect(servletRequest.getAttribute("reqAttr")).andReturn("theAttr");
+        expect(servletRequest.getAttribute("eduPersonAffiliation")).andReturn("college1");
+        expect(servletRequest.getAttribute("notPresent")).andReturn(null);
+
         filterChain.doFilter(servletRequest, servletResponse);
         EasyMock.expectLastCall();
                 
         EasyMock.replay(servletRequest, servletResponse, filterChain);
-        
+
         requestAttributeSourceFilter.doFilter(servletRequest, servletResponse, filterChain);
         
         EasyMock.verify(servletRequest, servletResponse, filterChain);
@@ -128,6 +137,9 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         expectedAttributes.put("nativeClient", Util.list("true"));
         expectedAttributes.put("uMobile", Util.list("true"));
         expectedAttributes.put("siteProfile", Util.list("foxtrot"));
+        expectedAttributes.put("attr1", Util.list("theAttr"));
+        expectedAttributes.put("attr2", Util.list("theAttr"));
+        expectedAttributes.put("eduPersonAffiliation", Util.list("college1"));
 
         assertEquals(expectedAttributes, additionalDescriptors.getAttributes());
     }
