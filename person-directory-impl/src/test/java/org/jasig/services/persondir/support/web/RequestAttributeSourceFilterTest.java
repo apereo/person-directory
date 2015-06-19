@@ -74,6 +74,7 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         requestAttributeSourceFilter.setCookieAttributeMapping(cookieAttributeMapping);
 
         final Map<String, Object>  headerAttributeMapping = new LinkedHashMap<>();
+        headerAttributeMapping.put("User-Agent", "userAgent");
         headerAttributeMapping.put("user.mail", new LinkedHashSet<Object>(Arrays.asList("user.mail", "email")));
         headerAttributeMapping.put("user.name.given", "user.name.given");
         headerAttributeMapping.put("user.name.family", "user.name.family");
@@ -101,6 +102,7 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         expect(servletRequest.getRemoteAddr()).andReturn("127.0.0.1");
         expect(servletRequest.getRemoteHost()).andReturn(null);
         expect(servletRequest.getCookies()).andReturn(new Cookie[] { new Cookie("foo", "bar"), new Cookie("ding", "dong") });
+        expect(servletRequest.getHeader("User-Agent")).andReturn("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/40.0.2214.111 Chrome/40.0.2214.111 Safari/537.36");
         expect(servletRequest.getHeader("user.mail")).andReturn("user1@example.com");
         expect(servletRequest.getHeader("user.name.given")).andReturn("Joe");
         expect(servletRequest.getHeader("user.name.family")).andReturn(null);
@@ -132,6 +134,7 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         expectedAttributes.put("ding", Util.list("dong"));
         expectedAttributes.put("ding", Util.list("dong"));
         expectedAttributes.put("email", Util.list("user1@example.com"));
+        expectedAttributes.put("userAgent", Util.list("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/40.0.2214.111 Chrome/40.0.2214.111 Safari/537.36"));
         expectedAttributes.put("user.mail", Util.list("user1@example.com"));
         expectedAttributes.put("user.name.given", Util.list("Joe"));
         expectedAttributes.put("nativeClient", Util.list("true"));
