@@ -19,8 +19,10 @@
 package org.jasig.services.persondir.support.web;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +36,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jasig.services.persondir.support.IAdditionalDescriptors;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.springframework.web.filter.GenericFilterBean;
@@ -45,108 +48,12 @@ import org.springframework.web.filter.GenericFilterBean;
  * gets only their own attributes correctly.
  * <br>
  * <br>
- * Configuration:
- * <table border="1">
- *     <tr>
- *         <th align="left">Property</th>
- *         <th align="left">Description</th>
- *         <th align="left">Required</th>
- *         <th align="left">Default</th>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">usernameAttribute</td>
- *         <td>
- *             The name of the attribute from the request (header or property) to use as the username. This is required
- *             so that Person Directory can later associate these attributes with the user correctly during queries.
- *         </td>
- *         <td valign="top">Yes</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">cookieAttributeMapping</td>
- *         <td>
- *             Set the {@link Map} to use for mapping from a cookie name to an attribute name or {@link Set} of attribute
- *             names. Cookie names that are specified but have null mappings will use the column name for the attribute
- *             name. Cookie names that are not specified as keys in this {@link Map} will be ignored.
- *             <br>
- *             The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set}
- *             of {@link String}.
- *         </td>
- *         <td valign="top">Yes</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">headerAttributeMapping</td>
- *         <td>
- *             Set the {@link Map} to use for mapping from a header name to an attribute name or {@link Set} of attribute
- *             names. Header names that are specified but have null mappings will use the column name for the attribute
- *             name. Header names that are not specified as keys in this {@link Map} will be ignored.
- *             <br>
- *             The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set}
- *             of {@link String}.
- *         </td>
- *         <td valign="top">Yes</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">additionalDescriptors</td>
- *         <td>
- *             The {@link IAdditionalDescriptors} object to set attributes found on the request into. The provided object
- *             should be a Spring session scoped bean which will allow each user to have their own version attached to
- *             their session.
- *         </td>
- *         <td valign="top">Yes</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">remoteUserAttribute</td>
- *         <td>
- *             If specified {@link HttpServletRequest#getRemoteUser()} is called and the returned value is stored as
- *             an attribute using the value specified for this property.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">remoteAddrAttribute</td>
- *         <td>
- *             If specified {@link HttpServletRequest#getRemoteAddr()} is called and the returned value is stored as
- *             an attribute using the value specified for this property.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">serverNameAttribute</td>
- *         <td>
- *             If specified {@link HttpServletRequest#getServerName()} is called and the returned value is stored as
- *             an attribute using the value specified for this property.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">serverPortAttribute</td>
- *         <td>
- *             If specified {@link HttpServletRequest#getServerPort()} is called and the returned value is stored as
- *             an attribute using the value specified for this property.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">clearExistingAttributes</td>
- *         <td>
- *             If true when attributes are found on the request any existing attributes in the provided {@link IAdditionalDescriptors}
- *             object will cleared and replaced with the new attributes. If false the new attributes overwrite existing
- *             attributes of the same name but attributes in {@link IAdditionalDescriptors} not found on the current request
- *             are not touched.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">false</td>
- *     </tr>
- * </table>
- * 
+ * Required Configuration:
+ * <ul>
+ *     <li>usernameAttribute</li>
+ *     <li>additionalDescriptors</li>
+ * </ul>
+ *
  * @author Eric Dalquist
  * @version $Revision$
  */
@@ -160,6 +67,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     private String usernameAttribute;
     private Map<String, Set<String>> cookieAttributeMapping = Collections.emptyMap();
     private Map<String, Set<String>> headerAttributeMapping = Collections.emptyMap();
+    private Map<String, Set<String>> parameterAttributeMapping = Collections.emptyMap();
     private IAdditionalDescriptors additionalDescriptors;
     private String remoteUserAttribute;
     private String remoteAddrAttribute;
@@ -167,13 +75,17 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     private String serverNameAttribute;
     private String serverPortAttribute;
     private boolean clearExistingAttributes = false;
+    private String referringParameterName;
+    private String urlCharacterEncoding = StandardCharsets.UTF_8.name();
+
     private ProcessingPosition processingPosition = ProcessingPosition.POST;
     
     public String getUsernameAttribute() {
         return usernameAttribute;
     }
     /**
-     * The name of the attribute from the request to use as the username
+     * The name of the attribute from the request (header or property) to use as the username. Required
+     * so that Person Directory can later associate these attributes with the user correctly during queries.
      */
     public void setUsernameAttribute(final String usernameAttribute) {
         this.usernameAttribute = usernameAttribute;
@@ -229,7 +141,6 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         this.serverPortAttribute = serverPortAttribute;
     }
     
-    
     public IAdditionalDescriptors getAdditionalDescriptors() {
         return additionalDescriptors;
     }
@@ -245,8 +156,12 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         return clearExistingAttributes;
     }
     /**
+     * If true when attributes are found on the request any existing attributes in the provided {@link IAdditionalDescriptors}
+     * object will cleared and replaced with the new attributes. If false (default) the new attributes overwrite existing
+     * attributes of the same name but attributes in {@link IAdditionalDescriptors} not found on the current request
+     * are not touched.
+     *
      * @param clearExistingAttributes If existing all attributes should be cleared when any new attributes are found.
-     * Defaults to false. 
      */
     public void setClearExistingAttributes(final boolean clearExistingAttributes) {
         this.clearExistingAttributes = clearExistingAttributes;
@@ -264,16 +179,10 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public void setProcessingPosition(final ProcessingPosition processingPosition) {
         this.processingPosition = processingPosition;
     }
-    
-    
-    public Map<String, Set<String>> getCookieAttributeMapping() {
-        return cookieAttributeMapping;
-    }
 
     /**
      * Set the {@link Map} to use for mapping from a cookie name to an attribute name or {@link Set} of attribute
-     * names. Cookie names that are specified but have null mappings will use the column name for the attribute
-     * name. Cookie names that are not specified as keys in this {@link Map} will be ignored.
+     * names. Cookie names that are not specified as keys in this {@link Map} will be ignored.
      * <br>
      * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set} 
      * of {@link String}.
@@ -283,44 +192,98 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
      */
     public void setCookieAttributeMapping(final Map<String, ?> cookieAttributeMapping) {
-        final Map<String, Set<String>> parsedCookieAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(cookieAttributeMapping);
-        
-        if (parsedCookieAttributeMapping.containsKey("")) {
-            throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
-        }
-        
-        this.cookieAttributeMapping = parsedCookieAttributeMapping;
+        this.cookieAttributeMapping = makeMapValueSetOfStrings(cookieAttributeMapping);
+    }
+
+    public Map<String, Set<String>> getCookieAttributeMapping() {
+        return cookieAttributeMapping;
     }
 
     public Map<String, Set<String>> getHeaderAttributeMapping() {
         return headerAttributeMapping;
     }
+
     /**
      * Set the {@link Map} to use for mapping from a header name to an attribute name or {@link Set} of attribute
-     * names. Header names that are specified but have null mappings will use the column name for the attribute
-     * name. Header names that are not specified as keys in this {@link Map} will be ignored.
+     * names. Header names that are not specified as keys in this {@link Map} will be ignored.
      * <br>
      * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set} 
      * of {@link String}.
      * 
-     * @param headerAttributeMapping {@link Map} from column names to attribute names, may not be null.
+     * @param headerAttributeMapping {@link Map} from header names to attribute names, may not be null.
      * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
      * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
      */
     public void setHeaderAttributeMapping(final Map<String, ?> headerAttributeMapping) {
-        final Map<String, Set<String>> parsedHeaderAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(headerAttributeMapping);
-        
-        if (parsedHeaderAttributeMapping.containsKey("")) {
+        this.headerAttributeMapping = makeMapValueSetOfStrings(headerAttributeMapping);
+    }
+
+    public Map<String, Set<String>> getParameterAttributeMapping() {
+        return parameterAttributeMapping;
+    }
+
+    /**
+     * Set the {@link Map} to use for mapping from a parameter name to an attribute name or {@link Set} of attribute
+     * names. Parameter names that are not specified as keys in this {@link Map} will be ignored.
+     * <br>
+     * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set}
+     * of {@link String}.
+     *
+     * @param parameterAttributeMapping {@link Map} from parameter names to attribute names, may not be null.
+     * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
+     * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
+     * @since 1.7.1
+     */
+    public void setParameterAttributeMapping(final Map<String, ?> parameterAttributeMapping) {
+        this.parameterAttributeMapping = makeMapValueSetOfStrings(parameterAttributeMapping);
+    }
+
+    private Map<String, Set<String>> makeMapValueSetOfStrings(Map<String, ?> attributeMapping) {
+        final Map<String, Set<String>> parsedParameterAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(attributeMapping);
+
+        if (parsedParameterAttributeMapping.containsKey("")) {
             throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
         }
-        
-        this.headerAttributeMapping = parsedHeaderAttributeMapping;
+        return parsedParameterAttributeMapping;
     }
-    
+
+    public String getReferringParameterName() {
+        return referringParameterName;
+    }
+
+    /**
+     * Name of a request parameter whose value is decoded and checked for <code>parameterAttributeMapping</code> matches.
+     * This is useful when the user's browser follows a redirect path and the request parameters from the user's original
+     * request are encoded in a 'refUrl' or similar parameter.  uPortal, for instance, does this. When a user accesses
+     * /uPortal?nativeClient=true, a redirect chain encodes this to '/uPortal/Login?refUrl=%2FuPortal%2F%3FnativeClient%3Dtrue'.
+     * Has no effect if not specified or if <code>parameterAttributeMapping</code> does not have matches to request
+     * parameters in the <code>referringParameterName</code>.  If specified, <code>parameterAttributeMapping</code>
+     * matches in first the <code>referringParameterName</code> and then the request parameters (thus would overwrite).
+     * @param referringParameterName Name of a request parameter to decode and inspect for
+     *                               <code>parameterAttributeMapping</code> matches.
+     * @since 1.7.1
+     */
+    public void setReferringParameterName(String referringParameterName) {
+        this.referringParameterName = referringParameterName;
+    }
+
+    public String getUrlCharacterEncoding() {
+        return urlCharacterEncoding;
+    }
+
+    /**
+     * Sets the URL character encoding to use to decode the value of the <code>referringParameterName</code> if it
+     * was specified.  Defaults to UTF-8.
+     * @param urlCharacterEncoding URL character encoding name
+     * @since 1.7.1
+     */
+    public void setUrlCharacterEncoding(String urlCharacterEncoding) {
+        this.urlCharacterEncoding = urlCharacterEncoding;
+    }
 
     /* (non-Javadoc)
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
-     */
+             * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+             */
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain chain) throws IOException, ServletException {
         if (ProcessingPosition.PRE == this.processingPosition || ProcessingPosition.BOTH == this.processingPosition) {
             this.doProcessing(servletRequest);
@@ -344,6 +307,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             this.addRequestCookies(httpServletRequest, attributes);
 
             this.addRequestHeaders(httpServletRequest, attributes);
+
+            addRequestParameters(httpServletRequest, attributes);
             
             final String username;
             final List<Object> usernameAttributes = attributes.get(this.usernameAttribute);
@@ -360,7 +325,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             }
             
             this.additionalDescriptors.setName(username);
-            
+
             if (this.clearExistingAttributes) {
                 this.additionalDescriptors.setAttributes(attributes);
             }
@@ -429,6 +394,62 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
                 }
             }
         }
+    }
+
+    /**
+     * Add specified request parameters to the attributes map.  The request parameters may be directly in
+     * the URL or in a referringUrl parameter (with uPortal accessing /uPortal?nativeClient=true will go through
+     * several redirects and get turned into /uPortal/Login?refUrl=%2FuPortal%2F%3FnativeClient%3Dtrue,
+     * which when fetched with request.getParameter(refurl) yields '/uPortal/?nativeClient=true').
+     * @param httpServletRequest Servlet Request
+     * @param attributes Map of attributes
+     * @since 1.7.1
+     */
+    protected void addRequestParameters(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
+        // If a referringParameterName is specified, first match against
+        if (referringParameterName != null
+                && StringUtils.isNotBlank(httpServletRequest.getParameter(referringParameterName))) {
+            String referringValue = httpServletRequest.getParameter(referringParameterName);
+            Map<String,String> referringParameters = parseRequestParameterString(referringValue);
+            for (final Map.Entry<String, Set<String>> parameterMapping : parameterAttributeMapping.entrySet()) {
+                final String parameterName = parameterMapping.getKey();
+                final String value = referringParameters.get(parameterName);
+
+                if (value != null) {
+                    for (final String attributeName : parameterMapping.getValue()) {
+                        attributes.put(attributeName, list(value));
+                    }
+                }
+            }
+        }
+        for (final Map.Entry<String, Set<String>> parameterMapping : parameterAttributeMapping.entrySet()) {
+            final String parameterName = parameterMapping.getKey();
+            final String value = httpServletRequest.getParameter(parameterName);
+
+            if (value != null) {
+                for (final String attributeName : parameterMapping.getValue()) {
+                    attributes.put(attributeName, list(value));
+                }
+            }
+        }
+    }
+
+    private Map<String,String> parseRequestParameterString (String requestParameterString) {
+        Map<String,String> parameters = new HashMap<>();
+        if (requestParameterString.indexOf("?") > 0) {
+            requestParameterString = requestParameterString.substring(requestParameterString.indexOf("?") + 1);
+        }
+        String[] parameterStrings = requestParameterString.trim().split("&");
+        for (String parameterString : parameterStrings) {
+            String[] parts = parameterString.split("=");
+            if (parts.length > 1) {
+                parameters.put(parts[0], parts[1]);
+            } else {
+                logger.info("Ignoring encoded parameter " + parts[0]
+                        + " in referring url parameter because it has no value");
+            }
+        }
+        return parameters;
     }
 
     /* Multiple attribute values are separated by a semicolon, and semicolons in values are escaped with a backslash */

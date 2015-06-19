@@ -233,6 +233,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         for (final Map.Entry<String, Map<String, List<Object>>> mappedAttributesEntry : peopleAttributesBuilder.entrySet()) {
             final String userName = mappedAttributesEntry.getKey();
             final Map<String, List<Object>> attributes = mappedAttributesEntry.getValue();
+            // PERSONDIR-89, PERSONDIR-91 Should this be CaseInsensitiveNamedPersonImpl like SingleRowJdbcPersonAttribute?
             final IPersonAttributes person = new NamedPersonImpl(userName, attributes);
             people.add(person);
         }
