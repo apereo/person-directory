@@ -45,7 +45,8 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
             throw new IllegalArgumentException("seed may not be null");
         }
 
-        return Collections.singleton((IPersonAttributes)new AttributeNamedPersonImpl(query));
+        return Collections.singleton((IPersonAttributes)
+                new AttributeNamedPersonImpl(getUsernameAttributeProvider().getUsernameAttribute(), query));
     }
 
     /**
