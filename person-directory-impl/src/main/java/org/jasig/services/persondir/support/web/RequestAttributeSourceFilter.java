@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,6 +70,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     private Map<String, Set<String>> headerAttributeMapping = Collections.emptyMap();
     private Map<String, Set<String>> parameterAttributeMapping = Collections.emptyMap();
     private Map<String, Set<String>> requestAttributeMapping = Collections.emptyMap();
+    private Set<String> headersToIgnoreSemicolons = new HashSet<>(Arrays.asList(new String[] {"User-Agent"}));
     private IAdditionalDescriptors additionalDescriptors;
     private String remoteUserAttribute;
     private String remoteAddrAttribute;
@@ -301,6 +303,20 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         this.urlCharacterEncoding = urlCharacterEncoding;
     }
 
+    public Set<String> getHeadersToIgnoreSemicolons() {
+        return headersToIgnoreSemicolons;
+    }
+
+    /**
+     * Set of header values to ignore splitting on semicolons.  Some HTTP Headers, such as the User-Agent string,
+     * should not be split on semicolons.  Defaults to User-Agent
+     * @param headersToIgnoreSemicolons Set of HTTP Header names to not split its value on semicolons into
+     *                                  multiple values
+     */
+    public void setHeadersToIgnoreSemicolons(Set<String> headersToIgnoreSemicolons) {
+        this.headersToIgnoreSemicolons = headersToIgnoreSemicolons;
+    }
+
     /* (non-Javadoc)
              * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
              */
@@ -412,7 +428,10 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             
             if (value != null) {
                 for (final String attributeName : headerAttributeEntry.getValue()) {
-                    attributes.put(attributeName, (List) splitOnSemiColonHandlingBackslashEscaping(value));
+                    attributes.put(attributeName,
+                            headersToIgnoreSemicolons.contains(headerName) ?
+                                    list(value)
+                                    : splitOnSemiColonHandlingBackslashEscaping(value));
                 }
             }
         }
@@ -504,8 +523,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /* transforms "a;b" into list { "a", "b" } */
     /* transforms "a\;b" into list { "a;b" } */
     /* transforms "a;b\;" into list { "a", "b;" } */
-    private static List<String> splitOnSemiColonHandlingBackslashEscaping(final String in) {
-	final List<String> result = new LinkedList<>();
+    private static List<Object> splitOnSemiColonHandlingBackslashEscaping(final String in) {
+	final List<Object> result = new LinkedList<>();
 
         int i = 1;
         String prefix = "";
@@ -524,6 +543,6 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
 
     private List<Object> list(final Object value) {
-        return Arrays.asList(value);
+        return Collections.singletonList(value);
     }
 }
