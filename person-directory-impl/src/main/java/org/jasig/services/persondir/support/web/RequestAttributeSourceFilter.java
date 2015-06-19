@@ -40,6 +40,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.jasig.services.persondir.support.IAdditionalDescriptors;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.GenericFilterBean;
 
 /**
@@ -59,6 +61,8 @@ import org.springframework.web.filter.GenericFilterBean;
  * @version $Revision$
  */
 public class RequestAttributeSourceFilter extends GenericFilterBean {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public enum ProcessingPosition {
         PRE,
         POST,
@@ -351,17 +355,15 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             final String username;
             final List<Object> usernameAttributes = attributes.get(this.usernameAttribute);
             if (usernameAttributes == null || usernameAttributes.isEmpty() || usernameAttributes.get(0) == null) {
-                this.logger.info("No username found for attribute '" + this.usernameAttribute + "' among " + attributes);
+                logger.info("No username found as attribute '{}' among {}", usernameAttribute, attributes);
                 username = null;
             }
             else {
                 username = usernameAttributes.get(0).toString();
             }
             
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Adding attributes for user " + username + ". " + attributes);
-            }
-            
+            logger.debug("Adding attributes for user {}, attributes {}", username, attributes);
+
             this.additionalDescriptors.setName(username);
 
             if (this.clearExistingAttributes) {
@@ -440,7 +442,9 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /**
      * Add specified request parameters to the attributes map.  Some Shibboleth (Apache httpd mod-shib) configurations
      * use environment variables which get passed by AJP as request attributes rather than HTTP Headers to pass
-     * attributes from the IDP to the application.
+     * attributes from the IDP to the application.  Since the attributes are likely from Shib, we want to do the
+     * same semicolon splitting behavior as HTTP headers. Shib often passes multi-valued attributes, such as a
+     * list of user roles.
      * @param httpServletRequest Servlet Request
      * @param attributes Map of attributes
      * @since 1.7.1
@@ -450,14 +454,17 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             final String attributeName = attributeMapping.getKey();
             final Object value = httpServletRequest.getAttribute(attributeName);
 
-            if (value instanceof String) {
-                if (value != null) {
+            if (value != null) {
+                if (value instanceof String) {
                     for (final String attrName : attributeMapping.getValue()) {
-                        attributes.put(attrName, list(value));
+                        attributes.put(attrName, splitOnSemiColonHandlingBackslashEscaping((String)value));
                     }
+                } else {
+                    logger.warn("Specified request attribute {} is not a String, is a {}", attributeName,
+                            value.getClass());
                 }
             } else {
-                logger.warn("Specified request attribute " + attributeName + " is not a String");
+                logger.debug("Did not find request attribute {} in the request", attributeName);
             }
         }
     }
@@ -511,8 +518,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             if (parts.length > 1) {
                 parameters.put(parts[0], parts[1]);
             } else {
-                logger.info("Ignoring encoded parameter " + parts[0]
-                        + " in referring url parameter because it has no value");
+                logger.info("Ignoring encoded parameter {} in referring url parameter because it has no value",
+                        parts[0]);
             }
         }
         return parameters;
