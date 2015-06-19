@@ -68,6 +68,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     private Map<String, Set<String>> cookieAttributeMapping = Collections.emptyMap();
     private Map<String, Set<String>> headerAttributeMapping = Collections.emptyMap();
     private Map<String, Set<String>> parameterAttributeMapping = Collections.emptyMap();
+    private Map<String, Set<String>> requestAttributeMapping = Collections.emptyMap();
     private IAdditionalDescriptors additionalDescriptors;
     private String remoteUserAttribute;
     private String remoteAddrAttribute;
@@ -218,6 +219,25 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         this.headerAttributeMapping = makeMapValueSetOfStrings(headerAttributeMapping);
     }
 
+    public Map<String, Set<String>> getRequestAttributeMapping() {
+        return requestAttributeMapping;
+    }
+
+    /**
+     * Set the {@link Map} to use for mapping from a request attributes to an attribute name or {@link Set} of attribute
+     * names. Request attributes that are not specified as keys in this {@link Map} will be ignored.
+     * <br>
+     * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set}
+     * of {@link String}.
+     *
+     * @param requestAttributeMapping {@link Map} from request attributes to attribute names, may not be null.
+     * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
+     * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
+     */
+    public void setRequestAttributeMapping(final Map<String, ?> requestAttributeMapping) {
+        this.requestAttributeMapping = makeMapValueSetOfStrings(requestAttributeMapping);
+    }
+
     public Map<String, Set<String>> getParameterAttributeMapping() {
         return parameterAttributeMapping;
     }
@@ -309,7 +329,9 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             this.addRequestHeaders(httpServletRequest, attributes);
 
             addRequestParameters(httpServletRequest, attributes);
-            
+
+            addRequestAttributes(httpServletRequest, attributes);
+
             final String username;
             final List<Object> usernameAttributes = attributes.get(this.usernameAttribute);
             if (usernameAttributes == null || usernameAttributes.isEmpty() || usernameAttributes.get(0) == null) {
@@ -392,6 +414,31 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
                 for (final String attributeName : headerAttributeEntry.getValue()) {
                     attributes.put(attributeName, (List) splitOnSemiColonHandlingBackslashEscaping(value));
                 }
+            }
+        }
+    }
+
+    /**
+     * Add specified request parameters to the attributes map.  Some Shibboleth (Apache httpd mod-shib) configurations
+     * use environment variables which get passed by AJP as request attributes rather than HTTP Headers to pass
+     * attributes from the IDP to the application.
+     * @param httpServletRequest Servlet Request
+     * @param attributes Map of attributes
+     * @since 1.7.1
+     */
+    protected void addRequestAttributes(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
+        for (final Map.Entry<String, Set<String>> attributeMapping : requestAttributeMapping.entrySet()) {
+            final String attributeName = attributeMapping.getKey();
+            final Object value = httpServletRequest.getAttribute(attributeName);
+
+            if (value instanceof String) {
+                if (value != null) {
+                    for (final String attrName : attributeMapping.getValue()) {
+                        attributes.put(attrName, list(value));
+                    }
+                }
+            } else {
+                logger.warn("Specified request attribute " + attributeName + " is not a String");
             }
         }
     }
