@@ -460,7 +460,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
                         attributes.put(attrName, splitOnSemiColonHandlingBackslashEscaping((String)value));
                     }
                 } else {
-                    logger.warn("Specified request attribute {} is not a String, is a {}", attributeName,
+                    logger.warn("Specified request attribute {} is not a String, is a {} so it is ignored", attributeName,
                             value.getClass());
                 }
             } else {
