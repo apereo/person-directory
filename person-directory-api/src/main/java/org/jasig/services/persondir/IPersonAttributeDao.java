@@ -61,7 +61,9 @@ public interface IPersonAttributeDao {
      * query {@link Map} null should be returned. For unexpected problems throw an exception.
      * 
      * @param query A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
-     * @return A {@link Set} of {@link IPersonAttributes}s that match the query {@link Map}. If no matches are found an empty {@link Set} is returned. If the query could not be run null is returned.
+     * @return A {@link Set} of {@link IPersonAttributes}s that match the query {@link Map}.
+     *         If no matches are found an empty {@link Set} is returned.
+     *         If the query could not be run null is returned.
      * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
     public Set<IPersonAttributes> getPeople(Map<String, Object> query);
@@ -109,7 +111,11 @@ public interface IPersonAttributeDao {
     /**
      * Returns a mutable {@link Map} of the attributes of the first {@link IPersonAttributes} returned by calling
      * {@link #getPeople(Map)}
-     * 
+     *
+     * @param seed A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
+     * @return A {@link Map} of PersonAttributess that match the query {@link Map}.
+     *         If no matches are found an empty {@link Map} is returned.
+     *         If the query could not be run null is returned.
      * @deprecated Use {@link #getPeople(Map)} instead. This method will be removed in 1.6
      */
     @Deprecated
@@ -118,7 +124,10 @@ public interface IPersonAttributeDao {
     /**
      * Returns a mutable {@link Map} of the attributes of the {@link IPersonAttributes} returned by calling
      * {@link #getPerson(String)}
-     * 
+     *
+     * @param uid The userName of the person to find.
+     * @return The populated {@link Map} of person attributes for the specified uid,
+     *         null if no person could be found for the uid.
      * @deprecated Use {@link #getPerson(String)} instead. This method will be removed in 1.6
      */
     @Deprecated
@@ -127,7 +136,11 @@ public interface IPersonAttributeDao {
     /**
      * Returns a mutable {@link Map} of the single-valued attributes of the first {@link IPersonAttributes} returned by calling
      * {@link #getPeople(Map)}
-     * 
+     *
+     * @param seed A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
+     * @return A {@link Map} of PersonAttributess that match the query {@link Map}.
+     *         If no matches are found an empty {@link Map} is returned.
+     *         If the query could not be run null is returned.
      * @deprecated Use {@link #getPeople(Map)} instead. This method will be removed in 1.6
      */
     @Deprecated
@@ -136,7 +149,10 @@ public interface IPersonAttributeDao {
     /**
      * Returns a mutable {@link Map} of the single-valued attributes of the {@link IPersonAttributes} returned by calling
      * {@link #getPerson(String)}
-     * 
+     *
+     * @param uid The userName of the person to find.
+     * @return The populated {@link Map} of person attributes for the specified uid,
+     *         null if no person could be found for the uid.
      * @deprecated Use {@link #getPerson(String)} instead. This method will be removed in 1.6
      */
     @Deprecated

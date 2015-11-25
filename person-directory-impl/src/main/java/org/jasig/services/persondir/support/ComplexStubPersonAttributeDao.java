@@ -18,25 +18,34 @@
  */
 package org.jasig.services.persondir.support;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.PatternHelper;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 /**
  * Looks up the user's attribute Map in the backingMap. If using the {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
- * method the attribute value returned for the key {@link #getDefaultAttributeName()} will
+ * method the attribute value returned for the key {@link #getUsernameAttributeProvider()} will
  * be used as the key for the backingMap.
  * 
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -91,8 +100,10 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         return this.queryAttributeName;
     }
     /**
-     * Name of the attribute to look for to key into the backing map. If not set the value returned by
+     * Name of the attribute to look for as key into the backing map. If not set the value returned by
      * {@link #getUsernameAttributeProvider()} will be used.
+     *
+     * @param queryAttributeName query attribute name
      */
     public void setQueryAttributeName(final String queryAttributeName) {
         this.queryAttributeName = queryAttributeName;
@@ -104,6 +115,8 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     /**
      * The backing Map to use for queries, the outer map is keyed on the query attribute. The inner
      * Map is the set of user attributes to be returned for the query attribute.
+     *
+     * @param backingMap backing map
      */
     public void setBackingMap(final Map<String, Map<String, List<Object>>> backingMap) {
         if (backingMap == null) {

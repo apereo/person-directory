@@ -41,7 +41,7 @@ import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -71,11 +71,11 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
 
     /**
      * Creates a new DeclaredRulePersonAttributeDao specifying the attributeName to pass to
-     * {@link #setDefaultAttributeName(String)} and the {@link List} of {@link AttributeRule}s
+     * {@link #getUsernameAttributeProvider()} and the {@link List} of {@link AttributeRule}s
      * to pass to {@link #setRules(List)}
      * 
-     * @param attributeName
-     * @param rules
+     * @param attributeName attribute name
+     * @param rules rules
      */
     public DeclaredRulePersonAttributeDao(final String attributeName, final List<AttributeRule> rules) {
         // PersonDirectory won't stop for anything... we need decent logging.

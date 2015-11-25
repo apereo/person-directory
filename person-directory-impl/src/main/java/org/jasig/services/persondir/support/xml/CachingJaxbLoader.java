@@ -22,28 +22,32 @@ package org.jasig.services.persondir.support.xml;
  * JAXB Object unmarshalling and caching service
  * 
  * @author Eric Dalquist
- * @version $Revision$
- * @param <T>
+ * @param <T> JAXB object type
  */
-public interface CachingJaxbLoader<T> {
+public interface CachingJaxbLoader<T extends Object> {
 
     /**
      * @param callback Callback that will be executed after the object is unmarshalled (if it needs to be) but before it is returned
+     * @return Unmarshalled object
      * @see #getUnmarshalledObject() 
      */
     public T getUnmarshalledObject(UnmarshallingCallback<T> callback);
     
     /**
      * Loads and unmarshalls the XML as needed, returning the unmarshalled object
+     *
+     * @return Unmarshalled object
      */
     public T getUnmarshalledObject();
 
     public interface UnmarshallingCallback<T> {
         /**
-         * Allow for specific handling of of the unmarshalled object before it is returned by a call to
-         * {@link JaxbLoader#getUnmarshalledObject(UnmarshallingCallback)} that triggered a reload. If
+         * Allow for specific handling of the unmarshalled object before it is returned by a call to
+         * {@link #getUnmarshalledObject(UnmarshallingCallback)} that triggered a reload. If
          * this method throws an exception the loaded object will not be cached and the exception will
-         * be propegated to the caller of {@link JaxbLoader#getUnmarshalledObject(UnmarshallingCallback)}.
+         * be propegated to the caller of {@link #getUnmarshalledObject(UnmarshallingCallback)}.
+         *
+         * @param unmarshalledObject Object to unmarshall
          */
         public void postProcessUnmarshalling(T unmarshalledObject);
     }

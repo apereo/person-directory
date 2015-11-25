@@ -108,7 +108,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     }
 
     /**
-     * Takes a &lt;String, List&lt;Object>> Map and coverts it to a &lt;String, Object> Map. This implementation takes
+     * Takes a &lt;String, List&lt;Object&gt;&gt; Map and coverts it to a &lt;String, Object&gt; Map. This implementation takes
      * the first value of each List to use as the value for the new Map.
      * 
      * @param multivaluedUserAttributes The attribute map to flatten.

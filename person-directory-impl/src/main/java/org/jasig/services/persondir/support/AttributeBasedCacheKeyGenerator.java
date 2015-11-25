@@ -144,17 +144,26 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     /**
      * If all seed attributes should be used. If true cacheKeyAttributes and defaultAttributeName are ignored. Defaults
      * to false.
+     *
+     * @param useAllAttributes True to use all attributes
      */
     public void setUseAllAttributes(final boolean useAllAttributes) {
         this.useAllAttributes = useAllAttributes;
     }
 
+    /**
+     * Returns boolean indicating whether seed attributes with empty values (null, empty string or empty list values)
+     * should be ignored when generating the cache key
+     * @return True if seed attributes should ignore empty values
+     */
     public boolean isIgnoreEmptyAttributes() {
         return ignoreEmptyAttributes;
     }
     /**
      * If seed attributes with empty values (null, empty string or empty list values) should be ignored when generating
-     * the cache key. Defaults to false. 
+     * the cache key. Defaults to false.
+     *
+     * @param ignoreEmptyAttributes True to ignore attributes with empty values
      */
     public void setIgnoreEmptyAttributes(final boolean ignoreEmptyAttributes) {
         this.ignoreEmptyAttributes = ignoreEmptyAttributes;
@@ -256,6 +265,9 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * Gets the hash of the key elements from the seed {@link Map}. The key elements are specified by
      * the <code>cacheKeyAttributes</code> {@link Set} or if it is <code>null</code> the
      * <code>defaultAttributeName</code> is used as the key attribute.
+     *
+     * @param seed Seed
+     * @return Hash of key elements from the seed
      */
     protected Integer getKeyHash(final Map<String, Object> seed) {
         //Determine the attributes to build the cache key with
@@ -311,6 +323,9 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     /**
      * Iterates over the {@link CachableMethod} instances to determine which instance the
      * passed {@link MethodInvocation} applies to.
+     *
+     * @param methodInvocation method invocation
+     * @return Cachable method
      */
     protected CachableMethod resolveCacheableMethod(final MethodInvocation methodInvocation) {
         final Method targetMethod = methodInvocation.getMethod();

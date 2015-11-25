@@ -93,6 +93,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /**
      * The name of the attribute from the request (header or property) to use as the username. Required
      * so that Person Directory can later associate these attributes with the user correctly during queries.
+     *
+     * @param usernameAttribute Name of the attribute from the request (header or property) to use as the username
      */
     public void setUsernameAttribute(final String usernameAttribute) {
         this.usernameAttribute = usernameAttribute;
@@ -103,6 +105,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
     /**
      * If specified {@link HttpServletRequest#getRemoteUser()} is added as an attribute under the provided name
+     *
+     * @param remoteUserAttribute Name of the attribute to add when {@link HttpServletRequest#getRemoteUser()} is invoked
      */
     public void setRemoteUserAttribute(final String remoteUserAttribute) {
         this.remoteUserAttribute = remoteUserAttribute;
@@ -113,6 +117,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
     /**
      * If specified {@link HttpServletRequest#getRemoteAddr()} is added as an attribute under the provided name
+     *
+     * @param remoteAddrAttribute Name of the attribute to add when {@link HttpServletRequest#getRemoteAddr()} is invoked
      */
     public void setRemoteAddrAttribute(final String remoteAddrAttribute) {
         this.remoteAddrAttribute = remoteAddrAttribute;
@@ -123,6 +129,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
     /**
      * If specified {@link HttpServletRequest#getRemoteHost()} is added as an attribute under the provided name
+     *
+     * @param remoteHostAttribute Name of the attribute to add when {@link HttpServletRequest#getRemoteHost()} is invoked
      */
     public void setRemoteHostAttribute(final String remoteHostAttribute) {
         this.remoteHostAttribute = remoteHostAttribute;
@@ -133,6 +141,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
     /**
      * If specified {@link HttpServletRequest#getServerName()} is added as an attribute under the provided name
+     *
+     * @param serverNameAttribute Name of the attribute to add when {@link HttpServletRequest#getServerName()} is invoked
      */
     public void setServerNameAttribute(final String serverNameAttribute) {
         this.serverNameAttribute = serverNameAttribute;
@@ -143,6 +153,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
     /**
      * If specified {@link HttpServletRequest#getServerPort()} is added as an attribute under the provided name
+     *
+     * @param serverPortAttribute Name of the attribute to add when {@link HttpServletRequest#getServerPort()} is invoked
      */
     public void setServerPortAttribute(final String serverPortAttribute) {
         this.serverPortAttribute = serverPortAttribute;
@@ -154,6 +166,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /**
      * The {@link IAdditionalDescriptors} instance to set request attributes on. This should be a Spring session-scoped
      * proxy to allow each session to have its own set of request-populated attributes.
+     *
+     * @param additionalDescriptors {@link IAdditionalDescriptors} instance to set request attributes on
      */
     public void setAdditionalDescriptors(final IAdditionalDescriptors additionalDescriptors) {
         this.additionalDescriptors = additionalDescriptors;
@@ -182,6 +196,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * PRE  means the attribute processing happens before the doFilter call
      * POST means the attribute processing happens after the doFilter call
      * BOTH means the attribute processing happens before and after the doFilter call
+     *
+     * @param processingPosition Processing position
      */
     public void setProcessingPosition(final ProcessingPosition processingPosition) {
         this.processingPosition = processingPosition;
@@ -376,7 +392,10 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
 
     /**
-     * Add other properties from the request to the attributes map
+     * Add other properties from the request to the attributes map.
+     *
+     * @param httpServletRequest Http Servlet Request
+     * @param attributes Map of attributes to add additional attributes to from the Http Request
      */
     protected void addRequestProperties(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
         if (this.remoteUserAttribute != null) {
@@ -403,6 +422,9 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
 
     /**
      * Add request cookies to the attributes map
+     *
+     * @param httpServletRequest Http Servlet Request
+     * @param attributes Map of attributes to add additional attributes to from the Http Request
      */
     protected void addRequestCookies(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
         final Cookie[] cookies = httpServletRequest.getCookies();
@@ -422,6 +444,9 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
 
     /**
      * Add request headers to the attributes map
+     *
+     * @param httpServletRequest Http Servlet Request
+     * @param attributes Map of attributes to add additional attributes to from the Http Request
      */
     protected void addRequestHeaders(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
         for (final Map.Entry<String, Set<String>> headerAttributeEntry : this.headerAttributeMapping.entrySet()) {
@@ -446,7 +471,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * same semicolon splitting behavior as HTTP headers. Shib often passes multi-valued attributes, such as a
      * list of user roles.
      * @param httpServletRequest Servlet Request
-     * @param attributes Map of attributes
+     * @param attributes Map of attributes to add additional attributes to from the Http Request
      * @since 1.7.1
      */
     protected void addRequestAttributes(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
@@ -475,7 +500,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * several redirects and get turned into /uPortal/Login?refUrl=%2FuPortal%2F%3FnativeClient%3Dtrue,
      * which when fetched with request.getParameter(refurl) yields '/uPortal/?nativeClient=true').
      * @param httpServletRequest Servlet Request
-     * @param attributes Map of attributes
+     * @param attributes Map of attributes to add additional attributes to from the Http Request
      * @since 1.7.1
      */
     protected void addRequestParameters(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {

@@ -40,7 +40,7 @@ import org.springframework.beans.factory.annotation.Required;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -86,7 +86,7 @@ import org.springframework.beans.factory.annotation.Required;
  *         <td valign="top">false</td>
  *     </tr>
  * </table>
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision$
  */
@@ -145,14 +145,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                 }
             }
             catch (final RuntimeException rte) {
-                if (this.recoverExceptions) {
-                    handledException = true;
-                    this.logger.warn("Recovering From Exception thrown by '" + currentlyConsidering + "'", rte);
-                }
-                else {
-                    this.logger.error("Failing From Exception thrown by '" + currentlyConsidering + "'", rte);
-                    throw rte;
-                }
+                handledException |= handleRuntimeException(currentlyConsidering, rte);
             }
 
             if (currentPeople != null) {
@@ -185,8 +178,19 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         
         return Collections.unmodifiableSet(resultPeople);
     }
-    
-    
+
+    private boolean handleRuntimeException(IPersonAttributeDao currentlyConsidering, RuntimeException rte) {
+        if (this.recoverExceptions) {
+            this.logger.warn("Recovering From Exception thrown by '" + currentlyConsidering + "'", rte);
+            return true;
+        }
+        else {
+            this.logger.error("Failing From Exception thrown by '" + currentlyConsidering + "'", rte);
+            throw rte;
+        }
+    }
+
+
     /**
      * Call to execute the appropriate query on the current {@link IPersonAttributeDao}. Provides extra information
      * beyond the seed for the state of the query chain and previous results.
@@ -194,10 +198,12 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * @param seed The seed for the original query.
      * @param isFirstQuery If this is the first query, this will stay true until a call to this method returns (does not throw an exception).
      * @param currentlyConsidering The IPersonAttributeDao to execute the query on.
-     * @param resultAttributes The Map of results from all previous queries, may be null.
+     * @param resultPeople The Map of results from all previous queries, may be null.
      * @return The results from the call to the DAO, follows the same rules as {@link IPersonAttributeDao#getUserAttributes(Map)}.
      */
-    protected abstract Set<IPersonAttributes> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery, IPersonAttributeDao currentlyConsidering, Set<IPersonAttributes> resultPeople);
+    protected abstract Set<IPersonAttributes> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery,
+                                                                   IPersonAttributeDao currentlyConsidering,
+                                                                   Set<IPersonAttributes> resultPeople);
     
     
     /**
@@ -222,14 +228,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                 }
             }
             catch (final RuntimeException rte) {
-                if (this.recoverExceptions) {
-                    handledException = true;
-                    this.logger.warn("Recovering From Exception thrown by '" + currentDao + "'", rte);
-                }
-                else {
-                    this.logger.error("Failing From Exception thrown by '" + currentDao + "'", rte);
-                    throw rte;
-                }
+                handledException |= handleRuntimeException(currentDao, rte);
             }
             
             if (currentDaoAttrNames != null) {
@@ -283,14 +282,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                 }
             }
             catch (final RuntimeException rte) {
-                if (this.recoverExceptions) {
-                    handledException = true;
-                    this.logger.warn("Recovering From Exception thrown by '" + currentDao + "'", rte);
-                }
-                else {
-                    this.logger.error("Failing From Exception thrown by '" + currentDao + "'", rte);
-                    throw rte;
-                }
+                handledException |= handleRuntimeException(currentDao, rte);
             }
             
             if (currentDaoQueryAttrs != null) {

@@ -75,7 +75,7 @@ class AttributeMapAttributesMapper implements AttributesMapper {
 
     /**
      * Create a Map instance to be used as attribute map.
-     * <br/>
+     * <br>
      * By default, a linked case-insensitive Map will be created
      * 
      * @param attributeCount the attribute count, to be used as initial capacity for the Map

@@ -37,7 +37,7 @@ import org.springframework.dao.support.DataAccessUtils;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -54,7 +54,7 @@ import org.springframework.dao.support.DataAccessUtils;
  *         <td valign="top">{@link SimpleUsernameAttributeProvider}</td>
  *     </tr>
  * </table>
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision$ $Date$
  * @since uPortal 2.5
@@ -95,8 +95,11 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
 
 
     /**
-     * Converts the uid to a multi-valued seed Map using the value from {@link #getDefaultAttributeName()}
+     * Converts the uid to a multi-valued seed Map using the value from {@link #getUsernameAttributeProvider()}
      * as the key.
+     *
+     * @param uid userId
+     * @return multi-valued seed Map containing the uid
      */
     protected Map<String, List<Object>> toSeedMap(final String uid) {
         final List<Object> values = Collections.singletonList((Object)uid);

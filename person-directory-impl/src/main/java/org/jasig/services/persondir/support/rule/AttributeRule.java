@@ -48,6 +48,9 @@ public interface AttributeRule {
      * information and returns the result.
      * 
      * This method follows the same contract as {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)}
+     *
+     * @param userInfo User info
+     * @return Set of {@link IPersonAttributes}
      */
     public abstract Set<IPersonAttributes> evaluate(Map<String, List<Object>> userInfo);
 
@@ -56,11 +59,15 @@ public interface AttributeRule {
      * returned by a call to <code>evaluate</code>.
      * 
      * This method follows the same contract as {@link org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()}
+     *
+     * @return Complete set of possible user attribute names that may be returned by a call to evaluate.
      */
     public abstract Set<String> getPossibleUserAttributeNames();
     
     /**
      * @see IPersonAttributeDao#getAvailableQueryAttributes()
+     *
+     * @return Complete set of actual user attribute names that may be returned by a call to evaluate.
      */
     public abstract Set<String> getAvailableQueryAttributes();
 }

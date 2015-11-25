@@ -21,6 +21,7 @@ package org.jasig.services.persondir.support.jdbc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -40,7 +41,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -75,7 +76,6 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
      * Creates a new MultiRowJdbcPersonAttributeDao specifying the DataSource and SQL to use.
      * 
      * @param ds The DataSource to get connections from for executing queries, may not be null.
-     * @param attrList Sets the query attribute list
      * @param sql The SQL to execute for user attributes, may not be null.
      */
     public SingleRowJdbcPersonAttributeDao(final DataSource ds, final String sql) {

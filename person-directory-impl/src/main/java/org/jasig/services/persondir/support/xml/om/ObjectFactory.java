@@ -60,7 +60,8 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Attribute }
-     * 
+     *
+     * @return Created attribute
      */
     public Attribute createAttribute() {
         return new Attribute();
@@ -68,7 +69,8 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Person }
-     * 
+     *
+     * @return Created person
      */
     public Person createPerson() {
         return new Person();
@@ -76,15 +78,18 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link PersonData }
-     * 
+     *
+     * @return Created PersonData
      */
     public PersonData createPersonData() {
         return new PersonData();
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     * 
+     * Create an instance of {@link JAXBElement}{@code <}{@link String }{@code >}}
+     *
+     * @param value {@link JAXBElement}'s value
+     * @return Created {@link JAXBElement}
      */
     @XmlElementDecl(namespace = "", name = "value")
     public JAXBElement<String> createValue(final String value) {

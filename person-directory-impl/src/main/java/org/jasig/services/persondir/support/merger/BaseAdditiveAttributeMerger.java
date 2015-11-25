@@ -92,6 +92,9 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     
     /**
      * Do a deep clone of an attribute Map to ensure it is completley mutable.
+     *
+     * @param attributes Attribute map
+     * @return Mutable attribute map
      */
     protected Map<String, List<Object>> buildMutableAttributeMap(final Map<String, List<Object>> attributes) {
         final Map<String, List<Object>> mutableValuesBuilder = this.createMutableAttributeMap(attributes.size());
@@ -112,6 +115,9 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
 
     /**
      * Create the Map used when merging attributes
+     *
+     * @param size Size of the map to create
+     * @return Mutable map
      */
     protected Map<String, List<Object>> createMutableAttributeMap(final int size) {
         return new LinkedHashMap<>(size > 0 ? size : 1);

@@ -18,6 +18,16 @@
  */
 package org.jasig.services.persondir.support.jdbc;
 
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.sql.DataSource;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -29,21 +39,12 @@ import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
-import javax.sql.DataSource;
-import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Provides common logic for executing a JDBC based query including building the WHERE clause SQL string.
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -191,8 +192,8 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
      * result in table scanning if the data layer does not support
      * function-based indices.
      *
-     * @param dataAttribute
-     * @return
+     * @param dataAttribute Name of the data attribute column
+     * @return Canonicalized data attribute column name
      */
     protected String canonicalizeDataAttributeForSql(final String dataAttribute) {
         if (this.caseInsensitiveDataAttributes == null || this.caseInsensitiveDataAttributes.isEmpty() || !(this.caseInsensitiveDataAttributes.containsKey(dataAttribute))) {
@@ -276,7 +277,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
      * wrapping any columns in canonicalizing functions, even if they are
      * referenced by {@link #setCaseInsensitiveDataAttributes(java.util.Map)}.</p>
      *
-     * @param dataAttributeCaseCanonicalizationFunctions
+     * @param dataAttributeCaseCanonicalizationFunctions Map of Canonicalization Mode to Message Formatters
      */
     @JsonIgnore
     public void setDataAttributeCaseCanonicalizationFunctions(final Map<CaseCanonicalizationMode, MessageFormat> dataAttributeCaseCanonicalizationFunctions) {

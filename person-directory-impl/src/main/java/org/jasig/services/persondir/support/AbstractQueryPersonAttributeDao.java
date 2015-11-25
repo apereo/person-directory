@@ -34,7 +34,7 @@ import org.jasig.services.persondir.util.CaseCanonicalizationMode;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -45,7 +45,7 @@ import org.jasig.services.persondir.util.CaseCanonicalizationMode;
  *         <td align="right" valign="top">queryAttributeMapping</td>
  *         <td>
  *             A {@link Map} from attribute names used in the query {@link Map} to attribute names to use in the SQL.
- *             The values can be either {@link String} or {@link Collection<String>} to use a single Map attribute under
+ *             The values can be either {@link String} or {@link Collection} of String to use a single Map attribute under
  *             multiple names as in the SQL. If set only {@link Map} attributes listed will be used in the SQL. If not
  *             set all {@link Map} attributes are used as-is in the SQL.
  *         </td>
@@ -56,7 +56,7 @@ import org.jasig.services.persondir.util.CaseCanonicalizationMode;
  *         <td align="right" valign="top">resultAttributeMapping</td>
  *         <td>
  *             A {@link Map} from SQL result names to returned attribute names. The values can be either {@link String} 
- *             or {@link Collection<String>} to use a single SQL result under multiple returned attributes. If set only
+ *             or {@link Collection} of String to use a single SQL result under multiple returned attributes. If set only
  *             SQL attributes listed will be returned. If not set all SQL attributes will be returned.
  *         </td>
  *         <td valign="top">No</td>
@@ -112,6 +112,8 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     /**
      * If {@link #setQueryAttributeMapping(Map)} is null this determines if no parameters should be specified 
      * or if all query attributes should be used as parameters. Defaults to true.
+     *
+     * @param useAllQueryAttributes True to use all query attributes as parameters
      */
     public void setUseAllQueryAttributes(final boolean useAllQueryAttributes) {
         this.useAllQueryAttributes = useAllQueryAttributes;
@@ -190,13 +192,15 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     }
     
     /**
+     * Returns the userNameAttribute
      * @return the userNameAttribute
      */
     public String getUnmappedUsernameAttribute() {
         return unmappedUsernameAttribute;
     }
+
     /**
-     * The returned attribute to use as the userName for the mapped IPersons. If null the {@link #setDefaultAttributeName(String)}
+     * The returned attribute to use as the userName for the mapped IPersons. If null the {@link #getUsernameAttributeProvider()}
      * value will be used and if that is null the {@link AttributeNamedPersonImpl#DEFAULT_USER_NAME_ATTRIBUTE} value is
      * used. 
      * 
@@ -292,11 +296,11 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * been configured for the app-layer attribute.
      * See {@link org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#setCaseInsensitiveDataAttributes(java.util.Map)}</p>
      *
-     * @param queryBuilder
-     * @param queryAttribute
-     * @param dataAttribute
-     * @param queryValues
-     * @return
+     * @param queryBuilder The sub-class specific query builder object
+     * @param queryAttribute The full attribute name to append
+     * @param dataAttribute The full attribute name to append
+     * @param queryValues The values for the data attribute
+     * @return An updated queryBuilder
      */
     protected QB appendCanonicalizedAttributeToQuery(final QB queryBuilder, final String queryAttribute, final String dataAttribute, final List<Object> queryValues) {
         // All logging messages were previously in generateQuery() and were
@@ -322,7 +326,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @param queryBuilder The sub-class specific query builder object
      * @param dataAttribute The full attribute name to append
      * @param queryValues The values for the data attribute
-     * @return An updated queryBuiler
+     * @return An updated queryBuilder
      */
     protected abstract QB appendAttributeToQuery(QB queryBuilder, String dataAttribute, List<Object> queryValues);
     
@@ -482,7 +486,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * Indicates which attribute found by the subclass should be taken as the 
      * 'username' attribute.  (E.g. 'uid' or 'sAMAccountName')  NOTE:  Any two 
      * instances if BasePersonImpl with the same username are considered 
-     * equal.  Since {@link #getDefaultAttributeName()} should never return 
+     * equal.  Since {@link #getUsernameAttributeProvider()} should never return
      * null, this method should never return null either.
      * 
      * @return The name of the attribute corresponding to the  user's username. 
@@ -515,7 +519,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     /**
      * @see #setCaseInsensitiveResultAttributes(java.util.Map)
      *
-     * @return
+     * @return Map of attribute names and casing canonicalization modes
      */
     public Map<String,CaseCanonicalizationMode> getCaseInsensitiveResultAttributes() {
         return caseInsensitiveResultAttributes;
@@ -542,7 +546,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * layer attributes, but respond with attribute values which preserve
      * the original data layer casing.</p>
      *
-     * @param caseInsensitiveResultAttributes
+     * @param caseInsensitiveResultAttributes Map of result attribute names and casing canonicalization modes
      */
     public void setCaseInsensitiveResultAttributes(final Map<String, CaseCanonicalizationMode> caseInsensitiveResultAttributes) {
         this.caseInsensitiveResultAttributes = caseInsensitiveResultAttributes;
@@ -557,7 +561,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * {@link #setDefaultCaseCanonicalizationMode(org.jasig.services.persondir.util.CaseCanonicalizationMode)}
      * has already been called.
      *
-     * @param caseInsensitiveResultAttributes
+     * @param caseInsensitiveResultAttributes Set of result attribute names
      */
     public void setCaseInsensitiveResultAttributesAsCollection(final Collection<String> caseInsensitiveResultAttributes) {
         if (caseInsensitiveResultAttributes == null || caseInsensitiveResultAttributes.isEmpty()) {
@@ -580,7 +584,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * {@link #setDefaultCaseCanonicalizationMode(org.jasig.services.persondir.util.CaseCanonicalizationMode)}
      * has already been called.
      *
-     * @param caseInsensitiveQueryAttributes
+     * @param caseInsensitiveQueryAttributes Set of query attribute names
      */
     public void setCaseInsensitiveQueryAttributesAsCollection(final Collection<String> caseInsensitiveQueryAttributes) {
         if (caseInsensitiveQueryAttributes == null || caseInsensitiveQueryAttributes.isEmpty()) {
@@ -614,7 +618,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * layer attributes, but respond with attribute values which preserve
      * the original data layer casing.</p>
      *
-     * @param caseInsensitiveQueryAttributes
+     * @param caseInsensitiveQueryAttributes Map of query attribute names and casing canonicalization modes
      */
     public void setCaseInsensitiveQueryAttributes(final Map<String, CaseCanonicalizationMode> caseInsensitiveQueryAttributes) {
         this.caseInsensitiveQueryAttributes = caseInsensitiveQueryAttributes;
@@ -622,17 +626,17 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
 
     /**
      * @see #setCaseInsensitiveQueryAttributes(java.util.Map)
-     * @return
+     * @return Map of query attribute names and casing canonicalization modes
      */
     public Map<String, CaseCanonicalizationMode> getCaseInsensitiveQueryAttributes() {
         return caseInsensitiveQueryAttributes;
     }
 
     /**
-     * Assign the {@link Locale} in which all casing canonicaliztions will occur.
+     * Assign the {@link Locale} in which all casing canonicalizations will occur.
      * A {@code null} will be treated as {@link java.util.Locale#getDefault()}.
      *
-     * @param caseCanonicalizationLocale
+     * @param caseCanonicalizationLocale Case-canonicalization locale
      */
     public void setCaseCanonicalizationLocale(final Locale caseCanonicalizationLocale) {
         if ( caseCanonicalizationLocale == null ) {
@@ -642,6 +646,10 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         }
     }
 
+    /**
+     * Returns the {@link Locale} in which all casing canonicalizations will occur.
+     * @return Case-canonicalization locale
+     */
     public Locale getCaseCanonicalizationLocale() {
         return caseCanonicalizationLocale;
     }
@@ -649,9 +657,9 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     /**
      * Override the default {@link CaseCanonicalizationMode}
      * ({@link #DEFAULT_CASE_CANONICALIZATION_MODE}). Cannot be unset. A
-     * {@link null} will have the same effect as reverting to the default.
+     * null will have the same effect as reverting to the default.
      *
-     * @param defaultCaseCanonicalizationMode
+     * @param defaultCaseCanonicalizationMode Set the default CaseCanonicalizationMode
      */
     public void setDefaultCaseCanonicalizationMode(final CaseCanonicalizationMode defaultCaseCanonicalizationMode) {
         if ( defaultCaseCanonicalizationMode == null ) {
@@ -661,6 +669,10 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         }
     }
 
+    /**
+     * Returns the default {@link CaseCanonicalizationMode}.
+     * @return Default CaseCanonicalizationMode
+     */
     public CaseCanonicalizationMode getDefaultCaseCanonicalizationMode() {
         return defaultCaseCanonicalizationMode;
     }
@@ -686,7 +698,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * <p>That default behavior is consistent with the legacy behavior of
      * being case sensitive w/r/t usernames.</p>
      *
-     * @param usernameCaseCanonicalizationMode
+     * @param usernameCaseCanonicalizationMode {@link CaseCanonicalizationMode} to use for the username
      */
     public void setUsernameCaseCanonicalizationMode(final CaseCanonicalizationMode usernameCaseCanonicalizationMode) {
         if ( usernameCaseCanonicalizationMode == null ) {
@@ -698,7 +710,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
 
     /**
      * @see #setUsernameCaseCanonicalizationMode(org.jasig.services.persondir.util.CaseCanonicalizationMode)
-     * @return
+     * @return The {@link CaseCanonicalizationMode} to use for the username
      */
     public CaseCanonicalizationMode getUsernameCaseCanonicalizationMode() {
         return this.usernameCaseCanonicalizationMode;

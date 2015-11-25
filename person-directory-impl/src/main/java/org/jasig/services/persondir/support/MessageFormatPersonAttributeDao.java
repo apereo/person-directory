@@ -35,7 +35,7 @@ import org.jasig.services.persondir.IPersonAttributes;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
