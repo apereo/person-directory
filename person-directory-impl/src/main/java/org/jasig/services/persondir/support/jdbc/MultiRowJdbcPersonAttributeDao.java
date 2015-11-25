@@ -19,6 +19,7 @@
 package org.jasig.services.persondir.support.jdbc;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
  * An {@link org.jasig.services.persondir.IPersonAttributeDao}
  * implementation that maps attribute names and values from name and value column
  * pairs. This is usefull if user attributes are stored in a table like:<br>
- * <table border="1">
+ * <table border="1" summary="">
  *  <tr>
  *      <th>USER_NM</th>
  *      <th>ATTR_NM</th>
@@ -76,7 +77,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -87,8 +88,8 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
  *         <td align="right" valign="top">nameValueColumnMappings</td>
  *         <td>
  *             A {@link Map} of attribute name columns to attribute value columns. A single result row can have multiple
- *             name columns and multiple value columns associated with each name. The values of the {@link Ma}p can be
- *             either {@link String} or {@link Collection<String>}.
+ *             name columns and multiple value columns associated with each name. The values of the {@link Map} can be
+ *             either {@link String} or {@link Collection} of String.
  *         </td>
  *         <td valign="top">Yes</td>
  *         <td valign="top">null</td>

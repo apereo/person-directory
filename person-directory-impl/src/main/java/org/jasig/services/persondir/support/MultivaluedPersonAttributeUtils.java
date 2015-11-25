@@ -118,7 +118,9 @@ public final class MultivaluedPersonAttributeUtils {
      * {@link List}, passing in a {@link List} of any type will
      * cause its contents to be added to the <code>results</code>
      * {@link Map} directly under the specified <code>key</code>
-     * 
+     *
+     * @param <K> Key type (extends Object)
+     * @param <V> Value type (extends Object)
      * @param results The {@link Map} to modify.
      * @param key The key to add the value for.
      * @param value The value to add for the key.
@@ -151,7 +153,8 @@ public final class MultivaluedPersonAttributeUtils {
     /**
      * Takes a {@link Collection} and creates a flattened {@link Collection} out
      * of it.
-     * 
+     *
+     * @param <T> Type of collection (extends Object)
      * @param source The {@link Collection} to flatten.
      * @return A flattened {@link Collection} that contains all entries from all levels of <code>source</code>.
      */
@@ -175,8 +178,11 @@ public final class MultivaluedPersonAttributeUtils {
     }
     
     /**
-     * Convert the <String, Object> map to a <String, List<Object>> map by simply wrapping
+     * Convert the &lt;String, Object&gt; map to a &lt;String, List&lt;Object&gt;&gt; map by simply wrapping
      * each value in a singleton (read-only) List
+     *
+     * @param seed Map of objects
+     * @return Map where each value is a List with the value in it
      */
     public static Map<String, List<Object>> toMultivaluedMap(final Map<String, Object> seed) {
         Validate.notNull(seed, "seed can not be null");

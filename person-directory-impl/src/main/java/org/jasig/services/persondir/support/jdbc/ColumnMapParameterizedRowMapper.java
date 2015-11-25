@@ -68,7 +68,7 @@ public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<M
 
     /**
      * Create a Map instance to be used as column map.
-     * <br/>
+     * <br>
      * By default, a linked case-insensitive Map will be created
      * 
      * @param columnCount the column count, to be used as initial capacity for the Map
@@ -100,13 +100,14 @@ public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<M
 
     /**
      * Retrieve a JDBC object value for the specified column.
-     * <br/>
+     * <br>
      * 
      * The default implementation uses the <code>getObject</code> method. Additionally, this implementation includes
      * a "hack" to get around Oracle returning a non standard object for their TIMESTAMP datatype.
      * 
      * @param rs is the ResultSet holding the data
      * @param index is the column index
+     * @throws SQLException SQL Exception
      * @return the Object returned
      * @see org.springframework.jdbc.support.JdbcUtils#getResultSetValue
      */

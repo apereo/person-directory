@@ -18,6 +18,7 @@
  */
 package org.jasig.services.persondir.support;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -73,8 +74,10 @@ public class JsonBackedComplexStubPersonAttributeDao extends ComplexStubPersonAt
 
     /**
      * Init method un-marshals JSON representation of the person attributes.
+     *
+     * @throws IOException invalid config file URI
      */
-    public void init() throws Exception {
+    public void init() throws IOException {
         /* If we get to this point, the JSON file is well-formed, but its structure does not map into
          * PersonDir backingMap generic type - fail fast.
          */
@@ -87,7 +90,7 @@ public class JsonBackedComplexStubPersonAttributeDao extends ComplexStubPersonAt
     }
 
     @SuppressWarnings("unchecked")
-    private void unmarshalAndSetBackingMap() throws Exception {
+    private void unmarshalAndSetBackingMap() throws IOException {
         logger.info("Un-marshaling person attributes from the config file " + this.personAttributesConfigFile.getFile());
         final Map<String, Map<String, List<Object>>> backingMap = this.jacksonObjectMapper.readValue(
                 this.personAttributesConfigFile.getFile(), Map.class);

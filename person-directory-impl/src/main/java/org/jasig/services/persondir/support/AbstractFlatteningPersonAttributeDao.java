@@ -48,6 +48,9 @@ public abstract class AbstractFlatteningPersonAttributeDao extends BasePersonAtt
     
     /**
      * @deprecated Use {@link MultivaluedPersonAttributeUtils#toMultivaluedMap(Map)} instead. This will be removed in 1.6
+     *
+     * @param seed Map of seed names and values
+     * @return Map of seed names with list of values
      */
     @Deprecated
     protected Map<String, List<Object>> toMultivaluedSeed(final Map<String, Object> seed) {

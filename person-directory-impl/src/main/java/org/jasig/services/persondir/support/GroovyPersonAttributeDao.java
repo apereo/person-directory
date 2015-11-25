@@ -37,31 +37,31 @@ import org.jasig.services.persondir.IPersonAttributes;
  * <br><br>
  * Approach 1: Groovy file pre-compiled to Java class file
  * <br><br>
- * <pre>{@code
- * Spring configuration:
- * 
- * <bean id="duplicateUsernameAttributeScript" class="org.jasig.portal.persondir.AttributeDuplicatingPersonAttributesScript"/>
- * <bean id="duplicateUsernameAttributeSource" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"
- *       c:groovyObject-ref="duplicateUsernameAttributeScript"/>
- * 
- * Groovy file:
- * 
- * class SampleGroovyPersonAttributeDao implements org.jasig.services.persondir.IPersonAttributeScriptDao {
- * 
- *     @Override
- *     Map<String, Object> getAttributesForUser(String uid, Log log) {
- *         return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
- *     }
- * 
- *     @Override
- *     Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes, Log log) {
- *         Map<String, List<Object>> newMap = new HashMap<>(attributes)
- *         newMap.put("foo", Arrays.asList(["value1", "value2"]))
- *         return newMap
- *     }
- * 
- * }
- * }</pre>
+ * <pre>
+   Spring configuration:
+   
+   &lt;bean id="duplicateUsernameAttributeScript" class="org.jasig.portal.persondir.AttributeDuplicatingPersonAttributesScript"/&gt;
+   &lt;bean id="duplicateUsernameAttributeSource" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"
+         c:groovyObject-ref="duplicateUsernameAttributeScript"/&gt;
+   
+   Groovy file:
+   
+   class SampleGroovyPersonAttributeDao implements org.jasig.services.persondir.IPersonAttributeScriptDao {
+   
+       {@literal @}Override
+       Map&lt;String, Object&gt; getAttributesForUser(String uid, Log log) {
+           return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
+       }
+   
+       {@literal @}Override
+       Map&lt;String, List&lt;Object&gt;&gt; getPersonAttributesFromMultivaluedAttributes(Map&lt;String, List&lt;Object&gt;&gt; attributes, Log log) {
+           Map&lt;String, List&lt;Object&gt;&gt; newMap = new HashMap&lt;&gt;(attributes)
+           newMap.put("foo", Arrays.asList(["value1", "value2"]))
+           return newMap
+       }
+   
+   }
+ * </pre>
  * Notes:<ol>
  * <li>Use maven-antrun-plugin, gmavenplus-plugin, or similar to pre-compile groovy classes in maven build process</li>
  * <li>Separate groovy source file, so can create unit test of groovy code</li>
@@ -70,20 +70,20 @@ import org.jasig.services.persondir.IPersonAttributes;
  * <br><br>
  * Approach 2: Groovy script file referenced by change-detecting configuration
  * <br><br>
- * <pre>{@code
- * Spring configuration:
- * 
- * <bean id="duplicateUsernameAttributeSource2" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"/>
- *     c:groovyObject-ref="duplicateUsernameAttributeScript2"/>
- * 
- * <lang:groovy id="duplicateUsernameAttributeScript2" refresh-check-delay="5000"
- *     script-source="classpath:AttributeDuplicatingPersonAttributesScript.groovy"/>
- * 
- * Groovy file:
- * 
- * Same as Approach 1
- * 
- * }</pre>
+ * <pre>
+   Spring configuration:
+   
+   &lt;bean id="duplicateUsernameAttributeSource2" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"/&gt;
+       c:groovyObject-ref="duplicateUsernameAttributeScript2"/&gt;
+   
+   &lt;lang:groovy id="duplicateUsernameAttributeScript2" refresh-check-delay="5000"
+       script-source="classpath:AttributeDuplicatingPersonAttributesScript.groovy"/&gt;
+   
+   Groovy file:
+   
+   Same as Approach 1
+   
+ * </pre>
  * Notes:<ol>
  * <li>Separate groovy source file, so can create unit test of groovy code</li>
  * <li>Will detect groovy source code changes</li>
@@ -91,24 +91,24 @@ import org.jasig.services.persondir.IPersonAttributes;
  * <br><br>
  * Approach 3: Inline Groovy script
  * <br><br>
- * <pre>{@code
- * Spring configuration:
- * 
- * <bean id="duplicateUsernameAttributeSource3" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"
- *     c:groovyObject-ref="duplicateUsernameAttributeScript3"/>
- * 
- * <lang:groovy id="duplicateUsernameAttributeScript3">
- *     <lang:inline-script><![CDATA[
- *         class AttributeDuplicatingPersonAttributesScript extends org.jasig.services.persondir.support.BaseGroovyScriptDaoImpl {
- * 
- *         @Override
- *         Map<String, Object> getAttributesForUser(String uid, Log log) {
- *             return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
- *         }
- *     ]]></lang:inline-script>
- * </lang:groovy>
- * 
- * }</pre>
+ * <pre>
+   Spring configuration:
+   
+   &lt;bean id="duplicateUsernameAttributeSource3" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"
+       c:groovyObject-ref="duplicateUsernameAttributeScript3"/&gt;
+   
+   &lt;lang:groovy id="duplicateUsernameAttributeScript3"&gt;
+       &lt;lang:inline-script&gt;&lt;![CDATA[
+           class AttributeDuplicatingPersonAttributesScript extends org.jasig.services.persondir.support.BaseGroovyScriptDaoImpl {
+
+           {@literal @}Override
+           Map&lt;String, Object&gt; getAttributesForUser(String uid, Log log) {
+               return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
+           }
+       ]]&gt;&lt;/lang:inline-script&gt;
+   &lt;/lang:groovy&gt;
+   
+ * </pre>
  * Notes:<ol>
  * <li>Cannot create unit test of groovy source file, will not detect changes</li>
  * <li>Useful for embedded configuration</li>

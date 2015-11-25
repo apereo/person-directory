@@ -32,11 +32,11 @@ import org.jasig.services.persondir.IPersonAttributes;
  */
 public interface IAttributeMerger {
     /**
-     * Merge the results of a {@link org.jasig.services.persondir.search.IPersonLookupDao#getUserIds(java.util.Map)} call
-     * and a compiled results map.
+     * Merge the results of a Set of {@link IPersonAttributes} and a compiled results map.
      * 
      * @param toModify The compiled results map, this will be modified based on the values in toConsider.
      * @param toConsider The query results map, this will not be modified.
+     * @return Merged set of {@link IPersonAttributes}
      */
     public Set<IPersonAttributes> mergeResults(Set<IPersonAttributes> toModify, Set<IPersonAttributes> toConsider);
 

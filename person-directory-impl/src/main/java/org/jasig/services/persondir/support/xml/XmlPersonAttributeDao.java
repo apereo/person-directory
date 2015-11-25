@@ -73,6 +73,8 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     /**
      * The {@link CachingJaxbLoader} to use to load the {@link PersonData}, if set the mappedXmlResource property is
      * ignored.
+     *
+     * @param jaxbLoader The {@link CachingJaxbLoader} to use to load the {@link PersonData}
      */
     public void setJaxbLoader(final CachingJaxbLoader<PersonData> jaxbLoader) {
         this.jaxbLoader = jaxbLoader;
@@ -83,6 +85,8 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     }
     /**
      * The XML {@link Resource} to load the {@link PersonData} from, required if the jaxbLoader property is not set.
+     *
+     * @param mappedXmlResource The XML {@link Resource} to load the {@link PersonData} from
      */
     public void setMappedXmlResource(final Resource mappedXmlResource) {
         this.mappedXmlResource = mappedXmlResource;

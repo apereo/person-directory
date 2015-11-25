@@ -50,7 +50,10 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     }
 
     /**
-     * Take the constructor argument and convert the Map and List values into read-only form
+     * Take the constructor argument and convert the Map and List values into read-only form.
+     *
+     * @param attributes Map of attributes
+     * @return Read-only map of attributes
      */
     protected Map<String, List<Object>> buildImmutableAttributeMap(final Map<String, List<Object>> attributes) {
         final Map<String, List<Object>> immutableValuesBuilder = this.createImmutableAttributeMap(attributes.size());
@@ -71,6 +74,9 @@ public abstract class BasePersonImpl implements IPersonAttributes {
 
     /**
      * Create the Map used to store the attributes internally for this IPersonAttributes
+     *
+     * @param size size of map
+     * @return Map to store attributes
      */
     protected Map<String, List<Object>> createImmutableAttributeMap(final int size) {
         return new LinkedHashMap<>(size > 0 ? size : 1);

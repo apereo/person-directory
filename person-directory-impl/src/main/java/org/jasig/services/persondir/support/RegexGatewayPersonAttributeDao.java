@@ -18,14 +18,18 @@
  */
 package org.jasig.services.persondir.support;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
-
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This DAO wraps another DAO and only executes the wrapped DAO if the data in the seed matches
@@ -36,7 +40,7 @@ import java.util.regex.Pattern;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -98,7 +102,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
 
     /**
      * Creates a RegexGatewayPersonAttributeDao that will test a single attribute. The specified
-     * attribute is also configured as the {@link #setDefaultAttributeName(String)}.
+     * attribute is also configured as the {@link #getUsernameAttributeProvider()}.
      * 
      * @param attributeName The attribute to test, is also set as the defaultAttributeName.
      * @param pattern The pattern to test the specified attribute with.

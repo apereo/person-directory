@@ -44,7 +44,9 @@ public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvid
     }
     
     /**
-     * The usernameAttribute to use
+     * The usernameAttribute to use .
+     *
+     * @param usernameAttribute name of the username attribute
      */
     public void setUsernameAttribute(final String usernameAttribute) {
         Validate.notNull(usernameAttribute);

@@ -41,7 +41,7 @@ import org.springframework.beans.factory.annotation.Required;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -78,6 +78,8 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
      * Called by Spring DI to inject the collection of additional descriptors.  
      * Descriptors are user specific, and (therefore) the <code>Map</code> must 
      * be a session-scoped bean.
+     *
+     * @param descriptors Additional descriptors
      */
     @Required
     public void setDescriptors(final IPersonAttributes descriptors) {
@@ -102,6 +104,8 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     /**
      * Sets the {@link ICurrentUserProvider} to use when determining if the additional attributes should be returned,
      * this is an optional property.
+     *
+     * @param currentUserProvider current user provider
      */
     public void setCurrentUserProvider(final ICurrentUserProvider currentUserProvider) {
         this.currentUserProvider = currentUserProvider;

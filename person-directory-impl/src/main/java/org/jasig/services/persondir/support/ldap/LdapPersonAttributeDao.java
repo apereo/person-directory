@@ -51,7 +51,7 @@ import org.springframework.util.Assert;
  * <br>
  * <br>
  * Configuration:
- * <table border="1">
+ * <table border="1" summary="">
  *     <tr>
  *         <th align="left">Property</th>
  *         <th align="left">Description</th>
@@ -241,6 +241,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
 
     /**
      * @see javax.naming.directory.SearchControls#getTimeLimit()
+     * @return time limit
      * @deprecated Set the property on the {@link SearchControls} and set that via {@link #setSearchControls(SearchControls)}
      */
     @Deprecated
@@ -250,6 +251,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
 
     /**
      * @see javax.naming.directory.SearchControls#setTimeLimit(int)
+     * @param ms time limit in milliseconds
      * @deprecated
      */
     @Deprecated
@@ -337,6 +339,8 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     }
     /**
      * Optional wrapper template for the generated part of the query. Use {0} as a placeholder for where the generated query should be inserted.
+     *
+     * @param queryTemplate query template
      */
     public void setQueryTemplate(final String queryTemplate) {
         this.queryTemplate = queryTemplate;

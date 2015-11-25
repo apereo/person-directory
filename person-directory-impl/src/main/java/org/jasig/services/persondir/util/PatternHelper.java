@@ -32,6 +32,9 @@ public class PatternHelper {
      * Converts a String using the {@link IPersonAttributeDao#WILDCARD} into a valid regular expression
      * {@link Pattern} with the {@link IPersonAttributeDao#WILDCARD} replaced by .* and the rest of the
      * string escaped using {@link Pattern#quote(String)}
+     *
+     * @param queryString query String
+     * @return compiled Pattern
      */
     public static Pattern compilePattern(final String queryString) {
         final StringBuilder queryBuilder = new StringBuilder();

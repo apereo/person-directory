@@ -36,9 +36,9 @@ import org.jasig.services.persondir.IPersonAttributes;
  * the groups from Grouper repository
  * for a given principal and adopts them to <code>IPersonAttributes</code> instance. 
  * All other unimplemented methods throw <code>UnsupportedOperationException</code>
- * <p/>
+ * <br>
  * This implementation uses Grouper's <i>grouperClient</i> library to query Grouper's back-end repository.
- * <p/>
+ * <br>
  * Note: This class extends the adapter implementing deprecated methods of <code>IPersonAttributeDao</code> which is scheduled to be removed
  * in person-directory 1.6
  *

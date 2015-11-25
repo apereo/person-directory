@@ -59,6 +59,8 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
     }
     /**
      * Period between reloads if last-modified of the {@link Resource} cannot be determined
+     *
+     * @param noLastModifiedReloadPeriod period between reloads
      */
     public void setNoLastModifiedReloadPeriod(final long noLastModifiedReloadPeriod) {
         this.noLastModifiedReloadPeriod = noLastModifiedReloadPeriod;
@@ -69,6 +71,8 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
     }
     /**
      * The XML resource to load.
+     *
+     * @param mappedXmlResource XML resource to load
      */
     public void setMappedXmlResource(final Resource mappedXmlResource) {
         this.mappedXmlResource = mappedXmlResource;
