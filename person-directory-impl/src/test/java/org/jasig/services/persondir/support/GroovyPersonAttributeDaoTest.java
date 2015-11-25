@@ -18,6 +18,13 @@
  */
 package org.jasig.services.persondir.support;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import groovy.lang.GroovyClassLoader;
 import org.apache.commons.io.IOUtils;
 import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
@@ -31,25 +38,40 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.springframework.core.io.ClassPathResource;
 
-import java.util.*;
-
 @RunWith(JUnit4.class)
 public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
 
     private GroovyPersonAttributeDao dao;
     private GroovyClassLoader loader;
+    private Map<String, List<Object>> items;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         final ClassLoader parent = getClass().getClassLoader();
         loader = new GroovyClassLoader(parent);
+        dao = new GroovyPersonAttributeDao(loadGroovyClass("SampleGroovyPersonAttributeDao.groovy"));
 
-        final ClassPathResource scriptFile = new ClassPathResource("SampleGroovyPersonAttributeDao.groovy");
-        final Class<?> groovyClass = loader.parseClass(scriptFile.getFile());
+        items = new HashMap<>();
+        items.put("dog", Arrays.asList(new Object[]{"barks", "eats"}));
+        items.put("cat", Arrays.asList(new Object[]{"meows", "scratches"}));
+    }
 
-        final IPersonAttributeScriptDao groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
+    private IPersonAttributeScriptDao loadGroovyClass(String filename) {
+        try {
+            final ClassPathResource scriptFile = new ClassPathResource(filename);
+            final Class<?> groovyClass = loader.parseClass(scriptFile.getFile());
 
-        dao = new GroovyPersonAttributeDao(groovyObject);
+            final IPersonAttributeScriptDao groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
+            return groovyObject;
+        } catch (IOException e) {
+            logger.error("Unable to load groovy file {} ", e);
+        } catch (InstantiationException e) {
+            logger.error("Unable to instantiate groovy class specified in file {}", filename, e);
+        } catch (IllegalAccessException e) {
+            logger.error("Unable to instantiate groovy class specified in file {}", filename, e);
+        }
+        fail("Unable to instantiate groovy class from file " + filename);
+        return null;
     }
 
     @After
@@ -58,7 +80,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     }
 
     @Test
-    public void testGetPerson() throws Exception {
+    public void testGetPerson() {
         final IPersonAttributes attrs = dao.getPerson("userid");
         assertFalse(attrs.getAttributes().isEmpty());
         
@@ -68,13 +90,24 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     }
 
     @Test
-    public void testGetPeopleWithMultivaluedAttributes() throws Exception {
-        final Map<String, List<Object>> items = new HashMap<>();
-        items.put("dog", Arrays.asList(new Object[]{"barks", "eats"}));
-        items.put("cat", Arrays.asList(new Object[]{"meows", "scratches"}));
+    public void testGetPeopleWithMultivaluedAttributes() {
         final Set<IPersonAttributes> results = dao.getPeopleWithMultivaluedAttributes(items);
         assertTrue("script did not add one attribute to passed-in attribute list",
                 results.iterator().next().getAttributes().size() == items.size() + 1);
+    }
+
+    @Test
+    public void testGetPersonNullResult() {
+        GroovyPersonAttributeDao nullResponseDao = new GroovyPersonAttributeDao(loadGroovyClass("SampleGroovyPersonAttributeDaoForTestingUpdates.groovy"));
+        final IPersonAttributes attrs = nullResponseDao.getPerson("userid");
+        assertNull(attrs);
+    }
+
+    @Test
+    public void testGetPeopleWithMultivaluedAttributesNullResult() {
+        GroovyPersonAttributeDao nullResponseDao = new GroovyPersonAttributeDao(loadGroovyClass("SampleGroovyPersonAttributeDaoForTestingUpdates.groovy"));
+        final Set<IPersonAttributes> results = nullResponseDao.getPeopleWithMultivaluedAttributes(items);
+        assertNull(results);
     }
 
     private List<?> getAttributeAsList(final IPersonAttributes attrs, final String name) {

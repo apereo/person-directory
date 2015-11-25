@@ -24,10 +24,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.IPersonAttributes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.DataAccessUtils;
 
 /**
@@ -38,7 +38,7 @@ import org.springframework.dao.support.DataAccessUtils;
  * @version $Revision$
  */
 public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
-    protected final Log logger = LogFactory.getLog(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     public BasePersonAttributeDao() {
@@ -139,10 +139,8 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
             userAttributes.put(attrName, value);
         }
         
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Flattened Map='" + multivaluedUserAttributes + "' into Map='" + userAttributes + "'");
-        }
-        
+        logger.debug("Flattened Map='{}' into Map='{}'", multivaluedUserAttributes, userAttributes);
+
         return userAttributes;
     }
 }
