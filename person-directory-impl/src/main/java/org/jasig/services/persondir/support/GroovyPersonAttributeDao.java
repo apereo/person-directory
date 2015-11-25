@@ -136,22 +136,19 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     @SuppressWarnings("unchecked")
     public IPersonAttributes getPerson(final String uid) {
-        try {
-            logger.debug("Executing groovy script's getAttributesForUser method");
+        logger.debug("Executing groovy script's getAttributesForUser method");
 
-            final Map<String, Object> personAttributesMap = groovyObject.getAttributesForUser(uid);
-            logger.debug("Creating person attributes with the username " + uid + " and attributes " +
-                    personAttributesMap);
-
+        final Map<String, Object> personAttributesMap = groovyObject.getAttributesForUser(uid);
+        if (personAttributesMap != null) {
+            logger.debug("Creating person attributes with the username {} and attributes {}", uid, personAttributesMap);
             final Map<String, List<Object>> personAttributes = stuffAttributesIntoListValues(personAttributesMap);
 
             if (this.caseInsensitiveUsername) {
                 return new CaseInsensitiveNamedPersonImpl(uid, personAttributes);
             }
             return new NamedPersonImpl(uid, personAttributes);
-        } catch (final Exception e) {
-            logger.error(e.getMessage(), e);
         }
+        logger.debug("Groovy script returned null for uid={}", uid);
         return null;
     }
 
@@ -178,19 +175,16 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     @SuppressWarnings("unchecked")
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> attributes) {
-        try {
-            logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters "
-                    + attributes);
+        logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters {}",
+                attributes);
 
-            @SuppressWarnings("unchecked")
-            final Map<String, List<Object>> personAttributesMap =
-                    groovyObject.getPersonAttributesFromMultivaluedAttributes(attributes);
+        @SuppressWarnings("unchecked")
+        final Map<String, List<Object>> personAttributesMap =
+                groovyObject.getPersonAttributesFromMultivaluedAttributes(attributes);
 
-            logger.debug("Creating person attributes: " + personAttributesMap);
-
+        if (personAttributesMap != null) {
+            logger.debug("Creating person attributes: {}", personAttributesMap);
             return Collections.singleton((IPersonAttributes) new AttributeNamedPersonImpl(personAttributesMap));
-        } catch (final Exception e) {
-            logger.error(e.getMessage(), e);
         }
         return null;
     }
