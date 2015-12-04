@@ -12,14 +12,14 @@
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.7.1-SNAPSHOT</version>
-    
+
     <scm>
         <connection>scm:git:git://github.com/Jasig/person-directory.git</connection>
         <developerConnection>scm:git:git@github.com:Jasig/person-directory.git</developerConnection>
         <url>https://github.com/Jasig/person-directory</url>
       <tag>person-directory-parent-1.5.2</tag>
   </scm>
-    
+
     <issueManagement>
         <url>${jasig-issues-base}/PERSONDIR</url>
         <system>${jasig-issues-system}</system>
@@ -42,12 +42,12 @@
             <archive>http://wiki.jasig.org/display/JSG/person-directory-dev</archive>
         </mailingList>
     </mailingLists>
-    
+
     <properties>
         <!-- Project Dependency Versions -->
         <aopalliance.version>1.0</aopalliance.version>
         <apacheds.version>1.0.2</apacheds.version>
-        <commons-collections.version>4.0</commons-collections.version>
+        <commons-collections.version>4.1</commons-collections.version>
         <commons-lang.version>3.4</commons-lang.version>
         <easymock.version>3.3.1</easymock.version>
         <hsqldb.version>1.8.0.7</hsqldb.version>
@@ -71,12 +71,12 @@
         <project.build.targetVersion>1.7</project.build.targetVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <modules>
         <module>person-directory-api</module>
         <module>person-directory-impl</module>
     </modules>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -99,7 +99,7 @@
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-impl</artifactId>
                 <version>${jaxb-impl.version}</version>
-            </dependency> 
+            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
@@ -432,7 +432,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -469,7 +469,7 @@
     </build>
 
     <profiles>
-        <!-- 
+        <!--
          | Used by the continuous integrations server to deploy the project site.
          +-->
         <profile>
@@ -481,7 +481,7 @@
                 </site>
             </distributionManagement>
         </profile>
-        <!-- 
+        <!--
          | Should be activated manually by a developer that wishes to deploy a maven site for
          | the project
          +-->
