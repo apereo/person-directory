@@ -31,10 +31,12 @@ import org.apache.commons.lang3.Validate;
  * result is used.
  * 
  * @author Eric Dalquist
- * @version $Revision$
+ * 
+ * @deprecated Use {@link SessionInvalidationSurvivingAdditionalDescriptors} instead.
  */
+@Deprecated
 public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     
     private List<IAdditionalDescriptors> delegateDescriptors = Collections.emptyList();
     
