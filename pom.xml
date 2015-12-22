@@ -58,6 +58,7 @@
         <slf4j.version>1.7.12</slf4j.version>
         <spring.version>4.1.6.RELEASE</spring.version>
         <spring-ldap.version>2.0.3.RELEASE</spring-ldap.version>
+        <spring-security.version>4.0.3.RELEASE</spring-security.version>
         <spring-modules.version>0.8a</spring-modules.version>
         <groovy.version>2.4.3</groovy.version>
         <grouper.client.version>2.2.1</grouper.client.version>
@@ -264,6 +265,16 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security.extensions</groupId>
+                <artifactId>spring-security-saml2-core</artifactId>
+                <version>1.0.1.RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>

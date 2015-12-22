@@ -28,7 +28,7 @@ import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 
 /**
  * Provides common functionality for DAOs using a set of attribute values from the seed to
- * perform a query. Ensures the nessesary attributes to run the query exist on the seed and
+ * perform a query. Ensures the necessary attributes to run the query exist on the seed and
  * organizes the values into an argument array.
  * 
  * <br>

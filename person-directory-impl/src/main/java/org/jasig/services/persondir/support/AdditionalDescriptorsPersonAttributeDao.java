@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.jasig.services.persondir.support;
 
 import java.util.Collections;
@@ -31,13 +32,12 @@ import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
-/**
  * Implementation of {@link IPersonAttributeDao} that allows other subsystems 
  * and components to <i>push</i> attributes to the <code>IPersonAttributeDao</code> 
  * stack.  The collection of pushed attributes is represented by the 
  * <code>descriptors</code> property and backed by an instance of 
  * {@link AdditionalDescriptors}.  In most cases this property should be 
- * configured as a Session-Scoped Proxy Bean.   
+ * configured as a Session-Scoped Proxy Bean.
  * <br>
  * <br>
  * Configuration:
@@ -69,7 +69,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     private CaseCanonicalizationMode usernameCaseCanonicalizationMode = AbstractQueryPersonAttributeDao.DEFAULT_USERNAME_CASE_CANONICALIZATION_MODE;
     private Locale usernameCaseCanonicalizationLocale = Locale.getDefault();
     private Set<String> possibleUserAttributeNames = null;  // default
-    
+
     /*
      * Public API.
      */
@@ -83,13 +83,13 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
      */
     @Required
     public void setDescriptors(final IPersonAttributes descriptors) {
-        
+
         // Assertions.
         if (descriptors == null) {
             final String msg = "Argument 'descriptors' cannot be null";
             throw new IllegalArgumentException(msg);
         }
-        
+
         this.descriptors = descriptors;
 
         if (this.logger.isDebugEnabled()) {
@@ -97,13 +97,14 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
         }
 
     }
-    
+
     public ICurrentUserProvider getCurrentUserProvider() {
         return currentUserProvider;
     }
+
     /**
-     * Sets the {@link ICurrentUserProvider} to use when determining if the additional attributes should be returned,
-     * this is an optional property.
+     * Sets the {@link ICurrentUserProvider} to use when determining if the
+     * additional attributes should be returned.
      *
      * @param currentUserProvider current user provider
      */
@@ -111,11 +112,8 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
         this.currentUserProvider = currentUserProvider;
     }
 
-
-
     /**
-     * Returns an empty <code>Set</code>, per the API documentation, because we 
-     * don't use any attributes in queries.
+     * Returns a <code>Set</code> containing only the configured username attribute.
      */
     @Override
     @JsonIgnore
@@ -133,24 +131,24 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("invoking getPeopleWithMultivaluedAttributes(" + query + ")");
         }
-        
+
         final IUsernameAttributeProvider usernameAttributeProvider = super.getUsernameAttributeProvider();
         String uid = usernameAttributeProvider.getUsernameFromQuery(query);
         if (uid == null) {
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("No username attribute found in query, returning null");
             }
-            
+
             return null;
         }
         uid = usernameCaseCanonicalizationMode.canonicalize(uid, usernameCaseCanonicalizationLocale);
-        
+
         String targetName = this.descriptors.getName();
         if (targetName == null) {
             if (this.currentUserProvider != null) {
                 targetName = this.currentUserProvider.getCurrentUserName();
             }
-            
+
             if (targetName == null) {
                 this.logger.warn("AdditionalDescriptors has a null name and a null name was returned by the currentUserProvider, returning null. " + this.descriptors);
                 return null;
@@ -162,11 +160,11 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Adding additional descriptors " + this.descriptors);
             }
-            
+
             final IPersonAttributes personAttributes = new CaseInsensitiveNamedPersonImpl(targetName, this.descriptors.getAttributes());
             return Collections.singleton(personAttributes);
         }
-        
+
         return null;
     }
 
@@ -176,7 +174,11 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     }
 
     /**
-     * Sets the set of possible attribute names.
+     * Allows the developer to configure the set of possible attribute names in
+     * the Spring application context.  Some downstream clients of
+     * person-directory need to know what attributes _may_ be present.  The only
+     * way for this bean to know that is to tell it in config.
+     *
      * @param possibleUserAttributeNames Set of possible attribute names.
      * @since 1.6.2
      */
