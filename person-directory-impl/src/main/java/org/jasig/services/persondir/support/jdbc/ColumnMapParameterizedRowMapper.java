@@ -18,15 +18,15 @@
  */
 package org.jasig.services.persondir.support.jdbc;
 
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.collections4.map.ListOrderedMap;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.JdbcUtils;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Map;
-
-import org.apache.commons.collections4.map.CaseInsensitiveMap;
-import org.apache.commons.collections4.map.ListOrderedMap;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-import org.springframework.jdbc.support.JdbcUtils;
 
 /**
  * JDK5 clone of {@link org.springframework.jdbc.core.ColumnMapRowMapper}
@@ -34,7 +34,7 @@ import org.springframework.jdbc.support.JdbcUtils;
  * @author Eric Dalquist
  * @version $Revision$
  */
-public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<Map<String, Object>> {
+public class ColumnMapParameterizedRowMapper implements RowMapper<Map<String, Object>> {
     private final boolean ignoreNull;
     
     public ColumnMapParameterizedRowMapper() {
@@ -49,6 +49,7 @@ public class ColumnMapParameterizedRowMapper implements ParameterizedRowMapper<M
     /* (non-Javadoc)
      * @see org.springframework.jdbc.core.simple.ParameterizedRowMapper#mapRow(java.sql.ResultSet, int)
      */
+    @Override
     public final Map<String, Object> mapRow(final ResultSet rs, final int rowNum) throws SQLException {
         final ResultSetMetaData rsmd = rs.getMetaData();
         final int columnCount = rsmd.getColumnCount();
