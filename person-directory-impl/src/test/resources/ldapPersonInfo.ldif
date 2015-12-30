@@ -11,7 +11,7 @@ objectclass: inetOrgPerson
 objectclass: top
 cn: Eric Dalquist
 description: uPortal Developer
-givenname: Eric
+givenName: Eric
 sn: Dalquist
 uid: edalquist
 mail: eric.dalquist@example.com
