@@ -40,6 +40,7 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
      * @return a Map equal to but not the same reference as the seed.
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
+    @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         if (query == null) {
             throw new IllegalArgumentException("seed may not be null");
@@ -54,6 +55,7 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
      * @return null
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @Override
     public Set<String> getPossibleUserAttributeNames() {
         return null;
     }
@@ -61,6 +63,7 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @Override
     public Set<String> getAvailableQueryAttributes() {
         return null;
     }

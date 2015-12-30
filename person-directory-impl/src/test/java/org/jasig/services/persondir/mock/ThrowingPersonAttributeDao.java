@@ -34,6 +34,7 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @Override
     public Set<String> getAvailableQueryAttributes() {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -41,6 +42,7 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeople(java.util.Map)
      */
+    @Override
     public Set<IPersonAttributes> getPeople(final Map<String, Object> query) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -48,6 +50,7 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
+    @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -55,6 +58,7 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
      */
+    @Override
     public IPersonAttributes getPerson(final String uid) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -62,6 +66,7 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @Override
     public Set<String> getPossibleUserAttributeNames() {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -69,6 +74,7 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
      */
+    @Override
     public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -76,6 +82,7 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.lang.String)
      */
+    @Override
     public Map<String, List<Object>> getMultivaluedUserAttributes(final String uid) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -83,6 +90,7 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
      */
+    @Override
     public Map<String, Object> getUserAttributes(final Map<String, Object> seed) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
@@ -90,6 +98,7 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.lang.String)
      */
+    @Override
     public Map<String, Object> getUserAttributes(final String uid) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }

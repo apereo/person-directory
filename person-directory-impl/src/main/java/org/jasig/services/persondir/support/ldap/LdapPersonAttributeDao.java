@@ -141,6 +141,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
+    @Override
     public void afterPropertiesSet() throws Exception {
         final Map<String, Set<String>> resultAttributeMapping = this.getResultAttributeMapping();
         if (this.setReturningAttributes && resultAttributeMapping != null) {

@@ -145,6 +145,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     /* (non-Javadoc)
      * @see org.springmodules.cache.provider.CacheProviderFacade#getCachingModelEditor()
      */
+    @Override
     public PropertyEditor getCachingModelEditor() {
         final ReflectionCacheModelEditor editor = new ReflectionCacheModelEditor();
         editor.setCacheModelClass(EhCacheCachingModel.class);
@@ -154,6 +155,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     /* (non-Javadoc)
      * @see org.springmodules.cache.provider.CacheProviderFacade#getFlushingModelEditor()
      */
+    @Override
     public PropertyEditor getFlushingModelEditor() {
         final ReflectionCacheModelEditor editor = new ReflectionCacheModelEditor();
         editor.setCacheModelClass(EhCacheFlushingModel.class);
@@ -163,6 +165,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     /* (non-Javadoc)
      * @see org.springmodules.cache.provider.CacheProviderFacade#modelValidator()
      */
+    @Override
     public CacheModelValidator modelValidator() {
         return new EhCacheModelValidator();
     }

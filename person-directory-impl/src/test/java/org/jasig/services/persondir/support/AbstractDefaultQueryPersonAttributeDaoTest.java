@@ -69,6 +69,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         /* (non-Javadoc)
          * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
          */
+        @Override
         public Set<String> getPossibleUserAttributeNames() {
             return null;
         }
@@ -76,6 +77,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         /* (non-Javadoc)
          * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
          */
+        @Override
         public Set<String> getAvailableQueryAttributes() {
             return null;
         }
@@ -83,6 +85,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         /* (non-Javadoc)
          * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
          */
+        @Override
         public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
             return Collections.singleton((IPersonAttributes)new AttributeNamedPersonImpl(query));
         }

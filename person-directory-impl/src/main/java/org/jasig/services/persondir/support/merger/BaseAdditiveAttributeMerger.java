@@ -40,6 +40,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergeAvailableQueryAttributes(java.util.Set, java.util.Set)
      */
+    @Override
     public Set<String> mergeAvailableQueryAttributes(final Set<String> toModify, final Set<String> toConsider) {
         toModify.addAll(toConsider);
         return toModify;
@@ -48,6 +49,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergePossibleUserAttributeNames(java.util.Set, java.util.Set)
      */
+    @Override
     public Set<String> mergePossibleUserAttributeNames(final Set<String> toModify, final Set<String> toConsider) {
         toModify.addAll(toConsider);
         return toModify;
@@ -56,6 +58,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergeResults(java.util.Set, java.util.Set)
      */
+    @Override
     public final Set<IPersonAttributes> mergeResults(final Set<IPersonAttributes> toModify, final Set<IPersonAttributes> toConsider) {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
@@ -140,6 +143,7 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.IAttributeMerger#mergeAttributes(java.util.Map, java.util.Map)
      */
+    @Override
     public Map<String, List<Object>> mergeAttributes(final Map<String, List<Object>> toModify, final Map<String, List<Object>> toConsider) {
         return this.mergePersonAttributes(toModify, toConsider);
     }

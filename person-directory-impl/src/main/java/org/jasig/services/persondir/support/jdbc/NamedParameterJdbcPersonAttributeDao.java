@@ -94,6 +94,7 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
         this.sql = sql;
     }
     
+    @Override
     @Required
     public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
         this.usernameAttributeProvider = usernameAttributeProvider;

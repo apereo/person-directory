@@ -112,6 +112,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
+    @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> seed) {
         Validate.notNull(seed, "Argument 'seed' cannot be null.");
 
@@ -134,6 +135,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * 
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @Override
     @JsonIgnore
     public Set<String> getPossibleUserAttributeNames() {
         final Set<String> rslt = new LinkedHashSet<>();
@@ -149,6 +151,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @Override
     @JsonIgnore
     public Set<String> getAvailableQueryAttributes() {
         final Set<String> rslt = new LinkedHashSet<>();

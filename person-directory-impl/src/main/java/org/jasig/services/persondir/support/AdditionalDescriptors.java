@@ -54,11 +54,13 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
      * Public API.
      */
 
+    @Override
     public Object getAttributeValue(final String name) {
         final List<Object> values = attributes.get(name);
         return values == null || values.size() == 0 ? null : values.get(0);
     }
 
+    @Override
     public List<Object> getAttributeValues(final String name) {
         final List<Object> values = this.attributes.get(name);
         if (values == null) {
@@ -68,18 +70,22 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         return Collections.unmodifiableList(values);
     }
 
+    @Override
     public Map<String, List<Object>> getAttributes() {
         return Collections.unmodifiableMap(this.attributes);
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
     
+    @Override
     public void setName(final String name) {
         this.name = name;
     }
     
+    @Override
     public void addAttributes(final Map<String, List<Object>> attributes) {
         for (final Map.Entry<String, List<Object>> newAttribute : attributes.entrySet()) {
             final String name = newAttribute.getKey();
@@ -94,6 +100,7 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         }
     }
     
+    @Override
     public void setAttributes(final Map<String, List<Object>> attributes) {
         Validate.notNull(attributes, "Argument 'attributes' cannot be null");
         final Map<String, List<Object>> newAttributes = new ConcurrentHashMap<>();
@@ -113,6 +120,7 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         this.attributes = newAttributes;
     }
     
+    @Override
     public List<Object> setAttributeValues(final String name, final List<Object> values) {
         // Assertions.
         if (name == null) {
@@ -127,6 +135,7 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         return this.attributes.put(name, new ArrayList<>(values));
     }
     
+    @Override
     public List<Object> removeAttribute(final String name) {
         Validate.notNull(name, "Argument 'name' cannot be null");
         return this.attributes.remove(name);

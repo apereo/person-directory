@@ -197,10 +197,12 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
         this.availableQueryAttributes = availableQueryAttributes;
     }
 
+    @Override
     public Set<String> getAvailableQueryAttributes() {
         return availableQueryAttributes;
     }
 
+    @Override
     public Set<String> getPossibleUserAttributeNames() {
         return possibleUserAttributeNames;
     }

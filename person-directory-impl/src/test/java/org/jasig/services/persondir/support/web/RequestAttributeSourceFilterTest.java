@@ -52,6 +52,7 @@ public class RequestAttributeSourceFilterTest extends TestCase {
     private FilterChain filterChain;
     private Map<String, List<Object>> expectedAttributes;
 
+    @Override
     @Before
     public void setUp() throws Exception {
         requestAttributeSourceFilter = new RequestAttributeSourceFilter();

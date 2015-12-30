@@ -56,6 +56,7 @@ public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvid
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.IUsernameAttributeProvider#getUsernameAttribute()
      */
+    @Override
     public String getUsernameAttribute() {
         return this.usernameAttribute;
     }
@@ -63,6 +64,7 @@ public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvid
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.IUsernameAttributeProvider#getUsernameFromQuery(java.util.Map)
      */
+    @Override
     public String getUsernameFromQuery(final Map<String, List<Object>> query) {
         final List<Object> usernameAttributeValues = query.get(this.usernameAttribute);
         

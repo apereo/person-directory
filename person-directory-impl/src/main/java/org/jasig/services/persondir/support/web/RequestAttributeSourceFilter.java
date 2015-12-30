@@ -340,6 +340,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /* (non-Javadoc)
              * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
              */
+    @Override
     public final void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain chain) throws IOException, ServletException {
         if (ProcessingPosition.PRE == this.processingPosition || ProcessingPosition.BOTH == this.processingPosition) {
             this.doProcessing(servletRequest);
