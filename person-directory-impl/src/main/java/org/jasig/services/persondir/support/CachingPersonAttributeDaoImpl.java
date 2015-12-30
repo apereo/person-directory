@@ -267,6 +267,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (this.cacheKeyGenerator == null) {
             final AttributeBasedCacheKeyGenerator cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
@@ -299,6 +300,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * 
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
+    @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> seed) {
         //Ensure the arguments and state are valid
         if (seed == null) {
@@ -423,6 +425,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         /* (non-Javadoc)
          * @see org.aopalliance.intercept.MethodInvocation#getMethod()
          */
+        @Override
         public Method getMethod() {
             return getPeopleWithMultivaluedAttributesMethod;
         }
@@ -430,6 +433,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         /* (non-Javadoc)
          * @see org.aopalliance.intercept.Invocation#getArguments()
          */
+        @Override
         public Object[] getArguments() {
             return this.args;
         }
@@ -437,6 +441,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         /* (non-Javadoc)
          * @see org.aopalliance.intercept.Joinpoint#getStaticPart()
          */
+        @Override
         public AccessibleObject getStaticPart() {
             throw new UnsupportedOperationException("This is a fake MethodInvocation, getStaticPart() is not supported.");
         }
@@ -444,6 +449,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         /* (non-Javadoc)
          * @see org.aopalliance.intercept.Joinpoint#getThis()
          */
+        @Override
         public Object getThis() {
             throw new UnsupportedOperationException("This is a fake MethodInvocation, getThis() is not supported.");
         }
@@ -451,6 +457,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         /* (non-Javadoc)
          * @see org.aopalliance.intercept.Joinpoint#proceed()
          */
+        @Override
         public Object proceed() throws Throwable {
             throw new UnsupportedOperationException("This is a fake MethodInvocation, proceed() is not supported.");
         }
@@ -467,6 +474,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         /* (non-Javadoc)
          * @see java.security.Principal#getName()
          */
+        @Override
         public String getName() {
             return CachingPersonAttributeDaoImpl.class.getName() + "UNIQUE_NULL_RESULTS";
         }

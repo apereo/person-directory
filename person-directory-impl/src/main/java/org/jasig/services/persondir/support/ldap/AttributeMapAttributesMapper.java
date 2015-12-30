@@ -52,6 +52,7 @@ class AttributeMapAttributesMapper implements AttributesMapper {
     /* (non-Javadoc)
      * @see org.springframework.ldap.core.AttributesMapper#mapFromAttributes(javax.naming.directory.Attributes)
      */
+    @Override
     public Object mapFromAttributes(final Attributes attributes) throws NamingException {
         final int attributeCount = attributes.size();
         final Map<String, Object> mapOfAttrValues = this.createAttributeMap(attributeCount);

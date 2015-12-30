@@ -39,6 +39,7 @@ public class NamedPersonImpl extends BasePersonImpl {
     /* (non-Javadoc)
      * @see java.security.Principal#getName()
      */
+    @Override
     public String getName() {
         return this.userName;
     }

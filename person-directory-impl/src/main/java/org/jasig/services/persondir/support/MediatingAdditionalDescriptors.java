@@ -47,6 +47,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#addAttributes(java.util.Map)
      */
+    @Override
     public void addAttributes(final Map<String, List<Object>> attributes) {
         for (final IAdditionalDescriptors additionalDescriptors : this.delegateDescriptors) {
             additionalDescriptors.addAttributes(attributes);
@@ -58,6 +59,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      * 
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#removeAttribute(java.lang.String)
      */
+    @Override
     public List<Object> removeAttribute(final String name) {
         List<Object> removedValues = null;
         
@@ -81,6 +83,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      * 
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#setAttributeValues(java.lang.String, java.util.List)
      */
+    @Override
     public List<Object> setAttributeValues(final String name, final List<Object> values) {
         List<Object> replacedValues = null;
         
@@ -102,6 +105,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#setAttributes(java.util.Map)
      */
+    @Override
     public void setAttributes(final Map<String, List<Object>> attributes) {
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             additionalDescriptors.setAttributes(attributes);
@@ -111,6 +115,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#setName(java.lang.String)
      */
+    @Override
     public void setName(final String name) {
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             additionalDescriptors.setName(name);
@@ -120,6 +125,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributes#getAttributeValue(java.lang.String)
      */
+    @Override
     public Object getAttributeValue(final String name) {
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             final Map<String, List<Object>> attributes = additionalDescriptors.getAttributes();
@@ -134,6 +140,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributes#getAttributeValues(java.lang.String)
      */
+    @Override
     public List<Object> getAttributeValues(final String name) {
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             final Map<String, List<Object>> attributes = additionalDescriptors.getAttributes();
@@ -148,6 +155,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributes#getAttributes()
      */
+    @Override
     public Map<String, List<Object>> getAttributes() {
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             final Map<String, List<Object>> attributes = additionalDescriptors.getAttributes();
@@ -162,6 +170,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     /* (non-Javadoc)
      * @see java.security.Principal#getName()
      */
+    @Override
     public String getName() {
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             final String name = additionalDescriptors.getName();

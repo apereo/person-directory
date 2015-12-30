@@ -83,6 +83,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @Override
     public Set<String> getAvailableQueryAttributes() {
         return null;
     }
@@ -90,6 +91,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
+    @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         final Map<String, List<Object>> formattedAttributes = new LinkedHashMap<>();
         

@@ -75,6 +75,7 @@ class LogicalFilterWrapper implements Filter {
     /* (non-Javadoc)
      * @see org.springframework.ldap.filter.Filter#encode()
      */
+    @Override
     public String encode() {
         return this.delegateFilter.encode();
     }
@@ -82,6 +83,7 @@ class LogicalFilterWrapper implements Filter {
     /* (non-Javadoc)
      * @see org.springframework.ldap.filter.Filter#encode(java.lang.StringBuffer)
      */
+    @Override
     public StringBuffer encode(final StringBuffer buf) {
         return this.delegateFilter.encode(buf);
     }

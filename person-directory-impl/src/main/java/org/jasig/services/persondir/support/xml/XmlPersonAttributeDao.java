@@ -95,6 +95,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (this.jaxbLoader == null && this.mappedXmlResource == null) {
             throw new BeanCreationException("Either the 'jaxbLoader' property or the 'mappedXmlResource' property needs to be set");
@@ -110,6 +111,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
+    @Override
     public Set<String> getAvailableQueryAttributes() {
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
         return this.attributesCache;
@@ -118,6 +120,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
+    @Override
     public Set<String> getPossibleUserAttributeNames() {
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
         return this.attributesCache;
@@ -135,6 +138,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
+    @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
         
@@ -250,6 +254,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
         /* (non-Javadoc)
          * @see org.jasig.services.persondir.support.xml.CachingJaxbLoader.UnmarshallingCallback#postProcessUnmarshalling(java.lang.Object)
          */
+        @Override
         public synchronized void postProcessUnmarshalling(final PersonData unmarshalledObject) {
             final Set<String> attributeNames = new LinkedHashSet<>();
             final Map<String, Set<IPersonAttributes>> personByAttributeCache = new LinkedHashMap<>();

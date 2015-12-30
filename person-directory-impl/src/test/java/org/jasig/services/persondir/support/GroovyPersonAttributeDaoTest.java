@@ -45,6 +45,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     private GroovyClassLoader loader;
     private Map<String, List<Object>> items;
 
+    @Override
     @Before
     public void setUp() {
         final ClassLoader parent = getClass().getClassLoader();
@@ -74,6 +75,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
         return null;
     }
 
+    @Override
     @After
     public void tearDown() {
         IOUtils.closeQuietly(loader);

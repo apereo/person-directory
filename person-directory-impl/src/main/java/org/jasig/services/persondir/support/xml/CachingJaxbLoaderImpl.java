@@ -82,6 +82,7 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.xml.CachingJaxbLoader#getUnmarshalledObject()
      */
+    @Override
     public T getUnmarshalledObject() {
         return this.getUnmarshalledObject(null);
     }
@@ -89,6 +90,7 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.xml.CachingJaxbLoader#getUnmarshalledObject(org.jasig.services.persondir.support.xml.CachingJaxbLoader.UnmarshallingCallback)
      */
+    @Override
     public T getUnmarshalledObject(final UnmarshallingCallback<T> callback) {
         //Only bother checking for a change if the object already exists
         Long lastModified = null;

@@ -85,6 +85,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributes#getAttributeValue(java.lang.String)
      */
+    @Override
     public Object getAttributeValue(final String name) {
         final List<Object> values = this.attributes.get(name);
         if (values == null || values.size() == 0) {
@@ -97,6 +98,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributes#getAttributeValues(java.lang.String)
      */
+    @Override
     public List<Object> getAttributeValues(final String name) {
         final List<Object> values = this.attributes.get(name);
         if (values == null) {
@@ -109,6 +111,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributes#getAttributes()
      */
+    @Override
     public Map<String, List<Object>> getAttributes() {
         return this.attributes;
     }

@@ -44,6 +44,7 @@ public class SingleContextSource implements ContextSource  {
     /*
      * @see org.springframework.ldap.ContextSource#getReadOnlyContext()
      */
+    @Override
     public DirContext getReadOnlyContext() throws NamingException {
         return getNonClosingDirContextProxy(ctx);
     }
@@ -51,6 +52,7 @@ public class SingleContextSource implements ContextSource  {
     /*
      * @see org.springframework.ldap.ContextSource#getReadWriteContext()
      */
+    @Override
     public DirContext getReadWriteContext() throws NamingException {
         return getNonClosingDirContextProxy(ctx);
     }
@@ -69,6 +71,7 @@ public class SingleContextSource implements ContextSource  {
             this.target = target;
         }
 
+        @Override
         public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 
             final String methodName = method.getName();

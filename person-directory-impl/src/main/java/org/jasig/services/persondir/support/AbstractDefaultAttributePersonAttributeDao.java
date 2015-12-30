@@ -70,6 +70,7 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
      * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one matching {@link IPersonAttributes} is found.
      */
+    @Override
     public IPersonAttributes getPerson(final String uid) {
         Validate.notNull(uid, "uid may not be null.");
         

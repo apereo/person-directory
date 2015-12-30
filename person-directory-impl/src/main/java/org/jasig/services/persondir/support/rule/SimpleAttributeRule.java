@@ -88,6 +88,7 @@ public final class SimpleAttributeRule implements AttributeRule {
         this.possibleAttributeNames = list;
     }
 
+    @Override
     public boolean appliesTo(final Map<String, List<Object>> userInfo) {
 
         // Assertions.
@@ -123,6 +124,7 @@ public final class SimpleAttributeRule implements AttributeRule {
 
     }
 
+    @Override
     public Set<IPersonAttributes> evaluate(final Map<String, List<Object>> userInfo) {
 
         // Assertions.
@@ -144,11 +146,13 @@ public final class SimpleAttributeRule implements AttributeRule {
         return Collections.singleton(person);
     }
 
+    @Override
     @JsonIgnore
     public Set<String> getPossibleUserAttributeNames() {
         return this.possibleAttributeNames;
     }
 
+    @Override
     @JsonIgnore
     public Set<String> getAvailableQueryAttributes() {
         final Set list = new HashSet();

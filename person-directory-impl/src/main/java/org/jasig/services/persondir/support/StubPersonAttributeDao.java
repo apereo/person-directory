@@ -61,6 +61,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
         this.setBackingMap(backingMap);
     }
 
+    @Override
     @JsonIgnore
     public Set<String> getPossibleUserAttributeNames() {
         if (this.backingPerson == null) {
@@ -70,6 +71,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
         return ImmutableSet.copyOf(this.backingPerson.getAttributes().keySet());
     }
     
+    @Override
     public Set<String> getAvailableQueryAttributes() {
         return null;
     }
@@ -78,6 +80,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
+    @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         if (query == null) {
             throw new IllegalArgumentException("Illegal to invoke getPeople(Map) with a null argument.");
@@ -92,6 +95,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
      */
+    @Override
     public IPersonAttributes getPerson(final String uid) {
         if (uid == null) {
             throw new IllegalArgumentException("Illegal to invoke getPerson(String) with a null argument.");
