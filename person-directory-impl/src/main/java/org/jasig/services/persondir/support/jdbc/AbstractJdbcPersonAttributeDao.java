@@ -18,16 +18,6 @@
  */
 package org.jasig.services.persondir.support.jdbc;
 
-import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.sql.DataSource;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -37,7 +27,16 @@ import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.QueryType;
 import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
+import org.springframework.jdbc.core.RowMapper;
+
+import javax.sql.DataSource;
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Provides common logic for executing a JDBC based query including building the WHERE clause SQL string.
@@ -143,7 +142,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
      * @return The ParameterizedRowMapper to handle the results of the SQL query.
      */
     @JsonIgnore
-    protected abstract ParameterizedRowMapper<R> getRowMapper();
+    protected abstract RowMapper<R> getRowMapper();
     
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
@@ -220,7 +219,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(final PartialWhereClause queryBuilder, final String queryUserName) {
         //Execute the query
-        final ParameterizedRowMapper<R> rowMapper = this.getRowMapper();
+        final RowMapper<R> rowMapper = this.getRowMapper();
         
         final List<R> results;
         if (queryBuilder != null) {

@@ -18,22 +18,21 @@
  */
 package org.jasig.services.persondir.support.jdbc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.sql.DataSource;
-
 import org.apache.commons.collections4.Factory;
 import org.apache.commons.collections4.map.LazyMap;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.jasig.services.persondir.support.NamedPersonImpl;
 import org.springframework.jdbc.BadSqlGrammarException;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
+import org.springframework.jdbc.core.RowMapper;
+
+import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An {@link org.jasig.services.persondir.IPersonAttributeDao}
@@ -102,7 +101,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
  * @since uPortal 2.5
  */
 public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeDao<Map<String, Object>> {
-    private static final ParameterizedRowMapper<Map<String, Object>> MAPPER = new ColumnMapParameterizedRowMapper();
+    private static final RowMapper<Map<String, Object>> MAPPER = new ColumnMapParameterizedRowMapper();
     
     /**
      * {@link Map} of columns from a name column to value columns.
@@ -158,7 +157,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
      * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#getRowMapper()
      */
     @Override
-    protected ParameterizedRowMapper<Map<String, Object>> getRowMapper() {
+    protected RowMapper<Map<String, Object>> getRowMapper() {
         return MAPPER;
     }
 
@@ -243,6 +242,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     }
     
     private static final class LinkedHashMapFactory<K, V> implements Factory {
+        @Override
         public Map<K, V> create() {
             return new LinkedHashMap<>();
         }

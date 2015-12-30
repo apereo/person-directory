@@ -18,18 +18,17 @@
  */
 package org.jasig.services.persondir.support.jdbc;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.sql.DataSource;
-
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.CaseInsensitiveAttributeNamedPersonImpl;
 import org.jasig.services.persondir.support.CaseInsensitiveNamedPersonImpl;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
+import org.springframework.jdbc.core.RowMapper;
+
+import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An {@link org.jasig.services.persondir.IPersonAttributeDao}
@@ -66,7 +65,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
  * @since uPortal 2.5
  */
 public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeDao<Map<String, Object>> {
-    private static final ParameterizedRowMapper<Map<String, Object>> MAPPER = new ColumnMapParameterizedRowMapper(true);
+    private static final RowMapper<Map<String, Object>> MAPPER = new ColumnMapParameterizedRowMapper(true);
 
     public SingleRowJdbcPersonAttributeDao() {
         super();
@@ -86,7 +85,7 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
      * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#getRowMapper()
      */
     @Override
-    protected ParameterizedRowMapper<Map<String, Object>> getRowMapper() {
+    protected RowMapper<Map<String, Object>> getRowMapper() {
         return MAPPER;
     }
 
