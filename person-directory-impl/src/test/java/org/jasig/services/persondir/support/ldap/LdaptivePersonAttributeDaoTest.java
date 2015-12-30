@@ -81,6 +81,7 @@ public class LdaptivePersonAttributeDaoTest extends AbstractDirContextTest {
         final Map<String, String> map = new HashMap<>();
         map.put("cn", "commonName");
         map.put("mail", "displayName");
+        map.put("givenName", "givenName");
 
         final SearchControls ctrs = new SearchControls();
         ctrs.setSearchScope(1);
@@ -97,6 +98,7 @@ public class LdaptivePersonAttributeDaoTest extends AbstractDirContextTest {
         assertTrue(person.getAttributes().size() > 0);
         assertNotNull(person.getAttributeValue("commonName"));
         assertNotNull(person.getAttributeValue("displayName"));
+        assertNotNull(person.getAttributeValue("givenName"));
     }
 }
 
