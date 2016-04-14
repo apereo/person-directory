@@ -29,6 +29,7 @@ import org.jasig.services.persondir.IPersonAttributes;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSString;
+import org.opensaml.xml.schema.impl.XSAnyImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.saml.SAMLCredential;
@@ -93,8 +94,8 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
                             msg.append("\n    a.getName()=").append(a.getName())
                                 .append("\n    a.getFriendlyName()=").append(a.getFriendlyName());
                                 for (XMLObject xmlo : a.getAttributeValues()) {
-                                    XSString str = (XSString) xmlo;
-                                    msg.append("\n        value="+str.getValue());
+                                    String str = extractStringValue(xmlo);
+                                    msg.append("\n        value="+str);
                                 }
                         }
                         logger.trace(msg.toString());
@@ -105,8 +106,10 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
                     for (Attribute a : credential.getAttributes()) {
                         List<Object> list = new ArrayList<Object>();
                         for (XMLObject xmlo : a.getAttributeValues()) {
-                            XSString str = (XSString) xmlo;
-                            list.add(str.getValue());
+                            String str = extractStringValue(xmlo);
+                            if (str != null) {
+                                list.add(str);
+                            }
                         }
                         attributes.put(a.getName(), list);
                     }
@@ -126,6 +129,22 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
 
         return Collections.emptyList();
 
+    }
+
+    /**
+     * Extracts the string value of the XMLObject depending upon its type.
+     * @param xmlo XMLObject
+     * @return String value of object. Null if unable to convert object to string.
+     */
+    private String extractStringValue(XMLObject xmlo) {
+        if (xmlo instanceof XSString) {
+            return ((XSString)xmlo).getValue();
+        } else if (xmlo instanceof XSAnyImpl) {
+            return ((XSAnyImpl)xmlo).getTextContent();
+        }
+        logger.warn("Unable to map attribute class {} to String. Unknown type. Enable TRACE logging to see attribute name",
+                xmlo.getClass());
+        return null;
     }
 
     @Override
