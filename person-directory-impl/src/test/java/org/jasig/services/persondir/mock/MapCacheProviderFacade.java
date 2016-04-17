@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,11 +17,6 @@
  * under the License.
  */
 package org.jasig.services.persondir.mock;
-
-import java.beans.PropertyEditor;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springmodules.cache.CacheException;
 import org.springmodules.cache.CachingModel;
@@ -34,49 +29,59 @@ import org.springmodules.cache.provider.ehcache.EhCacheCachingModel;
 import org.springmodules.cache.provider.ehcache.EhCacheFlushingModel;
 import org.springmodules.cache.provider.ehcache.EhCacheModelValidator;
 
+import java.beans.PropertyEditor;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Eric Dalquist
  * @version $Revision$
  */
 public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     final Map<Serializable, Object> cache = new HashMap<>();
-    
+
     private int hitCount = 0;
     private int missCount = 0;
     private int flushCount = 0;
     private int putCount = 0;
     private int removeCount = 0;
-    
+
     /**
      * @return the hitCount
      */
     public int getHitCount() {
         return hitCount;
     }
+
     /**
      * @return the missCount
      */
     public int getMissCount() {
         return missCount;
     }
+
     /**
      * @return the flushCount
      */
     public int getFlushCount() {
         return flushCount;
     }
+
     /**
      * @return the putCount
      */
     public int getPutCount() {
         return putCount;
     }
+
     /**
      * @return the removeCount
      */
     public int getRemoveCount() {
         return removeCount;
     }
+
     /**
      * @return the cacheSize
      */
@@ -108,11 +113,10 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     protected Object onGetFromCache(final Serializable key, final CachingModel model) throws CacheException {
         if (this.cache.containsKey(key)) {
             this.hitCount++;
-        }
-        else {
+        } else {
             this.missCount++;
         }
-        
+
         return this.cache.get(key);
     }
 

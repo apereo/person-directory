@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,18 +17,6 @@
  * under the License.
  */
 package org.jasig.services.persondir.support.jdbc;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.sql.DataSource;
 
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
@@ -40,16 +28,27 @@ import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Implementation of PersonAttributeDao based on Spring's {@link NamedParameterJdbcTemplate}.  
  * Specify any valid SQL, using named parameters as necessary.  Name the columns you want as 
  * attributes with the property 'userAttributeNames' (you can adjust names to taste using 
  * aliases in your SQL).  Supports multi-valued attributes through inner joins.
- * 
+ *
  * <p>Example SQL:  SELECT USER_ID FROM UP_USER WHERE USER_NAME = :username</p>
- * 
+ *
  * <p>Example Sprring Configuration:</p>
- * 
+ *
  * &lt;bean id="rolesUserSource" class="org.jasig.services.persondir.support.jdbc.NamedParameterJdbcPersonAttributeDao"&gt;
  *     &lt;property name="dataSource" ref="PersonDB" /&gt;
  *     &lt;property name="sql"&gt;
@@ -66,11 +65,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  *         &lt;/set&gt;
  *     &lt;/property&gt;
  * &lt;/bean&gt;
- * 
+ *
  * @author drew wills
  */
 public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao implements InitializingBean {
-    
+
     // Instance Members
     private NamedParameterJdbcTemplate jdbcTemplate;
         
@@ -93,22 +92,22 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
     public void setSql(final String sql) {
         this.sql = sql;
     }
-    
+
     @Override
     @Required
     public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
         this.usernameAttributeProvider = usernameAttributeProvider;
     }
-    
+
     public void setAvailableQueryAttributes(final Set<String> availableQueryAttributes) {
         this.availableQueryAttributes = Collections.unmodifiableSet(availableQueryAttributes);
     }
-    
+
     @Required
     public void setUserAttributeNames(final Set<String> userAttributeNames) {
         this.userAttributeNames = Collections.unmodifiableSet(userAttributeNames);
     }
-    
+
     @Override
     public void afterPropertiesSet() throws Exception {
         jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -139,12 +138,12 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
     /*
      * Nested Types
      */
-    
+
     private static final class SqlParameterSourceImpl extends AbstractSqlParameterSource {
-        
+
         // Instance Members.
         private final Map<String, List<Object>> queryParameters;
-        
+
         public SqlParameterSourceImpl(final Map<String, List<Object>> queryParameters) {
             this.queryParameters = queryParameters;
         }
@@ -154,8 +153,8 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
             // Use the first one
             final List<Object> val = queryParameters.get(paramName);
             return val != null && val.size() != 0
-                        ? val.get(0) 
-                        : null;
+                    ? val.get(0)
+                    : null;
         }
 
         @Override
@@ -163,15 +162,15 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
             final List<Object> val = queryParameters.get(paramName);
             return val != null && val.size() != 0;
         }
-        
+
     }
-    
-    private /* not static*/ final class RowCallbackHandlerImpl implements RowCallbackHandler {
-        
+
+    private class RowCallbackHandlerImpl implements RowCallbackHandler {
+
         // Instance Members
         final String username;
-        final Map<String,Set<Object>> attributes = new HashMap<>();
-        
+        final Map<String, Set<Object>> attributes = new HashMap<>();
+
         public RowCallbackHandlerImpl(final String username) {
             this.username = username;
         }
@@ -192,16 +191,16 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
             }
 
         }
-        
+
         public Set<IPersonAttributes> getResults() {
-            final Map<String,List<Object>> mapOfLists = new HashMap<>();
-            for (final Map.Entry<String,Set<Object>> y : attributes.entrySet()) {
+            final Map<String, List<Object>> mapOfLists = new HashMap<>();
+            for (final Map.Entry<String, Set<Object>> y : attributes.entrySet()) {
                 mapOfLists.put(y.getKey(), new ArrayList<>(y.getValue()));
             }
             final IPersonAttributes person = new CaseInsensitiveNamedPersonImpl(username, mapOfLists);
             return Collections.singleton(person);
         }
-        
+
     }
 
 }

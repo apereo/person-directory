@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,18 +18,17 @@
  */
 package org.jasig.services.persondir.support;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 import me.grison.jtoml.impl.Toml;
-
 import org.apache.commons.lang3.StringUtils;
-import org.jasig.services.persondir.support.ldap.LdaptivePersonAttributeDao;
 import org.jasig.services.persondir.support.ldap.LdapPersonAttributeDao;
+import org.jasig.services.persondir.support.ldap.LdaptivePersonAttributeDao;
 import org.springframework.core.io.Resource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This is an implementation of the {@link LdaptivePersonAttributeDao} that is able
@@ -42,41 +41,41 @@ import org.springframework.ldap.core.support.LdapContextSource;
  * {@link TomlLdapConfiguration} class. This dao will noy only prepare
  * for the resolution of person attributes, but also is able to construct
  * the necessary {@link LdapContextSource} via the settings that is provided in the file.
- * 
+ *
  * <p>Sample TOML file: <pre><code>
- 
-[ldap]
-baseDN = "ou=people,dc=school,dc=edu"
-urls = ["ldap://ldap.server1.edu:389", "ldap://ldap.server2.edu:389"]
-userDN = "cn=authSearch,ou=adminaccounts,dc=school,dc=edu"
-password = "psw"
 
-[ldap.queryAttributeMappings]
-username = "uid"
+ [ldap]
+ baseDN = "ou=people,dc=school,dc=edu"
+ urls = ["ldap://ldap.server1.edu:389", "ldap://ldap.server2.edu:389"]
+ userDN = "cn=authSearch,ou=adminaccounts,dc=school,dc=edu"
+ password = "psw"
 
-[ldap.resultAttributeMappings]
-displayName = "FullName"
-uid = "uid"
-CN = "Name"
+ [ldap.queryAttributeMappings]
+ username = "uid"
 
-[ldap.baseEnvironmentSettings]
-com.sun.jndi.ldap.connect.timeout = 3000
-com.sun.jndi.ldap.read.timeout = 3000
-java.naming.security.authentication = "simple"
+ [ldap.resultAttributeMappings]
+ displayName = "FullName"
+ uid = "uid"
+ CN = "Name"
 
-# Advanced settings
-###################
+ [ldap.baseEnvironmentSettings]
+ com.sun.jndi.ldap.connect.timeout = 3000
+ com.sun.jndi.ldap.read.timeout = 3000
+ java.naming.security.authentication = "simple"
 
-#pooled = false
-#queryTemplate = "uid={0}"
-#unmappedUsernameAttribute = "CN"
-#cacheEnvironmentProperties = false
-#useAllQueryAttributes = true
-#queryType = "AND"
-#referral = "follow"
-#ignoreNameNotFoundException = false
-#ignorePartialResultException = true
-#requireAllQueryAttributes = true
+ # Advanced settings
+ ###################
+
+ #pooled = false
+ #queryTemplate = "uid={0}"
+ #unmappedUsernameAttribute = "CN"
+ #cacheEnvironmentProperties = false
+ #useAllQueryAttributes = true
+ #queryType = "AND"
+ #referral = "follow"
+ #ignoreNameNotFoundException = false
+ #ignorePartialResultException = true
+ #requireAllQueryAttributes = true
 
  * </code></pre>
  * @author Misagh Moayyed
@@ -143,7 +142,7 @@ public class TomlLdapPersonAttributeDao extends LdapPersonAttributeDao {
         }
 
         if (config.getUrls() != null) {
-            ctxSource.setUrls(config.getUrls().toArray(new String[] {}));
+            ctxSource.setUrls(config.getUrls().toArray(new String[]{}));
         }
 
         if (!StringUtils.isBlank(config.getUserDN())) {

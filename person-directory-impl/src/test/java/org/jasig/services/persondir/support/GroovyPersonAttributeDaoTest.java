@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,13 +17,6 @@
  * under the License.
  */
 package org.jasig.services.persondir.support;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import groovy.lang.GroovyClassLoader;
 import org.apache.commons.io.IOUtils;
@@ -37,6 +30,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RunWith(JUnit4.class)
 public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
@@ -85,9 +85,9 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     public void testGetPerson() {
         final IPersonAttributes attrs = dao.getPerson("userid");
         assertFalse(attrs.getAttributes().isEmpty());
-        
+
         assertEquals(getAttributeAsSingleValue(attrs, "name"), "userid");
-        
+
         assertEquals(getAttributeAsList(attrs, "likes").size(), 2);
     }
 
@@ -115,6 +115,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     private List<?> getAttributeAsList(final IPersonAttributes attrs, final String name) {
         return attrs.getAttributes().get(name);
     }
+
     private Object getAttributeAsSingleValue(final IPersonAttributes attrs, final String name) {
         return getAttributeAsList(attrs, name).get(0);
     }

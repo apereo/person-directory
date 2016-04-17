@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,18 +18,18 @@
  */
 package org.jasig.services.persondir.support;
 
+import org.jasig.services.persondir.IPersonAttributes;
+import org.jasig.services.persondir.util.Util;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jasig.services.persondir.IPersonAttributes;
-import org.jasig.services.persondir.util.Util;
-
 /**
  * Provides base tests for classes that implement AbstractDefaultAttributePersonAttributeDao.
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision$
  */
@@ -41,7 +41,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
     protected final AbstractFlatteningPersonAttributeDao getAbstractFlatteningPersonAttributeDao() {
         return this.getAbstractDefaultQueryPersonAttributeDao();
     }
-    
+
     protected abstract AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao();
 
     public void testNullDefaultAttributeName() {
@@ -49,23 +49,22 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         try {
             dao.setUsernameAttributeProvider(null);
             fail("Expected Exception on setUsernameAttributeProvider(null)");
-        } 
-        catch (final Exception iae) {
+        } catch (final Exception iae) {
             return;
         }
     }
-    
-    
+
+
     public void testGetAttributesByString() {
         final AbstractDefaultAttributePersonAttributeDao dao = new SimpleDefaultQueryPersonAttributeDao();
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("TestAttrName"));
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("TestAttrName", Util.list("edalquist"));
-        
+
         assertEquals(expected, dao.getMultivaluedUserAttributes("edalquist"));
     }
-    
-    private class SimpleDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
+
+    private static class SimpleDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
         /* (non-Javadoc)
          * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
          */
@@ -87,7 +86,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
          */
         @Override
         public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
-            return Collections.singleton((IPersonAttributes)new AttributeNamedPersonImpl(query));
+            return Collections.singleton((IPersonAttributes) new AttributeNamedPersonImpl(query));
         }
     }
 }

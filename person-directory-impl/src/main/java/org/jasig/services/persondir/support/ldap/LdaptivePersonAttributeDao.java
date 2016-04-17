@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,13 +19,6 @@
 package org.jasig.services.persondir.support.ldap;
 
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.naming.directory.SearchControls;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.jasig.services.persondir.support.CaseInsensitiveAttributeNamedPersonImpl;
@@ -43,6 +36,13 @@ import org.ldaptive.SearchResult;
 import org.ldaptive.SearchScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
+import javax.naming.directory.SearchControls;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Person directory <code>IPersonAttribute</code> implementation that queries an LDAP directory
@@ -155,7 +155,7 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
                 if (attributes.containsKey(userNameAttribute)) {
                     person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, attributes);
                 } else {
-                    person = new CaseInsensitiveNamedPersonImpl(userName , attributes);
+                    person = new CaseInsensitiveNamedPersonImpl(userName, attributes);
                 }
                 peopleAttributes.add(person);
             }

@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,9 +19,9 @@
 package org.jasig.services.persondir.util;
 
 
-import java.util.Locale;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Locale;
 
 public enum CaseCanonicalizationMode {
 
@@ -60,5 +60,6 @@ public enum CaseCanonicalizationMode {
     };
 
     public abstract String canonicalize(String value);
+
     public abstract String canonicalize(String value, Locale locale);
 }

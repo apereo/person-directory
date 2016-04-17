@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,12 +18,12 @@
  */
 package org.jasig.services.persondir.mock;
 
+import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.IPersonAttributes;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.jasig.services.persondir.IPersonAttributes;
-import org.jasig.services.persondir.IPersonAttributeDao;
 
 /**
  * A mock, test implementation of ThrowingPersonAttributeDao which always
@@ -38,7 +38,7 @@ public class ThrowingPersonAttributeDao implements IPersonAttributeDao {
     public Set<String> getAvailableQueryAttributes() {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
-    
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeople(java.util.Map)
      */

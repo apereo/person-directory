@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -28,17 +28,22 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Test the {@link MultiRowJdbcPersonAttributeDao} against a dummy DataSource.
- * 
+ *
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist
  * @version $Revision$ $Date$
  */
-public class MultiRowJdbcPersonAttributeDaoTest 
-    extends AbstractCaseSensitivityJdbcPersonAttributeDaoTest {
+public class MultiRowJdbcPersonAttributeDaoTest
+        extends AbstractCaseSensitivityJdbcPersonAttributeDaoTest {
 
     @Override
     protected void setUpSchema(final DataSource dataSource) throws SQLException {
@@ -127,16 +132,16 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
     protected void processQueryAttributeMappingValues_BeforeNonUsernameQuery(final AbstractJdbcPersonAttributeDao<Map<String, Object>> dao) {
         final Map<String, Set<String>> origMappings = dao.getQueryAttributeMapping();
-        if ( origMappings == null || origMappings.isEmpty() ) {
+        if (origMappings == null || origMappings.isEmpty()) {
             return;
         }
         final Map<String, Set<String>> newMappings = new LinkedHashMap<>();
-        for ( final Map.Entry<String,Set<String>> origMapping : origMappings.entrySet() ) {
+        for (final Map.Entry<String, Set<String>> origMapping : origMappings.entrySet()) {
             final Set<String> newMappingValue = new LinkedHashSet<>();
             // multi-row dao maps all non-username attr values to the same
             // data layer column
-            for ( final String origMappingValue : origMapping.getValue() ) {
-                if ( !("netid".equals(origMappingValue)) ) {
+            for (final String origMappingValue : origMapping.getValue()) {
+                if (!("netid".equals(origMappingValue))) {
                     newMappingValue.add("attr_val");
                 } else {
                     newMappingValue.add(origMappingValue);
@@ -149,16 +154,16 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
     protected void processCaseInsensitiveDataAttributeMappingValues_BeforeNonUsernameQuery(final AbstractJdbcPersonAttributeDao<Map<String, Object>> dao) {
         final Map<String, CaseCanonicalizationMode> origMappings = dao.getCaseInsensitiveDataAttributes();
-        if ( origMappings == null || origMappings.isEmpty() ) {
+        if (origMappings == null || origMappings.isEmpty()) {
             return;
         }
         final Map<String, CaseCanonicalizationMode> newMappings = new LinkedHashMap<>();
-        for ( final Map.Entry<String,CaseCanonicalizationMode> origMapping : origMappings.entrySet() ) {
+        for (final Map.Entry<String, CaseCanonicalizationMode> origMapping : origMappings.entrySet()) {
             // that's right, it's all or nothing for the multi-row DAO w/r/t
             // case sensitivity of non-username attribs b/c the canonicalization
             // is based on data-layer attribute names, which are all the same for
             // this DAO type.
-            if ( !("netid".equals(origMapping.getKey())) ) {
+            if (!("netid".equals(origMapping.getKey()))) {
                 newMappings.put("attr_val", origMapping.getValue());
             } else {
                 newMappings.put(origMapping.getKey(), origMapping.getValue());
@@ -167,14 +172,14 @@ public class MultiRowJdbcPersonAttributeDaoTest
         dao.setCaseInsensitiveDataAttributes(newMappings);
     }
 
-    
+
     public void testNoQueryAttributeMapping() {
         final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE netid = 'awp9'");
         impl.setUseAllQueryAttributes(false);
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
         impl.setUnmappedUsernameAttribute("netid");
-        
+
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("name", "firstName");
         final Set<String> emailAttributeNames = new LinkedHashSet<>();
@@ -183,10 +188,10 @@ public class MultiRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("email", emailAttributeNames);
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
-        
-        
+
+
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
-        
+
 
         final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
@@ -196,176 +201,173 @@ public class MultiRowJdbcPersonAttributeDaoTest
         assertEquals(Util.list("Andrew"), attribs.get("firstName"));
     }
 
-   /**
-    * Test that the implementation properly reports the attribute names it
-    * expects to map.
-    */
-   public void testPossibleUserAttributeNames() {
-       final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT attr_name, attr_val FROM user_table WHERE {0}");
-       impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
-       
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
-       columnsToAttributes.put("name", "firstName");
+    /**
+     * Test that the implementation properly reports the attribute names it
+     * expects to map.
+     */
+    public void testPossibleUserAttributeNames() {
+        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT attr_name, attr_val FROM user_table WHERE {0}");
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-       final Set<String> emailAttributeNames = new LinkedHashSet<>();
-       emailAttributeNames.add("email");
-       emailAttributeNames.add("emailAddress");
-       columnsToAttributes.put("email", emailAttributeNames);
-       columnsToAttributes.put("shirt_color", "dressShirtColor");
-       impl.setResultAttributeMapping(columnsToAttributes);
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
+        columnsToAttributes.put("name", "firstName");
 
-       final Set<String> expectedAttributeNames = new LinkedHashSet<>();
-       expectedAttributeNames.add("firstName");
-       expectedAttributeNames.add("email");
-       expectedAttributeNames.add("emailAddress");
-       expectedAttributeNames.add("dressShirtColor");
-       
-       final Set<String> attributeNames = impl.getPossibleUserAttributeNames();
-       assertEquals(attributeNames, expectedAttributeNames);
-   }
+        final Set<String> emailAttributeNames = new LinkedHashSet<>();
+        emailAttributeNames.add("email");
+        emailAttributeNames.add("emailAddress");
+        columnsToAttributes.put("email", emailAttributeNames);
+        columnsToAttributes.put("shirt_color", "dressShirtColor");
+        impl.setResultAttributeMapping(columnsToAttributes);
 
-   /**
-    * Test for a query with a single attribute
-    */
-   public void testSingleAttrQuery() {
-       final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
-       impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
+        final Set<String> expectedAttributeNames = new LinkedHashSet<>();
+        expectedAttributeNames.add("firstName");
+        expectedAttributeNames.add("email");
+        expectedAttributeNames.add("emailAddress");
+        expectedAttributeNames.add("dressShirtColor");
 
-       impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
-       impl.setUnmappedUsernameAttribute("netid");
-       
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
-       columnsToAttributes.put("name", "firstName");
-       final Set<String> emailAttributeNames = new LinkedHashSet<>();
-       emailAttributeNames.add("email");
-       emailAttributeNames.add("emailAddress");
-       columnsToAttributes.put("email", emailAttributeNames);
-       columnsToAttributes.put("shirt_color", "dressShirtColor");
-       impl.setResultAttributeMapping(columnsToAttributes);
-       
-       
-       impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
-       
+        final Set<String> attributeNames = impl.getPossibleUserAttributeNames();
+        assertEquals(attributeNames, expectedAttributeNames);
+    }
 
-       final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
-       assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
-       assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
-       assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
-       assertNull(attribs.get("shirt_color"));
-       assertEquals(Util.list("Andrew"), attribs.get("firstName"));
-   }
+    /**
+     * Test for a query with a single attribute
+     */
+    public void testSingleAttrQuery() {
+        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-   /**
-    * Test for a query with a single attribute
-    */
-   public void testInvalidColumnName() {
-       final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
-       impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+        impl.setUnmappedUsernameAttribute("netid");
 
-       impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
-       impl.setUnmappedUsernameAttribute("netid");
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
+        columnsToAttributes.put("name", "firstName");
+        final Set<String> emailAttributeNames = new LinkedHashSet<>();
+        emailAttributeNames.add("email");
+        emailAttributeNames.add("emailAddress");
+        columnsToAttributes.put("email", emailAttributeNames);
+        columnsToAttributes.put("shirt_color", "dressShirtColor");
+        impl.setResultAttributeMapping(columnsToAttributes);
 
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
-       columnsToAttributes.put("name", "firstName");
 
-       columnsToAttributes.put("email", "emailAddress");
-       impl.setResultAttributeMapping(columnsToAttributes);
-       
-       impl.setNameValueColumnMappings(Collections.singletonMap("attr_nam", "attr_val"));
+        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-       try {
-           impl.getMultivaluedUserAttributes("awp9");
-           fail("BadSqlGrammarException expected with invalid attribute mapping key");
-       }
-       catch (final BadSqlGrammarException bsge) {
-           //expected
-       }
-       
-       
-       impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_va"));
 
-       try {
-           impl.getMultivaluedUserAttributes("awp9");
-           fail("BadSqlGrammarException expected with invalid attribute mapping key");
-       }
-       catch (final BadSqlGrammarException bsge) {
-           //expected
-       }
-   }
-   
-   /**
-    * Test for a query with a single attribute
-    */
-   public void testSetNullAttributeMapping() {
-       final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
-       impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
+        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
+        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
+        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
+        assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
+        assertNull(attribs.get("shirt_color"));
+        assertEquals(Util.list("Andrew"), attribs.get("firstName"));
+    }
 
-       impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
-       impl.setUnmappedUsernameAttribute("netid");
-       
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
-       columnsToAttributes.put("name", "firstName");
+    /**
+     * Test for a query with a single attribute
+     */
+    public void testInvalidColumnName() {
+        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
-       final Set<String> emailAttributeNames = new LinkedHashSet<>();
-       emailAttributeNames.add("email");
-       emailAttributeNames.add("emailAddress");
-       columnsToAttributes.put("email", emailAttributeNames);
-       columnsToAttributes.put("shirt_color", null);
-       impl.setResultAttributeMapping(columnsToAttributes);
-       
-       impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+        impl.setUnmappedUsernameAttribute("netid");
 
-       final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
-       assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
-       assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
-       assertEquals(Util.list("blue"), attribs.get("shirt_color"));
-       assertEquals(Util.list("Andrew"), attribs.get("firstName"));
-   }
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
+        columnsToAttributes.put("name", "firstName");
 
-   /**
-    * Test for a query with a single attribute
-    */
-   public void testSetNullAttributeName() {
-       final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
-       impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
+        columnsToAttributes.put("email", "emailAddress");
+        impl.setResultAttributeMapping(columnsToAttributes);
 
-       impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
-       impl.setUnmappedUsernameAttribute("netid");
+        impl.setNameValueColumnMappings(Collections.singletonMap("attr_nam", "attr_val"));
 
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
-       columnsToAttributes.put("", "dressShirtColor");
-       
-       try {
-           impl.setResultAttributeMapping(columnsToAttributes);
-           fail("IllegalArgumentException if the ColumnsToAttributes Map has an empty Key");
-       }
-       catch (final IllegalArgumentException iae) {
-           //expected
-       }
-   }
-   
-   /**
-    * Test for a query with a null value attribute
-    */
-   public void testNullAttrQuery() {
-       final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
-       impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
+        try {
+            impl.getMultivaluedUserAttributes("awp9");
+            fail("BadSqlGrammarException expected with invalid attribute mapping key");
+        } catch (final BadSqlGrammarException bsge) {
+            //expected
+        }
 
-       impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
-       impl.setUnmappedUsernameAttribute("netid");
-       
-       final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
-       columnsToAttributes.put("name", "firstName");
-       columnsToAttributes.put("shirt_color", "dressShirtColor");
-       impl.setResultAttributeMapping(columnsToAttributes);
-       
-       impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-       final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("susan");
-       assertEquals(Collections.singletonList(null), attribs.get("dressShirtColor"));
-       assertEquals(Util.list("Susan"), attribs.get("firstName"));
-   }
-   
+        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_va"));
+
+        try {
+            impl.getMultivaluedUserAttributes("awp9");
+            fail("BadSqlGrammarException expected with invalid attribute mapping key");
+        } catch (final BadSqlGrammarException bsge) {
+            //expected
+        }
+    }
+
+    /**
+     * Test for a query with a single attribute
+     */
+    public void testSetNullAttributeMapping() {
+        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
+
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+        impl.setUnmappedUsernameAttribute("netid");
+
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
+        columnsToAttributes.put("name", "firstName");
+
+        final Set<String> emailAttributeNames = new LinkedHashSet<>();
+        emailAttributeNames.add("email");
+        emailAttributeNames.add("emailAddress");
+        columnsToAttributes.put("email", emailAttributeNames);
+        columnsToAttributes.put("shirt_color", null);
+        impl.setResultAttributeMapping(columnsToAttributes);
+
+        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
+
+        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
+        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
+        assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
+        assertEquals(Util.list("blue"), attribs.get("shirt_color"));
+        assertEquals(Util.list("Andrew"), attribs.get("firstName"));
+    }
+
+    /**
+     * Test for a query with a single attribute
+     */
+    public void testSetNullAttributeName() {
+        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
+
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+        impl.setUnmappedUsernameAttribute("netid");
+
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
+        columnsToAttributes.put("", "dressShirtColor");
+
+        try {
+            impl.setResultAttributeMapping(columnsToAttributes);
+            fail("IllegalArgumentException if the ColumnsToAttributes Map has an empty Key");
+        } catch (final IllegalArgumentException iae) {
+            //expected
+        }
+    }
+
+    /**
+     * Test for a query with a null value attribute
+     */
+    public void testNullAttrQuery() {
+        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
+
+        impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
+        impl.setUnmappedUsernameAttribute("netid");
+
+        final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
+        columnsToAttributes.put("name", "firstName");
+        columnsToAttributes.put("shirt_color", "dressShirtColor");
+        impl.setResultAttributeMapping(columnsToAttributes);
+
+        impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
+
+        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("susan");
+        assertEquals(Collections.singletonList(null), attribs.get("dressShirtColor"));
+        assertEquals(Util.list("Susan"), attribs.get("firstName"));
+    }
+
     /**
      * Test case for a query that needs multiple attributes to complete and
      * more attributes than are needed to complete are passed to it.
@@ -380,22 +382,22 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
         impl.setUnmappedUsernameAttribute("netid");
-        
+
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("shirt_color", "color");
         impl.setResultAttributeMapping(columnsToAttributes);
-        
+
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
         final Map<String, List<Object>> queryMap = new LinkedHashMap<>();
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("shirtColor", Util.list("blue"));
-        queryMap.put("Name",Util.list("John"));
+        queryMap.put("Name", Util.list("John"));
 
         final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
         assertEquals(Util.list("blue"), attribs.get("color"));
     }
-    
+
     /**
      * A query that needs mulitple attributes to complete but the needed
      * attributes aren't passed to it.
@@ -420,7 +422,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
         impl.setResultAttributeMapping(columnsToAttributes);
-        
+
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
         final Map<String, List<Object>> queryMap = new LinkedHashMap<>();
@@ -430,19 +432,19 @@ public class MultiRowJdbcPersonAttributeDaoTest
         final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
         assertNull(attribs);
     }
-    
+
     public void testProperties() {
         final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE shirt_color = ?");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("shirt"));
         impl.setUnmappedUsernameAttribute("netid");
-        
-        
+
+
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "uid");
         columnsToAttributes.put("name", "firstName");
-        
+
         final Map<String, Object> expectedColumnsToAttributes = new LinkedHashMap<>();
         expectedColumnsToAttributes.put("netid", Collections.singleton("uid"));
         expectedColumnsToAttributes.put("name", Collections.singleton("firstName"));
@@ -450,21 +452,20 @@ public class MultiRowJdbcPersonAttributeDaoTest
         assertNull(impl.getResultAttributeMapping());
         impl.setResultAttributeMapping(columnsToAttributes);
         assertEquals(expectedColumnsToAttributes, impl.getResultAttributeMapping());
-        
-        
+
+
         assertEquals(null, impl.getNameValueColumnMappings());
         impl.setNameValueColumnMappings(null);
         assertEquals(null, impl.getNameValueColumnMappings());
         try {
             impl.setNameValueColumnMappings(Collections.singletonMap("NullValueKey", null));
             fail("setNameValueColumnMappings(Collections.singletonMap(\"NullValueKey\", null)) should result in an IllegalArgumentException");
-        }
-        catch (final IllegalArgumentException iae) {
+        } catch (final IllegalArgumentException iae) {
             //Expected
         }
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
         assertEquals(Collections.singletonMap("attr_name", Collections.singleton("attr_val")), impl.getNameValueColumnMappings());
-        
+
     }
 
     @Override

@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,10 +18,10 @@
  */
 package org.jasig.services.persondir.util;
 
+import org.jasig.services.persondir.IPersonAttributeDao;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.jasig.services.persondir.IPersonAttributeDao;
 
 /**
  * @author Eric Dalquist
@@ -38,13 +38,13 @@ public class PatternHelper {
      */
     public static Pattern compilePattern(final String queryString) {
         final StringBuilder queryBuilder = new StringBuilder();
-        
+
         final Matcher queryMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
-        
+
         if (!queryMatcher.find()) {
             return Pattern.compile(Pattern.quote(queryString));
         }
-        
+
         int start = queryMatcher.start();
         int previousEnd = -1;
         if (start > 0) {
@@ -56,23 +56,23 @@ public class PatternHelper {
 
         do {
             start = queryMatcher.start();
-            
+
             if (previousEnd != -1) {
                 final String queryPart = queryString.substring(previousEnd, start);
                 final String quotedQueryPart = Pattern.quote(queryPart);
                 queryBuilder.append(quotedQueryPart);
                 queryBuilder.append(".*");
             }
-            
+
             previousEnd = queryMatcher.end();
         } while (queryMatcher.find());
-        
+
         if (previousEnd < queryString.length()) {
             final String queryPart = queryString.substring(previousEnd);
             final String quotedQueryPart = Pattern.quote(queryPart);
             queryBuilder.append(quotedQueryPart);
         }
-        
+
         return Pattern.compile(queryBuilder.toString());
     }
 }

@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,6 +17,11 @@
  * under the License.
  */
 package org.jasig.services.persondir.support;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.IPersonAttributes;
+import org.jasig.services.persondir.util.PatternHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,17 +36,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.jasig.services.persondir.IPersonAttributeDao;
-import org.jasig.services.persondir.IPersonAttributes;
-import org.jasig.services.persondir.util.PatternHelper;
-
 
 /**
  * Looks up the user's attribute Map in the backingMap. If using the {@link org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(Map)}
  * method the attribute value returned for the key {@link #getUsernameAttributeProvider()} will
  * be used as the key for the backingMap.
- * 
+ *
  * <br>
  * <br>
  * Configuration:
@@ -64,20 +64,20 @@ import org.jasig.services.persondir.util.PatternHelper;
  *         <td valign="top">{@link Collections#EMPTY_MAP}</td>
  *     </tr>
  * </table>
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeDao<String> {
     private Map<String, Map<String, List<Object>>> backingMap = Collections.emptyMap();
     private Set<String> possibleUserAttributeNames = Collections.emptySet();
     private String queryAttributeName = null;
-    
+
     /**
      * Creates a new, empty, dao.
      */
     public ComplexStubPersonAttributeDao() {
     }
-    
+
     /**
      * Creates a new DAO with the specified backing map.
      * @param backingMap The backingMap to call {@link #setBackingMap(Map)} with.
@@ -85,7 +85,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     public ComplexStubPersonAttributeDao(final Map<String, Map<String, List<Object>>> backingMap) {
         this.setBackingMap(backingMap);
     }
-    
+
     /**
      * Creates a new DAO with the specified backing map and query attribute.
      * @param queryAttributeName The queryAttributeName to call {@link #setQueryAttributeName(String)} with.
@@ -95,10 +95,11 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         this.setQueryAttributeName(queryAttributeName);
         this.setBackingMap(backingMap);
     }
-    
+
     public String getQueryAttributeName() {
         return this.queryAttributeName;
     }
+
     /**
      * Name of the attribute to look for as key into the backing map. If not set the value returned by
      * {@link #getUsernameAttributeProvider()} will be used.
@@ -112,6 +113,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     public Map<String, Map<String, List<Object>>> getBackingMap() {
         return this.backingMap;
     }
+
     /**
      * The backing Map to use for queries, the outer map is keyed on the query attribute. The inner
      * Map is the set of user attributes to be returned for the query attribute.
@@ -122,13 +124,12 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         if (backingMap == null) {
             this.backingMap = new HashMap<>();
             this.possibleUserAttributeNames = new HashSet<>();
-        }
-        else {
+        } else {
             this.backingMap = new LinkedHashMap<>(backingMap);
             this.initializePossibleAttributeNames();
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPossibleUserAttributeNames()
      */
@@ -137,7 +138,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     public Set<String> getPossibleUserAttributeNames() {
         return this.possibleUserAttributeNames;
     }
-    
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getAvailableQueryAttributes()
      */
@@ -149,7 +150,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
 
         final Set list = new HashSet();
         list.add(usernameAttribute);
-        
+
         return list;
     }
 
@@ -161,20 +162,19 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         if (queryBuilder != null) {
             return queryBuilder;
         }
-        
+
         final String keyAttributeName;
         if (this.queryAttributeName != null) {
             keyAttributeName = this.queryAttributeName;
-        }
-        else {
+        } else {
             final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
             keyAttributeName = usernameAttributeProvider.getUsernameAttribute();
         }
-        
+
         if (keyAttributeName.equals(dataAttribute)) {
             return String.valueOf(queryValues.get(0));
         }
-        
+
         return null;
     }
 
@@ -185,9 +185,9 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     protected List<IPersonAttributes> getPeopleForQuery(final String seedValue, final String queryUserName) {
         if (seedValue != null && seedValue.contains(IPersonAttributeDao.WILDCARD)) {
             final Pattern seedPattern = PatternHelper.compilePattern(seedValue);
-            
+
             final List<IPersonAttributes> results = new LinkedList<>();
-            
+
             for (final Map.Entry<String, Map<String, List<Object>>> attributesEntry : this.backingMap.entrySet()) {
                 final String attributesKey = attributesEntry.getKey();
                 final Matcher keyMatcher = seedPattern.matcher(attributesKey);
@@ -199,16 +199,16 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
                     }
                 }
             }
-            
+
             if (results.size() == 0) {
                 return null;
             }
-            
+
             return results;
         }
-        
+
         final Map<String, List<Object>> attributes = this.backingMap.get(seedValue);
-        
+
         if (attributes == null) {
             return null;
         }
@@ -239,8 +239,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
             // at a userName attribute
             if (seedValue != null && userNameAttribute.equals(this.queryAttributeName)) {
                 person = new NamedPersonImpl(seedValue, attributes);
-            }
-            else {
+            } else {
                 person = new AttributeNamedPersonImpl(userNameAttribute, attributes);
             }
         }
@@ -255,12 +254,12 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
      */
     private void initializePossibleAttributeNames() {
         final Set<String> possibleAttribNames = new LinkedHashSet<>();
-        
+
         for (final Map<String, List<Object>> attributeMapForSomeUser : this.backingMap.values()) {
             final Set<String> keySet = attributeMapForSomeUser.keySet();
             possibleAttribNames.addAll(keySet);
         }
-        
+
         this.possibleUserAttributeNames = Collections.unmodifiableSet(possibleAttribNames);
     }
 }

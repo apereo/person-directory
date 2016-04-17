@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,11 +18,6 @@
  */
 package org.jasig.services.persondir.support;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.lang3.Validate;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
@@ -30,10 +25,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.DataAccessUtils;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Base {@link IPersonAttributeDao} that provides implementations of the deprecated methods. This class will be removed
  * in 1.6
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision$
  */
@@ -54,12 +54,12 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
 
         //Get the first IPersonAttributes to return data for
         final IPersonAttributes person = DataAccessUtils.singleResult(people);
-        
+
         //If null or no results return null
         if (person == null) {
             return null;
         }
-        
+
         //Make a mutable copy of the person's attributes
         return new LinkedHashMap<>(person.getAttributes());
     }
@@ -70,7 +70,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     @Override
     public final Map<String, List<Object>> getMultivaluedUserAttributes(final String uid) {
         final IPersonAttributes person = this.getPerson(uid);
-        
+
         if (person == null) {
             return null;
         }
@@ -88,7 +88,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
 
         //Get the first IPersonAttributes to return data for
         final IPersonAttributes person = DataAccessUtils.singleResult(people);
-        
+
         //If null or no results return null
         if (person == null) {
             return null;
@@ -104,17 +104,17 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     @Override
     public final Map<String, Object> getUserAttributes(final String uid) {
         Validate.notNull(uid, "uid may not be null.");
-        
+
         //Get the attributes from the subclass
         final Map<String, List<Object>> multivaluedUserAttributes = this.getMultivaluedUserAttributes(uid);
-        
+
         return this.flattenResults(multivaluedUserAttributes);
     }
 
     /**
      * Takes a &lt;String, List&lt;Object&gt;&gt; Map and coverts it to a &lt;String, Object&gt; Map. This implementation takes
      * the first value of each List to use as the value for the new Map.
-     * 
+     *
      * @param multivaluedUserAttributes The attribute map to flatten.
      * @return A flattened version of the Map, null if the argument was null.
      * @deprecated This method is just used internally and will be removed with this class in 1.6
@@ -124,25 +124,24 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         if (multivaluedUserAttributes == null) {
             return null;
         }
-        
+
         //Convert the <String, List<Object> results map to a <String, Object> map using the first value of each List
         final Map<String, Object> userAttributes = new LinkedHashMap<>(multivaluedUserAttributes.size());
-        
+
         for (final Map.Entry<String, List<Object>> attrEntry : multivaluedUserAttributes.entrySet()) {
             final String attrName = attrEntry.getKey();
             final List<Object> attrValues = attrEntry.getValue();
-            
+
             final Object value;
             if (attrValues == null || attrValues.size() == 0) {
                 value = null;
-            }
-            else {
+            } else {
                 value = attrValues.get(0);
             }
-            
+
             userAttributes.put(attrName, value);
         }
-        
+
         logger.debug("Flattened Map='{}' into Map='{}'", multivaluedUserAttributes, userAttributes);
 
         return userAttributes;

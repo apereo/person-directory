@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -26,11 +26,11 @@ import java.util.Map;
 /**
  * An immutable representation of a person with a uid (userName) and attributes. A user's attributes can be of any type
  * and can be multi-valued.
- * 
+ *
  * {@link Principal#getName()} is used for the uid (userName).
- * 
+ *
  * The equality and hashCode of an IPersonAttributes should ONLY include the name property and none of the attributes.
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision$
  */
@@ -39,19 +39,19 @@ public interface IPersonAttributes extends Principal, Serializable {
      * @return The immutable Map of all attributes for the person.
      */
     public Map<String, List<Object>> getAttributes();
-    
+
     /**
      * The value for the attribute, null if no value exists or the first value is null, if there are multiple values
      * the first is returned.
-     * 
+     *
      * @param name The name of the attribute to get the value for
      * @return The first value for the attribute
      */
     public Object getAttributeValue(String name);
-    
+
     /**
      * All values of the attribute, null if no values exist.
-     * 
+     *
      * @param name The name of the attribute to get the values for
      * @return All values for the attribute
      */

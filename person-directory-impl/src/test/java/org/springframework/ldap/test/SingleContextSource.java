@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,23 +18,22 @@
  */
 package org.springframework.ldap.test;
 
+import org.springframework.ldap.NamingException;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DirContextProxy;
+
+import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import javax.naming.directory.DirContext;
-import javax.naming.ldap.LdapContext;
-
-import org.springframework.ldap.NamingException;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.DirContextProxy;
-
 /**
  * @author Eric Dalquist
  * @version $Revision: 1.1 $
  */
-public class SingleContextSource implements ContextSource  {
+public class SingleContextSource implements ContextSource {
     private final DirContext ctx;
 
     public SingleContextSource(final DirContext ctx) {
@@ -59,11 +58,11 @@ public class SingleContextSource implements ContextSource  {
 
     private DirContext getNonClosingDirContextProxy(final DirContext context) {
         return (DirContext) Proxy.newProxyInstance(DirContextProxy.class.getClassLoader(),
-                new Class[] { getActualTargetClass(context), DirContextProxy.class },
+                new Class[]{getActualTargetClass(context), DirContextProxy.class},
                 new NonClosingDirContextInvocationHandler(context));
 
     }
-    
+
     public static class NonClosingDirContextInvocationHandler implements InvocationHandler {
         private final DirContext target;
 
@@ -77,16 +76,13 @@ public class SingleContextSource implements ContextSource  {
             final String methodName = method.getName();
             if (methodName.equals("getTargetContext")) {
                 return target;
-            }
-            else if (methodName.equals("equals")) {
+            } else if (methodName.equals("equals")) {
                 // Only consider equal when proxies are identical.
                 return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
-            }
-            else if (methodName.equals("hashCode")) {
+            } else if (methodName.equals("hashCode")) {
                 // Use hashCode of Connection proxy.
                 return new Integer(proxy.hashCode());
-            }
-            else if (methodName.equals("close")) {
+            } else if (methodName.equals("close")) {
                 // Never close the target context, as this class will only be
                 // used for operations concerning the compensating transactions.
                 return null;
@@ -94,17 +90,16 @@ public class SingleContextSource implements ContextSource  {
 
             try {
                 return method.invoke(target, args);
-            }
-            catch (final InvocationTargetException e) {
+            } catch (final InvocationTargetException e) {
                 throw e.getTargetException();
             }
         }
     }
-    
+
     /**
      * Get the actual class of the supplied DirContext instance; LdapContext or
      * DirContext.
-     * 
+     *
      * @param context
      *            the DirContext instance to check.
      * @return LdapContext.class if context is an LdapContext, DirContext.class

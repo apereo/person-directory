@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,16 +18,21 @@
  */
 package org.jasig.services.persondir.support;
 
-import java.util.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
 import org.jasig.services.persondir.IPersonAttributes;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * A stub IPersonAttributeDao to be used for testing.
  * Backed by a single Map which this implementation will always return.
- * 
+ *
  * <br>
  * <br>
  * Configuration:
@@ -70,13 +75,13 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
 
         return ImmutableSet.copyOf(this.backingPerson.getAttributes().keySet());
     }
-    
+
     @Override
     public Set<String> getAvailableQueryAttributes() {
         return null;
     }
 
-    
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
@@ -85,7 +90,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
         if (query == null) {
             throw new IllegalArgumentException("Illegal to invoke getPeople(Map) with a null argument.");
         }
-        
+
         if (this.backingPerson == null) {
             return null;
         }
@@ -106,7 +111,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
     /**
      * Get the Map which this stub object will return for all legal invocations of
      * attributesForUser()
-     * 
+     *
      * @return Returns the backingMap.
      */
     public Map<String, List<Object>> getBackingMap() {
@@ -116,7 +121,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
     /**
      * Set the Map which this stub object will return for all legal invocations of
      * attributesForUser().
-     * 
+     *
      * @param backingMap The backingMap to set, may not be null.
      */
     public void setBackingMap(final Map<String, List<Object>> backingMap) {

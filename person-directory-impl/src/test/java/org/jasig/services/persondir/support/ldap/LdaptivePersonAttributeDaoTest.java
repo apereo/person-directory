@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -21,7 +21,6 @@ package org.jasig.services.persondir.support.ldap;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.ldaptive.DefaultConnectionFactory;
 import org.ldaptive.pool.BlockingConnectionPool;
-import org.ldaptive.pool.ConnectionPool;
 import org.ldaptive.pool.PooledConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -67,12 +66,12 @@ public class LdaptivePersonAttributeDaoTest extends AbstractDirContextTest {
     @Override
     protected Resource[] initializationData() {
         final ClassPathResource ldapPersonInfo = new ClassPathResource("/ldapPersonInfo.ldif");
-        return new Resource[] { ldapPersonInfo };
+        return new Resource[]{ldapPersonInfo};
     }
 
     public void testVerifyGetPerson() throws Exception {
 
-        final String[] urls = ((LdapContextSource)this.getContextSource()).getUrls();
+        final String[] urls = ((LdapContextSource) this.getContextSource()).getUrls();
         final DefaultConnectionFactory df = new DefaultConnectionFactory(urls[0]);
         final BlockingConnectionPool cp = new BlockingConnectionPool(df);
         cp.initialize();

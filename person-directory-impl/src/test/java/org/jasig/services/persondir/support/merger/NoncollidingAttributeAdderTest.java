@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,11 +18,11 @@
  */
 package org.jasig.services.persondir.support.merger;
 
+import org.jasig.services.persondir.util.Util;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.jasig.services.persondir.util.Util;
 
 /**
  * Testcase for the NoncollidingAttributeAdder.
@@ -40,12 +40,12 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
         final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
-        
+
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(someAttributes);
-        
+
         final Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
-        
+
         assertEquals(expected, result);
     }
 
@@ -57,21 +57,20 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
         final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
-        
+
         final Map<String, List<Object>> otherAttributes = new HashMap<>();
         otherAttributes.put("attName3", Util.list("attValue3"));
         otherAttributes.put("attName4", Util.list("attValue4"));
-        
+
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(someAttributes);
         expected.putAll(otherAttributes);
-        
+
         final Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, otherAttributes);
         assertEquals(expected, result);
     }
-    
-    
-    
+
+
     /**
      * Test that colliding attributes are not added.
      */
@@ -79,15 +78,15 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
         final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("attValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
-        
+
         final Map<String, List<Object>> otherAttributes = new HashMap<>();
         otherAttributes.put("attName", Util.list("attValue3"));
         otherAttributes.put("attName4", Util.list("attValue4"));
-        
+
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(someAttributes);
         expected.put("attName4", Util.list("attValue4"));
-        
+
         final Map<String, List<Object>> result = this.adder.mergeAttributes(someAttributes, otherAttributes);
         assertEquals(expected, result);
     }
@@ -99,5 +98,5 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
     protected IAttributeMerger getAttributeMerger() {
         return new NoncollidingAttributeAdder();
     }
-    
+
 }

@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,11 +18,17 @@
  */
 package org.jasig.services.persondir.support.rule;
 
-import java.util.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.NamedPersonImpl;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Sets a specified attribute to a specified value when a specified seed value 
@@ -51,7 +57,7 @@ public final class SimpleAttributeRule implements AttributeRule {
      * Public API.
      */
     public SimpleAttributeRule(final String whenKey, final String whenPattern, final String setUserName,
-                            final String setKey, final String setValue) {
+                               final String setKey, final String setValue) {
 
         // Assertions.
         if (whenKey == null) {
@@ -81,10 +87,10 @@ public final class SimpleAttributeRule implements AttributeRule {
         this.setUserName = setUserName;
         this.setKey = setKey;
         this.setValue = setValue;
-        
+
         final Set list = new HashSet();
         list.add(this.setKey);
-        
+
         this.possibleAttributeNames = list;
     }
 
@@ -113,7 +119,7 @@ public final class SimpleAttributeRule implements AttributeRule {
         }
 
         boolean rslt = false;   // default...
-        for (int i=0; i < compare.length; i++) {
+        for (int i = 0; i < compare.length; i++) {
             if (compare[i].matches(whenPattern)) {
                 rslt = true;
                 break;
@@ -136,12 +142,12 @@ public final class SimpleAttributeRule implements AttributeRule {
             final String msg = "May not evaluate.  This rule does not apply.";
             throw new IllegalArgumentException(msg);
         }
-        
+
         final Map<String, List<Object>> rslt = new LinkedHashMap<>();
         final List<Object> value = new ArrayList<>(1);
         value.add(setValue);
         rslt.put(setKey, value);
-        
+
         final IPersonAttributes person = new NamedPersonImpl(this.setUserName, rslt);
         return Collections.singleton(person);
     }
@@ -157,7 +163,7 @@ public final class SimpleAttributeRule implements AttributeRule {
     public Set<String> getAvailableQueryAttributes() {
         final Set list = new HashSet();
         list.add(this.whenKey);
-        
+
         return list;
     }
 }

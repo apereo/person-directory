@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -59,7 +59,7 @@ import java.util.regex.Pattern;
  *         <td valign="top">AND</td>
  *     </tr>
  * </table>
- * 
+ *
  * @author Eric Dalquist 
  * @version $Revision$
  */
@@ -79,13 +79,12 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     private static final Pattern WHERE_PLACEHOLDER = Pattern.compile("\\{0\\}");
 
 
-    
     private final JdbcTemplate simpleJdbcTemplate;
     private final String queryTemplate;
     private QueryType queryType = QueryType.AND;
-    private Map<String,CaseCanonicalizationMode> caseInsensitiveDataAttributes;
+    private Map<String, CaseCanonicalizationMode> caseInsensitiveDataAttributes;
 
-    private Map<CaseCanonicalizationMode,MessageFormat> dataAttributeCaseCanonicalizationFunctions =
+    private Map<CaseCanonicalizationMode, MessageFormat> dataAttributeCaseCanonicalizationFunctions =
             DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS;
 
     public AbstractJdbcPersonAttributeDao() {
@@ -101,11 +100,11 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     public AbstractJdbcPersonAttributeDao(final DataSource ds, final String queryTemplate) {
         Validate.notNull(ds, "DataSource can not be null");
         Validate.notNull(queryTemplate, "queryTemplate can not be null");
-        
+
         this.simpleJdbcTemplate = new JdbcTemplate(ds);
         this.queryTemplate = queryTemplate;
     }
-    
+
     /**
      * @return the queryTemplate
      */
@@ -119,9 +118,10 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     public QueryType getQueryType() {
         return queryType;
     }
+
     /**
      * Type of logical operator to use when joining WHERE clause components
-     * 
+     *
      * @param queryType the queryType to set
      */
     public void setQueryType(final QueryType queryType) {
@@ -131,22 +131,19 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
 
     /**
      * Takes the {@link List} from the query and parses it into the {@link List} of {@link IPersonAttributes} attributes to be returned.
-     * 
+     *
      * @param queryResults Results from the query.
      * @param queryUserName The username passed in the query map, if no username attribute existed in the query Map null is provided.
      * @return The results of the query 
      */
     protected abstract List<IPersonAttributes> parseAttributeMapFromResults(final List<R> queryResults, String queryUserName);
-    
+
     /**
      * @return The ParameterizedRowMapper to handle the results of the SQL query.
      */
     @JsonIgnore
     protected abstract RowMapper<R> getRowMapper();
     
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
-     */
     @Override
     protected PartialWhereClause appendAttributeToQuery(PartialWhereClause queryBuilder, String dataAttribute, final List<Object> queryValues) {
         for (final Object queryValue : queryValues) {
@@ -154,30 +151,28 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
             if (StringUtils.isNotBlank(queryString)) {
                 if (queryBuilder == null) {
                     queryBuilder = new PartialWhereClause();
-                }
-                else if (queryBuilder.sql.length() > 0) {
+                } else if (queryBuilder.sql.length() > 0) {
                     queryBuilder.sql.append(" ").append(this.queryType.toString()).append(" ");
                 }
 
                 //Convert to SQL wildcard
                 final Matcher queryValueMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
                 final String formattedQueryValue = queryValueMatcher.replaceAll("%");
-                
+
                 queryBuilder.arguments.add(formattedQueryValue);
                 if (dataAttribute != null) {
                     dataAttribute = canonicalizeDataAttributeForSql(dataAttribute);
                     queryBuilder.sql.append(dataAttribute);
                     if (formattedQueryValue.equals(queryString)) {
                         queryBuilder.sql.append(" = ");
-                    }
-                    else {
+                    } else {
                         queryBuilder.sql.append(" LIKE ");
                     }
                 }
                 queryBuilder.sql.append("?");
             }
         }
-        
+
         return queryBuilder;
     }
 
@@ -198,21 +193,21 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
         if (this.caseInsensitiveDataAttributes == null || this.caseInsensitiveDataAttributes.isEmpty() || !(this.caseInsensitiveDataAttributes.containsKey(dataAttribute))) {
             return dataAttribute;
         }
-        if ( this.dataAttributeCaseCanonicalizationFunctions == null || this.dataAttributeCaseCanonicalizationFunctions.isEmpty() ) {
+        if (this.dataAttributeCaseCanonicalizationFunctions == null || this.dataAttributeCaseCanonicalizationFunctions.isEmpty()) {
             return dataAttribute;
         }
         CaseCanonicalizationMode canonicalizationMode = this.caseInsensitiveDataAttributes.get(dataAttribute);
-        if ( canonicalizationMode == null ) {
+        if (canonicalizationMode == null) {
             canonicalizationMode = getDefaultCaseCanonicalizationMode();
         }
         final MessageFormat mf = this.dataAttributeCaseCanonicalizationFunctions.get(canonicalizationMode);
-        if ( mf == null ) {
+        if (mf == null) {
             return dataAttribute;
         }
-        return mf.format(new String[] { dataAttribute });
+        return mf.format(new String[]{dataAttribute});
     }
 
-    
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPeopleForQuery(java.lang.Object, java.lang.String)
      */
@@ -220,23 +215,22 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     protected List<IPersonAttributes> getPeopleForQuery(final PartialWhereClause queryBuilder, final String queryUserName) {
         //Execute the query
         final RowMapper<R> rowMapper = this.getRowMapper();
-        
+
         final List<R> results;
         if (queryBuilder != null) {
             //Merge the generated SQL with the base query template
             final StringBuilder partialSqlWhere = queryBuilder.sql;
             final Matcher queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
             final String querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
-            
+
             results = this.simpleJdbcTemplate.query(querySQL, rowMapper, queryBuilder.arguments.toArray());
-            
+
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Executed '" + this.queryTemplate + "' with arguments " + queryBuilder.arguments + " and got results " + results);
             }
-        }
-        else {
+        } else {
             results = this.simpleJdbcTemplate.query(this.queryTemplate, rowMapper);
-            
+
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Executed '" + this.queryTemplate + "' and got results " + results);
             }
@@ -258,7 +252,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
             setCaseInsensitiveDataAttributes(null);
         } else {
             final Map<String, CaseCanonicalizationMode> asMap = new HashMap<>();
-            for ( final String attrib : caseInsensitiveDataAttributes ) {
+            for (final String attrib : caseInsensitiveDataAttributes) {
                 asMap.put(attrib, null);
             }
             setCaseInsensitiveDataAttributes(asMap);

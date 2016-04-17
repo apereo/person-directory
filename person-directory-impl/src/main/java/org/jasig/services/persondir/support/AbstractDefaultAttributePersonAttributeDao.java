@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,14 +18,14 @@
  */
 package org.jasig.services.persondir.support;
 
+import org.apache.commons.lang3.Validate;
+import org.jasig.services.persondir.IPersonAttributes;
+import org.springframework.dao.support.DataAccessUtils;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.lang3.Validate;
-import org.jasig.services.persondir.IPersonAttributes;
-import org.springframework.dao.support.DataAccessUtils;
 
 
 /**
@@ -33,7 +33,7 @@ import org.springframework.dao.support.DataAccessUtils;
  * by delegation to {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)} using a configurable
  * default attribute name. If {@link org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)} returnes
  * more than one {@link IPersonAttributes} is returned {@link org.springframework.dao.IncorrectResultSizeDataAccessException} is thrown.
- * 
+ *
  * <br>
  * <br>
  * Configuration:
@@ -73,24 +73,24 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
     @Override
     public IPersonAttributes getPerson(final String uid) {
         Validate.notNull(uid, "uid may not be null.");
-        
+
         //Generate the seed map for the uid
         final Map<String, List<Object>> seed = this.toSeedMap(uid);
-        
+
         //Run the query using the seed
         final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
-        
+
         //Ensure a single result is returned
         IPersonAttributes person = DataAccessUtils.singleResult(people);
         if (person == null) {
             return null;
         }
-        
+
         //Force set the name of the returned IPersonAttributes if it isn't provided in the return object
         if (person.getName() == null) {
             person = new NamedPersonImpl(uid, person.getAttributes());
         }
-        
+
         return person;
     }
 
@@ -103,7 +103,7 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      * @return multi-valued seed Map containing the uid
      */
     protected Map<String, List<Object>> toSeedMap(final String uid) {
-        final List<Object> values = Collections.singletonList((Object)uid);
+        final List<Object> values = Collections.singletonList((Object) uid);
         final String usernameAttribute = this.usernameAttributeProvider.getUsernameAttribute();
         final Map<String, List<Object>> seed = Collections.singletonMap(usernameAttribute, values);
         if (this.logger.isDebugEnabled()) {
@@ -116,11 +116,12 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
     public IUsernameAttributeProvider getUsernameAttributeProvider() {
         return this.usernameAttributeProvider;
     }
+
     /**
      * The {@link IUsernameAttributeProvider} to use for determining the username attribute
      * to use when none is provided. The provider is used when calls are made to {@link #getPerson(String)}
      * to build a query Map and then call {@link #getPeopleWithMultivaluedAttributes(Map)}
-     * 
+     *
      * @param usernameAttributeProvider the usernameAttributeProvider to set
      */
     public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {

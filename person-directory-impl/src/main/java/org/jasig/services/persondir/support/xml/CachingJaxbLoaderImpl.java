@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,45 +18,45 @@
  */
 package org.jasig.services.persondir.support.xml;
 
-import java.io.IOException;
-import java.io.InputStream;
+import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-
-import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Base logic for loading unmarshalling an XML document via JAXB and only reloading the cached object model when needed.
  * The class attempts to monitor the lastModified date of the {@link Resource} to determine when to reload. If that fails
  * the resource is reloaded periodically as specified by the {@link #setNoLastModifiedReloadPeriod(long)} property.
- * 
+ *
  * The class determines the return type and the base package to use for the {@link JAXBContext#newInstance(String)} call
  * via the loadedType parameter provided to the constructor.
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision$
  */
 public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
     protected final Class<T> loadedType;
-    
+
     protected long noLastModifiedReloadPeriod = 5 * 60 * 1000; //5 minute default
     protected Resource mappedXmlResource;
-    
+
     protected T unmarshalledObject;
     protected long lastModifiedTime = Integer.MIN_VALUE;
-    
+
     public CachingJaxbLoaderImpl(final Class<T> loadedType) {
         Assert.notNull(loadedType, "loadedType can not be null");
         this.loadedType = loadedType;
     }
-    
-    
+
+
     public long getNoLastModifiedReloadPeriod() {
         return noLastModifiedReloadPeriod;
     }
+
     /**
      * Period between reloads if last-modified of the {@link Resource} cannot be determined
      *
@@ -69,6 +69,7 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
     public Resource getMappedXmlResource() {
         return mappedXmlResource;
     }
+
     /**
      * The XML resource to load.
      *
@@ -96,30 +97,29 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
         Long lastModified = null;
         if (this.unmarshalledObject != null) {
             lastModified = this.getLastModified();
-            
+
             //Return immediately if nothing has changed
             if (this.isCacheValid(lastModified)) {
                 return this.unmarshalledObject;
             }
         }
-        
+
         final InputStream xmlInputStream = this.getXmlInputStream();
         final JAXBContext jaxbContext = this.getJAXBContext();
         final Unmarshaller unmarshaller = this.getUnmarshaller(jaxbContext);
         final T unmarshalledObject = this.unmarshal(xmlInputStream, unmarshaller);
-        
+
         if (callback != null) {
             callback.postProcessUnmarshalling(unmarshalledObject);
         }
-        
+
         this.unmarshalledObject = unmarshalledObject;
         if (lastModified != null) {
             this.lastModifiedTime = lastModified;
-        }
-        else {
+        } else {
             this.lastModifiedTime = System.currentTimeMillis();
         }
-        
+
         return this.unmarshalledObject;
     }
 
@@ -129,20 +129,19 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
     protected Long getLastModified() {
         try {
             return this.mappedXmlResource.lastModified();
-        }
-        catch (final IOException ioe) {
+        } catch (final IOException ioe) {
             return null;
         }
     }
 
     /**
      * Determines if the cached unmarshalled object is still valid
-     * 
+     *
      * @param lastModified last modified timestamp of the resource, null if not known.
      * @return true if the cached object should be used
      */
     protected boolean isCacheValid(final Long lastModified) {
-        return (lastModified != null && lastModified <= this.lastModifiedTime) || 
+        return (lastModified != null && lastModified <= this.lastModifiedTime) ||
                 (lastModified == null && (this.lastModifiedTime + this.noLastModifiedReloadPeriod) <= System.currentTimeMillis());
     }
 
@@ -153,8 +152,7 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
         final InputStream xmlInputStream;
         try {
             xmlInputStream = this.mappedXmlResource.getInputStream();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException("Failed to open InputStream for Resource: " + this.mappedXmlResource, e);
         }
         return xmlInputStream;
@@ -168,8 +166,7 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
         final String filterDisplayPackage = loadedPackage.getName();
         try {
             return JAXBContext.newInstance(filterDisplayPackage);
-        }
-        catch (final JAXBException e) {
+        } catch (final JAXBException e) {
             throw new RuntimeException("Failed to create " + JAXBContext.class + " to unmarshal " + this.loadedType, e);
         }
     }
@@ -181,8 +178,7 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
     protected Unmarshaller getUnmarshaller(final JAXBContext jaxbContext) {
         try {
             return jaxbContext.createUnmarshaller();
-        }
-        catch (final JAXBException e) {
+        } catch (final JAXBException e) {
             throw new RuntimeException("Failed to create " + Unmarshaller.class + " to unmarshal " + this.loadedType, e);
         }
     }
@@ -195,9 +191,8 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
     @SuppressWarnings("unchecked")
     protected T unmarshal(final InputStream xmlInputStream, final Unmarshaller unmarshaller) {
         try {
-            return (T)unmarshaller.unmarshal(xmlInputStream);
-        }
-        catch (final JAXBException e) {
+            return (T) unmarshaller.unmarshal(xmlInputStream);
+        } catch (final JAXBException e) {
             throw new RuntimeException("Unexpected JAXB error while unmarshalling  " + this.mappedXmlResource, e);
         }
     }

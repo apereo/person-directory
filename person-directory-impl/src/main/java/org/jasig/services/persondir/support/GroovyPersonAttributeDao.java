@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,15 +18,15 @@
  */
 package org.jasig.services.persondir.support;
 
+import org.jasig.services.persondir.IPersonAttributeScriptDao;
+import org.jasig.services.persondir.IPersonAttributes;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.jasig.services.persondir.IPersonAttributeScriptDao;
-import org.jasig.services.persondir.IPersonAttributes;
 
 /**
  * An implementation of the {@link org.jasig.services.persondir.IPersonAttributeDao} that is able to resolve attributes
@@ -38,29 +38,29 @@ import org.jasig.services.persondir.IPersonAttributes;
  * Approach 1: Groovy file pre-compiled to Java class file
  * <br><br>
  * <pre>
-   Spring configuration:
-   
-   &lt;bean id="duplicateUsernameAttributeScript" class="org.jasig.portal.persondir.AttributeDuplicatingPersonAttributesScript"/&gt;
-   &lt;bean id="duplicateUsernameAttributeSource" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"
-         c:groovyObject-ref="duplicateUsernameAttributeScript"/&gt;
-   
-   Groovy file:
-   
-   class SampleGroovyPersonAttributeDao implements org.jasig.services.persondir.IPersonAttributeScriptDao {
-   
-       {@literal @}Override
-       Map&lt;String, Object&gt; getAttributesForUser(String uid, Log log) {
-           return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
-       }
-   
-       {@literal @}Override
-       Map&lt;String, List&lt;Object&gt;&gt; getPersonAttributesFromMultivaluedAttributes(Map&lt;String, List&lt;Object&gt;&gt; attributes, Log log) {
-           Map&lt;String, List&lt;Object&gt;&gt; newMap = new HashMap&lt;&gt;(attributes)
-           newMap.put("foo", Arrays.asList(["value1", "value2"]))
-           return newMap
-       }
-   
-   }
+ Spring configuration:
+
+ &lt;bean id="duplicateUsernameAttributeScript" class="org.jasig.portal.persondir.AttributeDuplicatingPersonAttributesScript"/&gt;
+ &lt;bean id="duplicateUsernameAttributeSource" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"
+ c:groovyObject-ref="duplicateUsernameAttributeScript"/&gt;
+
+ Groovy file:
+
+ class SampleGroovyPersonAttributeDao implements org.jasig.services.persondir.IPersonAttributeScriptDao {
+
+ {@literal @}Override
+ Map&lt;String, Object&gt; getAttributesForUser(String uid, Log log) {
+ return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
+ }
+
+ {@literal @}Override
+ Map&lt;String, List&lt;Object&gt;&gt; getPersonAttributesFromMultivaluedAttributes(Map&lt;String, List&lt;Object&gt;&gt; attributes, Log log) {
+ Map&lt;String, List&lt;Object&gt;&gt; newMap = new HashMap&lt;&gt;(attributes)
+ newMap.put("foo", Arrays.asList(["value1", "value2"]))
+ return newMap
+ }
+
+ }
  * </pre>
  * Notes:<ol>
  * <li>Use maven-antrun-plugin, gmavenplus-plugin, or similar to pre-compile groovy classes in maven build process</li>
@@ -71,18 +71,18 @@ import org.jasig.services.persondir.IPersonAttributes;
  * Approach 2: Groovy script file referenced by change-detecting configuration
  * <br><br>
  * <pre>
-   Spring configuration:
-   
-   &lt;bean id="duplicateUsernameAttributeSource2" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"/&gt;
-       c:groovyObject-ref="duplicateUsernameAttributeScript2"/&gt;
-   
-   &lt;lang:groovy id="duplicateUsernameAttributeScript2" refresh-check-delay="5000"
-       script-source="classpath:AttributeDuplicatingPersonAttributesScript.groovy"/&gt;
-   
-   Groovy file:
-   
-   Same as Approach 1
-   
+ Spring configuration:
+
+ &lt;bean id="duplicateUsernameAttributeSource2" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"/&gt;
+ c:groovyObject-ref="duplicateUsernameAttributeScript2"/&gt;
+
+ &lt;lang:groovy id="duplicateUsernameAttributeScript2" refresh-check-delay="5000"
+ script-source="classpath:AttributeDuplicatingPersonAttributesScript.groovy"/&gt;
+
+ Groovy file:
+
+ Same as Approach 1
+
  * </pre>
  * Notes:<ol>
  * <li>Separate groovy source file, so can create unit test of groovy code</li>
@@ -92,22 +92,22 @@ import org.jasig.services.persondir.IPersonAttributes;
  * Approach 3: Inline Groovy script
  * <br><br>
  * <pre>
-   Spring configuration:
-   
-   &lt;bean id="duplicateUsernameAttributeSource3" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"
-       c:groovyObject-ref="duplicateUsernameAttributeScript3"/&gt;
-   
-   &lt;lang:groovy id="duplicateUsernameAttributeScript3"&gt;
-       &lt;lang:inline-script&gt;&lt;![CDATA[
-           class AttributeDuplicatingPersonAttributesScript extends org.jasig.services.persondir.support.BaseGroovyScriptDaoImpl {
+ Spring configuration:
 
-           {@literal @}Override
-           Map&lt;String, Object&gt; getAttributesForUser(String uid, Log log) {
-               return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
-           }
-       ]]&gt;&lt;/lang:inline-script&gt;
-   &lt;/lang:groovy&gt;
-   
+ &lt;bean id="duplicateUsernameAttributeSource3" class="org.jasig.services.persondir.support.GroovyPersonAttributeDao"
+ c:groovyObject-ref="duplicateUsernameAttributeScript3"/&gt;
+
+ &lt;lang:groovy id="duplicateUsernameAttributeScript3"&gt;
+ &lt;lang:inline-script&gt;&lt;![CDATA[
+ class AttributeDuplicatingPersonAttributesScript extends org.jasig.services.persondir.support.BaseGroovyScriptDaoImpl {
+
+ {@literal @}Override
+ Map&lt;String, Object&gt; getAttributesForUser(String uid, Log log) {
+ return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
+ }
+ ]]&gt;&lt;/lang:inline-script&gt;
+ &lt;/lang:groovy&gt;
+
  * </pre>
  * Notes:<ol>
  * <li>Cannot create unit test of groovy source file, will not detect changes</li>

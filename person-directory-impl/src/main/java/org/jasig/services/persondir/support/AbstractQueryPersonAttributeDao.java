@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,19 +18,29 @@
  */
 package org.jasig.services.persondir.support;
 
-import java.util.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.Validate;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Provides common functionality for DAOs using a set of attribute values from the seed to
  * perform a query. Ensures the necessary attributes to run the query exist on the seed and
  * organizes the values into an argument array.
- * 
+ *
  * <br>
  * <br>
  * Configuration:
@@ -55,7 +65,7 @@ import org.jasig.services.persondir.util.CaseCanonicalizationMode;
  *     <tr>
  *         <td align="right" valign="top">resultAttributeMapping</td>
  *         <td>
- *             A {@link Map} from SQL result names to returned attribute names. The values can be either {@link String} 
+ *             A {@link Map} from SQL result names to returned attribute names. The values can be either {@link String}
  *             or {@link Collection} of String to use a single SQL result under multiple returned attributes. If set only
  *             SQL attributes listed will be returned. If not set all SQL attributes will be returned.
  *         </td>
@@ -81,7 +91,7 @@ import org.jasig.services.persondir.util.CaseCanonicalizationMode;
  *         <td valign="top">null</td>
  *     </tr>
  * </table>
- * 
+ *
  * @author Eric Dalquist 
  * @version $Revision$
  */
@@ -100,7 +110,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     private boolean requireAllQueryAttributes = false;
     private boolean useAllQueryAttributes = true;
     private String unmappedUsernameAttribute = null;
-    
+
 
     public AbstractQueryPersonAttributeDao() {
         super();
@@ -109,6 +119,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     public boolean isUseAllQueryAttributes() {
         return this.useAllQueryAttributes;
     }
+
     /**
      * If {@link #setQueryAttributeMapping(Map)} is null this determines if no parameters should be specified 
      * or if all query attributes should be used as parameters. Defaults to true.
@@ -118,30 +129,31 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     public void setUseAllQueryAttributes(final boolean useAllQueryAttributes) {
         this.useAllQueryAttributes = useAllQueryAttributes;
     }
-    
-    
+
+
     /**
      * @return the queryAttributeMapping
      */
     public Map<String, Set<String>> getQueryAttributeMapping() {
         return queryAttributeMapping;
     }
+
     /**
      * Map from query attribute names to data-layer attribute names to use when building the query. If an ordered Map is
      * passed in the order of the attributes will be honored when building the query.
-     *  
+     *
      * If not set query attributes will be used directly from the query Map.
-     * 
+     *
      * @param queryAttributeMapping the queryAttributeMapping to set
      */
     public void setQueryAttributeMapping(final Map<String, ?> queryAttributeMapping) {
         final Map<String, Set<String>> parsedQueryAttributeMapping =
                 MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(queryAttributeMapping);
-        
+
         if (parsedQueryAttributeMapping.containsKey("")) {
             throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
         }
-        
+
         this.queryAttributeMapping = parsedQueryAttributeMapping;
     }
 
@@ -151,46 +163,48 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     public Map<String, Set<String>> getResultAttributeMapping() {
         return resultAttributeMapping;
     }
+
     /**
      * Set the {@link Map} to use for mapping from a data layer name to an attribute name or {@link Set} of attribute
      * names. Data layer names that are specified but have null mappings will use the column name for the attribute
      * name. Data layer names that are not specified as keys in this {@link Map} will be ignored.
      * <br>
-     * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set} 
+     * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set}
      * of {@link String}.
-     * 
+     *
      * @param resultAttributeMapping {@link Map} from column names to attribute names, may not be null.
      * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
      * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
      */
     public void setResultAttributeMapping(final Map<String, ?> resultAttributeMapping) {
         final Map<String, Set<String>> parsedResultAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(resultAttributeMapping);
-        
+
         if (parsedResultAttributeMapping.containsKey("")) {
             throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
         }
-        
+
         final Collection<String> userAttributes = MultivaluedPersonAttributeUtils.flattenCollection(parsedResultAttributeMapping.values());
-        
+
         this.resultAttributeMapping = parsedResultAttributeMapping;
         this.possibleUserAttributes = new LinkedHashSet<>(userAttributes);
     }
-    
+
     /**
      * @return the requireAllQueryAttributes
      */
     public boolean isRequireAllQueryAttributes() {
         return requireAllQueryAttributes;
     }
+
     /**
      * If all attributes specified in the queryAttributeMapping keySet must be present to actually run the query
-     * 
+     *
      * @param requireAllQueryAttributes the requireAllQueryAttributes to set
      */
     public void setRequireAllQueryAttributes(final boolean requireAllQueryAttributes) {
         this.requireAllQueryAttributes = requireAllQueryAttributes;
     }
-    
+
     /**
      * Returns the userNameAttribute
      * @return the userNameAttribute
@@ -203,32 +217,32 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * The returned attribute to use as the userName for the mapped IPersons. If null the {@link #getUsernameAttributeProvider()}
      * value will be used and if that is null the {@link AttributeNamedPersonImpl#DEFAULT_USER_NAME_ATTRIBUTE} value is
      * used. 
-     * 
+     *
      * @param userNameAttribute the userNameAttribute to set
      */
     public void setUnmappedUsernameAttribute(final String userNameAttribute) {
         this.unmappedUsernameAttribute = userNameAttribute;
     }
-    
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
     @Override
     public final Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         Validate.notNull(query, "query may not be null.");
-        
+
         //Generate the query to pass to the subclass
         final QB queryBuilder = this.generateQuery(query);
         if (queryBuilder == null && (this.queryAttributeMapping != null || this.useAllQueryAttributes == true)) {
             this.logger.debug("No queryBuilder was generated for query " + query + ", null will be returned");
-            
+
             return null;
         }
-        
+
         //Get the username from the query, if specified
         final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
         final String username = usernameAttributeProvider.getUsernameFromQuery(query);
-        
+
         //Execute the query in the subclass
         final List<IPersonAttributes> unmappedPeople = this.getPeopleForQuery(queryBuilder, username);
         if (unmappedPeople == null) {
@@ -241,10 +255,10 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             final IPersonAttributes mappedPerson = this.mapPersonAttributes(unmappedPerson);
             mappedPeople.add(mappedPerson);
         }
-        
+
         return Collections.unmodifiableSet(mappedPeople);
     }
-    
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
@@ -268,11 +282,11 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         return this.possibleUserAttributes;
     }
 
-    
+
     /**
      * Executes the query for the generated queryBuilder object and returns a list where each entry is a Map of
      * attributes for a single IPersonAttributes.
-     * 
+     *
      * @param queryBuilder The query generated by calls to {@link #appendAttributeToQuery(Object, String, List)}
      * @param queryUserName The username passed in the query map, if no username attribute existed in the query Map null is provided.
      * @return The list of IPersons found by the query. The user attributes should be using the raw names from the data layer.
@@ -309,7 +323,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         // All logging messages were previously in generateQuery() and were
         // copy/pasted verbatim
         final List<Object> canonicalizedQueryValues = this.canonicalizeAttribute(queryAttribute, queryValues, caseInsensitiveQueryAttributes);
-        if ( dataAttribute == null ) {
+        if (dataAttribute == null) {
             // preserved from historical versions which just pass queryValues through without any association to a dataAttribute,
             // and a slightly different log message
             if (this.logger.isDebugEnabled()) {
@@ -325,14 +339,14 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
 
     /**
      * Append the attribute and value to the queryBuilder.
-     * 
+     *
      * @param queryBuilder The sub-class specific query builder object
      * @param dataAttribute The full attribute name to append
      * @param queryValues The values for the data attribute
      * @return An updated queryBuilder
      */
     protected abstract QB appendAttributeToQuery(QB queryBuilder, String dataAttribute, List<Object> queryValues);
-    
+
     /**
      * Generates a query using the queryBuilder object passed by the subclass. Attribute/Value pairs are added to the
      * queryBuilder by calling {@link #appendCanonicalizedAttributeToQuery(Object, String, String, java.util.List)} which calls
@@ -349,24 +363,21 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             for (final Map.Entry<String, Set<String>> queryAttrEntry : this.queryAttributeMapping.entrySet()) {
                 final String queryAttr = queryAttrEntry.getKey();
                 final List<Object> queryValues = query.get(queryAttr);
-                if (queryValues != null ) {
+                if (queryValues != null) {
                     final Set<String> dataAttributes = queryAttrEntry.getValue();
                     if (dataAttributes == null) {
                         queryBuilder = this.appendCanonicalizedAttributeToQuery(queryBuilder, queryAttr, null, queryValues);
-                    }
-                    else {
+                    } else {
                         for (final String dataAttribute : dataAttributes) {
                             queryBuilder = this.appendCanonicalizedAttributeToQuery(queryBuilder, queryAttr, dataAttribute, queryValues);
                         }
                     }
-                }
-                else if (this.requireAllQueryAttributes) {
+                } else if (this.requireAllQueryAttributes) {
                     this.logger.debug("Query " + query + " does not contain all nessesary attributes as specified by queryAttributeMapping " + this.queryAttributeMapping + ", null will be returned for the queryBuilder");
                     return null;
                 }
             }
-        }
-        else if (this.useAllQueryAttributes) {
+        } else if (this.useAllQueryAttributes) {
             for (final Map.Entry<String, List<Object>> queryAttrEntry : query.entrySet()) {
                 final String queryKey = queryAttrEntry.getKey();
                 final List<Object> queryValues = queryAttrEntry.getValue();
@@ -374,30 +385,30 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                 queryBuilder = this.appendCanonicalizedAttributeToQuery(queryBuilder, queryKey, queryKey, queryValues);
             }
         }
-        
+
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Generated query builder '" + queryBuilder + "' from query Map " + query + ".");
         }
-        
+
         return queryBuilder;
     }
-    
+
     /**
      * Uses resultAttributeMapping to return a copy of the IPersonAttributes with only the attributes specified in
      * resultAttributeMapping mapped to their result attribute names.
-     * 
+     *
      * @param person The IPersonAttributes to map attributes for
      * @return A copy of the IPersonAttributes with mapped attributes, the original IPersonAttributes if resultAttributeMapping is null.
      */
     protected final IPersonAttributes mapPersonAttributes(final IPersonAttributes person) {
         final Map<String, List<Object>> personAttributes = person.getAttributes();
-        
+
         final Map<String, List<Object>> mappedAttributes;
         //If no mapping just use the attributes as-is
         if (this.resultAttributeMapping == null) {
             if (caseInsensitiveResultAttributes != null && !(caseInsensitiveResultAttributes.isEmpty())) {
                 mappedAttributes = new LinkedHashMap<>();
-                for ( final Map.Entry<String,List<Object>> attribute : personAttributes.entrySet() ) {
+                for (final Map.Entry<String, List<Object>> attribute : personAttributes.entrySet()) {
                     final String attributeName = attribute.getKey();
                     mappedAttributes.put(attributeName, canonicalizeAttribute(attributeName, attribute.getValue(), caseInsensitiveResultAttributes));
                 }
@@ -408,21 +419,21 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         //Map the attribute names via the resultAttributeMapping
         else {
             mappedAttributes = new LinkedHashMap<>();
-            
+
             for (final Map.Entry<String, Set<String>> resultAttrEntry : this.resultAttributeMapping.entrySet()) {
                 final String dataKey = resultAttrEntry.getKey();
-                
+
                 // Only map found data attributes.
                 // .  See https://issues.jasig.org/browse/PERSONDIR-89
                 // Currently respects CaseInsensitive*NamedPersonImpl because BasePersonImpl's constructor
                 if (personAttributes.containsKey(dataKey)) {
                     Set<String> resultKeys = resultAttrEntry.getValue();
-                    
+
                     //If dataKey has no mapped resultKeys just use the dataKey
                     if (resultKeys == null) {
                         resultKeys = ImmutableSet.of(dataKey);
                     }
-                    
+
                     //Add the value to the mapped attributes for each mapped key,
                     //possibly canonicalizing casing for each value
                     List<Object> value = personAttributes.get(dataKey);
@@ -431,27 +442,25 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                         if (resultKey == null) {
                             //TODO is this possible?
                             mappedAttributes.put(dataKey, value);
-                        }
-                        else {
+                        } else {
                             mappedAttributes.put(resultKey, value);
                         }
                     }
                 }
             }
         }
-        
+
         final IPersonAttributes newPerson;
-        
+
         final String name = person.getName();
         if (name != null) {
             newPerson = new NamedPersonImpl(usernameCaseCanonicalizationMode.canonicalize(name), mappedAttributes);
-        }
-        else {
+        } else {
             final String userNameAttribute = this.getConfiguredUserNameAttribute();
             final IPersonAttributes tmpNewPerson = new AttributeNamedPersonImpl(userNameAttribute, mappedAttributes);
             newPerson = new NamedPersonImpl(usernameCaseCanonicalizationMode.canonicalize(tmpNewPerson.getName()), mappedAttributes);
         }
-        
+
         return newPerson;
     }
 
@@ -467,7 +476,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             return value;
         }
         CaseCanonicalizationMode canonicalizationMode = config.get(key);
-        if ( canonicalizationMode == null ) {
+        if (canonicalizationMode == null) {
             // Intentionally late binding of the default to
             // avoid unexpected behavior if you wait to assign
             // the default until after you've injected the list
@@ -475,8 +484,8 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             canonicalizationMode = defaultCaseCanonicalizationMode;
         }
         final List<Object> canonicalizedValues = new ArrayList<>(value.size());
-        for ( final Object origValue : value ) {
-            if ( origValue instanceof String ) {
+        for (final Object origValue : value) {
+            if (origValue instanceof String) {
                 canonicalizedValues.add(canonicalizationMode.canonicalize((String) origValue, caseCanonicalizationLocale));
             } else {
                 canonicalizedValues.add(origValue);
@@ -491,7 +500,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * instances if BasePersonImpl with the same username are considered 
      * equal.  Since {@link #getUsernameAttributeProvider()} should never return
      * null, this method should never return null either.
-     * 
+     *
      * @return The name of the attribute corresponding to the  user's username. 
      */
     @JsonIgnore
@@ -500,17 +509,17 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         if (this.unmappedUsernameAttribute != null) {
             return this.unmappedUsernameAttribute;
         }
-        
+
         final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
         return usernameAttributeProvider.getUsernameAttribute();
     }
-    
+
     /**
-     * Indicates whether the value from {@link #getConfiguredUserNameAttribute()} 
+     * Indicates whether the value from {@link #getConfiguredUserNameAttribute()}
      * was configured explicitly.  A return value of <code>false</code> means 
      * that the value from {@link #getConfiguredUserNameAttribute()} is a 
      * default, and should not be used over a username passed in the query.
-     * 
+     *
      * @return <code>true</code> If the 'unmappedUsernameAttribute' property was 
      * set explicitly, otherwise <code>false</code>
      */
@@ -524,7 +533,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      *
      * @return Map of attribute names and casing canonicalization modes
      */
-    public Map<String,CaseCanonicalizationMode> getCaseInsensitiveResultAttributes() {
+    public Map<String, CaseCanonicalizationMode> getCaseInsensitiveResultAttributes() {
         return caseInsensitiveResultAttributes;
     }
 
@@ -571,7 +580,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             setCaseInsensitiveResultAttributes(null);
         } else {
             final Map<String, CaseCanonicalizationMode> asMap = new HashMap<>();
-            for ( final String attrib : caseInsensitiveResultAttributes ) {
+            for (final String attrib : caseInsensitiveResultAttributes) {
                 asMap.put(attrib, null);
             }
             setCaseInsensitiveResultAttributes(asMap);
@@ -594,7 +603,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             setCaseInsensitiveQueryAttributes(null);
         } else {
             final Map<String, CaseCanonicalizationMode> asMap = new HashMap<>();
-            for ( final String attrib : caseInsensitiveQueryAttributes ) {
+            for (final String attrib : caseInsensitiveQueryAttributes) {
                 asMap.put(attrib, null);
             }
             setCaseInsensitiveQueryAttributes(asMap);
@@ -642,7 +651,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @param caseCanonicalizationLocale Case-canonicalization locale
      */
     public void setCaseCanonicalizationLocale(final Locale caseCanonicalizationLocale) {
-        if ( caseCanonicalizationLocale == null ) {
+        if (caseCanonicalizationLocale == null) {
             this.caseCanonicalizationLocale = Locale.getDefault();
         } else {
             this.caseCanonicalizationLocale = caseCanonicalizationLocale;
@@ -665,7 +674,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @param defaultCaseCanonicalizationMode Set the default CaseCanonicalizationMode
      */
     public void setDefaultCaseCanonicalizationMode(final CaseCanonicalizationMode defaultCaseCanonicalizationMode) {
-        if ( defaultCaseCanonicalizationMode == null ) {
+        if (defaultCaseCanonicalizationMode == null) {
             this.defaultCaseCanonicalizationMode = DEFAULT_CASE_CANONICALIZATION_MODE;
         } else {
             this.defaultCaseCanonicalizationMode = defaultCaseCanonicalizationMode;
@@ -704,7 +713,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @param usernameCaseCanonicalizationMode {@link CaseCanonicalizationMode} to use for the username
      */
     public void setUsernameCaseCanonicalizationMode(final CaseCanonicalizationMode usernameCaseCanonicalizationMode) {
-        if ( usernameCaseCanonicalizationMode == null ) {
+        if (usernameCaseCanonicalizationMode == null) {
             this.usernameCaseCanonicalizationMode = DEFAULT_USERNAME_CASE_CANONICALIZATION_MODE;
         } else {
             this.usernameCaseCanonicalizationMode = usernameCaseCanonicalizationMode;

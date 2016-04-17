@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,7 +25,7 @@ import org.springframework.ldap.filter.OrFilter;
 
 /**
  * Wrapper class to allow the And and Or fitlers to be treated the same way.
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision: 1.1 $
  */
@@ -34,7 +34,7 @@ class LogicalFilterWrapper implements Filter {
     private final AndFilter andFilter;
     private final OrFilter orFilter;
     private final Filter delegateFilter;
-    
+
     public LogicalFilterWrapper(final QueryType queryType) {
         this.queryType = queryType;
 
@@ -42,20 +42,22 @@ class LogicalFilterWrapper implements Filter {
             case OR: {
                 this.andFilter = null;
                 this.orFilter = new OrFilter();
-                
+
                 this.delegateFilter = this.orFilter;
-            } break;
-            
+            }
+            break;
+
             default:
             case AND: {
                 this.andFilter = new AndFilter();
                 this.orFilter = null;
-                
+
                 this.delegateFilter = this.andFilter;
-            } break;
+            }
+            break;
         }
     }
-    
+
     /**
      * Append the query Filter to the underlying logical Filter
      */
@@ -63,12 +65,14 @@ class LogicalFilterWrapper implements Filter {
         switch (this.queryType) {
             case OR: {
                 this.orFilter.or(query);
-            } break;
-            
+            }
+            break;
+
             default:
             case AND: {
                 this.andFilter.and(query);
-            } break;
+            }
+            break;
         }
     }
 

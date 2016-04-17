@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,8 +18,7 @@
  */
 package org.jasig.services.persondir.support.jdbc;
 
-import org.apache.commons.collections4.Factory;
-import org.apache.commons.collections4.map.LazyMap;
+import com.google.common.collect.MapMaker;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.jasig.services.persondir.support.NamedPersonImpl;
@@ -65,14 +64,14 @@ import java.util.Set;
  *      <td>advisor</td>
  *  </tr>
  * </table>
- * 
+ *
  * <br>
- * 
+ *
  * This class expects 1 to N row results for a query, with each row containing 1 to N name
  * value attribute mappings and the userName of the user the attributes are for. This contrasts
  * {@link org.jasig.services.persondir.support.jdbc.SingleRowJdbcPersonAttributeDao} which expects
  * a single row result for a user query. <br>
- * 
+ *
  * <br>
  * <br>
  * Configuration:
@@ -94,7 +93,7 @@ import java.util.Set;
  *         <td valign="top">null</td>
  *     </tr>
  * </table>
- * 
+ *
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist <a href="mailto:edalquist@unicon.net">edalquist@unicon.net</a>
  * @version $Revision$ $Date$
@@ -102,7 +101,7 @@ import java.util.Set;
  */
 public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeDao<Map<String, Object>> {
     private static final RowMapper<Map<String, Object>> MAPPER = new ColumnMapParameterizedRowMapper();
-    
+
     /**
      * {@link Map} of columns from a name column to value columns.
      * Keys are Strings, Values are Strings or List of Strings 
@@ -115,14 +114,14 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
 
     /**
      * Creates a new MultiRowJdbcPersonAttributeDao specifying the DataSource and SQL to use.
-     * 
+     *
      * @param ds The DataSource to get connections from for executing queries, may not be null.
      * @param sql The SQL to execute for user attributes, may not be null.
      */
     public MultiRowJdbcPersonAttributeDao(final DataSource ds, final String sql) {
         super(ds, sql);
     }
-    
+
 
     /**
      * @return The Map of name column to value column(s). 
@@ -130,20 +129,19 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     public Map<String, Set<String>> getNameValueColumnMappings() {
         return this.nameValueColumnMappings;
     }
-    
+
     /**
      * The {@link Map} of columns from a name column to value columns. Keys are Strings,
      * Values are Strings or {@link java.util.List} of Strings.
-     * 
+     *
      * @param nameValueColumnMap The Map of name column to value column(s). 
      */
     public void setNameValueColumnMappings(final Map<String, ?> nameValueColumnMap) {
         if (nameValueColumnMap == null) {
             this.nameValueColumnMappings = null;
-        }
-        else {
+        } else {
             final Map<String, Set<String>> mappings = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nameValueColumnMap);
-            
+
             if (mappings.containsValue(null)) {
                 throw new IllegalArgumentException("nameValueColumnMap may not have null values");
             }
@@ -161,18 +159,13 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         return MAPPER;
     }
 
-    
-    
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#parseAttributeMapFromResults(java.util.List, java.lang.String)
-     */
     @Override
     @SuppressWarnings("unchecked")
     protected List<IPersonAttributes> parseAttributeMapFromResults(final List<Map<String, Object>> queryResults, final String queryUserName) {
-        final Map<String, Map<String, List<Object>>> peopleAttributesBuilder = LazyMap.lazyMap(new LinkedHashMap<String, Map<String, List<Object>>>(), new LinkedHashMapFactory<String, List<Object>>());
+        final Map<String, Map<String, List<Object>>> peopleAttributesBuilder = new MapMaker().makeMap();
 
         final String userNameAttribute = this.getConfiguredUserNameAttribute();
-        
+
         for (final Map<String, Object> queryResult : queryResults) {
             final String userName;  // Choose a username from the best available option
             if (this.isUserNameAttributeConfigured() && queryResult.containsKey(userNameAttribute)) {
@@ -195,20 +188,21 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
             } else {
                 throw new BadSqlGrammarException("No userName column named '" + userNameAttribute + "' exists in result set and no userName provided in query Map", this.getQueryTemplate(), null);
             }
-            
-            final Map<String, List<Object>> attributes = peopleAttributesBuilder.get(userName);
-            
+
+            final Map<String, List<Object>> attributes = peopleAttributesBuilder.computeIfAbsent(userName,
+                    key -> new LinkedHashMap<String, List<Object>>());
+
             //Iterate over each attribute column mapping to get the data from the row
             for (final Map.Entry<String, Set<String>> columnMapping : this.nameValueColumnMappings.entrySet()) {
                 final String keyColumn = columnMapping.getKey();
-                
+
                 //Get the attribute name for the specified column
                 final Object attrNameObj = queryResult.get(keyColumn);
                 if (attrNameObj == null && !queryResult.containsKey(keyColumn)) {
                     throw new BadSqlGrammarException("No attribute key column named '" + keyColumn + "' exists in result set", this.getQueryTemplate(), null);
                 }
                 final String attrName = String.valueOf(attrNameObj);
-                
+
                 //Get the columns containing the values and add all values to a List
                 final Set<String> valueColumns = columnMapping.getValue();
                 final List<Object> attrValues = new ArrayList<>(valueColumns.size());
@@ -217,7 +211,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
                     if (attrValue == null && !queryResult.containsKey(valueColumn)) {
                         throw new BadSqlGrammarException("No attribute value column named '" + valueColumn + "' exists in result set", this.getQueryTemplate(), null);
                     }
-                    
+
                     attrValues.add(attrValue);
                 }
 
@@ -225,11 +219,11 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
                 MultivaluedPersonAttributeUtils.addResult(attributes, attrName, attrValues);
             }
         }
-        
-        
+
+
         //Convert the builder structure into a List of IPersons
         final List<IPersonAttributes> people = new ArrayList<>(peopleAttributesBuilder.size());
-        
+
         for (final Map.Entry<String, Map<String, List<Object>>> mappedAttributesEntry : peopleAttributesBuilder.entrySet()) {
             final String userName = mappedAttributesEntry.getKey();
             final Map<String, List<Object>> attributes = mappedAttributesEntry.getValue();
@@ -239,12 +233,5 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         }
 
         return people;
-    }
-    
-    private static final class LinkedHashMapFactory<K, V> implements Factory {
-        @Override
-        public Map<K, V> create() {
-            return new LinkedHashMap<>();
-        }
     }
 }
