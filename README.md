@@ -2,7 +2,8 @@ Person Directory
 ===========================
 
 ## Intro
-A framework for resolving persons and attributes from a variety of underlying sources. It consists of a collection of DAOs that retrieve, cache, resolve, aggregate, merge person attributes from JDBC, LDAP and more. 
+A framework for resolving persons and attributes from a variety of underlying sources. 
+It consists of a collection of DAOs that retrieve, cache, resolve, aggregate, merge person attributes from JDBC, LDAP and more. 
 
 ## Maven
 
@@ -10,14 +11,14 @@ A framework for resolving persons and attributes from a variety of underlying so
 
 ```xml
 <dependency>
-	<groupId>org.jasig.service.persondir</groupId>
-	<artifactId>person-directory-api</artifactId>
-	<version>${person.directory.version}</version>
+    <groupId>org.jasig.service.persondir</groupId>
+    <artifactId>person-directory-api</artifactId>
+    <version>${person.directory.version}</version>
 </dependency>
 <dependency>
-	<groupId>org.jasig.service.persondir</groupId>
-	<artifactId>person-directory-impl</artifactId>
-	<version>${person.directory.version}</version>
+    <groupId>org.jasig.service.persondir</groupId>
+    <artifactId>person-directory-impl</artifactId>
+    <version>${person.directory.version}</version>
 </dependency>
 ```
 
@@ -27,7 +28,8 @@ A framework for resolving persons and attributes from a variety of underlying so
 
 #### CachingPersonAttributeDaoImpl
 
-Delegates queries to the configured child IPersonAttributeDao and caches the results based using a key generated from the query using attributes specified in the configuration.
+Delegates queries to the configured child IPersonAttributeDao and caches the results based using a key 
+generated from the query using attributes specified in the configuration.
 
 Setting up a `CachingPersonAttributeDaoImpl` in Spring to would look like the following:
 
@@ -39,13 +41,15 @@ Setting up a `CachingPersonAttributeDaoImpl` in Spring to would look like the fo
 </bean>
 ```
 
-This configuration will cache results of method calls on mergingPersonAttributeDao in userInfoCacheMap. The cache keys are generated using AttributeBasedCacheKeyGenerator by default and in the default configuration the username attribute is used for the key. Also null results will be cached, meaning if a query against `mergingPersonAttributeDao` is a miss or cannot be run (null returned) an marker will be cached to avoid repeated null lookups.
+This configuration will cache results of method calls on mergingPersonAttributeDao in userInfoCacheMap.
+The cache keys are generated using AttributeBasedCacheKeyGenerator by default and in the default configuration the username attribute is used for the key. Also null results will be cached, meaning if a query against `mergingPersonAttributeDao` is a miss or cannot be run (null returned) an marker will be cached to avoid repeated null lookups.
 
 #### Configuration
 
 | Property | Type | Default Value | Description |
 | ---------|-------|----------|-------------- |
-| defaultAttribute | String | username | The attribute name to use for calls to IPersonAttributes getPerson(String). A query Map is generated for these calls using the defaultAttribute and the value passed in.
+| defaultAttribute | String | username | The attribute name to use for calls to IPersonAttributes getPerson(String). 
+A query Map is generated for these calls using the defaultAttribute and the value passed in.
 | cachedPersonAttributesDao | IPersonAttributeDao | null | The IPersonAttributeDao to cache results from.
 | cacheKeyGenerator | CacheKeyGenerator | `new AttributeBasedCacheKeyGenerator()` | An implementation of the Spring-Modules Caching CacheKeyGenerator API to use to generate cache keys. The use of this interface also allows AOP based caching using the CacheKeyGenerator implementation directly.
 | userInfoCache | `Map<Serializable, Set<IPersonAttributes>>` | null | The cache to store results in. Only the get, set and remove methods are used on the Map interface so most commonly a wrapper around a real caching interface is used.
@@ -80,11 +84,13 @@ Setting up a MergingPersonAttributeDaoImpl in Spring to would look like the foll
 </bean>
 ```
 
-This configuration will query three IPersonAttributeDaos in order and merge their results using the default `IAttributeMerger` which is the `MultivaluedAttributeMerger`.
+This configuration will query three IPersonAttributeDaos in order and merge their results using the default `IAttributeMerger` 
+which is the `MultivaluedAttributeMerger`.
 
 
 #### CascadingPersonAttributeDao
-Designed to query multiple IPersonAttributeDaos in order and merge the results into a single result set. As each IPersonAttributesAttributeDao is queried the attributes from the first IPersonAttributes in the result set are used as the query for the next IPersonAttributesAttributeDao.
+Designed to query multiple IPersonAttributeDaos in order and merge the results into a single result set. As each IPersonAttributesAttributeDao 
+is queried the attributes from the first IPersonAttributes in the result set are used as the query for the next IPersonAttributesAttributeDao.
 Setting up a `CascadingPersonAttributeDao` in Spring to would look like the following:
 
 ```xml
@@ -108,7 +114,8 @@ This configuration will query three IPersonAttributeDaos in order and merge thei
 | ---------|-------|--------------|-------------- |
 | defaultAttribute | String | username | The attribute name to use for calls to `IPersonAttributes getPerson(String)`. A query Map is generated for these calls using the defaultAttribute and the value passed in.
 | personAttributeDaos | List<IPersonAttributesAttributeDao> | null | A List of `IPersonAttributeDaos` to be queried and have their results merged.
-| attrMerger  | IAttributeMerger  | new ReplacingAttributeAdder() | The result set merging strategy to be used. See the Merging Strategies section for more information on available options.
+| attrMerger  | IAttributeMerger  | new ReplacingAttributeAdder() | The result set merging strategy to be used. See the Merging 
+Strategies section for more information on available options.
 | recoverExceptions  | boolean | true | If an exception thrown by a child IPersonAttributesAttributeDao
 
 
@@ -124,7 +131,8 @@ As an example of this for two IPersonAttributess with the same name where:
 - The resulting merged IPersonAttributes would have attributes: {email=eric.dalquist@example.com, phone=[123-456-7890, 111-222-3333, 000-999-8888], office=3233}
 
 #### NoncollidingAttributeAdder
-Merging of the Sets of IPersonAttributess is additive. For IPersonAttributess with the same name the person's attributes are merged such that only attributes on the second IPersonAttributes that don't already exist on the first IPersonAttributes are merged in.
+Merging of the Sets of IPersonAttributess is additive. For IPersonAttributess with the same name the person's 
+attributes are merged such that only attributes on the second IPersonAttributes that don't already exist on the first IPersonAttributes are merged in.
 
 As an example of this for two IPersonAttributess with the same name where:
 
@@ -133,7 +141,8 @@ As an example of this for two IPersonAttributess with the same name where:
 - The resulting merged IPersonAttributes would have attributes: {email=eric.dalquist@example.com, phone=123-456-7890, office=3233}
 
 #### ReplacingAttributeAdder
-Merging of the Sets of IPersonAttributess is additive. For IPersonAttributess with the same name the person's attributes are merged such that attributes on the second IPersonAttributes replace any attributes with the same name on the first IPersonAttributes.
+Merging of the Sets of IPersonAttributess is additive. For IPersonAttributess with the same name the person's 
+attributes are merged such that attributes on the second IPersonAttributes replace any attributes with the same name on the first IPersonAttributes.
 As an example of this for two IPersonAttributess with the same name where:
 
 - IPersonAttributes A has attributes {email=eric.dalquist@example.com, phone=123-456-7890}
@@ -142,14 +151,17 @@ As an example of this for two IPersonAttributess with the same name where:
 
 ### Request Header Attribute Source
 
-The `RequestAttributeSourceFilter` provides the ability to use values from HttpServletRequest methods and headers as user attributes. The examples below store the attributes in the user's session. 
+The `RequestAttributeSourceFilter` provides the ability to use values from HttpServletRequest methods and headers as user attributes. 
+The examples below store the attributes in the user's session. 
 
-**Note**: The `AdditionalDescriptorsPersonAttributeDao` that actually provides the user attributes from the session should not be wrapped in a CachingPersonAttributeDaoImpl or any other cache, the attributes can change from request to request and the cache will hide this changes.
+**Note**: The `AdditionalDescriptorsPersonAttributeDao` that actually provides the user attributes from the session should 
+not be wrapped in a CachingPersonAttributeDaoImpl or any other cache, the attributes can change from request to request and the cache will hide this changes.
 
 
 #### Examples
 
-There are two ways to use the request attribute source. One requires the username be available as part of the request, the other requires that the application can provide the current username when running an attribute query.
+There are two ways to use the request attribute source. One requires the username be available as part of the request, 
+the other requires that the application can provide the current username when running an attribute query.
 
 **web.xml**: 
 
@@ -233,7 +245,9 @@ The following example assumes the username is provided by `HttpServletRequest.ge
 
 **Example using ICurrentUserProvider**
 
-The following example assumes the username is not available from the request. In this case the application must implement the `ICurrentUserProvider` and inject it into the AdditionalDescriptorsPersonAttributeDao. This is required so the DAO knows for which queries to return the attributes from the request.
+The following example assumes the username is not available from the request. In this case the application must 
+implement the `ICurrentUserProvider` and inject it into the AdditionalDescriptorsPersonAttributeDao. This is required so the 
+DAO knows for which queries to return the attributes from the request.
 
 ```xml
 <!--
@@ -292,7 +306,9 @@ The following example assumes the username is not available from the request. In
 
 ** Example using username from Request and handling session invalidation**
 
-The following example assumes the username is provided by `HttpServletRequest.getRemoteUser()`. This example also handles session invalidation which happens during the login request on some applications, including uPortal. The additional attributes are stored the current request as well as the session ensuring that they are available
+The following example assumes the username is provided by `HttpServletRequest.getRemoteUser()`. This example also handles 
+session invalidation which happens during the login request on some applications, including uPortal. The additional attributes 
+are stored the current request as well as the session ensuring that they are available
 at every point during the request.
 
 ```xml
