@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -23,7 +23,7 @@ package org.jasig.services.persondir.support;
  * current user. This is useful for sources such as {@link AdditionalDescriptorsPersonAttributeDao} where the additional
  * attributes may only be applicable for queries related to the current user of the system, and not for other users the
  * current user is getting attribute information for. 
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision$
  */

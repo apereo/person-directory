@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,26 +18,26 @@
  */
 package org.jasig.services.persondir.support;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.Validate;
-
 /**
  * Uses a List of {@link IAdditionalDescriptors} objects to delegate method calls to. For set/add/remove
  * operations all delegates are called. For get operations the first delegate to return a non-null/empty
  * result is used.
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision$
  */
 public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     private static final long serialVersionUID = 1L;
-    
+
     private List<IAdditionalDescriptors> delegateDescriptors = Collections.emptyList();
-    
+
 
     public void setDelegateDescriptors(final List<IAdditionalDescriptors> delegateDescriptors) {
         Validate.noNullElements(delegateDescriptors, "delegateDescriptors List cannot be null or contain null attributes");
@@ -56,49 +56,47 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
 
     /**
      * Returns list of all removed values
-     * 
+     *
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#removeAttribute(java.lang.String)
      */
     @Override
     public List<Object> removeAttribute(final String name) {
         List<Object> removedValues = null;
-        
+
         for (final IAdditionalDescriptors additionalDescriptors : this.delegateDescriptors) {
             final List<Object> values = additionalDescriptors.removeAttribute(name);
             if (values != null) {
                 if (removedValues == null) {
                     removedValues = new ArrayList<>(values);
-                }
-                else {
+                } else {
                     removedValues.addAll(values);
                 }
             }
         }
-        
+
         return removedValues;
     }
 
     /**
      * Returns list of all replaced values
-     * 
+     *
      * @see org.jasig.services.persondir.support.IAdditionalDescriptors#setAttributeValues(java.lang.String, java.util.List)
      */
     @Override
     public List<Object> setAttributeValues(final String name, final List<Object> values) {
         List<Object> replacedValues = null;
-        
+
         for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
             final List<Object> oldValues = additionalDescriptors.setAttributeValues(name, values);
             if (oldValues != null) {
                 if (replacedValues == null) {
                     replacedValues = new ArrayList<>(oldValues);
-                }
-                else {
+                } else {
                     replacedValues.addAll(oldValues);
                 }
             }
         }
-        
+
         return replacedValues;
     }
 
@@ -133,7 +131,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
                 return additionalDescriptors.getAttributeValue(name);
             }
         }
-        
+
         return null;
     }
 
@@ -148,7 +146,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
                 return additionalDescriptors.getAttributeValues(name);
             }
         }
-        
+
         return null;
     }
 
@@ -163,7 +161,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
                 return attributes;
             }
         }
-        
+
         return Collections.emptyMap();
     }
 
@@ -178,7 +176,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
                 return name;
             }
         }
-        
+
         return null;
     }
 }

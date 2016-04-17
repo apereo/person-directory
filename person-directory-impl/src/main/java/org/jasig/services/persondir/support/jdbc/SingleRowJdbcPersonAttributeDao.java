@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -36,7 +36,7 @@ import java.util.Set;
  * to attribute names. <br>
  * You must set a Map from column names to attribute names and only column names
  * appearing as keys in that map will be used.
- * 
+ *
  * <br>
  * <br>
  * Configuration:
@@ -58,7 +58,7 @@ import java.util.Set;
  *         <td valign="top">{@link java.util.Collections#EMPTY_MAP}</td>
  *     </tr>
  * </table>
- * 
+ *
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist
  * @version $Revision$ $Date$
@@ -73,7 +73,7 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
 
     /**
      * Creates a new MultiRowJdbcPersonAttributeDao specifying the DataSource and SQL to use.
-     * 
+     *
      * @param ds The DataSource to get connections from for executing queries, may not be null.
      * @param sql The SQL to execute for user attributes, may not be null.
      */
@@ -89,17 +89,17 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
         return MAPPER;
     }
 
-    
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#parseAttributeMapFromResults(java.util.List, java.lang.String)
      */
     @Override
     protected List<IPersonAttributes> parseAttributeMapFromResults(final List<Map<String, Object>> queryResults, final String queryUserName) {
         final List<IPersonAttributes> peopleAttributes = new ArrayList<>(queryResults.size());
-        
+
         for (final Map<String, Object> queryResult : queryResults) {
             final Map<String, List<Object>> multivaluedQueryResult = MultivaluedPersonAttributeUtils.toMultivaluedMap(queryResult);
-            
+
             final IPersonAttributes person;
             final String userNameAttribute = this.getConfiguredUserNameAttribute();
             if (this.isUserNameAttributeConfigured() && queryResult.containsKey(userNameAttribute)) {
@@ -118,10 +118,10 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
                 // at a userName attribute
                 person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, multivaluedQueryResult);
             }
-            
+
             peopleAttributes.add(person);
         }
-        
+
         return peopleAttributes;
     }
 }

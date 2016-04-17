@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,15 +17,6 @@
  * under the License.
  */
 package org.jasig.services.persondir.support.ldap;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.naming.directory.SearchControls;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jasig.services.persondir.IPersonAttributes;
@@ -42,6 +33,14 @@ import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.Filter;
 import org.springframework.ldap.filter.LikeFilter;
 import org.springframework.util.Assert;
+
+import javax.naming.directory.SearchControls;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * LDAP implementation of {@link org.jasig.services.persondir.IPersonAttributeDao}.
@@ -170,8 +169,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
                 final Filter filter;
                 if (!queryValueString.contains("*")) {
                     filter = new EqualsFilter(dataAttribute, queryValueString);
-                }
-                else {
+                } else {
                     filter = new LikeFilter(dataAttribute, queryValueString);
                 }
 
@@ -198,8 +196,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         final String ldapQuery;
         if (this.queryTemplate == null) {
             ldapQuery = generatedLdapQuery;
-        }
-        else {
+        } else {
             final Matcher queryMatcher = QUERY_PLACEHOLDER.matcher(this.queryTemplate);
             ldapQuery = queryMatcher.replaceAll(generatedLdapQuery);
             if (logger.isDebugEnabled()) {
@@ -312,6 +309,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     public SearchControls getSearchControls() {
         return this.searchControls;
     }
+
     /**
      * @param searchControls Search controls to use for LDAP queries
      */
@@ -326,6 +324,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     public QueryType getQueryType() {
         return queryType;
     }
+
     /**
      * Type of logical operator to use when joining WHERE clause components
      *
@@ -338,6 +337,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
     public String getQueryTemplate() {
         return this.queryTemplate;
     }
+
     /**
      * Optional wrapper template for the generated part of the query. Use {0} as a placeholder for where the generated query should be inserted.
      *

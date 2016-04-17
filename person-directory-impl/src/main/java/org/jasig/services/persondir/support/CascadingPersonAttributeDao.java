@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,15 +18,15 @@
  */
 package org.jasig.services.persondir.support;
 
+import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.IPersonAttributes;
+import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.jasig.services.persondir.IPersonAttributes;
-import org.jasig.services.persondir.IPersonAttributeDao;
-import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
 
 
 /**
@@ -61,7 +61,7 @@ import org.jasig.services.persondir.support.merger.ReplacingAttributeAdder;
  * It is <u>highly</u> recommended that the first DAO on the list for this class is
  * the {@link org.jasig.services.persondir.support.EchoPersonAttributeDaoImpl}
  * to ensure the seed gets placed into the general result map.
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision$ $Date$
  * @since uPortal 2.5
@@ -82,15 +82,14 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
     public CascadingPersonAttributeDao() {
         this.attrMerger = new ReplacingAttributeAdder();
     }
-    
-    
+
 
     /**
      * If this is the first call, or there are no results in the resultPeople Set and stopIfFirstDaoReturnsNull=false,
      * the seed map is used. If not the attributes of the first user in the resultPeople Set are used for each child
      * dao.  If stopIfFirstDaoReturnsNull=true and the first query returned no results in the resultPeopleSet,
      * return null.
-     *  
+     *
      * @see org.jasig.services.persondir.support.AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, org.jasig.services.persondir.IPersonAttributeDao, java.util.Set)
      */
     @Override
@@ -100,35 +99,34 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
         } else if (stopIfFirstDaoReturnsNull && !isFirstQuery && (resultPeople == null || resultPeople.size() == 0)) {
             return null;
         }
-        
+
         Set<IPersonAttributes> mergedPeopleResults = null;
         for (final IPersonAttributes person : resultPeople) {
             final Map<String, List<Object>> queryAttributes = new LinkedHashMap<>();
-            
+
             //Add the userName into the query map
             final String userName = person.getName();
             if (userName != null) {
                 final Map<String, List<Object>> userNameMap = this.toSeedMap(userName);
                 queryAttributes.putAll(userNameMap);
             }
-            
+
             //Add the rest of the attributes into the query map
             final Map<String, List<Object>> personAttributes = person.getAttributes();
             queryAttributes.putAll(personAttributes);
-            
+
             final Set<IPersonAttributes> newResults = currentlyConsidering.getPeopleWithMultivaluedAttributes(queryAttributes);
             if (newResults != null) {
                 if (mergedPeopleResults == null) {
                     //If this is the first valid result set just use it.
                     mergedPeopleResults = new LinkedHashSet<>(newResults);
-                }
-                else {
+                } else {
                     //Merge the Sets of IPersons
                     mergedPeopleResults = this.attrMerger.mergeResults(mergedPeopleResults, newResults);
                 }
             }
         }
-        
+
         return mergedPeopleResults;
     }
 }

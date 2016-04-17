@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,17 +18,6 @@
  */
 package org.jasig.services.persondir.support.web;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.FilterChain;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.jasig.services.persondir.support.AdditionalDescriptors;
@@ -36,8 +25,17 @@ import org.jasig.services.persondir.util.Util;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
+import javax.servlet.FilterChain;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Eric Dalquist
@@ -68,26 +66,26 @@ public class RequestAttributeSourceFilterTest extends TestCase {
     @Test
     public void testGetAttributesFromRequest() throws Exception {
 
-        final Map<String, Object>  cookieAttributeMapping = new LinkedHashMap<>();
+        final Map<String, Object> cookieAttributeMapping = new LinkedHashMap<>();
         cookieAttributeMapping.put("foo", new LinkedHashSet<Object>(Arrays.asList("foo", "baz")));
         cookieAttributeMapping.put("ding", "ding");
         cookieAttributeMapping.put("boo", "boo");
         requestAttributeSourceFilter.setCookieAttributeMapping(cookieAttributeMapping);
 
-        final Map<String, Object>  headerAttributeMapping = new LinkedHashMap<>();
+        final Map<String, Object> headerAttributeMapping = new LinkedHashMap<>();
         headerAttributeMapping.put("User-Agent", "userAgent");
         headerAttributeMapping.put("user.mail", new LinkedHashSet<Object>(Arrays.asList("user.mail", "email")));
         headerAttributeMapping.put("user.name.given", "user.name.given");
         headerAttributeMapping.put("user.name.family", "user.name.family");
         requestAttributeSourceFilter.setHeaderAttributeMapping(headerAttributeMapping);
 
-        final Map<String, Object>  parameterAttributeMapping = new LinkedHashMap<>();
+        final Map<String, Object> parameterAttributeMapping = new LinkedHashMap<>();
         parameterAttributeMapping.put("nativeClient", new LinkedHashSet<Object>(Arrays.asList("uMobile", "nativeClient")));
         parameterAttributeMapping.put("siteProfile", "siteProfile");
         parameterAttributeMapping.put("notPresent", "notPresent");
         requestAttributeSourceFilter.setParameterAttributeMapping(parameterAttributeMapping);
 
-        final Map<String, Object>  requestAttributeMapping = new LinkedHashMap<>();
+        final Map<String, Object> requestAttributeMapping = new LinkedHashMap<>();
         requestAttributeMapping.put("reqAttr", new LinkedHashSet<Object>(Arrays.asList("attr1", "attr2")));
         requestAttributeMapping.put("eduPersonAffiliation", "eduPersonAffiliation");
         requestAttributeMapping.put("notPresent", "notPresent");
@@ -96,13 +94,13 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         requestAttributeSourceFilter.setRemoteUserAttribute("remoteUser");
         requestAttributeSourceFilter.setRemoteAddrAttribute("remoteAddr");
         requestAttributeSourceFilter.setRemoteHostAttribute("remoteHost");
-        
+
         requestAttributeSourceFilter.setUsernameAttribute("remoteUser");
 
         expect(servletRequest.getRemoteUser()).andReturn("user1");
         expect(servletRequest.getRemoteAddr()).andReturn("127.0.0.1");
         expect(servletRequest.getRemoteHost()).andReturn(null);
-        expect(servletRequest.getCookies()).andReturn(new Cookie[] { new Cookie("foo", "bar"), new Cookie("ding", "dong") });
+        expect(servletRequest.getCookies()).andReturn(new Cookie[]{new Cookie("foo", "bar"), new Cookie("ding", "dong")});
         expect(servletRequest.getHeader("User-Agent")).andReturn("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/40.0.2214.111 Chrome/40.0.2214.111 Safari/537.36");
         expect(servletRequest.getHeader("user.mail")).andReturn("user1@example.com");
         expect(servletRequest.getHeader("user.name.given")).andReturn("Joe");
@@ -118,18 +116,18 @@ public class RequestAttributeSourceFilterTest extends TestCase {
 
         filterChain.doFilter(servletRequest, servletResponse);
         EasyMock.expectLastCall();
-                
+
         EasyMock.replay(servletRequest, servletResponse, filterChain);
 
         requestAttributeSourceFilter.doFilter(servletRequest, servletResponse, filterChain);
-        
+
         EasyMock.verify(servletRequest, servletResponse, filterChain);
 
         assertEquals("user1", additionalDescriptors.getName());
-        
+
         expectedAttributes.put("remoteUser", Util.list("user1"));
         expectedAttributes.put("remoteAddr", Util.list("127.0.0.1"));
-        expectedAttributes.put("remoteHost", Util.list((Object[])null));
+        expectedAttributes.put("remoteHost", Util.list((Object[]) null));
         expectedAttributes.put("foo", Util.list("bar"));
         expectedAttributes.put("baz", Util.list("bar"));
         expectedAttributes.put("ding", Util.list("dong"));
@@ -152,13 +150,13 @@ public class RequestAttributeSourceFilterTest extends TestCase {
     public void testGetAttributesWithRefUrl() throws Exception {
         requestAttributeSourceFilter.setReferringParameterName("refUrl");
 
-        final Map<String, Object>  requestAttributeMapping = new LinkedHashMap<>();
+        final Map<String, Object> requestAttributeMapping = new LinkedHashMap<>();
         requestAttributeMapping.put("nativeClient", new LinkedHashSet<Object>(Arrays.asList("uMobile", "nativeClient")));
         requestAttributeMapping.put("siteProfile", "siteProfile");
         requestAttributeMapping.put("notPresent", "notPresent");
         requestAttributeSourceFilter.setParameterAttributeMapping(requestAttributeMapping);
 
-        expect(servletRequest.getCookies()).andReturn(new Cookie[] { new Cookie("foo", "bar"), new Cookie("ding", "dong") });
+        expect(servletRequest.getCookies()).andReturn(new Cookie[]{new Cookie("foo", "bar"), new Cookie("ding", "dong")});
         expect(servletRequest.getParameter("refUrl")).andReturn("/uPortal/?nativeClient=true").times(2);
         expect(servletRequest.getParameter("nativeClient")).andReturn(null);
         expect(servletRequest.getParameter("siteProfile")).andReturn(null);
@@ -185,13 +183,13 @@ public class RequestAttributeSourceFilterTest extends TestCase {
     public void testGetAttributesWithRefUrlMultipleValues() throws Exception {
         requestAttributeSourceFilter.setReferringParameterName("refUrl");
 
-        final Map<String, Object>  requestAttributeMapping = new LinkedHashMap<>();
+        final Map<String, Object> requestAttributeMapping = new LinkedHashMap<>();
         requestAttributeMapping.put("nativeClient", new LinkedHashSet<Object>(Arrays.asList("uMobile", "nativeClient")));
         requestAttributeMapping.put("siteProfile", "siteProfile");
         requestAttributeMapping.put("misCode", "misCode");
         requestAttributeSourceFilter.setParameterAttributeMapping(requestAttributeMapping);
 
-        expect(servletRequest.getCookies()).andReturn(new Cookie[] { new Cookie("foo", "bar"), new Cookie("ding", "dong") });
+        expect(servletRequest.getCookies()).andReturn(new Cookie[]{new Cookie("foo", "bar"), new Cookie("ding", "dong")});
         expect(servletRequest.getParameter("refUrl")).andReturn("/uPortal/?nativeClient=true&misCode=ab123").times(2);
         expect(servletRequest.getParameter("nativeClient")).andReturn(null);
         expect(servletRequest.getParameter("siteProfile")).andReturn(null);

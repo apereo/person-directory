@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +18,19 @@
  */
 package org.jasig.services.persondir.support.web;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jasig.services.persondir.support.IAdditionalDescriptors;
+import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.filter.GenericFilterBean;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -29,20 +42,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.jasig.services.persondir.support.IAdditionalDescriptors;
-import org.jasig.services.persondir.support.MultivaluedPersonAttributeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.filter.GenericFilterBean;
 
 /**
  * {@link javax.servlet.Filter} that can provide {@link HttpServletRequest} headers and other properties on the request
@@ -68,13 +67,13 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         POST,
         BOTH;
     }
-    
+
     private String usernameAttribute;
     private Map<String, Set<String>> cookieAttributeMapping = Collections.emptyMap();
     private Map<String, Set<String>> headerAttributeMapping = Collections.emptyMap();
     private Map<String, Set<String>> parameterAttributeMapping = Collections.emptyMap();
     private Map<String, Set<String>> requestAttributeMapping = Collections.emptyMap();
-    private Set<String> headersToIgnoreSemicolons = new HashSet<>(Arrays.asList(new String[] {"User-Agent"}));
+    private Set<String> headersToIgnoreSemicolons = new HashSet<>(Arrays.asList(new String[]{"User-Agent"}));
     private IAdditionalDescriptors additionalDescriptors;
     private String remoteUserAttribute;
     private String remoteAddrAttribute;
@@ -86,10 +85,11 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     private String urlCharacterEncoding = StandardCharsets.UTF_8.name();
 
     private ProcessingPosition processingPosition = ProcessingPosition.POST;
-    
+
     public String getUsernameAttribute() {
         return usernameAttribute;
     }
+
     /**
      * The name of the attribute from the request (header or property) to use as the username. Required
      * so that Person Directory can later associate these attributes with the user correctly during queries.
@@ -103,6 +103,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public String getRemoteUserAttribute() {
         return remoteUserAttribute;
     }
+
     /**
      * If specified {@link HttpServletRequest#getRemoteUser()} is added as an attribute under the provided name
      *
@@ -115,6 +116,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public String getRemoteAddrAttribute() {
         return remoteAddrAttribute;
     }
+
     /**
      * If specified {@link HttpServletRequest#getRemoteAddr()} is added as an attribute under the provided name
      *
@@ -127,6 +129,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public String getRemoteHostAttribute() {
         return remoteHostAttribute;
     }
+
     /**
      * If specified {@link HttpServletRequest#getRemoteHost()} is added as an attribute under the provided name
      *
@@ -135,10 +138,11 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public void setRemoteHostAttribute(final String remoteHostAttribute) {
         this.remoteHostAttribute = remoteHostAttribute;
     }
-    
+
     public String getServerNameAttribute() {
         return serverNameAttribute;
     }
+
     /**
      * If specified {@link HttpServletRequest#getServerName()} is added as an attribute under the provided name
      *
@@ -151,6 +155,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public String getServerPortAttribute() {
         return serverPortAttribute;
     }
+
     /**
      * If specified {@link HttpServletRequest#getServerPort()} is added as an attribute under the provided name
      *
@@ -159,10 +164,11 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public void setServerPortAttribute(final String serverPortAttribute) {
         this.serverPortAttribute = serverPortAttribute;
     }
-    
+
     public IAdditionalDescriptors getAdditionalDescriptors() {
         return additionalDescriptors;
     }
+
     /**
      * The {@link IAdditionalDescriptors} instance to set request attributes on. This should be a Spring session-scoped
      * proxy to allow each session to have its own set of request-populated attributes.
@@ -176,6 +182,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public boolean isClearExistingAttributes() {
         return clearExistingAttributes;
     }
+
     /**
      * If true when attributes are found on the request any existing attributes in the provided {@link IAdditionalDescriptors}
      * object will cleared and replaced with the new attributes. If false (default) the new attributes overwrite existing
@@ -187,10 +194,11 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public void setClearExistingAttributes(final boolean clearExistingAttributes) {
         this.clearExistingAttributes = clearExistingAttributes;
     }
-    
+
     public ProcessingPosition getProcessingPosition() {
         return processingPosition;
     }
+
     /**
      * Sets the pre/post/both position of the processing relative to the doFilter call.
      * PRE  means the attribute processing happens before the doFilter call
@@ -207,9 +215,9 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * Set the {@link Map} to use for mapping from a cookie name to an attribute name or {@link Set} of attribute
      * names. Cookie names that are not specified as keys in this {@link Map} will be ignored.
      * <br>
-     * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set} 
+     * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set}
      * of {@link String}.
-     * 
+     *
      * @param cookieAttributeMapping {@link Map} from cookie names to attribute names, may not be null.
      * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
      * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
@@ -230,9 +238,9 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * Set the {@link Map} to use for mapping from a header name to an attribute name or {@link Set} of attribute
      * names. Header names that are not specified as keys in this {@link Map} will be ignored.
      * <br>
-     * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set} 
+     * The passed {@link Map} must have keys of type {@link String} and values of type {@link String} or a {@link Set}
      * of {@link String}.
-     * 
+     *
      * @param headerAttributeMapping {@link Map} from header names to attribute names, may not be null.
      * @throws IllegalArgumentException If the {@link Map} doesn't follow the rules stated above.
      * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
@@ -345,9 +353,9 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         if (ProcessingPosition.PRE == this.processingPosition || ProcessingPosition.BOTH == this.processingPosition) {
             this.doProcessing(servletRequest);
         }
-        
+
         chain.doFilter(servletRequest, servletResponse);
-        
+
         if (ProcessingPosition.POST == this.processingPosition || ProcessingPosition.BOTH == this.processingPosition) {
             this.doProcessing(servletRequest);
         }
@@ -355,10 +363,10 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
 
     private void doProcessing(final ServletRequest servletRequest) {
         if (servletRequest instanceof HttpServletRequest) {
-            final HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
-            
+            final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+
             final Map<String, List<Object>> attributes = new LinkedHashMap<>();
-            
+
             this.addRequestProperties(httpServletRequest, attributes);
 
             this.addRequestCookies(httpServletRequest, attributes);
@@ -374,19 +382,17 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             if (usernameAttributes == null || usernameAttributes.isEmpty() || usernameAttributes.get(0) == null) {
                 logger.info("No username found as attribute '{}' among {}", usernameAttribute, attributes);
                 username = null;
-            }
-            else {
+            } else {
                 username = usernameAttributes.get(0).toString();
             }
-            
+
             logger.debug("Adding attributes for user {}, attributes {}", username, attributes);
 
             this.additionalDescriptors.setName(username);
 
             if (this.clearExistingAttributes) {
                 this.additionalDescriptors.setAttributes(attributes);
-            }
-            else {
+            } else {
                 this.additionalDescriptors.addAttributes(attributes);
             }
         }
@@ -453,7 +459,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         for (final Map.Entry<String, Set<String>> headerAttributeEntry : this.headerAttributeMapping.entrySet()) {
             final String headerName = headerAttributeEntry.getKey();
             final String value = httpServletRequest.getHeader(headerName);
-            
+
             if (value != null) {
                 for (final String attributeName : headerAttributeEntry.getValue()) {
                     attributes.put(attributeName,
@@ -483,7 +489,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             if (value != null) {
                 if (value instanceof String) {
                     for (final String attrName : attributeMapping.getValue()) {
-                        attributes.put(attrName, splitOnSemiColonHandlingBackslashEscaping((String)value));
+                        attributes.put(attrName, splitOnSemiColonHandlingBackslashEscaping((String) value));
                     }
                 } else {
                     logger.warn("Specified request attribute {} is not a String, is a {} so it is ignored", attributeName,
@@ -509,7 +515,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         if (referringParameterName != null
                 && StringUtils.isNotBlank(httpServletRequest.getParameter(referringParameterName))) {
             String referringValue = httpServletRequest.getParameter(referringParameterName);
-            Map<String,String> referringParameters = parseRequestParameterString(referringValue);
+            Map<String, String> referringParameters = parseRequestParameterString(referringValue);
             for (final Map.Entry<String, Set<String>> parameterMapping : parameterAttributeMapping.entrySet()) {
                 final String parameterName = parameterMapping.getKey();
                 final String value = referringParameters.get(parameterName);
@@ -533,8 +539,8 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         }
     }
 
-    private Map<String,String> parseRequestParameterString (String requestParameterString) {
-        Map<String,String> parameters = new HashMap<>();
+    private Map<String, String> parseRequestParameterString(String requestParameterString) {
+        Map<String, String> parameters = new HashMap<>();
         if (requestParameterString.indexOf("?") > 0) {
             requestParameterString = requestParameterString.substring(requestParameterString.indexOf("?") + 1);
         }
@@ -557,7 +563,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     /* transforms "a\;b" into list { "a;b" } */
     /* transforms "a;b\;" into list { "a", "b;" } */
     private static List<Object> splitOnSemiColonHandlingBackslashEscaping(final String in) {
-	final List<Object> result = new LinkedList<>();
+        final List<Object> result = new LinkedList<>();
 
         int i = 1;
         String prefix = "";

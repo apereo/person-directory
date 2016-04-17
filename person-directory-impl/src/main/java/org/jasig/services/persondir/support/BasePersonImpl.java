@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,14 +18,17 @@
  */
 package org.jasig.services.persondir.support;
 
-import java.util.*;
-
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jasig.services.persondir.IPersonAttributes;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Eric Dalquist
@@ -35,10 +38,10 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     private static final long serialVersionUID = 1L;
 
     private final Map<String, List<Object>> attributes;
-    
+
     public BasePersonImpl(final Map<String, List<Object>> attributes) {
         Validate.notNull(attributes, "attributes can not be null");
-        
+
         final Map<String, List<Object>> immutableValuesBuilder = this.buildImmutableAttributeMap(attributes);
 
         // NOTE:  Do not return a copy of the map.  This must return the existing map or wrap the map with
@@ -61,11 +64,11 @@ public abstract class BasePersonImpl implements IPersonAttributes {
         for (final Map.Entry<String, List<Object>> attrEntry : attributes.entrySet()) {
             final String key = attrEntry.getKey();
             List<Object> value = attrEntry.getValue();
-            
+
             if (value != null) {
                 value = Collections.unmodifiableList(value);
             }
-            
+
             immutableValuesBuilder.put(key, value);
         }
 
@@ -91,7 +94,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
         if (values == null || values.size() == 0) {
             return null;
         }
-        
+
         return values.get(0);
     }
 
@@ -104,7 +107,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
         if (values == null) {
             return null;
         }
-        
+
         return values;
     }
 
@@ -129,8 +132,8 @@ public abstract class BasePersonImpl implements IPersonAttributes {
         }
         final IPersonAttributes rhs = (IPersonAttributes) object;
         return new EqualsBuilder()
-            .append(this.getName(), rhs.getName())
-            .isEquals();
+                .append(this.getName(), rhs.getName())
+                .isEquals();
     }
 
     /**
@@ -139,8 +142,8 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(1574945487, 827742191)
-            .append(this.getName())
-            .toHashCode();
+                .append(this.getName())
+                .toHashCode();
     }
 
     /**
@@ -149,8 +152,8 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-            .append("name", this.getName())
-            .append("attributes", this.attributes)
-            .toString();
+                .append("name", this.getName())
+                .append("attributes", this.attributes)
+                .toString();
     }
 }

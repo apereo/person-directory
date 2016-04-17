@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,9 +20,7 @@ package org.jasig.services.persondir.support;
 
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.collections4.map.CaseInsensitiveMap;
-import org.apache.commons.collections4.map.ListOrderedMap;
+import java.util.TreeMap;
 
 /**
  * Custom IPersonAttributes that uses a case insensitive Map to hide attribute name case.  The attribute names
@@ -41,14 +39,6 @@ public class CaseInsensitiveNamedPersonImpl extends NamedPersonImpl {
     @SuppressWarnings("unchecked")
     @Override
     protected Map<String, List<Object>> createImmutableAttributeMap(final int size) {
-        // NOTE:  Collections4 API for ListOrderedMap indicates it should not wrap CaseInsensitiveMap.  I found
-        // that if you do not wrap the CaseInsensitiveMap with the ListOrderedMap, the attribute names become
-        // all lower case which at this point breaks backwards compatibility.
-        // To remove the ListOrderedMap you must make default person directory behavior the case-sensitive
-        // behavior, but also insure case-insensitive comparison in
-        // AbstractQueryPersonAttributeDao.mapPersonAttributes.  James W 6/15
-        // See https://issues.jasig.org/browse/PERSONDIR-89
-        // https://commons.apache.org/proper/commons-collections/apidocs/index.html?org/apache/commons/collections4/map/ListOrderedMap.html
-        return ListOrderedMap.listOrderedMap(new CaseInsensitiveMap(size > 0 ? size : 1));
+        return new TreeMap(String.CASE_INSENSITIVE_ORDER);
     }
 }

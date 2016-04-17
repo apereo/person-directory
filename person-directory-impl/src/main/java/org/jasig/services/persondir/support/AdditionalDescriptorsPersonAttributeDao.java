@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,17 +19,17 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.IPersonAttributes;
 import org.jasig.services.persondir.util.CaseCanonicalizationMode;
 import org.springframework.beans.factory.annotation.Required;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of {@link IPersonAttributeDao} that allows other subsystems 
@@ -59,7 +59,7 @@ import org.springframework.beans.factory.annotation.Required;
  *         <td valign="top">null</td>
  *     </tr>
  * </table>
- * 
+ *
  * @author awills
  */
 public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
@@ -191,7 +191,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     }
 
     public void setUsernameCaseCanonicalizationMode(final CaseCanonicalizationMode usernameCaseCanonicalizationMode) {
-        if ( usernameCaseCanonicalizationMode == null ) {
+        if (usernameCaseCanonicalizationMode == null) {
             this.usernameCaseCanonicalizationMode = AbstractQueryPersonAttributeDao.DEFAULT_USERNAME_CASE_CANONICALIZATION_MODE;
         } else {
             this.usernameCaseCanonicalizationMode = usernameCaseCanonicalizationMode;
@@ -203,7 +203,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     }
 
     public void setUsernameCaseCanonicalizationLocale(final Locale usernameCaseCanonicalizationLocale) {
-        if ( usernameCaseCanonicalizationLocale == null ) {
+        if (usernameCaseCanonicalizationLocale == null) {
             this.usernameCaseCanonicalizationLocale = Locale.getDefault();
         } else {
             this.usernameCaseCanonicalizationLocale = usernameCaseCanonicalizationLocale;

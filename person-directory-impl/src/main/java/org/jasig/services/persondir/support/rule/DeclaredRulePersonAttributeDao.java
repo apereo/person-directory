@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,13 +18,6 @@
  */
 package org.jasig.services.persondir.support.rule;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
 import org.jasig.services.persondir.IPersonAttributes;
@@ -32,12 +25,19 @@ import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttrib
 import org.jasig.services.persondir.support.IUsernameAttributeProvider;
 import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Implementation of uPortal's <code>IPersonAttributeDao</code> that evaluates
  * person directory information based on configurable rules.  You may chain as 
  * many rules as you like, but this DAO will apply <b>at most</b> one rule, the
  * first that triggers.
- * 
+ *
  * <br>
  * <br>
  * Configuration:
@@ -73,7 +73,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * Creates a new DeclaredRulePersonAttributeDao specifying the attributeName to pass to
      * {@link #getUsernameAttributeProvider()} and the {@link List} of {@link AttributeRule}s
      * to pass to {@link #setRules(List)}
-     * 
+     *
      * @param attributeName attribute name
      * @param rules rules
      */
@@ -93,13 +93,14 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
             logger.debug("Created DeclaredRulePersonAttributeDao with attributeName='" + attributeName + "' and rules='" + rules + "'");
         }
     }
-    
+
     /**
      * @return the rules
      */
     public List<AttributeRule> getRules() {
         return this.rules;
     }
+
     /**
      * @param rules the rules to set
      */
@@ -125,14 +126,14 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
                 return rule.evaluate(seed);
             }
         }
-        
+
         return null;
     }
 
     /**
      * Aggregates the results of calling {@link AttributeRule#getPossibleUserAttributeNames()}
      * on each {@link AttributeRule} instance in the rules array.
-     * 
+     *
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
      */
     @Override

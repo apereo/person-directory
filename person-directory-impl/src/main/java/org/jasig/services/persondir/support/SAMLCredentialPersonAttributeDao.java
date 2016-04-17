@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,12 +19,6 @@
 
 package org.jasig.services.persondir.support;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.jasig.services.persondir.IPersonAttributes;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.xml.XMLObject;
@@ -32,6 +26,12 @@ import org.opensaml.xml.schema.XSString;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.saml.SAMLCredential;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Captures user attributes <i>via</i> the SAMLCredential for applications that
@@ -68,7 +68,8 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(QueryBuilder queryBuilder, String queryUserName) {
 
-        final String currentUserName = currentUserProvider.getCurrentUserName();;
+        final String currentUserName = currentUserProvider.getCurrentUserName();
+        ;
         if (currentUserName == null) {
             this.logger.warn("A null name was returned by the currentUserProvider, returning null.");
             return Collections.emptyList();
@@ -91,11 +92,11 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
                         msg.append("Credential obtained!");
                         for (Attribute a : credential.getAttributes()) {
                             msg.append("\n    a.getName()=").append(a.getName())
-                                .append("\n    a.getFriendlyName()=").append(a.getFriendlyName());
-                                for (XMLObject xmlo : a.getAttributeValues()) {
-                                    XSString str = (XSString) xmlo;
-                                    msg.append("\n        value="+str.getValue());
-                                }
+                                    .append("\n    a.getFriendlyName()=").append(a.getFriendlyName());
+                            for (XMLObject xmlo : a.getAttributeValues()) {
+                                XSString str = (XSString) xmlo;
+                                msg.append("\n        value=" + str.getValue());
+                            }
                         }
                         logger.trace(msg.toString());
                     }

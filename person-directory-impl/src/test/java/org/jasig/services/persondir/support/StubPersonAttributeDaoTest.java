@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,34 +22,39 @@ import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.util.Util;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
  * Testcase for StubPersonAttributeDao.
  * @version $Revision$ $Date$
  */
-public class StubPersonAttributeDaoTest 
-    extends AbstractPersonAttributeDaoTest {
+public class StubPersonAttributeDaoTest
+        extends AbstractPersonAttributeDaoTest {
 
     private StubPersonAttributeDao testInstance;
     private Map<String, List<Object>> backingMap;
-    
-    
+
+
     @Override
     protected void setUp() throws Exception {
         final Map<String, List<Object>> map = new HashMap<>();
         map.put("shirtColor", Util.list("blue"));
         map.put("phone", Util.list("777-7777"));
-        
+
         this.backingMap = map;
-        
+
         this.testInstance = new StubPersonAttributeDao();
         this.testInstance.setBackingMap(map);
-        
+
         super.setUp();
     }
-    
+
     /**
      * Test that when the backing map is set properly reports possible 
      * attribute names and when the map is not set returns null for
@@ -61,7 +66,7 @@ public class StubPersonAttributeDaoTest
         expectedAttributeNames.add("phone");
         final Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
         assertEquals(expectedAttributeNames, possibleAttributeNames);
-        
+
         final StubPersonAttributeDao nullBacking = new StubPersonAttributeDao();
         assertEquals(Collections.EMPTY_SET, nullBacking.getPossibleUserAttributeNames());
     }

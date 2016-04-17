@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,87 +18,87 @@
  */
 package org.jasig.services.persondir.support.rule;
 
+import junit.framework.TestCase;
+import org.jasig.services.persondir.util.Util;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
-import org.jasig.services.persondir.util.Util;
-
 public class SimpleAttributeRuleTest extends TestCase {
 
-	private static final String WHEN_KEY = "eduPersonPrimaryAffiliation";
-	private static final String WHEN_PATTERN = "records-staff";
-	private static final String SET_UID = "username";
-	private static final String SET_KEY = "fax";
-	private static final String SET_VALUE = "(480) 555-1212";
+    private static final String WHEN_KEY = "eduPersonPrimaryAffiliation";
+    private static final String WHEN_PATTERN = "records-staff";
+    private static final String SET_UID = "username";
+    private static final String SET_KEY = "fax";
+    private static final String SET_VALUE = "(480) 555-1212";
 
 	/*
-	 * Public API.
+     * Public API.
 	 */
-	
-	public SimpleAttributeRuleTest() {}
 
-	public void testConstructorParameters() {
-        
-		// whenKey.
-		try {
-			new SimpleAttributeRule(null, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
-			fail("IllegalArgumentException should have been thrown with null 'whenKey'.");
-		} catch (final IllegalArgumentException iae) {
-			// expected...
-		}
+    public SimpleAttributeRuleTest() {
+    }
 
-		// whenPattern.
-		try {
-			new SimpleAttributeRule(WHEN_KEY, null, SET_UID, SET_KEY, SET_VALUE);
-			fail("IllegalArgumentException should have been thrown with null 'whenPattern'.");
-		} catch (final IllegalArgumentException iae) {
-			// expected...
-		}
+    public void testConstructorParameters() {
 
-		// setKey.
-		try {
-			new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, null, SET_VALUE);
-			fail("IllegalArgumentException should have been thrown with null 'setKey'.");
-		} catch (final IllegalArgumentException iae) {
-			// expected...
-		}
+        // whenKey.
+        try {
+            new SimpleAttributeRule(null, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
+            fail("IllegalArgumentException should have been thrown with null 'whenKey'.");
+        } catch (final IllegalArgumentException iae) {
+            // expected...
+        }
 
-		// setValue.
-		try {
-			new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, null);
-			fail("IllegalArgumentException should have been thrown with null 'setValue'.");
-		} catch (final IllegalArgumentException iae) {
-			// expected...
-		}
+        // whenPattern.
+        try {
+            new SimpleAttributeRule(WHEN_KEY, null, SET_UID, SET_KEY, SET_VALUE);
+            fail("IllegalArgumentException should have been thrown with null 'whenPattern'.");
+        } catch (final IllegalArgumentException iae) {
+            // expected...
+        }
+
+        // setKey.
+        try {
+            new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, null, SET_VALUE);
+            fail("IllegalArgumentException should have been thrown with null 'setKey'.");
+        } catch (final IllegalArgumentException iae) {
+            // expected...
+        }
+
+        // setValue.
+        try {
+            new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, null);
+            fail("IllegalArgumentException should have been thrown with null 'setValue'.");
+        } catch (final IllegalArgumentException iae) {
+            // expected...
+        }
 
 
-	}
+    }
 
-	public void testAppliesToParameters() {
-        
-		final AttributeRule r = new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
-		
-		// null.
-		try {
-			r.appliesTo(null);
-			fail("IllegalArgumentException should have been thrown with null 'userInfo'.");
-		} catch (final IllegalArgumentException iae) {
-			// expected...
-		}
+    public void testAppliesToParameters() {
 
-		final Map<String, List<Object>> m = new HashMap<>();
-		
-		// String --> true.
-		m.put(WHEN_KEY, Util.list(WHEN_PATTERN));
-		assertTrue(r.appliesTo(m));
+        final AttributeRule r = new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
 
-		// String --> false.
-		m.put(WHEN_KEY, Util.list("monkey"));
-		assertFalse(r.appliesTo(m));
+        // null.
+        try {
+            r.appliesTo(null);
+            fail("IllegalArgumentException should have been thrown with null 'userInfo'.");
+        } catch (final IllegalArgumentException iae) {
+            // expected...
+        }
 
-	}
+        final Map<String, List<Object>> m = new HashMap<>();
+
+        // String --> true.
+        m.put(WHEN_KEY, Util.list(WHEN_PATTERN));
+        assertTrue(r.appliesTo(m));
+
+        // String --> false.
+        m.put(WHEN_KEY, Util.list("monkey"));
+        assertFalse(r.appliesTo(m));
+
+    }
 
 }

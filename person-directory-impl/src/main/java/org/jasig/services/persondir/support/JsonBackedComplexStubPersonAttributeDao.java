@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,42 +18,41 @@
  */
 package org.jasig.services.persondir.support;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.core.io.Resource;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.core.io.Resource;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * A convenient wrapper around <code>ComplexStubPersonAttributeDao</code> that reads the configuration for its <i>backingMap</i>
  * property from an external JSON configuration resource. 
- * 
+ *
  * <p>Sample JSON file:
  * <pre><code>
  * {
-        "u1":{
-            "firstName":["Json1"],
-            "lastName":["One"],
-            "additionalAttribute":["here I AM!!!"],
-            "additionalAttribute2":["attr2"],
-            "eduPersonAffiliation":["alumni", "staff"]
-        },
-        "u2":{
-            "firstName":["Json2"],
-            "lastName":["Two"],
-            "eduPersonAffiliation":["employee", "student"]
-        },
-        "u3":{
-            "firstName":["Json3"],
-            "lastName":["Three"],
-            "eduPersonAffiliation":["alumni", "student", "employee", "some other attr"]
-        }   
-    }
+ "u1":{
+ "firstName":["Json1"],
+ "lastName":["One"],
+ "additionalAttribute":["here I AM!!!"],
+ "additionalAttribute2":["attr2"],
+ "eduPersonAffiliation":["alumni", "staff"]
+ },
+ "u2":{
+ "firstName":["Json2"],
+ "lastName":["Two"],
+ "eduPersonAffiliation":["employee", "student"]
+ },
+ "u3":{
+ "firstName":["Json3"],
+ "lastName":["Three"],
+ "eduPersonAffiliation":["alumni", "student", "employee", "some other attr"]
+ }
+ }
  * </code></pre>
- * 
+ *
  * @author Dmitriy Kopylenko
  * @author Misagh Moayyed
  */

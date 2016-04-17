@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,19 +17,6 @@
  * under the License.
  */
 package org.jasig.services.persondir.support.xml;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jasig.services.persondir.IPersonAttributes;
@@ -45,31 +32,45 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * XML backed person attribute DAO that supports wildcard searching. The XML files provided must conform to the
  * PersonData.xsd which resides at the root of the classpath.
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision$
  */
 public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao implements InitializingBean {
     private final AttributeLoader attributeLoader = new AttributeLoader();
-    
+
     //Set of all attribute names across all available IPersonAttributes 
     private Set<String> attributesCache = null;
     //Map from attribute name to the Set of IPersonAttributes that have that attribute
     private Map<String, Set<IPersonAttributes>> personByAttributeCache = null;
     //Map from person name to IPersonAttributes
     private Map<String, IPersonAttributes> personByNameCache = null;
-    
-    
+
+
     private CachingJaxbLoader<PersonData> jaxbLoader;
     private Resource mappedXmlResource;
-    
+
     public CachingJaxbLoader<PersonData> getJaxbLoader() {
         return jaxbLoader;
     }
+
     /**
      * The {@link CachingJaxbLoader} to use to load the {@link PersonData}, if set the mappedXmlResource property is
      * ignored.
@@ -83,6 +84,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     public Resource getMappedXmlResource() {
         return mappedXmlResource;
     }
+
     /**
      * The XML {@link Resource} to load the {@link PersonData} from, required if the jaxbLoader property is not set.
      *
@@ -91,7 +93,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     public void setMappedXmlResource(final Resource mappedXmlResource) {
         this.mappedXmlResource = mappedXmlResource;
     }
-    
+
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
@@ -100,14 +102,14 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
         if (this.jaxbLoader == null && this.mappedXmlResource == null) {
             throw new BeanCreationException("Either the 'jaxbLoader' property or the 'mappedXmlResource' property needs to be set");
         }
-        
+
         if (this.jaxbLoader == null) {
             this.jaxbLoader = new CachingJaxbLoaderImpl<>(PersonData.class);
-            ((CachingJaxbLoaderImpl<PersonData>)this.jaxbLoader).setMappedXmlResource(this.mappedXmlResource);
+            ((CachingJaxbLoaderImpl<PersonData>) this.jaxbLoader).setMappedXmlResource(this.mappedXmlResource);
         }
     }
-    
-    
+
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
@@ -141,10 +143,10 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
-        
+
         //Tracks persons that could match the query
         final Map<String, IPersonAttributes> canidatePersons = new LinkedHashMap<>();
-        
+
         boolean firstAttribute = true;
         for (final Map.Entry<String, List<Object>> queryEntry : query.entrySet()) {
             final String entryKey = queryEntry.getKey();
@@ -153,7 +155,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
             if (!this.attributesCache.contains(entryKey)) {
                 continue;
             }
-            
+
             //Build list of non-blank attribute values
             final List<String> entryValues = new LinkedList<>();
             for (final Object entryValue : queryEntry.getValue()) {
@@ -162,32 +164,32 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
                 if (entryValue == null || StringUtils.isBlank(entry = entryValue.toString())) {
                     continue;
                 }
-                
+
                 entryValues.add(entry);
             }
-            
+
             //Skip attributes that have no non-blank values
             if (entryValues.size() == 0) {
                 continue;
             }
-            
+
             //Build Set of Persons that have the current attribute
             final Set<IPersonAttributes> personsForAttribute = this.personByAttributeCache.get(entryKey);
-            for (final Iterator<IPersonAttributes> canidateItr = canidatePersons.values().iterator(); canidateItr.hasNext();) {
+            for (final Iterator<IPersonAttributes> canidateItr = canidatePersons.values().iterator(); canidateItr.hasNext(); ) {
                 final IPersonAttributes canidate = canidateItr.next();
                 if (!personsForAttribute.contains(canidate)) {
                     canidateItr.remove();
                 }
             }
-            
+
             final Map<String, IPersonAttributes> attributeCanidatePersons = new LinkedHashMap<>();
             final Set<String> attributeMissPersons = new HashSet<>();
-            
+
             //Iterate over each possible value for an attribute checking for a match in the personsForAttribute 
             for (final String queryString : entryValues) {
                 //Convert the query value into a regular expression pattern
                 final Pattern queryPattern = PatternHelper.compilePattern(queryString);
-                
+
                 //Look for the attribute value in each potential IPersonAttributes
                 for (final IPersonAttributes person : personsForAttribute) {
                     //If this isn't the first attribute and this person isn't a canidate skip them
@@ -198,7 +200,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
 
                     //Track if any of the person's attributes match
                     boolean foundMatch = false;
-                    
+
                     //Compare the query pattern with the person's attribute values
                     final List<Object> personAttributeValues = person.getAttributeValues(entryKey);
                     if (personAttributeValues != null) {
@@ -207,7 +209,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
                             if (personAttributeValue == null) {
                                 continue;
                             }
-                            
+
                             final String personAttributeString = personAttributeValue.toString();
                             final Matcher personAttributeMatcher = queryPattern.matcher(personAttributeString);
                             if (personAttributeMatcher.matches()) {
@@ -219,14 +221,14 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
                             }
                         }
                     }
-                    
+
                     //No match for this attribute, remove the person from the canidate map if they are there
                     if (!foundMatch && !attributeCanidatePersons.containsKey(name)) {
                         attributeMissPersons.add(name);
                     }
                 }
             }
-            
+
             canidatePersons.putAll(attributeCanidatePersons);
             for (final String userName : attributeMissPersons) {
                 canidatePersons.remove(userName);
@@ -234,26 +236,23 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
 
             //Ran through a query entry completely
             firstAttribute = false;
-            
+
             //If no potential matches are left give up since canidatePersons never grows after the first pass
             if (canidatePersons.size() == 0) {
                 break;
             }
         }
-        
+
         return new LinkedHashSet<>(canidatePersons.values());
     }
-    
-    
+
+
     /**
      * Internal loader that takes care of parsing out the loaded data from the XML file into some
      * maps that are easier to search
      */
     private class AttributeLoader implements UnmarshallingCallback<PersonData> {
 
-        /* (non-Javadoc)
-         * @see org.jasig.services.persondir.support.xml.CachingJaxbLoader.UnmarshallingCallback#postProcessUnmarshalling(java.lang.Object)
-         */
         @Override
         public synchronized void postProcessUnmarshalling(final PersonData unmarshalledObject) {
             final Set<String> attributeNames = new LinkedHashSet<>();
@@ -263,20 +262,20 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
             final IUsernameAttributeProvider usernameAttributeProvider = XmlPersonAttributeDao.this.getUsernameAttributeProvider();
             final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
             attributeNames.add(usernameAttribute);
-            
+
             for (final Person xmlPerson : unmarshalledObject.getPerson()) {
                 final Map<String, List<Object>> attributes = new LinkedHashMap<>();
-                
+
                 for (final Attribute xmlAttribute : xmlPerson.getAttribute()) {
                     final String key = xmlAttribute.getKey();
                     attributeNames.add(key);
-                    
+
                     attributes.put(key, new ArrayList<Object>(xmlAttribute.getValue()));
                 }
-                
+
                 final IPersonAttributes personAttributes = new NamedPersonImpl(xmlPerson.getName(), attributes);
                 personByNameCache.put(personAttributes.getName(), personAttributes);
-                
+
                 for (final String key : personAttributes.getAttributes().keySet()) {
                     Set<IPersonAttributes> personsForAttribute = personByAttributeCache.get(key);
                     if (personsForAttribute == null) {
@@ -286,7 +285,7 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
                     personsForAttribute.add(personAttributes);
                 }
             }
-            
+
             XmlPersonAttributeDao.this.attributesCache = Collections.unmodifiableSet(attributeNames);
             XmlPersonAttributeDao.this.personByAttributeCache = Collections.unmodifiableMap(personByAttributeCache);
             XmlPersonAttributeDao.this.personByNameCache = Collections.unmodifiableMap(personByNameCache);

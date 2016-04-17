@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,6 +17,13 @@
  * under the License.
  */
 package org.jasig.services.persondir.support;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
+import org.jasig.services.persondir.IPersonAttributeDao;
+import org.jasig.services.persondir.IPersonAttributes;
+import org.jasig.services.persondir.util.CaseCanonicalizationMode;
+import org.jasig.services.persondir.util.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,21 +37,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
-import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
-import org.jasig.services.persondir.IPersonAttributeDao;
-import org.jasig.services.persondir.IPersonAttributes;
-import org.jasig.services.persondir.util.CaseCanonicalizationMode;
-import org.jasig.services.persondir.util.Util;
-
 /**
  * @author Eric Dalquist 
  * @version $Revision$
  */
 public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
     private TestQueryPersonAttributeDao testQueryPersonAttributeDao;
-    
+
     /**
      * @see junit.framework.TestCase#setUp()
      */
@@ -60,49 +59,49 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
     protected void tearDown() throws Exception {
         this.testQueryPersonAttributeDao = null;
     }
-    
+
     public void testDefaultAttributeNameUsage() {
         this.testQueryPersonAttributeDao.getUserAttributes("eric");
         final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
-        
+
         //Do asList for an easy comparison
         assertEquals(Collections.singletonList(Collections.singletonList("eric")), args);
     }
-    
+
     public void testNoQueryAttributeMapping() {
         this.testQueryPersonAttributeDao.getUserAttributes("eric");
-        final List<List<Object>>  args1 = this.testQueryPersonAttributeDao.getArgs();
+        final List<List<Object>> args1 = this.testQueryPersonAttributeDao.getArgs();
         assertEquals(Arrays.asList(Arrays.asList("eric")), args1);
-        
+
         this.testQueryPersonAttributeDao.setUseAllQueryAttributes(false);
         this.testQueryPersonAttributeDao.getUserAttributes("eric");
-        final List<List<Object>>  args2 = this.testQueryPersonAttributeDao.getArgs();
+        final List<List<Object>> args2 = this.testQueryPersonAttributeDao.getArgs();
         assertNull(args2);
     }
-    
+
     public void testInsuffcientSeed() {
         final Map<String, String> queryAttributes = new LinkedHashMap<>();
         queryAttributes.put("userid", null);
-        
+
         this.testQueryPersonAttributeDao.setQueryAttributeMapping(queryAttributes);
         this.testQueryPersonAttributeDao.getUserAttributes("eric");
-        final List<List<Object>>  args = this.testQueryPersonAttributeDao.getArgs();
+        final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
         assertNull(args);
     }
-    
+
     public void testCustomAttributes() {
         final Map<String, String> queryAttributes = new LinkedHashMap<>();
         queryAttributes.put("name.first", null);
         queryAttributes.put("name.last", null);
         this.testQueryPersonAttributeDao.setQueryAttributeMapping(queryAttributes);
-        
+
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("name.first", Collections.singletonList((Object)"eric"));
-        seed.put("name.last", Collections.singletonList((Object)"dalquist"));
+        seed.put("name.first", Collections.singletonList((Object) "eric"));
+        seed.put("name.last", Collections.singletonList((Object) "dalquist"));
         this.testQueryPersonAttributeDao.getMultivaluedUserAttributes(seed);
         final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
-        final Object[] expectedArgs = new Object[] { Collections.singletonList("eric"), Collections.singletonList("dalquist") };
-        
+        final Object[] expectedArgs = new Object[]{Collections.singletonList("eric"), Collections.singletonList("dalquist")};
+
         //Do asList for an easy comparison
         assertTrue(Arrays.asList(expectedArgs).containsAll(args));
     }
@@ -116,7 +115,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object)"edalquist"));
+        seed.put("username", Collections.singletonList((Object) "edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
@@ -143,7 +142,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         dao.setResultAttributeMapping(resultAttributeMappings);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object)"edalquist"));
+        seed.put("username", Collections.singletonList((Object) "edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
@@ -170,7 +169,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         dao.setCaseInsensitiveResultAttributes(caseInsensitiveAttributes);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object)"edalquist"));
+        seed.put("username", Collections.singletonList((Object) "edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
@@ -200,7 +199,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         dao.setResultAttributeMapping(resultAttributeMappings);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object)"edalquist"));
+        seed.put("username", Collections.singletonList((Object) "edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
@@ -235,7 +234,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         dao.setUsernameCaseCanonicalizationMode(CaseCanonicalizationMode.LOWER);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object)"edalquist"));
+        seed.put("username", Collections.singletonList((Object) "edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
@@ -264,7 +263,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         // Intentionally *not* calling setUsernameCaseCanonicalizationMode()
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object)"edalquist"));
+        seed.put("username", Collections.singletonList((Object) "edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed);
 
@@ -293,7 +292,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
 
         @Override
         protected List<IPersonAttributes> getPeopleForQuery(final List<List<Object>> queryBuilder, final String queryUserName) {
-            return new ArrayList(storage.getPeopleWithMultivaluedAttributes(new HashMap<String,List<Object>>()));
+            return new ArrayList(storage.getPeopleWithMultivaluedAttributes(new HashMap<String, List<Object>>()));
         }
 
         @Override
@@ -323,7 +322,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         public List<List<Object>> getArgs() {
             return this.args;
         }
-        
+
         /* (non-Javadoc)
          * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#appendAttributeToQuery(java.lang.Object, java.lang.String, java.util.List)
          */
@@ -332,9 +331,9 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
             if (queryBuilder == null) {
                 queryBuilder = new LinkedList<>();
             }
-            
+
             queryBuilder.add(queryValues);
-            
+
             return queryBuilder;
         }
 

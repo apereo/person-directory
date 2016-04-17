@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,7 +22,11 @@ import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.util.Util;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Eric Dalquist
@@ -49,17 +53,17 @@ public class MessageFormatPersonAttributeDaoTest extends AbstractPersonAttribute
 
     public void testMessageFormatAttributes() throws Exception {
 
-        
+
         final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("firstName", Util.list("Eric"));
         query.put("lastName", Util.list("Dalquist"));
-        
+
         final Map<String, List<Object>> result = messageFormatPersonAttributeDao.getMultivaluedUserAttributes(query);
-        
-        
+
+
         final Map<String, List<Object>> expectedResult = new LinkedHashMap<>();
         expectedResult.put("displayName", Util.list("Eric Dalquist"));
-        
+
         assertEquals(expectedResult, result);
     }
 

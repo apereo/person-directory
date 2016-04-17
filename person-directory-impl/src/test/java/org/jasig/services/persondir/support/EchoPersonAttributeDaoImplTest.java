@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,13 +18,13 @@
  */
 package org.jasig.services.persondir.support;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.jasig.services.persondir.AbstractPersonAttributeDaoTest;
 import org.jasig.services.persondir.IPersonAttributeDao;
 import org.jasig.services.persondir.util.Util;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Eric Dalquist
@@ -39,18 +39,18 @@ public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTe
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {
         return new EchoPersonAttributeDaoImpl();
     }
-    
+
     public void testMapEcho() {
         final EchoPersonAttributeDaoImpl dao = new EchoPersonAttributeDaoImpl();
-        
+
         final Map<String, List<Object>> testMap = new HashMap<>();
         testMap.put("key1", Util.list("val1"));
         testMap.put("key2", Util.list("val2"));
-        
+
         final Map<String, List<Object>> goalMap = new HashMap<>(testMap);
-        
+
         final Map<String, List<Object>> resultMap = dao.getMultivaluedUserAttributes(testMap);
-        
+
         assertEquals(goalMap, resultMap);
     }
 

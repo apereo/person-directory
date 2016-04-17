@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,11 +18,11 @@
  */
 package org.springframework.ldap.test;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
+import org.apache.directory.server.core.configuration.MutablePartitionConfiguration;
+import org.apache.directory.server.unit.AbstractServerTest;
+import org.springframework.core.io.Resource;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.support.LdapContextSource;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -32,16 +32,15 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
-
-import org.apache.directory.server.core.configuration.MutablePartitionConfiguration;
-import org.apache.directory.server.unit.AbstractServerTest;
-import org.springframework.core.io.Resource;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.support.LdapContextSource;
+import java.io.File;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Set;
 
 /**
  * Base LDAP server test for testing code that uses a Spring-LDAP ContextSource
- * 
+ *
  * @author Eric Dalquist
  * @version $Revision: 1.1 $
  */
@@ -54,7 +53,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
     @Override
     public final void setUp() throws Exception {
         final String partitionName = this.getPartitionName();
-        
+
         // Add partition 'sevenSeas'
         final MutablePartitionConfiguration partitionConfiguration = new MutablePartitionConfiguration();
         partitionConfiguration.setName(partitionName);
@@ -110,12 +109,12 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
         //Setup the ContextSource
         final DirContext context = this.createContext();
         this.contextSource = new SingleContextSource(context);
-        
+
         this.contextSource = new LdapContextSource();
         ((LdapContextSource) this.contextSource).setUrl("ldap://localhost:" + this.port);
         ((LdapContextSource) this.contextSource).setBase(this.getBaseDn());
-        ((LdapContextSource) this.contextSource).afterPropertiesSet(); 
-        
+        ((LdapContextSource) this.contextSource).afterPropertiesSet();
+
         this.internalSetUp();
     }
 
@@ -125,12 +124,12 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
     @Override
     public final void tearDown() throws Exception {
         this.internaltearDown();
-        
+
         this.contextSource = null;
-        
+
         super.tearDown();
     }
-    
+
     /**
      * Create a context pointing to the partition
      */
@@ -138,7 +137,7 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
     protected final DirContext createContext() throws NamingException {
         // Create a environment container
         final Hashtable<String, Object> env = new Hashtable<>(configuration.toJndiEnvironment());
-        
+
         final String partitionName = this.getPartitionName();
 
         // Create a new context pointing to the partition
@@ -157,14 +156,14 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
 
         return appRoot;
     }
-    
+
     /**
      * @return A Spring-LDAP ContextSource for the in-memory LDAP server
      */
     protected final ContextSource getContextSource() {
         return this.contextSource;
     }
-    
+
     /**
      * Can be overridden for local setUp logic
      */
@@ -176,29 +175,29 @@ public abstract class AbstractDirContextTest extends AbstractServerTest {
      */
     protected void internaltearDown() throws Exception {
     }
-    
+
     /**
      * @return The root name for the in-memory LDAP partition
      */
     protected abstract String getPartitionName();
-    
+
     /**
      * @return The baseDn for the in-memory LDAP context
      */
     protected abstract String getBaseDn();
-    
+
     /**
      * @return Resources pointing to ldif content to import into the in-memory LDAP server during setUp
      */
     protected abstract Resource[] initializationData();
-    
+
     /**
      * Tests that the partition is created correctly
      */
     public final void testPartition() throws NamingException {
         final DirContext appRoot = this.createContext();
         final String partitionName = this.getPartitionName();
-        
+
         // Let's get the entry associated to the top level
         final Attributes attributes = appRoot.getAttributes("");
         assertNotNull(attributes);

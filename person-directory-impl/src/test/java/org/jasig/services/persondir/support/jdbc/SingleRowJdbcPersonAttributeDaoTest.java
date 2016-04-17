@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +18,12 @@
  */
 package org.jasig.services.persondir.support.jdbc;
 
+import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
+import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
+import org.jasig.services.persondir.util.Util;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -29,22 +35,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.sql.DataSource;
-
-import org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
-import org.jasig.services.persondir.support.SimpleUsernameAttributeProvider;
-import org.jasig.services.persondir.util.Util;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
-
 /**
  * Test the {@link SingleRowJdbcPersonAttributeDao} against a dummy DataSource.
- * 
+ *
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist
  * @version $Revision$ $Date$
  */
-public class SingleRowJdbcPersonAttributeDaoTest 
-    extends AbstractCaseSensitivityJdbcPersonAttributeDaoTest {
+public class SingleRowJdbcPersonAttributeDaoTest
+        extends AbstractCaseSensitivityJdbcPersonAttributeDaoTest {
 
     @Override
     protected void setUpSchema(final DataSource dataSource) throws SQLException {
@@ -99,7 +98,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     protected void beforeNonUsernameQuery(final AbstractJdbcPersonAttributeDao<Map<String, Object>> dao) {
         // no-op
     }
-    
+
     public void testNoQueryAttributeMapping() {
         final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE netid = 'awp9'");
         impl.setUseAllQueryAttributes(false);
@@ -123,7 +122,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         assertNull(attribs.get("shirt_color"));
         assertEquals(Util.list("Andrew"), attribs.get("firstName"));
     }
-    
+
     /**
      * Test that the implementation properly reports the attribute names it
      * expects to map.
@@ -198,8 +197,8 @@ public class SingleRowJdbcPersonAttributeDaoTest
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("Andrew"), attribs.get("firstName"));
     }
-   
-   /**
+
+    /**
      * Test for a query with a single attribute
      */
     public void testSetNullAttributeMapping() {
@@ -238,13 +237,12 @@ public class SingleRowJdbcPersonAttributeDaoTest
         try {
             impl.setResultAttributeMapping(columnsToAttributes);
             fail("IllegalArgumentException if the ColumnsToAttributes Map has an empty Key");
-        }
-        catch (final IllegalArgumentException iae) {
+        } catch (final IllegalArgumentException iae) {
             //expected
         }
     }
-   
-   /**
+
+    /**
      * Test for a query with a null value attribute
      */
     public void testNullAttrQuery() {
@@ -262,7 +260,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         assertNull(attribs.get("dressShirtColor"));
         assertEquals(Util.list("Susan"), attribs.get("firstName"));
     }
-   
+
     /**
      * Test case for a query that needs multiple attributes to complete and
      * more attributes than are needed to complete are passed to it.
@@ -275,7 +273,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(queryAttributeMapping);
 
-        
+
         final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("name", "firstName");
 
@@ -296,7 +294,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("Andrew"), attribs.get("firstName"));
     }
-    
+
     /**
      * A query that needs mulitple attributes to complete but the needed
      * attributes aren't passed to it.
@@ -309,7 +307,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(queryAttributeMapping);
         impl.setRequireAllQueryAttributes(true);
-        
+
         final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("name", "firstName");
 
@@ -326,7 +324,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
         assertNull(attribs);
     }
-    
+
     /**
      * Test for a query with a single attribute
      */
@@ -351,21 +349,20 @@ public class SingleRowJdbcPersonAttributeDaoTest
 
         try {
             impl.getMultivaluedUserAttributes(queryMap);
-        }
-        catch (final IncorrectResultSizeDataAccessException irsdae) {
+        } catch (final IncorrectResultSizeDataAccessException irsdae) {
             // good, exception thrown for multiple results
             return;
         }
 
         fail("JdbcPersonAttributeDao should have thrown IncorrectResultSizeDataAccessException for multiple results");
     }
-    
+
     public void testProperties() {
         final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
-        
+
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
         assertEquals(Collections.singletonMap("shirt", Collections.singleton("shirt_color")), impl.getQueryAttributeMapping());
-        
+
         final Map<String, Object> columnsToAttributes = new HashMap<>();
         columnsToAttributes.put("netid", "uid");
         columnsToAttributes.put("name", "firstName");
@@ -383,9 +380,9 @@ public class SingleRowJdbcPersonAttributeDaoTest
         final String queryAttr = "shirt";
         final List<String> queryAttrList = new LinkedList<>();
         queryAttrList.add(queryAttr);
-        
+
         // shirt_color = ?
-        
+
         final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(this.testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
 
