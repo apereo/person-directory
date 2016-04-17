@@ -18,11 +18,12 @@ under the License.
 This project includes:
   AntLR under BSD License
   AOP alliance under Public Domain
-  Apache Commons Collections under Apache License, Version 2.0
+  Apache Commons CLI under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
   Apache Directory ASN.1 Shared under Apache Software License 2.0
   Apache Directory MINA ASN.1 Codec Shared under Apache Software License 2.0
   Apache Directory Protocol Ldap Shared under Apache 2.0 License
+  Apache Groovy under The Apache Software License, Version 2.0
   Apache Log4j under The Apache Software License, Version 2.0
   Apache MINA Core API under Apache 2.0 License
   Apache MINA SSL Filter under Apache 2.0 License
@@ -40,22 +41,20 @@ This project includes:
   ApacheDS Server JNDI under Apache License, Version 2.0
   ApacheDS Server Unit under Apache License, Version 2.0
   asm under Apache License, Version 2.0
-  ASM Core under BSD
   Backport of JSR 166 under Public Domain
   Bouncy Castle Provider under Bouncy Castle Licence
-  Code Generation Library under ASF 2.0
+  cglib under Apache License, Version 2.0
+  Collections under The Apache Software License, Version 2.0
   Commons BeanUtils under The Apache Software License, Version 2.0
   Commons Codec under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   Commons Lang under The Apache Software License, Version 2.0
   Commons Logging under The Apache Software License, Version 2.0
-  commons-collections under Apache License, Version 2.0
   dom4j under BSD License
   EasyMock under Apache 2
   ESAPI under BSD or Creative Commons 3.0 BY-SA
   ezmorph under The Apache Software License, Version 2.0
   fastinfoset under Apache License, Version 2.0
-  Groovy under The Apache Software License, Version 2.0
   Grouper Client under Apache 2
   Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
   Hamcrest Core under New BSD License
@@ -81,7 +80,7 @@ This project includes:
   jtoml under The MIT License (MIT)
   JUnit under Eclipse Public License 1.0
   ldapsdk under Netscape Public License
-  LDAPTIVE under Apache 2 or GNU Lesser General Public License
+  LDAPTIVE CORE under Apache 2 or GNU Lesser General Public License
   MXP1: Xml Pull Parser 3rd Edition (XPP3) under Indiana University Extreme! Lab Software License, vesion 1.1.1 or Public Domain
   Not Yet Commons SSL under Apache License v2
   Objenesis under Apache 2
