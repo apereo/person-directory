@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -29,11 +29,11 @@ import java.util.regex.Pattern;
  *
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist
- * @version $Revision$ $Date$
+
  */
 public interface IPersonAttributeDao {
-    public static final String WILDCARD = "*";
-    public static final Pattern WILDCARD_PATTERN = Pattern.compile(Pattern.quote(IPersonAttributeDao.WILDCARD));
+    String WILDCARD = "*";
+    Pattern WILDCARD_PATTERN = Pattern.compile(Pattern.quote(IPersonAttributeDao.WILDCARD));
 
     /**
      * Searches for a single {@link IPersonAttributes} using the specified uid (userName).<br>
@@ -50,7 +50,7 @@ public interface IPersonAttributeDao {
      * @return The populated {@link IPersonAttributes} for the specified uid, null if no person could be found for the uid. 
      * @throws IllegalArgumentException If <code>uid</code> is <code>null.</code>
      */
-    public IPersonAttributes getPerson(String uid);
+    IPersonAttributes getPerson(String uid);
 
     /**
      * Searches for {@link IPersonAttributes}s that match the set of attributes provided in the query {@link Map}. Each
@@ -66,7 +66,7 @@ public interface IPersonAttributeDao {
      *         If the query could not be run null is returned.
      * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
-    public Set<IPersonAttributes> getPeople(Map<String, Object> query);
+    Set<IPersonAttributes> getPeople(Map<String, Object> query);
     
     /**
      * Searches for {@link IPersonAttributes}s that match the set of attributes provided in the query {@link Map}. Each
@@ -80,7 +80,7 @@ public interface IPersonAttributeDao {
      * @return A {@link Set} of {@link IPersonAttributes}s that match the query {@link Map}. If no matches are found an empty {@link Set} is returned. If the query could not be run null is returned.
      * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query);
+    Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query);
 
     /**
      * Gets a {@link Set} of attribute names that may be returned for an IPersonAttributes. The names returned represent all
@@ -91,7 +91,7 @@ public interface IPersonAttributeDao {
      *
      * @return A {@link Set} of possible attribute names for user queries.
      */
-    public Set<String> getPossibleUserAttributeNames();
+    Set<String> getPossibleUserAttributeNames();
 
     /**
      * Gets a {@link Set} of attribute names that this implementation knows how to use in a query. The names returned 
@@ -102,7 +102,7 @@ public interface IPersonAttributeDao {
      *
      * @return The set of attributes that can be used to query for user ids in this dao, null if the set is unknown.
      */
-    public Set<String> getAvailableQueryAttributes();
+    Set<String> getAvailableQueryAttributes();
 
 
     /**
@@ -116,7 +116,7 @@ public interface IPersonAttributeDao {
      * @deprecated Use {@link #getPeople(Map)} instead. This method will be removed in 1.6
      */
     @Deprecated
-    public Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed);
+    Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed);
 
     /**
      * Returns a mutable {@link Map} of the attributes of the {@link IPersonAttributes} returned by calling
@@ -128,7 +128,7 @@ public interface IPersonAttributeDao {
      * @deprecated Use {@link #getPerson(String)} instead. This method will be removed in 1.6
      */
     @Deprecated
-    public Map<String, List<Object>> getMultivaluedUserAttributes(final String uid);
+    Map<String, List<Object>> getMultivaluedUserAttributes(final String uid);
 
     /**
      * Returns a mutable {@link Map} of the single-valued attributes of the first {@link IPersonAttributes} returned by calling
@@ -141,7 +141,7 @@ public interface IPersonAttributeDao {
      * @deprecated Use {@link #getPeople(Map)} instead. This method will be removed in 1.6
      */
     @Deprecated
-    public Map<String, Object> getUserAttributes(final Map<String, Object> seed);
+    Map<String, Object> getUserAttributes(final Map<String, Object> seed);
 
     /**
      * Returns a mutable {@link Map} of the single-valued attributes of the {@link IPersonAttributes} returned by calling
@@ -153,5 +153,5 @@ public interface IPersonAttributeDao {
      * @deprecated Use {@link #getPerson(String)} instead. This method will be removed in 1.6
      */
     @Deprecated
-    public Map<String, Object> getUserAttributes(final String uid);
+    Map<String, Object> getUserAttributes(final String uid);
 }
