@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.jasig.parent</groupId>
@@ -12,7 +11,7 @@
     <groupId>org.apereo.service.persondir</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.8.1-SNAPSHOT</version>
+    <version>1.8.1</version>
 
     <issueManagement>
         <url>${jasig-issues-base}/PERSONDIR</url>
@@ -23,7 +22,7 @@
         <connection>scm:git:git://github.com/apereo/person-directory.git</connection>
         <developerConnection>scm:git:git@github.com:apereo/person-directory.git</developerConnection>
         <url>https://github.com/apereo/person-directory</url>
-        <tag>person-directory-parent-1.5.2</tag>
+        <tag>person-directory-parent-1.8.1</tag>
     </scm>
 
     <name>Person Directory Parent</name>
