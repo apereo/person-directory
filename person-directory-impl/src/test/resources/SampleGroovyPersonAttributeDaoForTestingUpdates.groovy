@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import org.jasig.services.persondir.IPersonAttributeScriptDao
+import org.apereo.services.persondir.IPersonAttributeScriptDao
 
 /**
  * Licensed to Jasig under one or more contributor license

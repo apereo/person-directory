@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import org.jasig.services.persondir.support.BaseGroovyScriptDaoImpl
+import org.apereo.services.persondir.support.BaseGroovyScriptDaoImpl
 
 /**
  * Licensed to Jasig under one or more contributor license
