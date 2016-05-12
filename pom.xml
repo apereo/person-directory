@@ -11,7 +11,7 @@
     <groupId>org.apereo.service.persondir</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.8.1</version>
+    <version>1.8.2-SNAPSHOT</version>
 
     <issueManagement>
         <url>${jasig-issues-base}/PERSONDIR</url>
@@ -22,7 +22,7 @@
         <connection>scm:git:git://github.com/apereo/person-directory.git</connection>
         <developerConnection>scm:git:git@github.com:apereo/person-directory.git</developerConnection>
         <url>https://github.com/apereo/person-directory</url>
-        <tag>person-directory-parent-1.8.1</tag>
+        <tag>person-directory-parent-1.5.2</tag>
     </scm>
 
     <name>Person Directory Parent</name>
