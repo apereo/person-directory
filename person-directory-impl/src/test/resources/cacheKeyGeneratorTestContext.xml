@@ -48,9 +48,9 @@
         </property>
     </bean>
     
-    <bean id="cacheProviderFacade" class="org.jasig.services.persondir.mock.MapCacheProviderFacade" />
+    <bean id="cacheProviderFacade" class="org.apereo.services.persondir.mock.MapCacheProviderFacade" />
     
-    <bean id="cacheKeyGenerator" class="org.jasig.services.persondir.support.AttributeBasedCacheKeyGenerator">
+    <bean id="cacheKeyGenerator" class="org.apereo.services.persondir.support.AttributeBasedCacheKeyGenerator">
         <property name="defaultAttributeName" value="userName" />
         <property name="cacheKeyAttributes">
             <set>
@@ -60,9 +60,9 @@
         </property>
     </bean>
     
-    <bean id="personAttributeDaoTarget" class="org.jasig.services.persondir.support.ComplexStubPersonAttributeDao">
+    <bean id="personAttributeDaoTarget" class="org.apereo.services.persondir.support.ComplexStubPersonAttributeDao">
         <property name="usernameAttributeProvider">
-            <bean class="org.jasig.services.persondir.support.SimpleUsernameAttributeProvider">
+            <bean class="org.apereo.services.persondir.support.SimpleUsernameAttributeProvider">
                 <property name="usernameAttribute" value="userName" />
             </bean>
         </property>
