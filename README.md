@@ -7,16 +7,16 @@ It consists of a collection of DAOs that retrieve, cache, resolve, aggregate, me
 
 ## Maven
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.jasig.service.persondir/person-directory-parent/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.jasig.service.persondir/person-directory-parent)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apereo.service.persondir/person-directory-parent/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.apereo.service.persondir/person-directory-parent)
 
 ```xml
 <dependency>
-    <groupId>org.jasig.service.persondir</groupId>
+    <groupId>org.apereo.service.persondir</groupId>
     <artifactId>person-directory-api</artifactId>
     <version>${person.directory.version}</version>
 </dependency>
 <dependency>
-    <groupId>org.jasig.service.persondir</groupId>
+    <groupId>org.apereo.service.persondir</groupId>
     <artifactId>person-directory-impl</artifactId>
     <version>${person.directory.version}</version>
 </dependency>
@@ -34,7 +34,7 @@ generated from the query using attributes specified in the configuration.
 Setting up a `CachingPersonAttributeDaoImpl` in Spring to would look like the following:
 
 ```xml
-<bean id="cachingPersonAttributeDao" class="org.jasig.services.persondir.support.CachingPersonAttributeDaoImpl">
+<bean id="cachingPersonAttributeDao" class="org.apereo.services.persondir.support.CachingPersonAttributeDaoImpl">
     <property name="cachedPersonAttributesDao" ref="mergingPersonAttributeDao" />
     <property name="userInfoCache" ref="userInfoCacheMap" />
     <property name="cacheNullResults" value="true" />
@@ -73,7 +73,7 @@ Designed to query multiple IPersonAttributeDaos in order and merge the results i
 Setting up a MergingPersonAttributeDaoImpl in Spring to would look like the following:
 
 ```xml
-<bean id="mergingPersonAttributeDao" class="org.jasig.services.persondir.support.MergingPersonAttributeDaoImpl">
+<bean id="mergingPersonAttributeDao" class="org.apereo.services.persondir.support.MergingPersonAttributeDaoImpl">
     <property name="personAttributeDaos">
         <list>
             <ref bean="jdbcPersonAttributeDao" />
@@ -94,7 +94,7 @@ is queried the attributes from the first IPersonAttributes in the result set are
 Setting up a `CascadingPersonAttributeDao` in Spring to would look like the following:
 
 ```xml
-<bean id="mergingPersonAttributeDao" class="org.jasig.services.persondir.support.MergingPersonAttributeDaoImpl">
+<bean id="mergingPersonAttributeDao" class="org.apereo.services.persondir.support.MergingPersonAttributeDaoImpl">
     <property name="personAttributeDaos">
         <list>
             <ref bean="jdbcPersonAttributeDao" />
@@ -202,7 +202,7 @@ The following example assumes the username is provided by `HttpServletRequest.ge
  |     doFilter is called. This is useful when filtering around things like the uPortal login servlet which
  |     invalidates and re-creates the session during execution.
  +-->
-<bean id="requestAttributeSourceFilter" class="org.jasig.services.persondir.support.web.RequestAttributeSourceFilter">
+<bean id="requestAttributeSourceFilter" class="org.apereo.services.persondir.support.web.RequestAttributeSourceFilter">
     <property name="additionalDescriptors" ref="requestAdditionalDescriptors" />
     <property name="remoteUserAttribute" value="username" />
     <property name="serverNameAttribute" value="serverName" />
@@ -228,7 +228,7 @@ The following example assumes the username is provided by `HttpServletRequest.ge
  | that classes referencing this bean will use will automatically find the correct instance from the current
  | user's session.
  +-->
-<bean id="requestAttributeDescriptors" class="org.jasig.services.persondir.support.AdditionalDescriptors" scope="globalSession">
+<bean id="requestAttributeDescriptors" class="org.apereo.services.persondir.support.AdditionalDescriptors" scope="globalSession">
     <!-- Required so Spring injects an AOP proxy instead of the actual bean instance -->
     <aop:scoped-proxy/>
 </bean>
@@ -237,7 +237,7 @@ The following example assumes the username is provided by `HttpServletRequest.ge
  | The AdditionalDescriptorsPersonAttributeDao is what you would configure in the tree of IPersonAttributeDaos
  | used to get user attributes. It can be treated just like a JDBC or LDAP dao.
  +-->
-<bean id="requestAttributesDao" class="org.jasig.services.persondir.support.AdditionalDescriptorsPersonAttributeDao">
+<bean id="requestAttributesDao" class="org.apereo.services.persondir.support.AdditionalDescriptorsPersonAttributeDao">
     <property name="descriptors" ref="requestAdditionalDescriptors" />
     <property name="usernameAttributeProvider" ref="usernameAttributeProvider" />
 </bean>
@@ -263,7 +263,7 @@ DAO knows for which queries to return the attributes from the request.
  |     doFilter is called. This is useful when filtering around things like the uPortal login servlet which
  |     invalidates and re-creates the session during execution.
  +-->
-<bean id="requestAttributeSourceFilter" class="org.jasig.services.persondir.support.web.RequestAttributeSourceFilter">
+<bean id="requestAttributeSourceFilter" class="org.apereo.services.persondir.support.web.RequestAttributeSourceFilter">
     <property name="additionalDescriptors" ref="requestAdditionalDescriptors" />
     <property name="serverNameAttribute" value="serverName" />
     <property name="processingPosition" value="BOTH" />
@@ -288,7 +288,7 @@ DAO knows for which queries to return the attributes from the request.
  | that classes referencing this bean will use will automatically find the correct instance from the current
  | user's session.
  +-->
-<bean id="requestAttributeDescriptors" class="org.jasig.services.persondir.support.AdditionalDescriptors" scope="globalSession">
+<bean id="requestAttributeDescriptors" class="org.apereo.services.persondir.support.AdditionalDescriptors" scope="globalSession">
     <!-- Required so Spring injects an AOP proxy instead of the actual bean instance -->
     <aop:scoped-proxy/>
 </bean>
@@ -297,7 +297,7 @@ DAO knows for which queries to return the attributes from the request.
  | The AdditionalDescriptorsPersonAttributeDao is what you would configure in the tree of IPersonAttributeDaos
  | used to get user attributes. It can be treated just like a JDBC or LDAP dao.
  +-->
-<bean id="requestAttributesDao" class="org.jasig.services.persondir.support.AdditionalDescriptorsPersonAttributeDao">
+<bean id="requestAttributesDao" class="org.apereo.services.persondir.support.AdditionalDescriptorsPersonAttributeDao">
     <property name="descriptors" ref="requestAdditionalDescriptors" />
     <property name="usernameAttributeProvider" ref="usernameAttributeProvider" />
     <property name="currentUserProvider" ref="currentUserProvider" />
@@ -326,7 +326,7 @@ at every point during the request.
  |     doFilter is called. This is useful when filtering around things like the uPortal login servlet which
  |     invalidates and re-creates the session during execution.
  +-->
-<bean id="requestAttributeSourceFilter" class="org.jasig.services.persondir.support.web.RequestAttributeSourceFilter">
+<bean id="requestAttributeSourceFilter" class="org.apereo.services.persondir.support.web.RequestAttributeSourceFilter">
     <property name="additionalDescriptors" ref="requestAdditionalDescriptors" />
     <property name="remoteUserAttribute" value="username" />
     <property name="serverNameAttribute" value="serverName" />
@@ -351,13 +351,13 @@ at every point during the request.
  | request that the attributes were provided if the session is invalidated the attributes will still be
  | available.
  +-->
-<bean id="requestAdditionalDescriptors" class="org.jasig.services.persondir.support.MediatingAdditionalDescriptors">
+<bean id="requestAdditionalDescriptors" class="org.apereo.services.persondir.support.MediatingAdditionalDescriptors">
     <property name="delegateDescriptors">
         <list>
-            <bean class="org.jasig.services.persondir.support.AdditionalDescriptors" scope="globalSession">
+            <bean class="org.apereo.services.persondir.support.AdditionalDescriptors" scope="globalSession">
                 <aop:scoped-proxy />
             </bean>
-            <bean class="org.jasig.services.persondir.support.AdditionalDescriptors" scope="request">
+            <bean class="org.apereo.services.persondir.support.AdditionalDescriptors" scope="request">
                 <aop:scoped-proxy />
             </bean>
         </list>
@@ -368,7 +368,7 @@ at every point during the request.
  | The AdditionalDescriptorsPersonAttributeDao is what you would configure in the tree of IPersonAttributeDaos
  | used to get user attributes. It can be treated just like a JDBC or LDAP dao.
  +-->
-<bean id="requestAttributesDao" class="org.jasig.services.persondir.support.AdditionalDescriptorsPersonAttributeDao">
+<bean id="requestAttributesDao" class="org.apereo.services.persondir.support.AdditionalDescriptorsPersonAttributeDao">
     <property name="descriptors" ref="requestAdditionalDescriptors" />
     <property name="usernameAttributeProvider" ref="usernameAttributeProvider" />
 </bean>
