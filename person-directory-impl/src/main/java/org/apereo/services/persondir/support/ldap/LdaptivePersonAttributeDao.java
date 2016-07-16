@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.naming.directory.SearchControls;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -194,7 +195,7 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
         request.setReturnAttributes(this.attributes);
         request.setSearchScope(this.searchScope);
         request.setSizeLimit(this.searchControls.getCountLimit());
-        request.setTimeLimit(this.searchControls.getTimeLimit());
+        request.setTimeLimit(Duration.ofSeconds(searchControls.getTimeLimit()));
         return request;
     }
 
