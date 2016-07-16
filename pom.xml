@@ -18,6 +18,28 @@
         <system>${jasig-issues-system}</system>
     </issueManagement>
     
+    <repositories>
+        <repository>
+            <id>sonatype-releases</id>
+            <url>http://oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>shibboleth-releases</id>
+            <url>https://build.shibboleth.net/nexus/content/repositories/releases</url>
+        </repository>
+        <repository>
+            <id>ldaptive</id>
+            <url>https://github.com/vt-middleware/maven-repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <scm>
         <connection>scm:git:git://github.com/apereo/person-directory.git</connection>
         <developerConnection>scm:git:git@github.com:apereo/person-directory.git</developerConnection>
@@ -523,11 +545,20 @@
     
     <repositories>
         <repository>
+            <id>sonatype-releases</id>
+            <url>http://oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>shibboleth-releases</id>
+            <url>https://build.shibboleth.net/nexus/content/repositories/releases</url>
+        </repository>
+        <repository>
             <id>ldaptive</id>
             <url>https://github.com/vt-middleware/maven-repo</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
