@@ -1,4 +1,4 @@
-Person Directory
+Person Directory [![Build Status](https://travis-ci.org/apereo/person-directory.svg?branch=master)](https://travis-ci.org/apereo/person-directory)
 ===========================
 
 ## Intro
