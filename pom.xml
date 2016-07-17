@@ -20,6 +20,11 @@
     
     <repositories>
         <repository>
+            <id>vt-middleware</id>
+            <name>VT Middleware GitHub Repository</name>
+            <url>https://raw.github.com/vt-middleware/maven-repo/master</url>
+        </repository>
+        <repository>
             <id>sonatype-releases</id>
             <url>https://oss.sonatype.org/content/repositories/releases</url>
         </repository>
@@ -31,23 +36,6 @@
             <id>shibboleth-releases</id>
             <url>https://build.shibboleth.net/nexus/content/repositories/releases</url>
         </repository>
-        <repository>
-            <id>ldaptive</id>
-            <url>https://github.com/vt-middleware/maven-repo</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-		    <id>codehaus-snapshots</id>
-		    <url>https://nexus.codehaus.org/snapshots/</url>
-		    <snapshots>
-		        <enabled>false</enabled>
-		    </snapshots>
-		    <releases>
-		        <enabled>false</enabled>
-		    </releases>
-		</repository>
     </repositories>
 
     <scm>
