@@ -38,6 +38,16 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+		    <id>codehaus-snapshots</id>
+		    <url>https://nexus.codehaus.org/snapshots/</url>
+		    <snapshots>
+		        <enabled>false</enabled>
+		    </snapshots>
+		    <releases>
+		        <enabled>false</enabled>
+		    </releases>
+		</repository>
     </repositories>
 
     <scm>
