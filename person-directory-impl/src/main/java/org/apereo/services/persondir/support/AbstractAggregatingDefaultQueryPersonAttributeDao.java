@@ -88,7 +88,7 @@ import java.util.Set;
  * </table>
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     /**

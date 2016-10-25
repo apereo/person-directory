@@ -32,7 +32,7 @@ import java.util.Set;
  * Provides base tests for classes that implement AbstractDefaultAttributePersonAttributeDao.
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends AbstractFlatteningPersonAttributeDaoTest {
     /**

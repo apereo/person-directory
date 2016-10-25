@@ -27,7 +27,7 @@ import java.util.Map;
  * Interface that describes what is essentially a mutable {@link IPersonAttributes} object
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public interface IAdditionalDescriptors extends IPersonAttributes {
 

@@ -47,7 +47,7 @@ import java.util.Set;
  * as specified by the <code>cacheKeyAttributes</code> {@link Set}
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     private static final Map<String, Object> POSSIBLE_USER_ATTRIBUTE_NAMES_SEED_MAP = Collections.singletonMap("getPossibleUserAttributeNames_seedMap", (Object) new Serializable() {

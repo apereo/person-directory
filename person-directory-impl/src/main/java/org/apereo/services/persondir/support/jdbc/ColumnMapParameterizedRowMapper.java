@@ -31,7 +31,7 @@ import java.util.TreeMap;
  * JDK5 clone of {@link org.springframework.jdbc.core.ColumnMapRowMapper}
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class ColumnMapParameterizedRowMapper implements RowMapper<Map<String, Object>> {
     private final boolean ignoreNull;

@@ -31,7 +31,7 @@ import java.util.Set;
  * {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)}
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public abstract class AbstractFlatteningPersonAttributeDao extends BasePersonAttributeDao {
 

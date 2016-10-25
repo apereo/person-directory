@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
  * PersonData.xsd which resides at the root of the classpath.
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao implements InitializingBean {
     private final AttributeLoader attributeLoader = new AttributeLoader();

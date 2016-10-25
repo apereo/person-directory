@@ -94,7 +94,7 @@ import java.util.Set;
  * </table>
  *
  * @author Eric Dalquist 
- * @version $Revision$
+
  */
 public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaultAttributePersonAttributeDao {
     // DEFAULT_CASE_CANONICALIZATION_MODE is default for canonicalizing the values

@@ -33,7 +33,7 @@ import java.util.Set;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class XmlPersonAttributeDaoTest extends TestCase {
     private XmlPersonAttributeDao xmlPersonAttributeDao;

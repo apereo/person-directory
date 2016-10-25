@@ -39,7 +39,7 @@ import java.util.Set;
 
 /**
  * @author Eric Dalquist 
- * @version $Revision$
+
  */
 public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
     private TestQueryPersonAttributeDao testQueryPersonAttributeDao;

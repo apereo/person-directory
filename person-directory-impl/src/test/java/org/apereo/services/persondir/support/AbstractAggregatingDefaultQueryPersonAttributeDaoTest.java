@@ -38,7 +38,7 @@ import java.util.Set;
  *
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest extends AbstractDefaultQueryPersonAttributeDaoTest {
     /**

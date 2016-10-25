@@ -32,7 +32,7 @@ import java.util.Set;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 @SuppressWarnings("deprecation")
 public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAttributeDaoTest {

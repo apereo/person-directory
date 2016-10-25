@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTest {
 

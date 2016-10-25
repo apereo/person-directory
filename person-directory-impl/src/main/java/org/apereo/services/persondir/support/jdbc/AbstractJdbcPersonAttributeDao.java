@@ -61,7 +61,7 @@ import java.util.regex.Pattern;
  * </table>
  *
  * @author Eric Dalquist 
- * @version $Revision$
+
  */
 public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPersonAttributeDao<PartialWhereClause> {
     private static final Map<CaseCanonicalizationMode, MessageFormat>
