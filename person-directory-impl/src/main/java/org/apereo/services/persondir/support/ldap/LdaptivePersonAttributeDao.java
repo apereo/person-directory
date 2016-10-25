@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -29,6 +29,7 @@ import org.ldaptive.LdapAttribute;
 import org.ldaptive.LdapEntry;
 import org.ldaptive.LdapException;
 import org.ldaptive.Response;
+import org.ldaptive.ReturnAttributes;
 import org.ldaptive.SearchFilter;
 import org.ldaptive.SearchOperation;
 import org.ldaptive.SearchRequest;
@@ -54,26 +55,35 @@ import java.util.Map;
  */
 public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<SearchFilter> {
 
-    /** Logger instance. **/
+    /**
+     * Logger instance.
+     **/
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /** Search base DN. */
+    /**
+     * Search base DN.
+     */
     private String baseDN;
 
-    /** Search controls. */
+    /**
+     * Search controls.
+     */
     private SearchControls searchControls;
 
-    /** LDAP connection factory. */
+    /**
+     * LDAP connection factory.
+     */
     private ConnectionFactory connectionFactory;
 
-    /** LDAP search scope. */
+    /**
+     * LDAP search scope.
+     */
     private SearchScope searchScope;
 
-    /** LDAP search filter. */
+    /**
+     * LDAP search filter.
+     */
     private String searchFilter;
-
-    /** LDAP attributes to fetch from search results. */
-    private String[] attributes;
 
     public LdaptivePersonAttributeDao() {
         super();
@@ -128,7 +138,6 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
                 this.searchScope = scope;
             }
         }
-        this.attributes = getResultAttributeMapping().keySet().toArray(new String[getResultAttributeMapping().size()]);
     }
 
     @Override
@@ -185,14 +194,23 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      * Creates a search request from a search filter.
      *
      * @param filter LDAP search filter.
-     *
      * @return ldaptive search request.
      */
     private SearchRequest createRequest(final SearchFilter filter) {
         final SearchRequest request = new SearchRequest();
         request.setBaseDn(this.baseDN);
         request.setSearchFilter(filter);
-        request.setReturnAttributes(this.attributes);
+
+        /** LDAP attributes to fetch from search results. */
+        if (getResultAttributeMapping() != null && !getResultAttributeMapping().isEmpty()) {
+            final String[] attributes = getResultAttributeMapping().keySet().toArray(new String[getResultAttributeMapping().size()]);
+            request.setReturnAttributes(attributes);
+        } else if (searchControls.getReturningAttributes() != null && searchControls.getReturningAttributes().length > 0) {
+            request.setReturnAttributes(searchControls.getReturningAttributes());
+        } else {
+            request.setReturnAttributes(ReturnAttributes.ALL_USER.value());
+        }
+
         request.setSearchScope(this.searchScope);
         request.setSizeLimit(this.searchControls.getCountLimit());
         request.setTimeLimit(Duration.ofSeconds(searchControls.getTimeLimit()));
@@ -204,7 +222,6 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      * by Person Directory components.
      *
      * @param entry Ldap entry.
-     *
      * @return Attribute map.
      */
     private Map<String, List<Object>> convertLdapEntryToMap(final LdapEntry entry) {
