@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * @author Eric Dalquist
 
  */
-public interface IPersonAttributeDao {
+public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
     String WILDCARD = "*";
     Pattern WILDCARD_PATTERN = Pattern.compile(Pattern.quote(IPersonAttributeDao.WILDCARD));
 
@@ -154,4 +154,13 @@ public interface IPersonAttributeDao {
      */
     @Deprecated
     Map<String, Object> getUserAttributes(final String uid);
+
+    /**
+     * Describes the order by which this DAO may be sorted
+     * and put into an ordered collection.
+     * @return the numeric order.
+     */
+    default int getOrder() {
+        return 0;
+    }
 }

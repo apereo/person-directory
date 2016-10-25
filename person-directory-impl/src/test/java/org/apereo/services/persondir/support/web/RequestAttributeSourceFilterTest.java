@@ -39,7 +39,7 @@ import static org.easymock.EasyMock.*;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class RequestAttributeSourceFilterTest extends TestCase {
 

@@ -31,23 +31,19 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Base {@link IPersonAttributeDao} that provides implementations of the deprecated methods. This class will be removed
- * in 1.6
+ * Base {@link IPersonAttributeDao} that provides implementations of the deprecated methods.
  *
  * @author Eric Dalquist
- * @version $Revision$
  */
 public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
-
-
+    private int order;
+    
     public BasePersonAttributeDao() {
         super();
     }
 
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.util.Map)
-     */
+
     @Override
     public final Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
         final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
@@ -64,9 +60,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         return new LinkedHashMap<>(person.getAttributes());
     }
 
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getMultivaluedUserAttributes(java.lang.String)
-     */
+
     @Override
     public final Map<String, List<Object>> getMultivaluedUserAttributes(final String uid) {
         final IPersonAttributes person = this.getPerson(uid);
@@ -78,10 +72,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         //Make a mutable copy of the person's attributes
         return new LinkedHashMap<>(person.getAttributes());
     }
-
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.util.Map)
-     */
+    
     @Override
     public final Map<String, Object> getUserAttributes(final Map<String, Object> seed) {
         final Set<IPersonAttributes> people = this.getPeople(seed);
@@ -145,5 +136,19 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         logger.debug("Flattened Map='{}' into Map='{}'", multivaluedUserAttributes, userAttributes);
 
         return userAttributes;
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(final int order) {
+        this.order = order;
+    }
+
+    @Override
+    public int compareTo(final IPersonAttributeDao o) {
+        return this.order;
     }
 }

@@ -61,7 +61,7 @@ import java.util.Set;
  * </table>
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     private Set<FormatAttribute> formatAttributes;

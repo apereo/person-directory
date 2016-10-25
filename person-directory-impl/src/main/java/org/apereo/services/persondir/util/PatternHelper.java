@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class PatternHelper {
     /**

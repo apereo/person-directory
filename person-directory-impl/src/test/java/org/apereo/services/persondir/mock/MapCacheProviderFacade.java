@@ -36,7 +36,7 @@ import java.util.Map;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     final Map<Serializable, Object> cache = new HashMap<>();

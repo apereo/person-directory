@@ -36,7 +36,7 @@ import java.io.InputStream;
  * via the loadedType parameter provided to the constructor.
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
     protected final Class<T> loadedType;

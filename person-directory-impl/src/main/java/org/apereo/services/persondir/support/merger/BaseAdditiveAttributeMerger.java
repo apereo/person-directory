@@ -34,7 +34,7 @@ import java.util.Set;
  * methods do a simple addative merge of the sets. These can be overriden by subclasses.
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
     /* (non-Javadoc)

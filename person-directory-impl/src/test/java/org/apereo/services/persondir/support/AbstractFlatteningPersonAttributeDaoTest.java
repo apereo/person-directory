@@ -30,7 +30,7 @@ import java.util.Map;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public abstract class AbstractFlatteningPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
     /**

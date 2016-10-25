@@ -25,7 +25,7 @@ import java.util.Map;
  * Provider for the username attribute to use when one is not otherwise provided.
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public interface IUsernameAttributeProvider {
     /**

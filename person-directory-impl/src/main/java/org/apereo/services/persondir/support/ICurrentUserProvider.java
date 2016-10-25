@@ -27,7 +27,7 @@ import org.apereo.services.persondir.IPersonAttributeDao;
  * current user is getting attribute information for. 
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public interface ICurrentUserProvider {
     /**

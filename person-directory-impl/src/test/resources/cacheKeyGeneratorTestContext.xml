@@ -20,11 +20,11 @@
 
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:tx="http://www.springframework.org/schema/tx"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
@@ -47,9 +47,9 @@
             </props>
         </property>
     </bean>
-    
+
     <bean id="cacheProviderFacade" class="org.apereo.services.persondir.mock.MapCacheProviderFacade" />
-    
+
     <bean id="cacheKeyGenerator" class="org.apereo.services.persondir.support.AttributeBasedCacheKeyGenerator">
         <property name="defaultAttributeName" value="userName" />
         <property name="cacheKeyAttributes">
@@ -59,7 +59,7 @@
             </set>
         </property>
     </bean>
-    
+
     <bean id="personAttributeDaoTarget" class="org.apereo.services.persondir.support.ComplexStubPersonAttributeDao">
         <property name="usernameAttributeProvider">
             <bean class="org.apereo.services.persondir.support.SimpleUsernameAttributeProvider">
@@ -97,9 +97,9 @@
             </map>
         </property>
     </bean>
-    
+
     <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
-    
+
     <!--
 
     <bean id="portletDefinitionDao" class="org.jasig.portal.portlet.dao.jpa.JpaPortletDefinitionDao">

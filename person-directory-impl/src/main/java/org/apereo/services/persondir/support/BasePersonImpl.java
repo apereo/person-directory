@@ -32,7 +32,7 @@ import java.util.Map;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public abstract class BasePersonImpl implements IPersonAttributes {
     private static final long serialVersionUID = 1L;

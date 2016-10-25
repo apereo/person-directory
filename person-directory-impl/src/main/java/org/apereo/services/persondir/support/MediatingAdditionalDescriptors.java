@@ -31,7 +31,7 @@ import java.util.Map;
  * result is used.
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     private static final long serialVersionUID = 1L;

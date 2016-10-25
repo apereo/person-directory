@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/cacheKeyGeneratorTestContext.xml"})

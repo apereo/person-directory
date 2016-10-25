@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class Util {
     /**

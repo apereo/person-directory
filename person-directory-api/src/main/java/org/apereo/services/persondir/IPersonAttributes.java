@@ -32,13 +32,12 @@ import java.util.Map;
  * The equality and hashCode of an IPersonAttributes should ONLY include the name property and none of the attributes.
  *
  * @author Eric Dalquist
- * @version $Revision$
  */
 public interface IPersonAttributes extends Principal, Serializable {
     /**
      * @return The immutable Map of all attributes for the person.
      */
-    public Map<String, List<Object>> getAttributes();
+    Map<String, List<Object>> getAttributes();
 
     /**
      * The value for the attribute, null if no value exists or the first value is null, if there are multiple values
@@ -47,7 +46,7 @@ public interface IPersonAttributes extends Principal, Serializable {
      * @param name The name of the attribute to get the value for
      * @return The first value for the attribute
      */
-    public Object getAttributeValue(String name);
+    Object getAttributeValue(String name);
 
     /**
      * All values of the attribute, null if no values exist.
@@ -55,5 +54,5 @@ public interface IPersonAttributes extends Principal, Serializable {
      * @param name The name of the attribute to get the values for
      * @return All values for the attribute
      */
-    public List<Object> getAttributeValues(String name);
+    List<Object> getAttributeValues(String name);
 }

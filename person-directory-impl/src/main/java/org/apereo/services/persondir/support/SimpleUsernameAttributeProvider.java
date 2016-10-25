@@ -31,7 +31,7 @@ import java.util.Map;
  * wildcard.
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvider {
     private String usernameAttribute = "username";

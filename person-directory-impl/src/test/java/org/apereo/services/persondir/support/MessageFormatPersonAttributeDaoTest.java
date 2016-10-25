@@ -30,7 +30,7 @@ import java.util.Set;
 
 /**
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class MessageFormatPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
     private final MessageFormatPersonAttributeDao messageFormatPersonAttributeDao = new MessageFormatPersonAttributeDao();

@@ -57,7 +57,7 @@ import java.util.Set;
  * </ul>
  *
  * @author Eric Dalquist
- * @version $Revision$
+
  */
 public class RequestAttributeSourceFilter extends GenericFilterBean {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
