@@ -93,7 +93,14 @@ public class LdaptivePersonAttributeDaoTest extends AbstractDirContextTest {
         dao.setSearchFilter("uid={0}");
         dao.setResultAttributeMapping(map);
 
-        final IPersonAttributes person = dao.getPerson("edalquist");
+        IPersonAttributes person = dao.getPerson("edalquist");
+        assertTrue(person.getAttributes().size() > 0);
+        assertNotNull(person.getAttributeValue("commonName"));
+        assertNotNull(person.getAttributeValue("displayName"));
+        assertNotNull(person.getAttributeValue("givenName"));
+
+        dao.setSearchFilter("uid={user}");
+        person = dao.getPerson("edalquist");
         assertTrue(person.getAttributes().size() > 0);
         assertNotNull(person.getAttributeValue("commonName"));
         assertNotNull(person.getAttributeValue("displayName"));

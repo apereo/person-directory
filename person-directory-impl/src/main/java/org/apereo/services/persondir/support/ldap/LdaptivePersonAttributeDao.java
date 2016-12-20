@@ -177,12 +177,17 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
     }
 
     @Override
-    protected SearchFilter appendAttributeToQuery(
-            final SearchFilter filter, final String attribute, final List<Object> values) {
+    protected SearchFilter appendAttributeToQuery(final SearchFilter filter, final String attribute, final List<Object> values) {
         final SearchFilter query;
         if (filter == null && values.size() > 0) {
             query = new SearchFilter(this.searchFilter);
-            query.setParameter(0, values.get(0).toString());
+
+            if (this.searchFilter.contains("{0}")) {
+                query.setParameter(0, values.get(0).toString());
+            } else if (this.searchFilter.contains("{user}")) {
+                query.setParameter("user", values.get(0).toString());
+            }
+
             logger.debug("Constructed LDAP search query [{}]", query.format());
         } else {
             throw new UnsupportedOperationException("Multiple attributes not supported.");
