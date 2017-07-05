@@ -31,15 +31,12 @@ import java.util.Set;
  * A sample script implementation in Groovy follows:
  * <p>
  * <pre>
- * import java.util.*
- *
- * class SampleGroovyPersonAttributeDao {
- * def Map<String, List<Object>> run(final Object... args) {
- * def uid = args[0]
- * def logger = args[1]
- * return[username:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
- * }
- * }
+   import java.util.*
+   def Map&lt;String, List&lt;Object&gt;&gt; run(final Object... args) {
+       def uid = args[0]
+       def logger = args[1]
+       return[username:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
+   }
  * </pre>
  * <p>
  * For the script engine to do its job, relevant libraries must be available on the classpath.
