@@ -29,6 +29,7 @@ import java.util.Set;
  * Provides the ability to contact a URL resource to ask for attributes.
  * Support GET/POST endpoints, and provides the username in form of a parameter.
  * The response is expected to be a JSON map.
+ * @author Misagh Moayyed
  */
 public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     private final ObjectMapper jacksonObjectMapper = new ObjectMapper().findAndRegisterModules();
