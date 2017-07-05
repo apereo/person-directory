@@ -61,7 +61,7 @@ public class RequestAttributeSourceFilterTest extends TestCase {
         servletRequest = createMock(HttpServletRequest.class);
         servletResponse = createMock(HttpServletResponse.class);
         filterChain = createMock(FilterChain.class);
-    }
+    }                                         
 
     @Test
     public void testGetAttributesFromRequest() throws Exception {

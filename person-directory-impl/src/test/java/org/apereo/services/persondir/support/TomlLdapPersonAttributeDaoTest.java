@@ -27,12 +27,12 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 @RunWith(JUnit4.class)
-public class TomlLdapPersonAttributeDaoTests extends AbstractPersonAttributeDaoTest {
+public class TomlLdapPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
 
     private final TomlLdapPersonAttributeDao dao;
 
 
-    public TomlLdapPersonAttributeDaoTests() throws Exception {
+    public TomlLdapPersonAttributeDaoTest() throws Exception {
         final Resource tomlConfigFile = new FileSystemResource("src/test/resources/ldap.toml");
         this.dao = new TomlLdapPersonAttributeDao(tomlConfigFile);
     }

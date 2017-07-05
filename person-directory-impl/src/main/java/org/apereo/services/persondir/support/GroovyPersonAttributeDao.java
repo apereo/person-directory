@@ -120,7 +120,7 @@ import java.util.Set;
  */
 public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
 
-    private IPersonAttributeScriptDao groovyObject;
+    private final IPersonAttributeScriptDao groovyObject;
     private Set<String> possibleUserAttributeNames = null;
     private Set<String> availableQueryAttributes = null;
 
