@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to Apereo under one or more contributor license
+    agreements. See the NOTICE file distributed with this work
+    for additional information regarding copyright ownership.
+    Apereo licenses this file to you under the Apache License,
+    Version 2.0 (the "License"); you may not use this file
+    except in compliance with the License.  You may obtain a
+    copy of the License at the following location:
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<person-data>
+    <person name="jstudent">
+        <attribute key="givenName">
+            <value>Joe</value>
+        </attribute>
+        <attribute key="familyName">
+            <value>Student</value>
+        </attribute>
+        <attribute key="email">
+            <value>joe.student@example.com</value>
+            <value>jstudent@example.edu</value>
+        </attribute>
+        <attribute key="sisID">
+            <value>123456789</value>
+        </attribute>
+        <attribute key="portalId"/>
+    </person>
+    <person name="mstaff">
+        <attribute key="givenName">
+            <value>Mary</value>
+        </attribute>
+        <attribute key="familyName">
+            <value>Staff</value>
+        </attribute>
+        <attribute key="email">
+            <value>mstaff@example.edu</value>
+        </attribute>
+        <attribute key="emplid">
+            <value>963852741</value>
+        </attribute>
+        <attribute key="portalId">
+            <value>!@#$%^*()_+</value>
+        </attribute>
+    </person>
+    <person name="dfaculty">
+        <attribute key="givenName">
+            <value>Donald</value>
+        </attribute>
+        <attribute key="familyName">
+            <value>Faculty</value>
+        </attribute>
+        <attribute key="email">
+            <value>donnyboy@faculty.org</value>
+        </attribute>
+        <attribute key="emplid">
+            <value>67844888</value>
+        </attribute>
+        <attribute key="portalId">
+            <value>*(%*%#$%^$</value>
+        </attribute>
+    </person>
+    <person name="iboring" />
+</person-data>
