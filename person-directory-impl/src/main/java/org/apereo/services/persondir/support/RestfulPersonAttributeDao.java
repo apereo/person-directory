@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     private final ObjectMapper jacksonObjectMapper = new ObjectMapper().findAndRegisterModules();
-   private final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
+    private final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
    
     private boolean caseInsensitiveUsername = false;
     private String url;

@@ -22,7 +22,8 @@ public class RestfulPersonAttributeDaoTest extends AbstractPersonAttributeDaoTes
     @Override
     @Before
     public void setUp() throws Exception {
-        httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
+        httpServer = HttpServer.create();
+        httpServer.bind(new InetSocketAddress("localhost",8080), 0);
         httpServer.createContext("/test", exchange -> {
             final String json = "{ \n" +
                     "  \"backgroundcolor\":\"#656667\",\n" +
