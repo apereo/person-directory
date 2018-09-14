@@ -15,9 +15,11 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 
 /**
  * A DAO implementation that takes advantage of Java's scripting engine functionality
@@ -47,6 +49,7 @@ import java.util.Set;
 public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     private String scriptFile;
     private boolean caseInsensitiveUsername = false;
+    private final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
 
     public String getScriptFile() {
         return scriptFile;
@@ -84,7 +87,13 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
 
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
-        throw new UnsupportedOperationException("This method is not implemented.");
+        final Set<IPersonAttributes> people = new LinkedHashSet<>();
+        final String username = usernameAttributeProvider.getUsernameFromQuery(query);
+        final IPersonAttributes person = getPerson(username);
+        if (person != null) {
+            people.add(person);
+        }
+        return people;
     }
 
     @Override
