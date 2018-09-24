@@ -48,6 +48,7 @@ import java.util.Set;
  */
 public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     private String scriptFile;
+    private String engineName;
     private boolean caseInsensitiveUsername = false;
     private final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
 
@@ -59,12 +60,50 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
         this.scriptFile = scriptFile;
     }
 
+    public String getEngineName() {
+        return engineName;
+    }
+
+    public void setEngineName(final String engineName) {
+        this.engineName = engineName;
+    }
+
     public boolean isCaseInsensitiveUsername() {
         return caseInsensitiveUsername;
     }
 
     public void setCaseInsensitiveUsername(final boolean caseInsensitiveUsername) {
         this.caseInsensitiveUsername = caseInsensitiveUsername;
+    }
+
+    /**
+     * This should probably be deprecated in favor of constructors that guarantee required properties are set
+     */
+    public ScriptEnginePersonAttributeDao() {
+    }
+
+    /**
+     * Create DAO with reference to file or the contents of a script. 
+     * 
+     * @param scriptFile This can be a path to a file, classpath resource, or the script contents as string.
+     * If its the string version then engine name must be set using setter.
+     */
+    public ScriptEnginePersonAttributeDao(String scriptFile) {
+        this.scriptFile = scriptFile;
+        this.engineName = getEngineName();
+    }
+
+    /**
+     * Create DAO with reference to file or the contents of a script. 
+     * 
+     * @param scriptFile This can be a path to a file, classpath resource, or the script contents as string.
+     * If its the string version then engine name must be set using setter.
+     * @param engineName Script engine name such as js, groovy, python
+     */
+
+    public ScriptEnginePersonAttributeDao(String scriptFile, String engineName) {
+        this.scriptFile = scriptFile;
+        this.engineName = engineName;
     }
 
     @Override
@@ -109,14 +148,21 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     }
 
     private Map<String, Object> getScriptedAttributesFromFile(final String uid) throws Exception {
-        final String engineName = getScriptEngineName();
+        if (engineName == null) {
+            engineName = getScriptEngineName(this.scriptFile);
+            if (StringUtils.isBlank(engineName)) {
+                logger.warn("Unable to determine script engine, please set engineName property");
+                return new HashMap<>();
+            }
+        }
+        // ScriptEngineManager().getEngineByName(engineName) will throw NPE if engineName is null
         final ScriptEngine engine = new ScriptEngineManager().getEngineByName(engineName);
-        if (engine == null || StringUtils.isBlank(engineName)) {
+        if (engine == null) {
             logger.warn("Script engine is not available for [{}]", engineName);
             return new HashMap<>();
         }
 
-        logger.debug("Created groovy script engine instance for [{}]", engineName);
+        logger.debug("Created script engine instance for [{}]", engineName);
         final Object[] args = {uid, logger};
 
         final File theScriptFile = new File(this.scriptFile);
@@ -146,18 +192,6 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
         return personAttributesMap;
     }
 
-    private String getScriptEngineName() {
-        String engineName = null;
-        if (this.scriptFile.endsWith(".py")) {
-            engineName = "python";
-        } else if (this.scriptFile.endsWith(".js")) {
-            engineName = "js";
-        } else if (this.scriptFile.endsWith(".groovy")) {
-            engineName = "groovy";
-        }
-        return engineName;
-    }
-
     private static Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, Object> personAttributesMap) {
         final Map<String, List<Object>> personAttributes = new HashMap<>();
         for (final Map.Entry<String, Object> stringObjectEntry : personAttributesMap.entrySet()) {
@@ -169,5 +203,18 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
             }
         }
         return personAttributes;
+    }
+
+    public static String getScriptEngineName(String filename) {
+        String engineName = null;
+        if (filename.endsWith(".py")) {
+            engineName = "python";
+        } else if (filename.endsWith(".js")) {
+            engineName = "js";
+        } else if (filename.endsWith(".groovy")) {
+            engineName = "groovy";
+        }
+        return engineName;
+
     }
 }
