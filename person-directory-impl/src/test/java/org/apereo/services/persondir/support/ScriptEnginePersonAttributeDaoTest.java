@@ -72,7 +72,31 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
         query.put("username", Util.list("testuser"));
         final Set<IPersonAttributes> personSet = this.dao.getPeopleWithMultivaluedAttributes(query);
         assertNotNull(personSet);
-        assertEquals(personSet.size(),1);
-        assertEquals(((IPersonAttributes)personSet.iterator().next()).getName(),"testuser");
+        assertEquals(personSet.size(), 1);
+        assertEquals(((IPersonAttributes) personSet.iterator().next()).getName(), "testuser");
+    }
+
+    @Test
+    public void testGetScriptEngineName() {
+        // test with an inline script, even though DAO avoids this internally
+        assertEquals(ScriptEnginePersonAttributeDao.getScriptEngineName("not a filename = a script"), null);
+        // test with classpath resource
+        assertEquals(ScriptEnginePersonAttributeDao.getScriptEngineName("SampleScriptedJavascriptPersonAttributeDao.js"), "nashorn");
+        assertEquals(ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js"), "nashorn");
+        assertEquals(ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedGroovyPersonAttributeDao.groovy"), "groovy");
+        // note jython not in classpath so null is expected return value, also test.py file doesn't exist
+        assertEquals(ScriptEnginePersonAttributeDao.getScriptEngineName("test.py"), null);
+    }
+
+    @Test
+    public void testDetermineScriptType() {
+        // test with classpath resource
+        assertEquals(new ScriptEnginePersonAttributeDao("SampleScriptedJavascriptPersonAttributeDao.js").getScriptType(),
+                ScriptEnginePersonAttributeDao.SCRIPT_TYPE.RESOURCE);
+        assertEquals(new ScriptEnginePersonAttributeDao("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js").getScriptType(),
+                ScriptEnginePersonAttributeDao.SCRIPT_TYPE.FILE);
+        // if file doesn't exist, assume script is contents of string
+        assertEquals(new ScriptEnginePersonAttributeDao("doesnotexist/src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js").getScriptType(),
+                ScriptEnginePersonAttributeDao.SCRIPT_TYPE.CONTENTS);
     }
 }
