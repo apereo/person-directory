@@ -1,14 +1,19 @@
 package org.apereo.services.persondir.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.services.persondir.IPersonAttributes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -47,7 +52,11 @@ import java.util.Set;
  * @author Misagh Moayyed
  */
 public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
+    private static final Logger logger = LoggerFactory.getLogger(ScriptEnginePersonAttributeDao.class);
     private String scriptFile;
+    public enum SCRIPT_TYPE {RESOURCE, FILE, CONTENTS}
+    private SCRIPT_TYPE scriptType;
+    private String engineName;
     private boolean caseInsensitiveUsername = false;
     private final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
 
@@ -55,8 +64,32 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
         return scriptFile;
     }
 
+    // Current unit tests re-use an instance of this DAO,
+    // this object would be better if engineName and scriptFile couldn't change
     public void setScriptFile(final String scriptFile) {
         this.scriptFile = scriptFile;
+        this.scriptType = determineScriptType(scriptFile);
+        if (scriptType != SCRIPT_TYPE.CONTENTS) {
+            // assume that if adjusting the file, engine name should also be re-calc'd
+            // if scriptType is CONTENTS then we can't determine engineName anyway
+            this.engineName = getScriptEngineName(scriptFile);
+        }
+    }
+
+    public String getEngineName() {
+        return engineName;
+    }
+
+    protected SCRIPT_TYPE getScriptType() {
+        return scriptType;
+    }
+
+    public void setEngineName(final String engineName) {
+        this.engineName = engineName;
+        final ScriptEngine engine = new ScriptEngineManager().getEngineByName(engineName);
+        if (engine == null) {
+            logger.warn("Specified engineName {} is not available in classpath.", engineName);
+        }
     }
 
     public boolean isCaseInsensitiveUsername() {
@@ -65,6 +98,36 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
 
     public void setCaseInsensitiveUsername(final boolean caseInsensitiveUsername) {
         this.caseInsensitiveUsername = caseInsensitiveUsername;
+    }
+
+    /**
+     * This should probably be deprecated in favor of constructors that guarantee required properties are set
+     */
+    public ScriptEnginePersonAttributeDao() {
+    }
+
+    /**
+     * Create DAO with reference to file or the contents of a script. 
+     * 
+     * @param scriptFile This can be a path to a file, classpath resource, or the script contents as string.
+     * If its the string version then engine name must be set using setter.
+     */
+    public ScriptEnginePersonAttributeDao(String scriptFile) {
+        setScriptFile(scriptFile);
+        this.engineName = getScriptEngineName(scriptFile);
+    }
+
+    /**
+     * Create DAO with reference to file or the contents of a script. 
+     * 
+     * @param scriptFile This can be a path to a file, classpath resource, or the script contents as string.
+     * If its the string version then engine name must be set using setter.
+     * @param engineName Script engine name such as js, groovy, python
+     */
+
+    public ScriptEnginePersonAttributeDao(String scriptFile, String engineName) {
+        setScriptFile(scriptFile);
+        setEngineName(engineName);
     }
 
     @Override
@@ -109,33 +172,53 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     }
 
     private Map<String, Object> getScriptedAttributesFromFile(final String uid) throws Exception {
-        final String engineName = getScriptEngineName();
-        final ScriptEngine engine = new ScriptEngineManager().getEngineByName(engineName);
-        if (engine == null || StringUtils.isBlank(engineName)) {
-            logger.warn("Script engine is not available for [{}]", engineName);
+
+        if (StringUtils.isBlank(scriptFile)) {
+            logger.warn("Script file or contents not set.");
             return new HashMap<>();
         }
 
-        logger.debug("Created groovy script engine instance for [{}]", engineName);
+        if (StringUtils.isBlank(engineName)) {
+            if (scriptType == SCRIPT_TYPE.CONTENTS) {
+                // don't log contents of script
+                logger.warn("Engine name not specified, not running script.");
+            } else {
+                logger.warn("Unable to determine engineName for script: {}, not running script", scriptFile);
+            }
+            return new HashMap<>();
+        }
+
+        // ScriptEngineManager().getEngineByName(engineName) will throw NPE if engineName is null
+        final ScriptEngine engine = new ScriptEngineManager().getEngineByName(engineName);
+        if (engine == null) {
+            logger.warn("Script engine is not available in classpath for [{}]", engineName);
+            return new HashMap<>();
+        }
+
+        logger.debug("Created script engine instance for [{}]", engineName);
         final Object[] args = {uid, logger};
 
-        final File theScriptFile = new File(this.scriptFile);
-        if (theScriptFile.exists()) {
-            logger.debug("Loading script from [{}]", theScriptFile);
-            engine.eval(new FileReader(theScriptFile));
-        } else {
-            boolean foundStream = false;
-            try (InputStream in = getClass().getClassLoader().getResourceAsStream(this.scriptFile)) {
-                if (in != null && in.markSupported() && in.available() > 0) {
-                    logger.debug("Loading script [{}] from classloader as a stream", theScriptFile);
-                    engine.eval(new InputStreamReader(in));
-                    foundStream = true;
+        switch (scriptType) {
+            case RESOURCE:
+                try (InputStream in = getClass().getClassLoader().getResourceAsStream(this.scriptFile)) {
+                    if (in != null && in.markSupported() && in.available() > 0) {
+                        logger.debug("Loading script [{}] from classloader as a stream", this.scriptFile);
+                        engine.eval(new InputStreamReader(in));
+                    }
                 }
-            }
-            if (!foundStream) {
-                logger.debug("Loading script [{}] in raw text format", theScriptFile);
+                break;
+            case FILE:
+                final File theScriptFile = new File(this.scriptFile);
+                logger.debug("Loading script from [{}]", theScriptFile);
+                engine.eval(new FileReader(theScriptFile));
+                break;
+            case CONTENTS:
+                logger.debug("Evaluating script contents [\n{}\n]", this.scriptFile);
                 engine.eval(new StringReader(this.scriptFile));
-            }
+                break;
+            default:
+                throw new IllegalStateException("Unsupported script type: " + scriptType);
+
         }
 
         logger.debug("Executing script's run method, with parameters [{}]", args);
@@ -146,17 +229,24 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
         return personAttributesMap;
     }
 
-    private String getScriptEngineName() {
-        String engineName = null;
-        if (this.scriptFile.endsWith(".py")) {
-            engineName = "python";
-        } else if (this.scriptFile.endsWith(".js")) {
-            engineName = "js";
-        } else if (this.scriptFile.endsWith(".groovy")) {
-            engineName = "groovy";
+    private SCRIPT_TYPE determineScriptType(String fileName) {
+        File f = new File(fileName);
+        if (f.exists() && f.isFile()) {
+            return SCRIPT_TYPE.FILE;
         }
-        return engineName;
+
+        InputStream in = ScriptEnginePersonAttributeDao.class.getClassLoader().getResourceAsStream(fileName);
+        try {
+            if (in != null && in.markSupported() && in.available() > 0) {
+                return SCRIPT_TYPE.RESOURCE;
+            }
+        } catch (IOException e) {
+            logger.warn("Error checking if stream exists: {}",e.getMessage(),e);
+            return SCRIPT_TYPE.CONTENTS;
+        }
+        return SCRIPT_TYPE.CONTENTS;
     }
+
 
     private static Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, Object> personAttributesMap) {
         final Map<String, List<Object>> personAttributes = new HashMap<>();
@@ -169,5 +259,32 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
             }
         }
         return personAttributes;
+    }
+
+    /**
+     * This method is static is available as utility for users that are passing the contents of a script
+     * and want to set the engineName property based on a filename.
+     * @param filename
+     * @return
+     */
+    public static String getScriptEngineName(String filename) {
+        String extension = FilenameUtils.getExtension(filename);
+        if (StringUtils.isBlank(extension)) {
+            logger.warn("Can't determine engine name based on filename without extension {}",filename);
+            return null;
+        }
+        ScriptEngineManager manager = new ScriptEngineManager();
+        List<ScriptEngineFactory> engines = manager.getEngineFactories();
+        for (ScriptEngineFactory engineFactory : engines) {
+            List<String> extensions = engineFactory.getExtensions();
+            for (String supportedExt : extensions) {
+                if (extension.equals(supportedExt)) {
+                    // return first short name
+                    return engineFactory.getNames().get(0);
+                }
+            }
+        }
+        logger.warn("Can't determine engine name based on filename and available script engines {}",filename);
+        return null;
     }
 }

@@ -11,7 +11,7 @@
     <groupId>org.apereo.service.persondir</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.8.8-SNAPSHOT</version>
+    <version>1.8.9-SNAPSHOT</version>
 
     <issueManagement>
         <url>https://github.com/apereo/person-directory/issues</url>
@@ -87,7 +87,7 @@
         <toml.version>1.0.0</toml.version>
         <xerces.version>2.11.0</xerces.version>
         <jackson.version>2.8.5</jackson.version>
-        <commons-io.version>2.4</commons-io.version>
+        <commons-io.version>2.6</commons-io.version>
         <ldaptive.version>1.2.1</ldaptive.version>
         <apachehttpclient>4.5.3</apachehttpclient>
         
