@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,19 +24,24 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apereo.services.persondir.IPersonAttributes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Eric Dalquist
-
  */
 public abstract class BasePersonImpl implements IPersonAttributes {
     private static final long serialVersionUID = 1L;
-
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
     private final Map<String, List<Object>> attributes;
 
     public BasePersonImpl(final Map<String, List<Object>> attributes) {
@@ -60,15 +65,37 @@ public abstract class BasePersonImpl implements IPersonAttributes {
      */
     protected Map<String, List<Object>> buildImmutableAttributeMap(final Map<String, List<Object>> attributes) {
         final Map<String, List<Object>> immutableValuesBuilder = this.createImmutableAttributeMap(attributes.size());
-
+        final Pattern arrayPattern = Pattern.compile("\\{(.*)\\}");
         for (final Map.Entry<String, List<Object>> attrEntry : attributes.entrySet()) {
             final String key = attrEntry.getKey();
             List<Object> value = attrEntry.getValue();
 
             if (value != null) {
+                if (!value.isEmpty()) {
+                    final Object result = value.get(0);
+                    if (Array.class.isInstance(result)) {
+                        if (logger.isTraceEnabled()) {
+                            logger.trace("Column {} is classified as a SQL array", key);
+                        }
+                        final String values = result.toString();
+                        if (logger.isTraceEnabled()) {
+                            logger.trace("Converting SQL array values {} using pattern {}", values, arrayPattern.pattern());
+                        }
+                        final Matcher matcher = arrayPattern.matcher(values);
+                        if (matcher.matches()) {
+                            final String[] groups = matcher.group(1).split(",");
+                            value = Arrays.asList(groups);
+                            if (logger.isTraceEnabled()) {
+                                logger.trace("Converted SQL array values {}", values);
+                            }
+                        }
+                    }
+                }
                 value = Collections.unmodifiableList(value);
             }
-
+            if (logger.isTraceEnabled()) {
+                logger.trace("Collecting attribute {} with value(s) {}", key, value);
+            }
             immutableValuesBuilder.put(key, value);
         }
 
@@ -132,8 +159,8 @@ public abstract class BasePersonImpl implements IPersonAttributes {
         }
         final IPersonAttributes rhs = (IPersonAttributes) object;
         return new EqualsBuilder()
-                .append(this.getName(), rhs.getName())
-                .isEquals();
+            .append(this.getName(), rhs.getName())
+            .isEquals();
     }
 
     /**
@@ -142,8 +169,8 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(1574945487, 827742191)
-                .append(this.getName())
-                .toHashCode();
+            .append(this.getName())
+            .toHashCode();
     }
 
     /**
@@ -152,8 +179,8 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("name", this.getName())
-                .append("attributes", this.attributes)
-                .toString();
+            .append("name", this.getName())
+            .append("attributes", this.attributes)
+            .toString();
     }
 }

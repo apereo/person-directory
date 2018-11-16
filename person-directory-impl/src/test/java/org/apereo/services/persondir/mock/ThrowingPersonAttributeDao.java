@@ -19,7 +19,6 @@
 package org.apereo.services.persondir.mock;
 
 import org.apereo.services.persondir.IPersonAttributes;
-import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.support.BasePersonAttributeDao;
 
 import java.util.List;
