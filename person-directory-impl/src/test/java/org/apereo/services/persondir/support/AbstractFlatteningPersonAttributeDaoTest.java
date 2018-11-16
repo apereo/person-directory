@@ -33,9 +33,6 @@ import java.util.Map;
 
  */
 public abstract class AbstractFlatteningPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
-    /**
-     * @see org.jasig.services.persondir.support.AbstractPersonAttributeDaoTest#getPersonAttributeDaoInstance()
-     */
     @Override
     protected final IPersonAttributeDao getPersonAttributeDaoInstance() {
         return this.getAbstractFlatteningPersonAttributeDao();

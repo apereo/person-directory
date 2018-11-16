@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,10 +18,14 @@
  */
 package org.apereo.services.persondir.support.jdbc;
 
-import org.apereo.services.persondir.support.SimpleUsernameAttributeProvider;
+import junit.framework.TestResult;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
+import org.apereo.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.apereo.services.persondir.util.Util;
+import org.junit.Ignore;
+import org.postgresql.Driver;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -42,34 +46,48 @@ import java.util.Set;
  * @author Eric Dalquist
 
  */
-public class SingleRowJdbcPersonAttributeDaoTest
-        extends AbstractCaseSensitivityJdbcPersonAttributeDaoTest {
+@Ignore
+public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSensitivityJdbcPersonAttributeDaoTest {
+
+    @Override
+    public void run(final TestResult result) {
+        if (Util.isPortInUse("localhost", 5432)) {
+            super.run(result);
+        }
+    }
+
+
+    @Override
+    protected DataSource setUpDataSource() {
+        return new SimpleDriverDataSource(new Driver(), "jdbc:postgresql://localhost:5432/postgres", "postgres", "password");
+    }
 
     @Override
     protected void setUpSchema(final DataSource dataSource) throws SQLException {
         final Connection con = dataSource.getConnection();
 
         con.prepareStatement("CREATE TABLE user_table " +
-                "(netid VARCHAR, " +
-                "name VARCHAR, " +
-                "email VARCHAR, " +
-                "shirt_color VARCHAR)").execute();
+            "(netid VARCHAR, " +
+            "name VARCHAR, " +
+            "email VARCHAR, " +
+            "locations TEXT[], " +
+            "shirt_color VARCHAR)").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                "(netid, name, email, shirt_color) " +
-                "VALUES ('awp9', 'Andrew', 'andrew.petro@yale.edu', 'blue')").execute();
+            "(netid, name, email, shirt_color, locations) " +
+            "VALUES ('awp9', 'Andrew', 'andrew.petro@yale.edu', 'blue', '{\"usa\",\"uk\"}')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                "(netid, name, email, shirt_color) " +
-                "VALUES ('edalquist', 'Eric', 'edalquist@unicon.net', 'blue')").execute();
+            "(netid, name, email, shirt_color) " +
+            "VALUES ('edalquist', 'Eric', 'edalquist@unicon.net', 'blue')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                "(netid, name, email, shirt_color) " +
-                "VALUES ('atest', 'Andrew', 'andrew.test@test.net', 'red')").execute();
+            "(netid, name, email, shirt_color) " +
+            "VALUES ('atest', 'Andrew', 'andrew.test@test.net', 'red')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                "(netid, name, email, shirt_color) " +
-                "VALUES ('susan', 'Susan', 'susan.test@test.net', null)").execute();
+            "(netid, name, email, shirt_color) " +
+            "VALUES ('susan', 'Susan', 'susan.test@test.net', null)").execute();
 
         con.close();
     }
@@ -77,9 +95,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     @Override
     protected void tearDownSchema(final DataSource dataSource) throws SQLException {
         final Connection con = dataSource.getConnection();
-
         con.prepareStatement("DROP TABLE user_table").execute();
-        con.prepareStatement("SHUTDOWN").execute();
         con.close();
     }
 
@@ -154,7 +170,8 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * Test for a query with a single attribute
      */
     public void testSingleAttrQuery() {
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
+        final SingleRowJdbcPersonAttributeDao impl = new
+            SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color, locations FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -167,6 +184,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         emailAttributeNames.add("emailAddress");
         columnsToAttributes.put("email", emailAttributeNames);
         columnsToAttributes.put("shirt_color", "dressShirtColor");
+        columnsToAttributes.put("locations", "locations");
         impl.setResultAttributeMapping(columnsToAttributes);
 
         final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");

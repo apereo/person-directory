@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,11 +18,11 @@
  */
 package org.apereo.services.persondir.support.jdbc;
 
-import org.hsqldb.jdbcDriver;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractDefaultQueryPersonAttributeDaoTest;
 import org.apereo.services.persondir.util.CaseCanonicalizationMode;
 import org.apereo.services.persondir.util.Util;
+import org.hsqldb.jdbcDriver;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
@@ -66,8 +66,12 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        this.testDataSource = new SimpleDriverDataSource(new jdbcDriver(), "jdbc:hsqldb:mem:adhommemds", "sa", "");
+        this.testDataSource = setUpDataSource();
         setUpSchema(testDataSource);
+    }
+
+    protected DataSource setUpDataSource() {
+        return new SimpleDriverDataSource(new jdbcDriver(), "jdbc:hsqldb:mem:adhommemds", "sa", "");
     }
 
     @Override
