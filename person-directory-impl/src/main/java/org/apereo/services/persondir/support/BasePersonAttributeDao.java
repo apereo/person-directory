@@ -38,7 +38,9 @@ import java.util.Set;
 public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     private int order;
-    
+    private String id = getClass().getSimpleName();
+    private boolean enabled = true;
+
     public BasePersonAttributeDao() {
         super();
     }
@@ -46,6 +48,9 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
 
     @Override
     public final Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
+        if (!this.enabled) {
+            return null;
+        }
         final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
 
         //Get the first IPersonAttributes to return data for
@@ -63,6 +68,9 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
 
     @Override
     public final Map<String, List<Object>> getMultivaluedUserAttributes(final String uid) {
+        if (!this.enabled) {
+            return null;
+        }
         final IPersonAttributes person = this.getPerson(uid);
 
         if (person == null) {
@@ -75,6 +83,9 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     
     @Override
     public final Map<String, Object> getUserAttributes(final Map<String, Object> seed) {
+        if (!this.enabled) {
+            return null;
+        }
         final Set<IPersonAttributes> people = this.getPeople(seed);
 
         //Get the first IPersonAttributes to return data for
@@ -94,6 +105,9 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
      */
     @Override
     public final Map<String, Object> getUserAttributes(final String uid) {
+        if (!this.enabled) {
+            return null;
+        }
         Validate.notNull(uid, "uid may not be null.");
 
         //Get the attributes from the subclass
@@ -112,6 +126,10 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
      */
     @Deprecated
     protected Map<String, Object> flattenResults(final Map<String, List<Object>> multivaluedUserAttributes) {
+        if (!this.enabled) {
+            return null;
+        }
+
         if (multivaluedUserAttributes == null) {
             return null;
         }
@@ -150,5 +168,23 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     @Override
     public int compareTo(final IPersonAttributeDao o) {
         return this.order;
+    }
+
+    @Override
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(final String id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
     }
 }

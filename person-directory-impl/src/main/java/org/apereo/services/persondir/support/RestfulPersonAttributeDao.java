@@ -87,6 +87,9 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     public IPersonAttributes getPerson(final String uid) {
         try {
+            if (!this.isEnabled()) {
+                return null;
+            }
             final HttpClientBuilder builder = HttpClientBuilder.create();
 
             if (StringUtils.isNotBlank(this.basicAuthUsername) && StringUtils.isNotBlank(this.basicAuthPassword)) {

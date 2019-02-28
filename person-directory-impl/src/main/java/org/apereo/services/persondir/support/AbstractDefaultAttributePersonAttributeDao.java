@@ -73,6 +73,9 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      */
     @Override
     public IPersonAttributes getPerson(final String uid) {
+        if (!this.isEnabled()) {
+            return null;
+        }
         Validate.notNull(uid, "uid may not be null.");
 
         //Generate the seed map for the uid
