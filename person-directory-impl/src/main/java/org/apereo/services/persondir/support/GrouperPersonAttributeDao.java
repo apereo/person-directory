@@ -53,6 +53,9 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
 
     @Override
     public IPersonAttributes getPerson(final String subjectId) {
+        if (!this.isEnabled()) {
+            return null;
+        }
         final GcGetGroups groupsClient = new GcGetGroups().addSubjectId(subjectId);
         final Map<String, List<Object>> grouperGroupsAsAttributesMap = new HashMap<>(1);
         final List<Object> groupsList = new ArrayList<>();

@@ -133,6 +133,9 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     @Override
     public IPersonAttributes getPerson(final String uid) {
         try {
+            if (!this.isEnabled()) {
+                return null;
+            }
             final Map attributes = getScriptedAttributesFromFile(uid);
             if (this.caseInsensitiveUsername) {
                 return new CaseInsensitiveNamedPersonImpl(uid, stuffAttributesIntoListValues(attributes));

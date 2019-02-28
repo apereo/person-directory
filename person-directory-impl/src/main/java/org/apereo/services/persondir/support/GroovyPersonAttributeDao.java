@@ -137,6 +137,10 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     @SuppressWarnings("unchecked")
     public IPersonAttributes getPerson(final String uid) {
+        if (!this.isEnabled()) {
+            return null;
+        }
+
         logger.debug("Executing groovy script's getAttributesForUser method");
 
         final Map<String, Object> personAttributesMap = groovyObject.getAttributesForUser(uid);

@@ -133,6 +133,9 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
      */
     @Override
     public IPersonAttributes getPerson(final String uid) {
+        if (!this.isEnabled()) {
+            return null;
+        }
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
         return this.personByNameCache.get(uid);
     }

@@ -102,6 +102,9 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
      */
     @Override
     public IPersonAttributes getPerson(final String uid) {
+        if (!this.isEnabled()) {
+            return null;
+        }
         if (uid == null) {
             throw new IllegalArgumentException("Illegal to invoke getPerson(String) with a null argument.");
         }
