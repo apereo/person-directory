@@ -11,7 +11,7 @@
     <groupId>org.apereo.service.persondir</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.8.10</version>
+    <version>1.8.11-SNAPSHOT</version>
 
     <issueManagement>
         <url>https://github.com/apereo/person-directory/issues</url>
