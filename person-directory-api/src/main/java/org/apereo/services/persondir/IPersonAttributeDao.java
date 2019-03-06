@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -51,7 +51,7 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      * <li>If an error occurs while find the person an appropriate exception will be thrown.</li>
      * </ul>
      *
-     * @param uid The userName of the person to find.
+     * @param uid         The userName of the person to find.
      * @return The populated {@link IPersonAttributes} for the specified uid, null if no person could be found for the uid.
      * @throws IllegalArgumentException If <code>uid</code> is <code>null.</code>
      */
@@ -65,8 +65,8 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      * If the implementation can not execute its query for an expected reason such as not enough information in the
      * query {@link Map} null should be returned. For unexpected problems throw an exception.
      *
-     * @param query A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
-     * @return A {@link Set} of {@link IPersonAttributes}s that match the query {@link Map}.         If no matches are found an empty {@link Set} is returned.         If the query could not be run null is returned.
+     * @param query       A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
+     * @return A {@link Set} of {@link IPersonAttributes}s that match the query {@link Map}. If no matches are found an empty {@link Set} is returned. If the query could not be run null is returned.
      * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
     Set<IPersonAttributes> getPeople(Map<String, Object> query);
@@ -79,7 +79,7 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      * If the implementation can not execute its query for an expected reason such as not enough information in the
      * query {@link Map} null should be returned. For unexpected problems throw an exception.
      *
-     * @param query A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
+     * @param query       A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
      * @return A {@link Set} of {@link IPersonAttributes}s that match the query {@link Map}. If no matches are found an empty {@link Set} is returned. If the query could not be run null is returned.
      * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
@@ -112,8 +112,8 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      * Returns a mutable {@link Map} of the attributes of the first {@link IPersonAttributes} returned by calling
      * {@link #getPeople(Map)}
      *
-     * @param seed A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
-     * @return A {@link Map} of PersonAttributess that match the query {@link Map}.         If no matches are found an empty {@link Map} is returned.         If the query could not be run null is returned.
+     * @param seed        A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
+     * @return A {@link Map} of PersonAttributess that match the query {@link Map}. If no matches are found an empty {@link Map} is returned. If the query could not be run null is returned.
      * @deprecated Use {@link #getPeople(Map)} instead. This method will be removed in 1.6
      */
     @Deprecated
@@ -123,8 +123,8 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      * Returns a mutable {@link Map} of the attributes of the {@link IPersonAttributes} returned by calling
      * {@link #getPerson(String)}
      *
-     * @param uid The userName of the person to find.
-     * @return The populated {@link Map} of person attributes for the specified uid,         null if no person could be found for the uid.
+     * @param uid         The userName of the person to find.
+     * @return The populated {@link Map} of person attributes for the specified uid, null if no person could be found for the uid.
      * @deprecated Use {@link #getPerson(String)} instead. This method will be removed in 1.6
      */
     @Deprecated
@@ -134,8 +134,8 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      * Returns a mutable {@link Map} of the single-valued attributes of the first {@link IPersonAttributes} returned by calling
      * {@link #getPeople(Map)}
      *
-     * @param seed A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
-     * @return A {@link Map} of PersonAttributess that match the query {@link Map}.         If no matches are found an empty {@link Map} is returned.         If the query could not be run null is returned.
+     * @param seed        A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
+     * @return A {@link Map} of PersonAttributess that match the query {@link Map}. If no matches are found an empty {@link Map} is returned. If the query could not be run null is returned.
      * @deprecated Use {@link #getPeople(Map)} instead. This method will be removed in 1.6
      */
     @Deprecated
@@ -146,7 +146,7 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      * {@link #getPerson(String)}
      *
      * @param uid The userName of the person to find.
-     * @return The populated {@link Map} of person attributes for the specified uid,         null if no person could be found for the uid.
+     * @return The populated {@link Map} of person attributes for the specified uid, null if no person could be found for the uid.
      * @deprecated Use {@link #getPerson(String)} instead. This method will be removed in 1.6
      */
     @Deprecated
@@ -167,8 +167,8 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      *
      * @return the id
      */
-    default String getId() {
-        return this.getClass().getSimpleName();
+    default String[] getId() {
+        return new String[]{this.getClass().getSimpleName()};
     }
 
     /**

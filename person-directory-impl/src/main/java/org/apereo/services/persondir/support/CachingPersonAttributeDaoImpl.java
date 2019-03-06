@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -32,6 +32,8 @@ import org.springmodules.cache.key.CacheKeyGenerator;
 import java.io.Serializable;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -384,6 +386,14 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         final MethodInvocation methodInvocation = new PersonAttributeDaoMethodInvocation(seed);
         final Serializable cacheKey = this.cacheKeyGenerator.generateKey(methodInvocation);
         this.userInfoCache.remove(cacheKey);
+    }
+
+    @Override
+    public String[] getId() {
+        final List<String> ids = new ArrayList<>();
+        ids.add(super.getClass().getSimpleName());
+        ids.addAll(Arrays.asList(this.cachedPersonAttributesDao.getId()));
+        return ids.toArray(new String[]{});
     }
 
     /* (non-Javadoc)

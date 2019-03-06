@@ -7,7 +7,7 @@
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -38,7 +38,7 @@ import java.util.Set;
 public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     private int order;
-    private String id = getClass().getSimpleName();
+    private String[] id = new String[] {getClass().getSimpleName()};
     private boolean enabled = true;
 
     public BasePersonAttributeDao() {
@@ -80,7 +80,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         //Make a mutable copy of the person's attributes
         return new LinkedHashMap<>(person.getAttributes());
     }
-    
+
     @Override
     public final Map<String, Object> getUserAttributes(final Map<String, Object> seed) {
         if (!this.enabled) {
@@ -171,14 +171,14 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     }
 
     @Override
-    public String getId() {
+    public String[] getId() {
         return this.id;
     }
 
-    public void setId(final String id) {
+    public void setId(final String... id) {
         this.id = id;
     }
-
+    
     @Override
     public boolean isEnabled() {
         return enabled;

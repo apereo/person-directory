@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,12 +20,14 @@ package org.apereo.services.persondir.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
-import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.merger.IAttributeMerger;
+import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.springframework.beans.factory.annotation.Required;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -110,6 +112,14 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     protected boolean stopOnSuccess = false;
 
 
+    @Override
+    public String[] getId() {
+        final List<String> ids = new ArrayList<>();
+        ids.add(super.getClass().getSimpleName());
+        personAttributeDaos.forEach(dao -> ids.addAll(Arrays.asList(dao.getId())));
+        return ids.toArray(new String[]{});
+    }
+
     /**
      * Iterates through the configured {@link java.util.List} of {@link IPersonAttributeDao}
      * instances. The results from each DAO are merged into the result {@link Map}
@@ -141,8 +151,8 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
 
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Retrieved attributes='" + currentPeople + "' for query='"
-                            + query + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='"
-                            + currentlyConsidering + "', resultAttributes='" + resultPeople + "'");
+                        + query + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='"
+                        + currentlyConsidering + "', resultAttributes='" + resultPeople + "'");
                 }
             } catch (final RuntimeException rte) {
                 handledException |= handleRuntimeException(currentlyConsidering, rte);
@@ -193,10 +203,10 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * Call to execute the appropriate query on the current {@link IPersonAttributeDao}. Provides extra information
      * beyond the seed for the state of the query chain and previous results.
      *
-     * @param seed The seed for the original query.
-     * @param isFirstQuery If this is the first query, this will stay true until a call to this method returns (does not throw an exception).
+     * @param seed                 The seed for the original query.
+     * @param isFirstQuery         If this is the first query, this will stay true until a call to this method returns (does not throw an exception).
      * @param currentlyConsidering The IPersonAttributeDao to execute the query on.
-     * @param resultPeople The Map of results from all previous queries, may be null.
+     * @param resultPeople         The Map of results from all previous queries, may be null.
      * @return The results from the call to the DAO, follows the same rules as {@link IPersonAttributeDao#getUserAttributes(Map)}.
      */
     protected abstract Set<IPersonAttributes> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery,
