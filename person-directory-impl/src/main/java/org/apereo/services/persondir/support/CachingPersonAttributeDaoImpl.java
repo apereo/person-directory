@@ -24,6 +24,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
@@ -42,73 +43,74 @@ import java.util.Set;
 
 /**
  * A configurable caching implementation of {@link IPersonAttributeDao}
- * which caches results from a wrapped IPersonAttributeDao. 
+ * which caches results from a wrapped IPersonAttributeDao.
  * <br>
  * <br>
  * Configuration:
  * <table border="1" summary="">
- *     <tr>
- *         <th align="left">Property</th>
- *         <th align="left">Description</th>
- *         <th align="left">Required</th>
- *         <th align="left">Default</th>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">cachedPersonAttributesDao</td>
- *         <td>
- *             The {@link IPersonAttributeDao} to delegate
- *             queries to on cache misses.
- *         </td>
- *         <td valign="top">Yes</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">userInfoCache</td>
- *         <td>
- *             The {@link java.util.Map} to use for result caching. This class does no cache
- *             maintenence. It is assumed the underlying Map implementation will ensure the cache
- *             is in a good state at all times.
- *         </td>
- *         <td valign="top">Yes</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">cacheKeyAttributes</td>
- *         <td>
- *             A Set of attribute names to use when building the cache key. The default
- *             implementation generates the key as a Map of attributeNames to values retrieved
- *             from the seed for the query. Zero length sets are treaded as null.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">cacheNullResults</td>
- *         <td>
- *             If the wrapped IPersonAttributeDao returns null for the query should that null
- *             value be stored in the cache. 
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">false</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">nullResultsObject</td>
- *         <td>
- *             If cacheNullResults is set to true this value is stored in the cache for any
- *             query that returns null. This is used as a flag so the same query will return
- *             null from the cache by seeing this value
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">{@link CachingPersonAttributeDaoImpl#NULL_RESULTS_OBJECT}</td>
- *     </tr>
+ * <tr>
+ * <th align="left">Property</th>
+ * <th align="left">Description</th>
+ * <th align="left">Required</th>
+ * <th align="left">Default</th>
+ * </tr>
+ * <tr>
+ * <td align="right" valign="top">cachedPersonAttributesDao</td>
+ * <td>
+ * The {@link IPersonAttributeDao} to delegate
+ * queries to on cache misses.
+ * </td>
+ * <td valign="top">Yes</td>
+ * <td valign="top">null</td>
+ * </tr>
+ * <tr>
+ * <td align="right" valign="top">userInfoCache</td>
+ * <td>
+ * The {@link java.util.Map} to use for result caching. This class does no cache
+ * maintenence. It is assumed the underlying Map implementation will ensure the cache
+ * is in a good state at all times.
+ * </td>
+ * <td valign="top">Yes</td>
+ * <td valign="top">null</td>
+ * </tr>
+ * <tr>
+ * <td align="right" valign="top">cacheKeyAttributes</td>
+ * <td>
+ * A Set of attribute names to use when building the cache key. The default
+ * implementation generates the key as a Map of attributeNames to values retrieved
+ * from the seed for the query. Zero length sets are treaded as null.
+ * </td>
+ * <td valign="top">No</td>
+ * <td valign="top">null</td>
+ * </tr>
+ * <tr>
+ * <td align="right" valign="top">cacheNullResults</td>
+ * <td>
+ * If the wrapped IPersonAttributeDao returns null for the query should that null
+ * value be stored in the cache.
+ * </td>
+ * <td valign="top">No</td>
+ * <td valign="top">false</td>
+ * </tr>
+ * <tr>
+ * <td align="right" valign="top">nullResultsObject</td>
+ * <td>
+ * If cacheNullResults is set to true this value is stored in the cache for any
+ * query that returns null. This is used as a flag so the same query will return
+ * null from the cache by seeing this value
+ * </td>
+ * <td valign="top">No</td>
+ * <td valign="top">{@link CachingPersonAttributeDaoImpl#NULL_RESULTS_OBJECT}</td>
+ * </tr>
  * </table>
- *
  *
  * @author dgrimwood@unicon.net
  * @author Eric Dalquist
  * @version $Id
  */
 public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao implements InitializingBean, BeanNameAware {
+    private final Object objectMonitor = new Object();
+
     protected static final Set<IPersonAttributes> NULL_RESULTS_OBJECT;
 
     protected Log statsLogger = LogFactory.getLog(this.getClass().getName() + ".statistics");
@@ -348,7 +350,16 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
             }
         }
 
-        final Set<IPersonAttributes> queryResults = this.cachedPersonAttributesDao.getPeopleWithMultivaluedAttributes(seed);
+        final Set<IPersonAttributes> queryResults;
+        final IPersonAttributeDaoFilter filter = this.cachedPersonAttributesDao.getPersonAttributeDaoFilter();
+        try {
+            synchronized (objectMonitor) {
+                this.cachedPersonAttributesDao.setPersonAttributeDaoFilter(getPersonAttributeDaoFilter());
+                queryResults = this.cachedPersonAttributesDao.getPeopleWithMultivaluedAttributes(seed);
+            }
+        } finally {
+            this.cachedPersonAttributesDao.setPersonAttributeDaoFilter(filter);
+        }
 
         if (cacheKey != null) {
             if (queryResults != null) {
@@ -358,7 +369,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
             }
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache for " + beanName + ". key='" + cacheKey + "', results='" + queryResults + "'");
+                logger.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache for "
+                    + beanName + ". key='" + cacheKey + "', results='" + queryResults + "'");
             }
 
             this.queries++;

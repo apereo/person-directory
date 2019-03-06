@@ -179,4 +179,10 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
     default boolean isEnabled() {
         return true;
     }
+
+    default IPersonAttributeDaoFilter getPersonAttributeDaoFilter() {
+        return null;
+    }
+
+    default void setPersonAttributeDaoFilter(final IPersonAttributeDaoFilter filter) {}
 }

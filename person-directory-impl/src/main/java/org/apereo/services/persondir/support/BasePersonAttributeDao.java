@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import org.apache.commons.lang3.Validate;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +39,9 @@ import java.util.Set;
 public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     private int order;
-    private String[] id = new String[] {getClass().getSimpleName()};
+    private String[] id = new String[]{getClass().getSimpleName()};
     private boolean enabled = true;
+    private IPersonAttributeDaoFilter personAttributeDaoFilter;
 
     public BasePersonAttributeDao() {
         super();
@@ -178,7 +180,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     public void setId(final String... id) {
         this.id = id;
     }
-    
+
     @Override
     public boolean isEnabled() {
         return enabled;
@@ -186,5 +188,15 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
 
     public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public IPersonAttributeDaoFilter getPersonAttributeDaoFilter() {
+        return personAttributeDaoFilter;
+    }
+
+    @Override
+    public void setPersonAttributeDaoFilter(final IPersonAttributeDaoFilter personAttributeDaoFilter) {
+        this.personAttributeDaoFilter = personAttributeDaoFilter;
     }
 }

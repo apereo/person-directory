@@ -21,6 +21,7 @@ package org.apereo.services.persondir.support;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.merger.IAttributeMerger;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
@@ -43,54 +44,53 @@ import java.util.Set;
  * <br>
  * Configuration:
  * <table border="1" summary="">
- *     <tr>
- *         <th align="left">Property</th>
- *         <th align="left">Description</th>
- *         <th align="left">Required</th>
- *         <th align="left">Default</th>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">personAttributeDaos</td>
- *         <td>
- *             A {@link List} of {@link IPersonAttributeDao}s to aggregate attributes from.
- *         </td>
- *         <td valign="top">Yes</td>
- *         <td valign="top">null</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">attrMerger</td>
- *         <td>
- *             A {@link IAttributeMerger} strategy to use for merging the attributes from
- *             the {@link List} of {@link IPersonAttributeDao}s.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">{@link MultivaluedAttributeMerger}</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">recoverExceptions</td>
- *         <td>
- *             Sets the action to be taken if one of the {@link IPersonAttributeDao}s in the
- *             {@link List} fails with a {@link RuntimeException}. If set to true a warn level
- *             log message and stack trace will be logged. If set to false an error level
- *             message and stack trace will be logged and the exception will re-thrown. 
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">true</td>
- *     </tr>
- *     <tr>
- *         <td align="right" valign="top">stopOnSuccess</td>
- *         <td>
- *             If true iteration of the child DAOs will stop after the first one that returns without
- *             throwing an exception. This is intended to provide fail-over among attribute sources. The
- *             <b>recoverExceptions</b> should be set to true for this to function as expected 
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">false</td>
- *     </tr>
+ * <tr>
+ * <th align="left">Property</th>
+ * <th align="left">Description</th>
+ * <th align="left">Required</th>
+ * <th align="left">Default</th>
+ * </tr>
+ * <tr>
+ * <td align="right" valign="top">personAttributeDaos</td>
+ * <td>
+ * A {@link List} of {@link IPersonAttributeDao}s to aggregate attributes from.
+ * </td>
+ * <td valign="top">Yes</td>
+ * <td valign="top">null</td>
+ * </tr>
+ * <tr>
+ * <td align="right" valign="top">attrMerger</td>
+ * <td>
+ * A {@link IAttributeMerger} strategy to use for merging the attributes from
+ * the {@link List} of {@link IPersonAttributeDao}s.
+ * </td>
+ * <td valign="top">No</td>
+ * <td valign="top">{@link MultivaluedAttributeMerger}</td>
+ * </tr>
+ * <tr>
+ * <td align="right" valign="top">recoverExceptions</td>
+ * <td>
+ * Sets the action to be taken if one of the {@link IPersonAttributeDao}s in the
+ * {@link List} fails with a {@link RuntimeException}. If set to true a warn level
+ * log message and stack trace will be logged. If set to false an error level
+ * message and stack trace will be logged and the exception will re-thrown.
+ * </td>
+ * <td valign="top">No</td>
+ * <td valign="top">true</td>
+ * </tr>
+ * <tr>
+ * <td align="right" valign="top">stopOnSuccess</td>
+ * <td>
+ * If true iteration of the child DAOs will stop after the first one that returns without
+ * throwing an exception. This is intended to provide fail-over among attribute sources. The
+ * <b>recoverExceptions</b> should be set to true for this to function as expected
+ * </td>
+ * <td valign="top">No</td>
+ * <td valign="top">false</td>
+ * </tr>
  * </table>
  *
  * @author Eric Dalquist
-
  */
 public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     /**
@@ -123,7 +123,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     /**
      * Iterates through the configured {@link java.util.List} of {@link IPersonAttributeDao}
      * instances. The results from each DAO are merged into the result {@link Map}
-     * by the configured {@link IAttributeMerger}. 
+     * by the configured {@link IAttributeMerger}.
      *
      * @see IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
@@ -143,6 +143,11 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
 
         //Iterate through the configured IPersonAttributeDaos, querying each.
         for (final IPersonAttributeDao currentlyConsidering : this.personAttributeDaos) {
+
+            if (!choosePersonAttributeDao(currentlyConsidering)) {
+                continue;
+            }
+
             boolean handledException = false;
             Set<IPersonAttributes> currentPeople = null;
             try {
@@ -227,6 +232,10 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         Set<String> attrNames = null;
 
         for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
+
+            if (!choosePersonAttributeDao(currentDao)) {
+                continue;
+            }
             boolean handledException = false;
             Set<String> currentDaoAttrNames = null;
             try {
@@ -280,6 +289,9 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         Set<String> queryAttrs = null;
 
         for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
+            if (!choosePersonAttributeDao(currentDao)) {
+                continue;
+            }
             boolean handledException = false;
             Set<String> currentDaoQueryAttrs = null;
             try {
@@ -331,7 +343,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     }
 
     /**
-     * Set the strategy whereby we accumulate attributes from the results of 
+     * Set the strategy whereby we accumulate attributes from the results of
      * polling our delegates.
      *
      * @param merger The attrMerger to set.
@@ -401,4 +413,6 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     public void setStopOnSuccess(final boolean stopOnSuccess) {
         this.stopOnSuccess = stopOnSuccess;
     }
+
+
 }

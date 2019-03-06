@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,8 +20,10 @@ package org.apereo.services.persondir.support;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.core.io.Resource;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -56,19 +58,31 @@ import java.util.Map;
  * @author Dmitriy Kopylenko
  * @author Misagh Moayyed
  */
-public class JsonBackedComplexStubPersonAttributeDao extends ComplexStubPersonAttributeDao {
+public class JsonBackedComplexStubPersonAttributeDao extends ComplexStubPersonAttributeDao implements Closeable, DisposableBean {
 
     /**
      * A configuration file containing JSON representation of the stub person attributes. REQUIRED.
      */
     private final Resource personAttributesConfigFile;
 
-    private final ObjectMapper jacksonObjectMapper = new ObjectMapper();
+    private final ObjectMapper jacksonObjectMapper = new ObjectMapper().findAndRegisterModules();
 
     private final Object synchronizationMonitor = new Object();
 
+    private Closeable resourceWatcherService;
+
     public JsonBackedComplexStubPersonAttributeDao(final Resource personAttributesConfigFile) {
         this.personAttributesConfigFile = personAttributesConfigFile;
+        this.resourceWatcherService = null;
+    }
+
+    public JsonBackedComplexStubPersonAttributeDao(final Resource personAttributesConfigFile, final Closeable resourceWatcherService) {
+        this.personAttributesConfigFile = personAttributesConfigFile;
+        this.resourceWatcherService = resourceWatcherService;
+    }
+
+    public void setResourceWatcherService(final Closeable resourceWatcherService) {
+        this.resourceWatcherService = resourceWatcherService;
     }
 
     /**
@@ -84,7 +98,14 @@ public class JsonBackedComplexStubPersonAttributeDao extends ComplexStubPersonAt
             unmarshalAndSetBackingMap();
         } catch (final ClassCastException ex) {
             throw new BeanCreationException(String.format("The semantic structure of the person attributes"
-                    + "JSON config is not correct. Please fix it in this resource: [%s]", this.personAttributesConfigFile.getURI()));
+                + "JSON config is not correct. Please fix it in this resource: [%s]", this.personAttributesConfigFile.getURI()));
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        if (this.resourceWatcherService != null) {
+            resourceWatcherService.close();
         }
     }
 
@@ -92,11 +113,15 @@ public class JsonBackedComplexStubPersonAttributeDao extends ComplexStubPersonAt
     private void unmarshalAndSetBackingMap() throws IOException {
         logger.info("Un-marshaling person attributes from the config file " + this.personAttributesConfigFile.getFile());
         final Map<String, Map<String, List<Object>>> backingMap = this.jacksonObjectMapper.readValue(
-                this.personAttributesConfigFile.getFile(), Map.class);
+            this.personAttributesConfigFile.getFile(), Map.class);
         logger.debug("Person attributes have been successfully read into the map ");
         synchronized (this.synchronizationMonitor) {
             super.setBackingMap(backingMap);
         }
     }
 
+    @Override
+    public void destroy() throws Exception {
+        close();
+    }
 }
