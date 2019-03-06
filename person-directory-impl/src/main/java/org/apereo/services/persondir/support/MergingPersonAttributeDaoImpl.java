@@ -42,7 +42,6 @@ public class MergingPersonAttributeDaoImpl extends AbstractAggregatingDefaultQue
         this.attrMerger = new MultivaluedAttributeMerger();
     }
 
-
     /**
      * Calls the current IPersonAttributeDao from using the seed.
      *

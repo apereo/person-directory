@@ -132,4 +132,11 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
         Validate.notNull(usernameAttributeProvider);
         this.usernameAttributeProvider = usernameAttributeProvider;
     }
+
+    protected boolean choosePersonAttributeDao(final IPersonAttributeDao currentlyConsidering) {
+        if (getPersonAttributeDaoFilter() != null) {
+            return getPersonAttributeDaoFilter().choosePersonAttributeDao(currentlyConsidering);
+        }
+        return true;
+    }
 }
