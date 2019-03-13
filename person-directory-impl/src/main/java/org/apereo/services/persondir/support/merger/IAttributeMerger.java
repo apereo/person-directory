@@ -38,7 +38,7 @@ public interface IAttributeMerger {
      * @param toConsider The query results map, this will not be modified.
      * @return Merged set of {@link IPersonAttributes}
      */
-    public Set<IPersonAttributes> mergeResults(Set<IPersonAttributes> toModify, Set<IPersonAttributes> toConsider);
+    Set<IPersonAttributes> mergeResults(Set<IPersonAttributes> toModify, Set<IPersonAttributes> toConsider);
 
     /**
      * Modify the "toModify" argument in consideration of the "toConsider" argument. Return the resulting Set which may
@@ -52,7 +52,7 @@ public interface IAttributeMerger {
      * @return The modified set
      * @throws IllegalArgumentException if either toModify or toConsider is null
      */
-    public Set<String> mergePossibleUserAttributeNames(Set<String> toModify, Set<String> toConsider);
+    Set<String> mergePossibleUserAttributeNames(Set<String> toModify, Set<String> toConsider);
 
     /**
      * Modify the "toModify" argument in consideration of the "toConsider" argument. Return the resulting Set which may
@@ -66,7 +66,7 @@ public interface IAttributeMerger {
      * @return The modified set
      * @throws IllegalArgumentException if either toModify or toConsider is null
      */
-    public Set<String> mergeAvailableQueryAttributes(Set<String> toModify, Set<String> toConsider);
+    Set<String> mergeAvailableQueryAttributes(Set<String> toModify, Set<String> toConsider);
 
 
     /**
@@ -82,5 +82,5 @@ public interface IAttributeMerger {
      * @return the modified Map
      * @throws IllegalArgumentException if either toModify or toConsider is null
      */
-    public Map<String, List<Object>> mergeAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider);
+    Map<String, List<Object>> mergeAttributes(Map<String, List<Object>> toModify, Map<String, List<Object>> toConsider);
 }

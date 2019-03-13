@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import junit.framework.TestCase;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
@@ -78,13 +79,13 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
 
         //Test exception recovery
         dao.setRecoverExceptions(true);
-        final Set<String> resultNames = dao.getPossibleUserAttributeNames();
+        final Set<String> resultNames = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(expectedNames, resultNames);
 
         //Test fail on exception
         dao.setRecoverExceptions(false);
         try {
-            dao.getPossibleUserAttributeNames();
+            dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
             TestCase.fail("Expected RuntimeException on getPossibleUserAttributeNames() with ThrowingPersonAttributeDao as a child DAO");
         } catch (final RuntimeException re) {
             //expected
@@ -122,19 +123,19 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
 
         dao.setStopOnSuccess(true);
 
-        final Set<String> resultNamesWithStop = dao.getPossibleUserAttributeNames();
+        final Set<String> resultNamesWithStop = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(expectedNamesWithStop, resultNamesWithStop);
 
-        final IPersonAttributes personWithStop = dao.getPerson("test");
+        final IPersonAttributes personWithStop = dao.getPerson("test", IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithStop);
 
 
         dao.setStopOnSuccess(false);
 
-        final Set<String> resultNamesWithoutStop = dao.getPossibleUserAttributeNames();
+        final Set<String> resultNamesWithoutStop = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(expectedNamesWithoutStop, resultNamesWithoutStop);
 
-        final IPersonAttributes personWithoutStop = dao.getPerson("test");
+        final IPersonAttributes personWithoutStop = dao.getPerson("test", IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithoutStop);
 
     }

@@ -18,6 +18,7 @@
  */
 package org.apereo.services.persondir.support.ldap;
 
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.core.io.ClassPathResource;
@@ -84,7 +85,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         queryMap.put("uid", Util.list("unknown"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
+            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
             assertNull(attribs);
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -112,7 +113,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         queryMap.put("uid", Util.list("edalquist"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
+            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
             assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("email"));
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -146,7 +147,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         queryMap.put("uid", Util.list("edalquist"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
+            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
             assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("email"));
             assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("work.email"));
         } catch (final DataAccessResourceFailureException darfe) {
@@ -172,7 +173,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         queryMap.put("uid", Util.list("edalquist"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
+            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
             assertNull(attribs.get("email"));
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -197,7 +198,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         queryMap.put("uid", Util.list("edalquist"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
+            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
             assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("mail"));
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -231,7 +232,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         queryMap.put("email", Util.list("edalquist@unicon.net"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
+            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
             assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("email"));
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
@@ -261,7 +262,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         queryMap.put("uid", Util.list("edalquist"));
         queryMap.put("email", Util.list("edalquist@example.net"));
 
-        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
+        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(attribs);
     }
 
@@ -289,7 +290,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         expectedAttributeNames.add("email");
         expectedAttributeNames.add("dressShirtColor");
 
-        assertEquals(expectedAttributeNames, impl.getPossibleUserAttributeNames());
+        assertEquals(expectedAttributeNames, impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
     public void testProperties() throws Exception {
@@ -318,9 +319,9 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
 
 
         impl.setResultAttributeMapping(null);
-        assertEquals(Collections.EMPTY_SET, impl.getPossibleUserAttributeNames());
+        assertEquals(Collections.EMPTY_SET, impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
         impl.setResultAttributeMapping(attrMap);
-        assertEquals(Collections.singleton("email"), impl.getPossibleUserAttributeNames());
+        assertEquals(Collections.singleton("email"), impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
     /**

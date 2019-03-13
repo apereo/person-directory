@@ -3,6 +3,7 @@ package org.apereo.services.persondir.support;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +132,7 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public IPersonAttributes getPerson(final String uid) {
+    public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
         try {
             if (!this.isEnabled()) {
                 return null;
@@ -147,15 +148,17 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public Set<IPersonAttributes> getPeople(final Map<String, Object> query) {
-        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(query));
+    public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
+                                            final IPersonAttributeDaoFilter filter) {
+        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(query), filter);
     }
 
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                     final IPersonAttributeDaoFilter filter) {
         final Set<IPersonAttributes> people = new LinkedHashSet<>();
         final String username = usernameAttributeProvider.getUsernameFromQuery(query);
-        final IPersonAttributes person = getPerson(username);
+        final IPersonAttributes person = getPerson(username, filter);
         if (person != null) {
             people.add(person);
         }
@@ -164,13 +167,13 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
 
     @Override
     @JsonIgnore
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         return Collections.EMPTY_SET;
     }
 
     @Override
     @JsonIgnore
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         return Collections.EMPTY_SET;
     }
 
@@ -267,8 +270,9 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     /**
      * This method is static is available as utility for users that are passing the contents of a script
      * and want to set the engineName property based on a filename.
-     * @param filename
-     * @return
+     *
+     * @param filename the filename
+     * @return script engine name
      */
     public static String getScriptEngineName(String filename) {
         String extension = FilenameUtils.getExtension(filename);

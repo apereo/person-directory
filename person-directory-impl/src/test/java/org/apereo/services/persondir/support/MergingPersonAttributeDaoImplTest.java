@@ -18,6 +18,7 @@
  */
 package org.apereo.services.persondir.support;
 
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
@@ -125,7 +126,7 @@ public class MergingPersonAttributeDaoImplTest
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
 
-        final Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap);
+        final Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(this.oneAndTwo, result);
     }
 
@@ -141,7 +142,7 @@ public class MergingPersonAttributeDaoImplTest
         final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
 
-        final Set<String> attributeNames = impl.getPossibleUserAttributeNames();
+        final Set<String> attributeNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(this.oneAndTwo.keySet(), attributeNames);
     }
@@ -164,7 +165,7 @@ public class MergingPersonAttributeDaoImplTest
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
 
-        final Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap);
+        final Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(this.oneAndTwoAndThree, result);
     }
 
@@ -183,12 +184,12 @@ public class MergingPersonAttributeDaoImplTest
         final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
 
-        final Set<String> attribNames = impl.getPossibleUserAttributeNames();
+        final Set<String> attribNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
 
         final Set<String> expectedAttribNames = new HashSet<>();
-        expectedAttribNames.addAll(this.sourceOne.getPossibleUserAttributeNames());
-        expectedAttribNames.addAll(this.sourceTwo.getPossibleUserAttributeNames());
-        expectedAttribNames.addAll(this.collidesWithOne.getPossibleUserAttributeNames());
+        expectedAttribNames.addAll(this.sourceOne.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
+        expectedAttribNames.addAll(this.sourceTwo.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
+        expectedAttribNames.addAll(this.collidesWithOne.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
 
         assertEquals(expectedAttribNames, attribNames);
     }
@@ -213,7 +214,7 @@ public class MergingPersonAttributeDaoImplTest
             final Map<String, List<Object>> queryMap = new HashMap<>();
             queryMap.put(queryAttr, Util.list("awp9"));
 
-            impl.getMultivaluedUserAttributes(queryMap);
+            impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         } catch (final RuntimeException rte) {
             // good, was propogated
             return;
@@ -239,7 +240,7 @@ public class MergingPersonAttributeDaoImplTest
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
 
-        final Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap);
+        final Map<String, List<Object>> result = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(this.oneAndTwo, result);
     }
 
@@ -249,7 +250,7 @@ public class MergingPersonAttributeDaoImplTest
         queryMap.put(queryAttr, Util.list("awp9"));
 
         try {
-            impl.getMultivaluedUserAttributes(queryMap);
+            impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
             fail("IllegalStateException should have been thrown");
         } catch (final IllegalStateException ise) {
         }
@@ -303,7 +304,7 @@ public class MergingPersonAttributeDaoImplTest
         final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
 
-        final Set<IPersonAttributes> layoutOwners = impl.getPeople(Collections.singletonMap("username", (Object) "lo-*"));
+        final Set<IPersonAttributes> layoutOwners = impl.getPeople(Collections.singletonMap("username", (Object) "lo-*"), IPersonAttributeDaoFilter.alwaysChoose());
 
         final Set<IPersonAttributes> excepectedLayoutOwners = new HashSet<>();
         excepectedLayoutOwners.add(new NamedPersonImpl("lo-welcome", loWelcomeAttrs));
@@ -312,7 +313,7 @@ public class MergingPersonAttributeDaoImplTest
         assertEquals(excepectedLayoutOwners, layoutOwners);
 
 
-        final Set<IPersonAttributes> homeUsers = impl.getPeople(Collections.singletonMap("username", (Object) "*home"));
+        final Set<IPersonAttributes> homeUsers = impl.getPeople(Collections.singletonMap("username", (Object) "*home"), IPersonAttributeDaoFilter.alwaysChoose());
 
         final Set<IPersonAttributes> excepectedHomeUsers = new HashSet<>();
         excepectedHomeUsers.add(new NamedPersonImpl("jshome", jshomeAttrs));
@@ -331,7 +332,7 @@ public class MergingPersonAttributeDaoImplTest
          * @return null
          */
         @Override
-        public Set<String> getPossibleUserAttributeNames() {
+        public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
             return null;
         }
     }

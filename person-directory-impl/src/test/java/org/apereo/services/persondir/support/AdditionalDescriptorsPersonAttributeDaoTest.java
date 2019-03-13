@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import junit.framework.TestCase;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
@@ -47,7 +48,7 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends AbstractPersonA
 
     public void testGetAvailableQueryAttributes() {
         TestCase.assertEquals(getPersonAttributeDaoInstance()
-                .getAvailableQueryAttributes(), Collections.singleton(USERNAME_ATTRIBUTE));
+                .getAvailableQueryAttributes(IPersonAttributeDaoFilter.alwaysChoose()), Collections.singleton(USERNAME_ATTRIBUTE));
 
     }
 
@@ -65,12 +66,12 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends AbstractPersonA
         final Map<String, List<Object>> query = new HashMap<>();
         query.put(ATTRIBUTE_NAME, ATTRIBUTE_VALUES);
 
-        Set<IPersonAttributes> rslt = adpad.getPeopleWithMultivaluedAttributes(query);
+        Set<IPersonAttributes> rslt = adpad.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertNull(rslt);
 
         query.put(USERNAME_ATTRIBUTE, Collections.singletonList((Object) USERNAME));
 
-        rslt = adpad.getPeopleWithMultivaluedAttributes(query);
+        rslt = adpad.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertNotNull(rslt);
         TestCase.assertTrue(rslt.size() == 1);
         TestCase.assertTrue(rslt.contains(ad));

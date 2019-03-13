@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import org.apache.commons.lang3.Validate;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.springframework.dao.support.DataAccessUtils;
 
@@ -30,9 +31,9 @@ import java.util.Set;
 
 
 /**
- * Abstract class implementing the IPersonAttributeDao method  {@link IPersonAttributeDao#getPerson(String)}
- * by delegation to {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)} using a configurable
- * default attribute name. If {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)} returnes
+ * Abstract class implementing the IPersonAttributeDao method  {@link IPersonAttributeDao#getPerson(String, IPersonAttributeDaoFilter)}
+ * by delegation to {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map, IPersonAttributeDaoFilter)} using a configurable
+ * default attribute name. If {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map, IPersonAttributeDaoFilter)} returnes
  * more than one {@link IPersonAttributes} is returned {@link org.springframework.dao.IncorrectResultSizeDataAccessException} is thrown.
  *
  * <br>
@@ -49,7 +50,7 @@ import java.util.Set;
  *         <td align="right" valign="top">usernameAttributeProvider</td>
  *         <td>
  *             The provider used to determine the username attribute to use when no attribute is specified in the query. This
- *             is primarily used for calls to {@link #getPerson(String)}.
+ *             is primarily used for calls to {@link #getPerson(String, IPersonAttributeDaoFilter)}.
  *         </td>
  *         <td valign="top">No</td>
  *         <td valign="top">{@link SimpleUsernameAttributeProvider}</td>
@@ -68,11 +69,11 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
     }
 
     /**
-     * @see IPersonAttributeDao#getPerson(java.lang.String)
+     * @see IPersonAttributeDao#getPerson(java.lang.String, IPersonAttributeDaoFilter)
      * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one matching {@link IPersonAttributes} is found.
      */
     @Override
-    public IPersonAttributes getPerson(final String uid) {
+    public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;
         }
@@ -82,7 +83,7 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
         final Map<String, List<Object>> seed = this.toSeedMap(uid);
 
         //Run the query using the seed
-        final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
+        final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed, filter);
 
         //Ensure a single result is returned
         IPersonAttributes person = DataAccessUtils.singleResult(people);
@@ -123,20 +124,13 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
 
     /**
      * The {@link IUsernameAttributeProvider} to use for determining the username attribute
-     * to use when none is provided. The provider is used when calls are made to {@link #getPerson(String)}
-     * to build a query Map and then call {@link #getPeopleWithMultivaluedAttributes(Map)}
+     * to use when none is provided. The provider is used when calls are made to {@link #getPerson(String, org.apereo.services.persondir.IPersonAttributeDaoFilter)}
+     * to build a query Map and then call {@link #getPeopleWithMultivaluedAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)}
      *
      * @param usernameAttributeProvider the usernameAttributeProvider to set
      */
     public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
         Validate.notNull(usernameAttributeProvider);
         this.usernameAttributeProvider = usernameAttributeProvider;
-    }
-
-    protected boolean choosePersonAttributeDao(final IPersonAttributeDao currentlyConsidering) {
-        if (getPersonAttributeDaoFilter() != null) {
-            return getPersonAttributeDaoFilter().choosePersonAttributeDao(currentlyConsidering);
-        }
-        return true;
     }
 }

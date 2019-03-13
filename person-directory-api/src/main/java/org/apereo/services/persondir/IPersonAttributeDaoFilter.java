@@ -5,6 +5,11 @@ package org.apereo.services.persondir;
  *
  * @author Misagh Moayyed
  */
+@FunctionalInterface
 public interface IPersonAttributeDaoFilter {
     boolean choosePersonAttributeDao(IPersonAttributeDao personAttributeDao);
+
+    static IPersonAttributeDaoFilter alwaysChoose() {
+        return personAttributeDao -> true;
+    }
 }

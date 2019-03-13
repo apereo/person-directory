@@ -21,6 +21,7 @@ package org.apereo.services.persondir.support;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.Validate;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.CaseCanonicalizationMode;
@@ -229,7 +230,8 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
     @Override
-    public final Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+    public final Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                           final IPersonAttributeDaoFilter filter) {
         Validate.notNull(query, "query may not be null.");
 
         //Generate the query to pass to the subclass
@@ -265,7 +267,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      */
     @Override
     @JsonIgnore
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         if (this.queryAttributeMapping == null) {
             return new HashSet<>();
         }
@@ -279,7 +281,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      */
     @Override
     @JsonIgnore
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         return this.possibleUserAttributes;
     }
 

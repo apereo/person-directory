@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.apereo.services.persondir.util.Util;
@@ -105,7 +106,7 @@ public class CascadingPersonAttributeDaoTest
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
+        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("username", Util.list("edalquist"));
@@ -120,7 +121,7 @@ public class CascadingPersonAttributeDaoTest
         final CascadingPersonAttributeDao targetDao = new CascadingPersonAttributeDao();
 
         try {
-            targetDao.getMultivaluedUserAttributes("edalquist");
+            targetDao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
             fail("IllegalStateException should have been thrown with no child DAOs");
         } catch (final IllegalStateException ise) {
             //expected
@@ -139,7 +140,8 @@ public class CascadingPersonAttributeDaoTest
 
 
         targetDao.setRecoverExceptions(true);
-        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
+        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist",
+            IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("studentId", Util.list("123456789"));
@@ -152,7 +154,7 @@ public class CascadingPersonAttributeDaoTest
 
         targetDao.setRecoverExceptions(false);
         try {
-            targetDao.getMultivaluedUserAttributes("edalquist");
+            targetDao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
             fail("RuntimeException should have been thrown with no child DAOs");
         } catch (final RuntimeException ise) {
             //expected
@@ -169,7 +171,8 @@ public class CascadingPersonAttributeDaoTest
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
+        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist",
+            IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("username", Util.list("edalquist"));
@@ -191,7 +194,8 @@ public class CascadingPersonAttributeDaoTest
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist");
+        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist",
+            IPersonAttributeDaoFilter.alwaysChoose());
 
         assertNull(results);
     }

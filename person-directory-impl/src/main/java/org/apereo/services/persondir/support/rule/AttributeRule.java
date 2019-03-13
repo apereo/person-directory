@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -41,33 +41,33 @@ public interface AttributeRule {
      * @return TRUE if this rule applies to the Map data, FALSE if not.
      * @throws IllegalArgumentException If <code>userInfo</code> is <code>null.</code>
      */
-    public abstract boolean appliesTo(Map<String, List<Object>> userInfo);
+    boolean appliesTo(Map<String, List<Object>> userInfo);
 
     /**
      * Applies the embodied rule to the user described by the specified
      * information and returns the result.
      *
-     * This method follows the same contract as {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map)}
+     * This method follows the same contract as {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)}
      *
      * @param userInfo User info
      * @return Set of {@link IPersonAttributes}
      */
-    public abstract Set<IPersonAttributes> evaluate(Map<String, List<Object>> userInfo);
+    Set<IPersonAttributes> evaluate(Map<String, List<Object>> userInfo);
 
     /**
      * Indicates the complete set of user attribute names that <em>may</em> be
      * returned by a call to <code>evaluate</code>.
      *
-     * This method follows the same contract as {@link IPersonAttributeDao#getPossibleUserAttributeNames()}
+     * This method follows the same contract as {@link IPersonAttributeDao#getPossibleUserAttributeNames(org.apereo.services.persondir.IPersonAttributeDaoFilter)}
      *
      * @return Complete set of possible user attribute names that may be returned by a call to evaluate.
      */
-    public abstract Set<String> getPossibleUserAttributeNames();
+    Set<String> getPossibleUserAttributeNames();
 
     /**
-     * @see IPersonAttributeDao#getAvailableQueryAttributes()
+     * @see IPersonAttributeDao#getAvailableQueryAttributes(org.apereo.services.persondir.IPersonAttributeDaoFilter)
      *
      * @return Complete set of actual user attribute names that may be returned by a call to evaluate.
      */
-    public abstract Set<String> getAvailableQueryAttributes();
+    Set<String> getAvailableQueryAttributes();
 }

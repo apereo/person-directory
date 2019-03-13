@@ -31,16 +31,16 @@ public interface CachingJaxbLoader<T extends Object> {
      * @return Unmarshalled object
      * @see #getUnmarshalledObject()
      */
-    public T getUnmarshalledObject(UnmarshallingCallback<T> callback);
+    T getUnmarshalledObject(UnmarshallingCallback<T> callback);
 
     /**
      * Loads and unmarshalls the XML as needed, returning the unmarshalled object
      *
      * @return Unmarshalled object
      */
-    public T getUnmarshalledObject();
+    T getUnmarshalledObject();
 
-    public interface UnmarshallingCallback<T> {
+    interface UnmarshallingCallback<T> {
         /**
          * Allow for specific handling of the unmarshalled object before it is returned by a call to
          * {@link #getUnmarshalledObject(UnmarshallingCallback)} that triggered a reload. If
@@ -49,6 +49,6 @@ public interface CachingJaxbLoader<T extends Object> {
          *
          * @param unmarshalledObject Object to unmarshall
          */
-        public void postProcessUnmarshalling(T unmarshalledObject);
+        void postProcessUnmarshalling(T unmarshalledObject);
     }
 }

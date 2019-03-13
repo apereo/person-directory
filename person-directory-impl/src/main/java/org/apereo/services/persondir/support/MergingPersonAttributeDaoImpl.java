@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 
@@ -45,10 +46,10 @@ public class MergingPersonAttributeDaoImpl extends AbstractAggregatingDefaultQue
     /**
      * Calls the current IPersonAttributeDao from using the seed.
      *
-     * @see AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, IPersonAttributeDao, java.util.Set)
+     * @see AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, IPersonAttributeDao, java.util.Set, IPersonAttributeDaoFilter)
      */
     @Override
-    protected Set<IPersonAttributes> getAttributesFromDao(final Map<String, List<Object>> seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Set<IPersonAttributes> resultPeople) {
-        return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed);
+    protected Set<IPersonAttributes> getAttributesFromDao(final Map<String, List<Object>> seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Set<IPersonAttributes> resultPeople, final IPersonAttributeDaoFilter filter) {
+        return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed, filter);
     }
 }

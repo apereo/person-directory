@@ -3,6 +3,7 @@ package org.apereo.services.persondir.support;
 import com.sun.net.httpserver.HttpServer;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.junit.Before;
 import org.springframework.http.HttpMethod;
@@ -40,7 +41,7 @@ public class RestfulPersonAttributeDaoTest extends AbstractPersonAttributeDaoTes
     public void testGetAttributes() {
         this.dao.setUrl("http://localhost:8080/test");
         this.dao.setMethod(HttpMethod.GET.name());
-        final IPersonAttributes person = this.dao.getPerson("something");
+        final IPersonAttributes person = this.dao.getPerson("something", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(person.getName(), "something");
         assertEquals(person.getAttributes().size(), 2);
     }

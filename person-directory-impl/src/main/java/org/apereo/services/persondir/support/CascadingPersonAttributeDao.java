@@ -18,6 +18,7 @@
  */
 package org.apereo.services.persondir.support;
 
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.support.merger.ReplacingAttributeAdder;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
@@ -90,12 +91,12 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
      * dao.  If stopIfFirstDaoReturnsNull=true and the first query returned no results in the resultPeopleSet,
      * return null.
      *
-     * @see AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, IPersonAttributeDao, java.util.Set)
+     * @see AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, IPersonAttributeDao, java.util.Set, IPersonAttributeDaoFilter)
      */
     @Override
-    protected Set<IPersonAttributes> getAttributesFromDao(final Map<String, List<Object>> seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Set<IPersonAttributes> resultPeople) {
+    protected Set<IPersonAttributes> getAttributesFromDao(final Map<String, List<Object>> seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Set<IPersonAttributes> resultPeople, final IPersonAttributeDaoFilter filter) {
         if (isFirstQuery || (!stopIfFirstDaoReturnsNull && (resultPeople == null || resultPeople.size() == 0))) {
-            return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed);
+            return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed, filter);
         } else if (stopIfFirstDaoReturnsNull && !isFirstQuery && (resultPeople == null || resultPeople.size() == 0)) {
             return null;
         }
@@ -115,7 +116,7 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
             final Map<String, List<Object>> personAttributes = person.getAttributes();
             queryAttributes.putAll(personAttributes);
 
-            final Set<IPersonAttributes> newResults = currentlyConsidering.getPeopleWithMultivaluedAttributes(queryAttributes);
+            final Set<IPersonAttributes> newResults = currentlyConsidering.getPeopleWithMultivaluedAttributes(queryAttributes, filter);
             if (newResults != null) {
                 if (mergedPeopleResults == null) {
                     //If this is the first valid result set just use it.

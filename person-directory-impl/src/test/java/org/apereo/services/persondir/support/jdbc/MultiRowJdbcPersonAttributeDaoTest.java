@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support.jdbc;
 
 import com.google.common.collect.ImmutableMap;
 import junit.framework.TestCase;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.apereo.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.apereo.services.persondir.util.CaseCanonicalizationMode;
@@ -194,7 +195,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
 
-        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
+        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9", IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         TestCase.assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -226,7 +227,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         expectedAttributeNames.add("emailAddress");
         expectedAttributeNames.add("dressShirtColor");
 
-        final Set<String> attributeNames = impl.getPossibleUserAttributeNames();
+        final Set<String> attributeNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(attributeNames, expectedAttributeNames);
     }
 
@@ -253,7 +254,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
 
-        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
+        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9", IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         TestCase.assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -280,7 +281,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_nam", "attr_val"));
 
         try {
-            impl.getMultivaluedUserAttributes("awp9");
+            impl.getMultivaluedUserAttributes("awp9", IPersonAttributeDaoFilter.alwaysChoose());
             TestCase.fail("BadSqlGrammarException expected with invalid attribute mapping key");
         } catch (final BadSqlGrammarException bsge) {
             //expected
@@ -290,7 +291,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_va"));
 
         try {
-            impl.getMultivaluedUserAttributes("awp9");
+            impl.getMultivaluedUserAttributes("awp9", IPersonAttributeDaoFilter.alwaysChoose());
             TestCase.fail("BadSqlGrammarException expected with invalid attribute mapping key");
         } catch (final BadSqlGrammarException bsge) {
             //expected
@@ -319,7 +320,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9");
+        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("awp9", IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         TestCase.assertEquals(Util.list("blue"), attribs.get("shirt_color"));
@@ -364,7 +365,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("susan");
+        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes("susan", IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(Collections.singletonList(null), attribs.get("dressShirtColor"));
         TestCase.assertEquals(Util.list("Susan"), attribs.get("firstName"));
     }
@@ -395,7 +396,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         queryMap.put("shirtColor", Util.list("blue"));
         queryMap.put("Name", Util.list("John"));
 
-        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
+        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(Util.list("blue"), attribs.get("color"));
     }
 
@@ -430,7 +431,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("Name", Util.list("John"));
 
-        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap);
+        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertNull(attribs);
     }
 

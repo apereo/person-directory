@@ -21,6 +21,7 @@ package org.apereo.services.persondir.support;
 import edu.internet2.middleware.grouperClient.api.GcGetGroups;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
     public static final String DEFAULT_GROUPER_ATTRIBUTES_KEY = "grouperGroups";
 
     @Override
-    public IPersonAttributes getPerson(final String subjectId) {
+    public IPersonAttributes getPerson(final String subjectId, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;
         }
@@ -73,23 +74,25 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         return Collections.EMPTY_SET;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         return Collections.EMPTY_SET;
     }
 
     @Override
-    public Set<IPersonAttributes> getPeople(final Map<String, Object> stringObjectMap) {
+    public Set<IPersonAttributes> getPeople(final Map<String, Object> stringObjectMap,
+                                            final IPersonAttributeDaoFilter filter) {
         throw new UnsupportedOperationException("This method is not implemented.");
     }
 
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> stringListMap) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> stringListMap,
+                                                                     final IPersonAttributeDaoFilter filter) {
         throw new UnsupportedOperationException("This method is not implemented.");
     }
 }

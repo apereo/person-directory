@@ -18,6 +18,7 @@
  */
 package org.apereo.services.persondir.support.jdbc;
 
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.apereo.services.persondir.support.CaseInsensitiveNamedPersonImpl;
@@ -118,12 +119,13 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
      */
 
     @Override
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         return availableQueryAttributes;
     }
 
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> queryParameters) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> queryParameters,
+                                                                     final IPersonAttributeDaoFilter filter) {
         final String username = usernameAttributeProvider.getUsernameFromQuery(queryParameters);
         final RowCallbackHandlerImpl rslt = new RowCallbackHandlerImpl(username);
         jdbcTemplate.query(sql, new SqlParameterSourceImpl(queryParameters), rslt);
@@ -131,7 +133,7 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
     }
 
     @Override
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         return userAttributeNames;
     }
     

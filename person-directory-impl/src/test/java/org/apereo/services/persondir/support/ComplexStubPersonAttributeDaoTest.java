@@ -18,6 +18,7 @@
  */
 package org.apereo.services.persondir.support;
 
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.HashMap;
@@ -75,7 +76,7 @@ public class ComplexStubPersonAttributeDaoTest
         expectedAttributeNames.add("phone");
         expectedAttributeNames.add("musicalInstrumentOfChoice");
         expectedAttributeNames.add("wearsTie");
-        final Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
+        final Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
 
         // test that it properly computed the set of possible attribute names
 
@@ -86,7 +87,7 @@ public class ComplexStubPersonAttributeDaoTest
         // by making a new Set each time, but since we know it's trying to cache
         // the computed set, we can test whether it's doing what it indends.
 
-        assertSame(possibleAttributeNames, this.testInstance.getPossibleUserAttributeNames());
+        assertSame(possibleAttributeNames, this.testInstance.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
 
     }
 
@@ -96,21 +97,21 @@ public class ComplexStubPersonAttributeDaoTest
     public void testGetUserAttributesMap() {
         final Map<String, List<Object>> awp9Key = new HashMap<>();
         awp9Key.put("username", Util.list("awp9"));
-        assertEquals(this.backingMap.get("awp9"), this.testInstance.getMultivaluedUserAttributes(awp9Key));
+        assertEquals(this.backingMap.get("awp9"), this.testInstance.getMultivaluedUserAttributes(awp9Key, IPersonAttributeDaoFilter.alwaysChoose()));
 
         final Map<String, List<Object>> unknownUserKey = new HashMap<>();
         unknownUserKey.put("uid", Util.list("unknownUser"));
 
-        assertNull(this.testInstance.getMultivaluedUserAttributes(unknownUserKey));
+        assertNull(this.testInstance.getMultivaluedUserAttributes(unknownUserKey, IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
     /**
      * Test getting user attributes using a String key.
      */
     public void testGetUserAttributesString() {
-        assertEquals(this.backingMap.get("aam26"), this.testInstance.getMultivaluedUserAttributes("aam26"));
+        assertEquals(this.backingMap.get("aam26"), this.testInstance.getMultivaluedUserAttributes("aam26", IPersonAttributeDaoFilter.alwaysChoose()));
 
-        assertNull(this.testInstance.getMultivaluedUserAttributes("unknownUser"));
+        assertNull(this.testInstance.getMultivaluedUserAttributes("unknownUser", IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
     @Override

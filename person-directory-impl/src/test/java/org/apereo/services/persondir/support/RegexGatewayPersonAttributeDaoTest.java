@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,17 +78,19 @@ public class RegexGatewayPersonAttributeDaoTest extends AbstractPersonAttributeD
     }
 
     public void testMatches() {
-        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey@yahoo.com");
+        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey@yahoo.com", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(results, attributes);
     }
 
     public void testDoesNotMatch() {
-        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey");
+        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey",
+            IPersonAttributeDaoFilter.alwaysChoose());
         assertFalse(attributes.equals(results));
     }
 
     public void testGetPossibleNames() {
-        assertEquals(enclosed.getPossibleUserAttributeNames(), target.getPossibleUserAttributeNames());
+        assertEquals(enclosed.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()),
+            target.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
 
