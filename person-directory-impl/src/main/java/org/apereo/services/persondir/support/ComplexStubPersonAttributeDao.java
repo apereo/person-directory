@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.PatternHelper;
 
@@ -38,7 +39,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * Looks up the user's attribute Map in the backingMap. If using the {@link IPersonAttributeDao#getUserAttributes(Map)}
+ * Looks up the user's attribute Map in the backingMap. If using the {@link IPersonAttributeDao#getUserAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)}
  * method the attribute value returned for the key {@link #getUsernameAttributeProvider()} will
  * be used as the key for the backingMap.
  *
@@ -58,7 +59,7 @@ import java.util.regex.Pattern;
  *             Sets the backing map to use to return user attributes from. The backing map
  *             should have keys of type {@link String} which are the uid for the user. The
  *             values should be of type {@link Map} which follow the Map restrictions decribed
- *             by {@link IPersonAttributeDao#getUserAttributes(Map)}.
+ *             by {@link IPersonAttributeDao#getUserAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)}.
  *         </td>
  *         <td valign="top">No</td>
  *         <td valign="top">{@link Collections#EMPTY_MAP}</td>
@@ -130,21 +131,15 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getPossibleUserAttributeNames()
-     */
     @Override
     @JsonIgnore
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         return this.possibleUserAttributeNames;
     }
 
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.AbstractQueryPersonAttributeDao#getAvailableQueryAttributes()
-     */
     @JsonIgnore
     @Override
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
         final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
 

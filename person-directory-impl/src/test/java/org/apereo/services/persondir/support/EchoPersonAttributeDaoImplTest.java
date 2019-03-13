@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.HashMap;
@@ -32,9 +33,6 @@ import java.util.Map;
  */
 public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTest {
 
-    /**
-     * @see org.jasig.services.persondir.support.AbstractPersonAttributeDaoTest#getPersonAttributeDaoInstance()
-     */
     @Override
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {
         return new EchoPersonAttributeDaoImpl();
@@ -49,7 +47,7 @@ public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTe
 
         final Map<String, List<Object>> goalMap = new HashMap<>(testMap);
 
-        final Map<String, List<Object>> resultMap = dao.getMultivaluedUserAttributes(testMap);
+        final Map<String, List<Object>> resultMap = dao.getMultivaluedUserAttributes(testMap, IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(goalMap, resultMap);
     }

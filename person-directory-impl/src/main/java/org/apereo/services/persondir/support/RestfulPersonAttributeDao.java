@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.springframework.http.HttpMethod;
 
@@ -85,7 +86,7 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public IPersonAttributes getPerson(final String uid) {
+    public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
         try {
             if (!this.isEnabled()) {
                 return null;
@@ -109,9 +110,9 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
             final Map attributes = jacksonObjectMapper.readValue(response.getEntity().getContent(), Map.class);
 
             if (this.caseInsensitiveUsername) {
-                return new CaseInsensitiveNamedPersonImpl(uid, stuffAttributesIntoListValues(attributes));
+                return new CaseInsensitiveNamedPersonImpl(uid, stuffAttributesIntoListValues(attributes, filter));
             }
-            return new NamedPersonImpl(uid, stuffAttributesIntoListValues(attributes));
+            return new NamedPersonImpl(uid, stuffAttributesIntoListValues(attributes, filter));
 
         } catch (final Exception e) {
             throw new IllegalArgumentException(e.getMessage(), e);
@@ -119,15 +120,17 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public Set<IPersonAttributes> getPeople(final Map<String, Object> query) {
-        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(query));
+    public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
+                                            final IPersonAttributeDaoFilter filter) {
+        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(query, filter), filter);
     }
 
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                     final IPersonAttributeDaoFilter filter) {
         final Set<IPersonAttributes> people = new LinkedHashSet<>();
         final String username = usernameAttributeProvider.getUsernameFromQuery(query);
-        final IPersonAttributes person = getPerson(username);
+        final IPersonAttributes person = getPerson(username, filter);
         if (person != null) {
             people.add(person);
         }
@@ -136,17 +139,18 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
 
     @Override
     @JsonIgnore
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         return Collections.EMPTY_SET;
     }
 
     @Override
     @JsonIgnore
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         return Collections.EMPTY_SET;
     }
 
-    private static Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, ?> personAttributesMap) {
+    private static Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, ?> personAttributesMap,
+                                                                           final IPersonAttributeDaoFilter filter) {
         final Map<String, List<Object>> personAttributes = new HashMap<>();
 
         for (final Map.Entry<String, ?> stringObjectEntry : personAttributesMap.entrySet()) {

@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support.xml;
 
 import junit.framework.TestCase;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 import org.springframework.core.io.ClassPathResource;
@@ -54,21 +55,21 @@ public class XmlPersonAttributeDaoTest extends TestCase {
         final Set<String> expectedAttributes = new LinkedHashSet<>(
                 Arrays.asList("username", "givenName", "familyName", "email", "sisID", "portalId", "emplid"));
 
-        final Set<String> availableQueryAttributes = this.xmlPersonAttributeDao.getAvailableQueryAttributes();
+        final Set<String> availableQueryAttributes = this.xmlPersonAttributeDao.getAvailableQueryAttributes(IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expectedAttributes, availableQueryAttributes);
 
-        final Set<String> possibleUserAttributeNames = this.xmlPersonAttributeDao.getPossibleUserAttributeNames();
+        final Set<String> possibleUserAttributeNames = this.xmlPersonAttributeDao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expectedAttributes, possibleUserAttributeNames);
     }
 
     public void testQueryByUsername() {
-        final IPersonAttributes boringPerson = this.xmlPersonAttributeDao.getPerson("iboring");
+        final IPersonAttributes boringPerson = this.xmlPersonAttributeDao.getPerson("iboring", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(boringPerson);
         assertEquals("iboring", boringPerson.getName());
         assertEquals(Collections.EMPTY_MAP, boringPerson.getAttributes());
 
 
-        final IPersonAttributes mstaffPerson = this.xmlPersonAttributeDao.getPerson("mstaff");
+        final IPersonAttributes mstaffPerson = this.xmlPersonAttributeDao.getPerson("mstaff", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(mstaffPerson);
         assertEquals("mstaff", mstaffPerson.getName());
 
@@ -81,7 +82,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
 
         assertEquals(mstaffAttributes, mstaffPerson.getAttributes());
 
-        final IPersonAttributes nullPerson = this.xmlPersonAttributeDao.getPerson("doesntexist");
+        final IPersonAttributes nullPerson = this.xmlPersonAttributeDao.getPerson("doesntexist", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(nullPerson);
     }
 
@@ -89,7 +90,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
         final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("email", Util.list("*@example.edu", "*@faculty.org"));
 
-        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query);
+        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(3, results.size());
     }
 
@@ -97,7 +98,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
         final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("email", Util.list("*@example.edu", "j*"));
 
-        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query);
+        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, results.size());
     }
 
@@ -106,7 +107,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
         query.put("email", Util.list("*@example.edu", "*@faculty.org"));
         query.put("emplid", Util.list("*"));
 
-        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query);
+        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, results.size());
     }
 
@@ -115,7 +116,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
         query.put("email", Util.list("*@example.edu", "*@faculty.org"));
         query.put("emplid", Util.list(""));
 
-        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query);
+        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(3, results.size());
     }
 
@@ -124,7 +125,7 @@ public class XmlPersonAttributeDaoTest extends TestCase {
         query.put("emplid", Util.list(""));
         query.put("email", Util.list("*@example.edu", "*@faculty.org"));
 
-        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query);
+        final Set<IPersonAttributes> results = this.xmlPersonAttributeDao.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(3, results.size());
     }
 

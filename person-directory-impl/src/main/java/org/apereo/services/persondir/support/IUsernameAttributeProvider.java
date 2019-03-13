@@ -31,11 +31,11 @@ public interface IUsernameAttributeProvider {
     /**
      * @return The username attribute to use when one is not otherwise provided, will never return null.
      */
-    public String getUsernameAttribute();
+    String getUsernameAttribute();
 
     /**
      * @param query The query map of attributes
      * @return The username included in the query, determined using the username attribute. Returns null if no username attribute is included in the query.
      */
-    public String getUsernameFromQuery(Map<String, List<Object>> query);
+    String getUsernameFromQuery(Map<String, List<Object>> query);
 }

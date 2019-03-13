@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 
 import java.util.Collections;
@@ -39,10 +40,11 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
     /**
      * Returns a duplicate of the seed it is passed.
      * @return a Map equal to but not the same reference as the seed.
-     * @see IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
+     * @see IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)
      */
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                     final IPersonAttributeDaoFilter filter) {
         if (query == null) {
             throw new IllegalArgumentException("seed may not be null");
         }
@@ -54,10 +56,10 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
     /**
      * Possible attributes are unknown; will always return <code>null</code>.
      * @return null
-     * @see IPersonAttributeDao#getPossibleUserAttributeNames()
+     * @see IPersonAttributeDao#getPossibleUserAttributeNames(IPersonAttributeDaoFilter)
      */
     @Override
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         return null;
     }
 
@@ -65,7 +67,7 @@ public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAt
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
     @Override
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         return null;
     }
 }

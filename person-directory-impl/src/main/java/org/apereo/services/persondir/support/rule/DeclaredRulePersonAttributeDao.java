@@ -21,6 +21,7 @@ package org.apereo.services.persondir.support.rule;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.apereo.services.persondir.support.IUsernameAttributeProvider;
@@ -115,7 +116,8 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> seed) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> seed,
+                                                                     final IPersonAttributeDaoFilter filter) {
         Validate.notNull(seed, "Argument 'seed' cannot be null.");
 
         for (final AttributeRule rule : this.rules) {
@@ -135,11 +137,11 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      * Aggregates the results of calling {@link AttributeRule#getPossibleUserAttributeNames()}
      * on each {@link AttributeRule} instance in the rules array.
      *
-     * @see IPersonAttributeDao#getPossibleUserAttributeNames()
+     * @see IPersonAttributeDao#getPossibleUserAttributeNames(org.apereo.services.persondir.IPersonAttributeDaoFilter)
      */
     @Override
     @JsonIgnore
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         final Set<String> rslt = new LinkedHashSet<>();
 
         for (final AttributeRule rule : this.rules) {
@@ -155,7 +157,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
      */
     @Override
     @JsonIgnore
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         final Set<String> rslt = new LinkedHashSet<>();
 
         for (final AttributeRule rule : this.rules) {

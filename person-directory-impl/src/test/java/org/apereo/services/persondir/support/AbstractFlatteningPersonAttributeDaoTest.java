@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.Collections;
@@ -60,10 +61,11 @@ public abstract class AbstractFlatteningPersonAttributeDaoTest extends AbstractP
 //        final SimpleDefaultQueryPersonAttributeDao flatteningPersonAttributeDao = new SimpleDefaultQueryPersonAttributeDao(backingMap);
         final StubPersonAttributeDao flatteningPersonAttributeDao = new StubPersonAttributeDao(backingMap);
 
-        final Map<String, Object> userAttributesUid = flatteningPersonAttributeDao.getUserAttributes("seed");
+        final Map<String, Object> userAttributesUid = flatteningPersonAttributeDao.getUserAttributes("seed", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expected, userAttributesUid);
 
-        final Map<String, Object> userAttributesMap = flatteningPersonAttributeDao.getUserAttributes(Collections.singletonMap("key", new Object()));
+        final Map<String, Object> userAttributesMap = flatteningPersonAttributeDao.getUserAttributes(Collections.singletonMap("key", new Object()),
+            IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expected, userAttributesMap);
     }
 

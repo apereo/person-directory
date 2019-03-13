@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support;
 
 import junit.framework.TestCase;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
@@ -62,7 +63,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("TestAttrName", Util.list("edalquist"));
 
-        assertEquals(expected, dao.getMultivaluedUserAttributes("edalquist"));
+        assertEquals(expected, dao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
     private static class SimpleDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
@@ -70,7 +71,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
          * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
          */
         @Override
-        public Set<String> getPossibleUserAttributeNames() {
+        public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
             return null;
         }
 
@@ -78,7 +79,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
          * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
          */
         @Override
-        public Set<String> getAvailableQueryAttributes() {
+        public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
             return null;
         }
 
@@ -86,7 +87,8 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
          * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
          */
         @Override
-        public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+        public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                         final IPersonAttributeDaoFilter filter) {
             return Collections.singleton((IPersonAttributes) new AttributeNamedPersonImpl(query));
         }
     }

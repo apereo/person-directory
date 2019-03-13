@@ -41,7 +41,6 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     private int order;
     private String[] id = new String[]{getClass().getSimpleName()};
     private boolean enabled = true;
-    private IPersonAttributeDaoFilter personAttributeDaoFilter;
 
     public BasePersonAttributeDao() {
         super();
@@ -49,11 +48,12 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
 
 
     @Override
-    public final Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed) {
+    public final Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed,
+                                                                        final IPersonAttributeDaoFilter filter) {
         if (!this.enabled) {
             return null;
         }
-        final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed);
+        final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed, filter);
 
         //Get the first IPersonAttributes to return data for
         final IPersonAttributes person = DataAccessUtils.singleResult(people);
@@ -69,11 +69,12 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
 
 
     @Override
-    public final Map<String, List<Object>> getMultivaluedUserAttributes(final String uid) {
+    public final Map<String, List<Object>> getMultivaluedUserAttributes(final String uid,
+                                                                        final IPersonAttributeDaoFilter filter) {
         if (!this.enabled) {
             return null;
         }
-        final IPersonAttributes person = this.getPerson(uid);
+        final IPersonAttributes person = this.getPerson(uid, filter);
 
         if (person == null) {
             return null;
@@ -84,11 +85,12 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     }
 
     @Override
-    public final Map<String, Object> getUserAttributes(final Map<String, Object> seed) {
+    public final Map<String, Object> getUserAttributes(final Map<String, Object> seed,
+                                                       final IPersonAttributeDaoFilter filter) {
         if (!this.enabled) {
             return null;
         }
-        final Set<IPersonAttributes> people = this.getPeople(seed);
+        final Set<IPersonAttributes> people = this.getPeople(seed, filter);
 
         //Get the first IPersonAttributes to return data for
         final IPersonAttributes person = DataAccessUtils.singleResult(people);
@@ -106,14 +108,15 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
      * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.lang.String)
      */
     @Override
-    public final Map<String, Object> getUserAttributes(final String uid) {
+    public final Map<String, Object> getUserAttributes(final String uid,
+                                                       final IPersonAttributeDaoFilter filter) {
         if (!this.enabled) {
             return null;
         }
         Validate.notNull(uid, "uid may not be null.");
 
         //Get the attributes from the subclass
-        final Map<String, List<Object>> multivaluedUserAttributes = this.getMultivaluedUserAttributes(uid);
+        final Map<String, List<Object>> multivaluedUserAttributes = this.getMultivaluedUserAttributes(uid, filter);
 
         return this.flattenResults(multivaluedUserAttributes);
     }
@@ -190,13 +193,4 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         this.enabled = enabled;
     }
 
-    @Override
-    public IPersonAttributeDaoFilter getPersonAttributeDaoFilter() {
-        return personAttributeDaoFilter;
-    }
-
-    @Override
-    public void setPersonAttributeDaoFilter(final IPersonAttributeDaoFilter personAttributeDaoFilter) {
-        this.personAttributeDaoFilter = personAttributeDaoFilter;
-    }
 }

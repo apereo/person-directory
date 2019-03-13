@@ -18,6 +18,7 @@
  */
 package org.apereo.services.persondir.mock;
 
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.BasePersonAttributeDao;
 
@@ -31,30 +32,34 @@ import java.util.Set;
  */
 public class ThrowingPersonAttributeDao extends BasePersonAttributeDao {
 
-    public Set<String> getAvailableQueryAttributes() {
+    @Override
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
     
     @Override
-    public Set<IPersonAttributes> getPeople(final Map<String, Object> query) {
+    public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
+                                            final IPersonAttributeDaoFilter filter) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
 
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                     final IPersonAttributeDaoFilter filter) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
 
     @Override
-    public IPersonAttributes getPerson(final String uid) {
+    public IPersonAttributes getPerson(final String uid,
+                                       final IPersonAttributeDaoFilter filter) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
 
     @Override
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 

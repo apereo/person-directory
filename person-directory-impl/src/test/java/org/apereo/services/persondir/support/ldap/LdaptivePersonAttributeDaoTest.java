@@ -18,6 +18,7 @@
  */
 package org.apereo.services.persondir.support.ldap;
 
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.ldaptive.DefaultConnectionFactory;
 import org.ldaptive.pool.BlockingConnectionPool;
@@ -93,14 +94,14 @@ public class LdaptivePersonAttributeDaoTest extends AbstractDirContextTest {
         dao.setSearchFilter("uid={0}");
         dao.setResultAttributeMapping(map);
 
-        IPersonAttributes person = dao.getPerson("edalquist");
+        IPersonAttributes person = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
         assertTrue(person.getAttributes().size() > 0);
         assertNotNull(person.getAttributeValue("commonName"));
         assertNotNull(person.getAttributeValue("displayName"));
         assertNotNull(person.getAttributeValue("givenName"));
 
         dao.setSearchFilter("uid={user}");
-        person = dao.getPerson("edalquist");
+        person = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
         assertTrue(person.getAttributes().size() > 0);
         assertNotNull(person.getAttributeValue("commonName"));
         assertNotNull(person.getAttributeValue("displayName"));

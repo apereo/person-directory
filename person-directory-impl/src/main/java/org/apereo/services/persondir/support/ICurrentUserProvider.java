@@ -33,5 +33,5 @@ public interface ICurrentUserProvider {
     /**
      * @return The userName of the user calling the {@link IPersonAttributeDao} API
      */
-    public String getCurrentUserName();
+    String getCurrentUserName();
 }

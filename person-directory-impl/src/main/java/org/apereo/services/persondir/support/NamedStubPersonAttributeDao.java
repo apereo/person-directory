@@ -18,6 +18,7 @@
  */
 package org.apereo.services.persondir.support;
 
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 
 import java.util.HashMap;
@@ -46,7 +47,8 @@ public class NamedStubPersonAttributeDao extends StubPersonAttributeDao {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public final Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+    public final Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                           final IPersonAttributeDaoFilter filter) {
 
         final List<?> list = query.get("username");
         final Map m = new HashMap(this.getBackingMap());
@@ -54,6 +56,6 @@ public class NamedStubPersonAttributeDao extends StubPersonAttributeDao {
         m.put("username", list);
 
         this.setBackingMap(m);
-        return super.getPeopleWithMultivaluedAttributes(query);
+        return super.getPeopleWithMultivaluedAttributes(query, filter);
     }
 }

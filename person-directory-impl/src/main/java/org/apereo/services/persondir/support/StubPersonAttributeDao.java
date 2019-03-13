@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableSet;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 
 import java.util.Collections;
@@ -68,7 +69,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
 
     @Override
     @JsonIgnore
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         if (this.backingPerson == null) {
             return new HashSet<>();
         }
@@ -77,16 +78,13 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
     }
 
     @Override
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         return null;
     }
 
-
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
-     */
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                     final IPersonAttributeDaoFilter filter) {
         if (query == null) {
             throw new IllegalArgumentException("Illegal to invoke getPeople(Map) with a null argument.");
         }
@@ -101,7 +99,8 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPerson(java.lang.String)
      */
     @Override
-    public IPersonAttributes getPerson(final String uid) {
+    public IPersonAttributes getPerson(final String uid,
+                                       final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;
         }

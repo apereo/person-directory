@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.HashSet;
@@ -58,7 +59,8 @@ public class MessageFormatPersonAttributeDaoTest extends AbstractPersonAttribute
         query.put("firstName", Util.list("Eric"));
         query.put("lastName", Util.list("Dalquist"));
 
-        final Map<String, List<Object>> result = messageFormatPersonAttributeDao.getMultivaluedUserAttributes(query);
+        final Map<String, List<Object>> result = messageFormatPersonAttributeDao.getMultivaluedUserAttributes(query,
+            IPersonAttributeDaoFilter.alwaysChoose());
 
 
         final Map<String, List<Object>> expectedResult = new LinkedHashMap<>();

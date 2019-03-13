@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support.xml;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.support.IUsernameAttributeProvider;
 import org.apereo.services.persondir.support.xml.om.PersonData;
 import org.apereo.services.persondir.IPersonAttributes;
@@ -114,25 +115,20 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
      * @see org.jasig.services.persondir.IPersonAttributeDao#getAvailableQueryAttributes()
      */
     @Override
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
         return this.attributesCache;
     }
 
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getPossibleUserAttributeNames()
-     */
     @Override
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
         return this.attributesCache;
     }
 
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.AbstractDefaultAttributePersonAttributeDao#getPerson(java.lang.String)
-     */
+
     @Override
-    public IPersonAttributes getPerson(final String uid) {
+    public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;
         }
@@ -144,7 +140,8 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                     final IPersonAttributeDaoFilter filter) {
         this.jaxbLoader.getUnmarshalledObject(this.attributeLoader);
 
         //Tracks persons that could match the query

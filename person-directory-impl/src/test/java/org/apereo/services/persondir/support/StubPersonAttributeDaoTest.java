@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.Collections;
@@ -64,20 +65,21 @@ public class StubPersonAttributeDaoTest
         final Set<String> expectedAttributeNames = new HashSet<>();
         expectedAttributeNames.add("shirtColor");
         expectedAttributeNames.add("phone");
-        final Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames();
+        final Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expectedAttributeNames, possibleAttributeNames);
 
         final StubPersonAttributeDao nullBacking = new StubPersonAttributeDao();
-        assertEquals(Collections.EMPTY_SET, nullBacking.getPossibleUserAttributeNames());
+        assertEquals(Collections.EMPTY_SET, nullBacking.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
     public void testGetUserAttributesMap() {
-        assertEquals(this.backingMap, this.testInstance.getMultivaluedUserAttributes(new HashMap<String, List<Object>>()));
+        assertEquals(this.backingMap, this.testInstance.getMultivaluedUserAttributes(new HashMap<String, List<Object>>(),
+            IPersonAttributeDaoFilter.alwaysChoose()));
 
     }
 
     public void testGetUserAttributesString() {
-        assertEquals(this.backingMap, this.testInstance.getMultivaluedUserAttributes("wombat"));
+        assertEquals(this.backingMap, this.testInstance.getMultivaluedUserAttributes("wombat", IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
     @Override

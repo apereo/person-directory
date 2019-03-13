@@ -21,6 +21,7 @@ package org.apereo.services.persondir.support;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.Validate;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 
 import java.util.Collections;
@@ -212,7 +213,8 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
      * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
      */
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> seed) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> seed,
+                                                                     final IPersonAttributeDaoFilter filter) {
         Validate.notNull(seed, "Argument 'seed' cannot be null.");
 
         if (patterns == null || patterns.size() < 1) {
@@ -329,7 +331,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
                 this.logger.info("Matching criteria '" + this.patterns + "' was met for query '" + seed + "', delegating call to the targetPersonAttributeDao='" + this.targetPersonAttributeDao + "'");
             }
 
-            return this.targetPersonAttributeDao.getPeopleWithMultivaluedAttributes(seed);
+            return this.targetPersonAttributeDao.getPeopleWithMultivaluedAttributes(seed, filter);
         }
 
         if (this.logger.isInfoEnabled()) {
@@ -344,8 +346,8 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
      */
     @JsonIgnore
     @Override
-    public Set<String> getPossibleUserAttributeNames() {
-        return targetPersonAttributeDao.getPossibleUserAttributeNames();
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
+        return targetPersonAttributeDao.getPossibleUserAttributeNames(filter);
     }
 
     /* (non-Javadoc)
@@ -353,7 +355,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
      */
     @JsonIgnore
     @Override
-    public Set<String> getAvailableQueryAttributes() {
-        return this.targetPersonAttributeDao.getAvailableQueryAttributes();
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
+        return this.targetPersonAttributeDao.getAvailableQueryAttributes(filter);
     }
 }

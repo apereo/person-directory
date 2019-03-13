@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.util.CaseCanonicalizationMode;
@@ -116,7 +117,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
      */
     @Override
     @JsonIgnore
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         final IUsernameAttributeProvider usernameAttributeProvider = super.getUsernameAttributeProvider();
         return Collections.singleton(usernameAttributeProvider.getUsernameAttribute());
     }
@@ -126,7 +127,8 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
      */
     @Override
     @JsonIgnore
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                     final IPersonAttributeDaoFilter filter) {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("invoking getPeopleWithMultivaluedAttributes(" + query + ")");
         }
@@ -168,7 +170,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     }
 
     @Override
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         return possibleUserAttributeNames;
     }
 

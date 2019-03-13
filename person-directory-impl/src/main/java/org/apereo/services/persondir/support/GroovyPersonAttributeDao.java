@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributeScriptDao;
 import org.apereo.services.persondir.IPersonAttributes;
 
@@ -136,7 +137,7 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public IPersonAttributes getPerson(final String uid) {
+    public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;
         }
@@ -173,13 +174,15 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public Set<IPersonAttributes> getPeople(final Map<String, Object> attributes) {
-        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(attributes));
+    public Set<IPersonAttributes> getPeople(final Map<String, Object> attributes,
+                                            final IPersonAttributeDaoFilter filter) {
+        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(attributes), filter);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> attributes) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> attributes,
+                                                                     final IPersonAttributeDaoFilter filter) {
         logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters {}",
                 attributes);
 
@@ -203,12 +206,12 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         return availableQueryAttributes;
     }
 
     @Override
-    public Set<String> getPossibleUserAttributeNames() {
+    public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         return possibleUserAttributeNames;
     }
 }

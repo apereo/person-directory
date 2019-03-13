@@ -40,10 +40,10 @@ import java.util.Set;
 
 /**
  * Generates a cache key using a hash of the {@link Method} being called and for
- * {@link IPersonAttributeDao#getMultivaluedUserAttributes(String)} and
- * {@link IPersonAttributeDao#getUserAttributes(String)} the {@link String} uid or for
- * {@link IPersonAttributeDao#getMultivaluedUserAttributes(Map)} and
- * {@link IPersonAttributeDao#getUserAttributes(Map)} attributes from the seed {@link Map}
+ * {@link IPersonAttributeDao#getMultivaluedUserAttributes(String, org.apereo.services.persondir.IPersonAttributeDaoFilter)} and
+ * {@link IPersonAttributeDao#getUserAttributes(String, org.apereo.services.persondir.IPersonAttributeDaoFilter)} the {@link String} uid or for
+ * {@link IPersonAttributeDao#getMultivaluedUserAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)} and
+ * {@link IPersonAttributeDao#getUserAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)} attributes from the seed {@link Map}
  * as specified by the <code>cacheKeyAttributes</code> {@link Set}
  *
  * @author Eric Dalquist

@@ -125,10 +125,11 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * instances. The results from each DAO are merged into the result {@link Map}
      * by the configured {@link IAttributeMerger}.
      *
-     * @see IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
+     * @see IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map, IPersonAttributeDaoFilter)
      */
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                     final IPersonAttributeDaoFilter filter) {
         Validate.notNull(query, "query may not be null.");
 
         //Initialize null, so that if none of the sub-DAOs find any people null is returned appropriately
@@ -143,15 +144,14 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
 
         //Iterate through the configured IPersonAttributeDaos, querying each.
         for (final IPersonAttributeDao currentlyConsidering : this.personAttributeDaos) {
-
-            if (!choosePersonAttributeDao(currentlyConsidering)) {
+            if (filter != null && !filter.choosePersonAttributeDao(currentlyConsidering)) {
                 continue;
             }
 
             boolean handledException = false;
             Set<IPersonAttributes> currentPeople = null;
             try {
-                currentPeople = this.getAttributesFromDao(query, isFirstQuery, currentlyConsidering, resultPeople);
+                currentPeople = this.getAttributesFromDao(query, isFirstQuery, currentlyConsidering, resultPeople, filter);
                 isFirstQuery = false;
 
                 if (this.logger.isDebugEnabled()) {
@@ -212,34 +212,35 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * @param isFirstQuery         If this is the first query, this will stay true until a call to this method returns (does not throw an exception).
      * @param currentlyConsidering The IPersonAttributeDao to execute the query on.
      * @param resultPeople         The Map of results from all previous queries, may be null.
-     * @return The results from the call to the DAO, follows the same rules as {@link IPersonAttributeDao#getUserAttributes(Map)}.
+     * @return The results from the call to the DAO, follows the same rules as {@link IPersonAttributeDao#getUserAttributes(Map, IPersonAttributeDaoFilter)}.
      */
     protected abstract Set<IPersonAttributes> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery,
                                                                    IPersonAttributeDao currentlyConsidering,
-                                                                   Set<IPersonAttributes> resultPeople);
+                                                                   Set<IPersonAttributes> resultPeople,
+                                                                   IPersonAttributeDaoFilter filter);
 
 
     /**
-     * Merges the results of calling {@link IPersonAttributeDao#getPossibleUserAttributeNames()} on each child dao using
+     * Merges the results of calling {@link IPersonAttributeDao#getPossibleUserAttributeNames(IPersonAttributeDaoFilter)} on each child dao using
      * the configured {@link IAttributeMerger#mergePossibleUserAttributeNames(Set, Set)}. If all children return null
      * this method returns null as well. If any child does not return null this method will not return null.
      *
-     * @see IPersonAttributeDao#getPossibleUserAttributeNames()
+     * @see IPersonAttributeDao#getPossibleUserAttributeNames(IPersonAttributeDaoFilter)
      */
     @Override
     @JsonIgnore
-    public final Set<String> getPossibleUserAttributeNames() {
+    public final Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         Set<String> attrNames = null;
 
         for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
 
-            if (!choosePersonAttributeDao(currentDao)) {
+            if (filter != null && !filter.choosePersonAttributeDao(currentDao)) {
                 continue;
             }
             boolean handledException = false;
             Set<String> currentDaoAttrNames = null;
             try {
-                currentDaoAttrNames = currentDao.getPossibleUserAttributeNames();
+                currentDaoAttrNames = currentDao.getPossibleUserAttributeNames(filter);
 
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Retrieved possible attribute names '" + currentDaoAttrNames + "' from '" + currentDao + "'");
@@ -277,25 +278,25 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     }
 
     /**
-     * Merges the results of calling {@link IPersonAttributeDao#getAvailableQueryAttributes()} on each child dao using
+     * Merges the results of calling {@link IPersonAttributeDao#getAvailableQueryAttributes(IPersonAttributeDaoFilter)} on each child dao using
      * the configured {@link IAttributeMerger#mergeAvailableQueryAttributes(Set, Set)}. If all children return null this
      * method returns null as well. If any child does not return null this method will not return null.
      *
-     * @see IPersonAttributeDao#getAvailableQueryAttributes()
+     * @see IPersonAttributeDao#getAvailableQueryAttributes(IPersonAttributeDaoFilter)
      */
     @JsonIgnore
     @Override
-    public Set<String> getAvailableQueryAttributes() {
+    public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         Set<String> queryAttrs = null;
 
         for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
-            if (!choosePersonAttributeDao(currentDao)) {
+            if (filter != null && !filter.choosePersonAttributeDao(currentDao)) {
                 continue;
             }
             boolean handledException = false;
             Set<String> currentDaoQueryAttrs = null;
             try {
-                currentDaoQueryAttrs = currentDao.getAvailableQueryAttributes();
+                currentDaoQueryAttrs = currentDao.getAvailableQueryAttributes(filter);
 
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Retrieved possible query attributes '" + currentDaoQueryAttrs + "' from '" + currentDao + "'");

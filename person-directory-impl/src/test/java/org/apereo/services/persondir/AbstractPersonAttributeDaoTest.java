@@ -75,7 +75,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
         final Map<String, List<Object>> nullMap = null;
         try {
-            dao.getMultivaluedUserAttributes(nullMap);
+            dao.getMultivaluedUserAttributes(nullMap, IPersonAttributeDaoFilter.alwaysChoose());
         } catch (final RuntimeException iae) {
             // good, as expected
             return;
@@ -93,7 +93,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
         final Map<String, Object> nullMap = null;
         try {
-            dao.getUserAttributes(nullMap);
+            dao.getUserAttributes(nullMap, IPersonAttributeDaoFilter.alwaysChoose());
         } catch (final NullPointerException iae) {
             // good, as expected
             return;
@@ -111,7 +111,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
         final String nullString = null;
         try {
-            dao.getMultivaluedUserAttributes(nullString);
+            dao.getMultivaluedUserAttributes(nullString, IPersonAttributeDaoFilter.alwaysChoose());
         } catch (final RuntimeException iae) {
             // good, as expected
             return;
@@ -128,7 +128,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
         final String nullString = null;
         try {
-            dao.getUserAttributes(nullString);
+            dao.getUserAttributes(nullString, IPersonAttributeDaoFilter.alwaysChoose());
         } catch (final RuntimeException iae) {
             // good, as expected
             return;
@@ -142,7 +142,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      */
     public void testPossibleSetConstraints() {
         final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
-        final Set<String> possibleNames = dao.getPossibleUserAttributeNames();
+        final Set<String> possibleNames = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         try {
             if (possibleNames != null) {
                 final String newObj = new String();
