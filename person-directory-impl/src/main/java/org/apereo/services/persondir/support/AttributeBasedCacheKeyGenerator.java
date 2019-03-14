@@ -24,6 +24,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.springframework.util.CollectionUtils;
 import org.springmodules.cache.key.CacheKeyGenerator;
 import org.springmodules.cache.key.HashCodeCacheKey;
@@ -64,19 +65,19 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      */
     public enum CachableMethod {
         @Deprecated
-        MULTIVALUED_USER_ATTRIBUTES__MAP("getMultivaluedUserAttributes", Map.class),
+        MULTIVALUED_USER_ATTRIBUTES__MAP("getMultivaluedUserAttributes", Map.class, IPersonAttributeDaoFilter.class),
         @Deprecated
-        MULTIVALUED_USER_ATTRIBUTES__STR("getMultivaluedUserAttributes", String.class),
+        MULTIVALUED_USER_ATTRIBUTES__STR("getMultivaluedUserAttributes", String.class, IPersonAttributeDaoFilter.class),
         @Deprecated
-        USER_ATTRIBUTES__MAP("getUserAttributes", Map.class),
+        USER_ATTRIBUTES__MAP("getUserAttributes", Map.class, IPersonAttributeDaoFilter.class),
         @Deprecated
-        USER_ATTRIBUTES__STR("getUserAttributes", String.class),
+        USER_ATTRIBUTES__STR("getUserAttributes", String.class, IPersonAttributeDaoFilter.class),
 
-        PERSON_STR("getPerson", String.class),
-        PEOPLE_MAP("getPeople", Map.class),
-        PEOPLE_MULTIVALUED_MAP("getPeopleWithMultivaluedAttributes", Map.class),
-        POSSIBLE_USER_ATTRIBUTE_NAMES("getPossibleUserAttributeNames"),
-        AVAILABLE_QUERY_ATTRIBUTES("getAvailableQueryAttributes");
+        PERSON_STR("getPerson", String.class, IPersonAttributeDaoFilter.class),
+        PEOPLE_MAP("getPeople", Map.class, IPersonAttributeDaoFilter.class),
+        PEOPLE_MULTIVALUED_MAP("getPeopleWithMultivaluedAttributes", Map.class, IPersonAttributeDaoFilter.class),
+        POSSIBLE_USER_ATTRIBUTE_NAMES("getPossibleUserAttributeNames", IPersonAttributeDaoFilter.class),
+        AVAILABLE_QUERY_ATTRIBUTES("getAvailableQueryAttributes", IPersonAttributeDaoFilter.class);
 
         private final String name;
         private final Class<?>[] args;
