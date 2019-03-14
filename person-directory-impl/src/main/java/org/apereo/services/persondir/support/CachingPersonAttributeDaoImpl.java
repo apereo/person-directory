@@ -423,7 +423,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
 
         static {
             try {
-                getPeopleWithMultivaluedAttributesMethod = IPersonAttributeDao.class.getMethod("getPeopleWithMultivaluedAttributes", Map.class);
+                getPeopleWithMultivaluedAttributesMethod = IPersonAttributeDao.class.getMethod("getPeopleWithMultivaluedAttributes",
+                    Map.class, IPersonAttributeDaoFilter.class);
             } catch (final SecurityException e) {
                 final NoSuchMethodError nsme = new NoSuchMethodError("The 'getPeopleWithMultivaluedAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' is not accessible due to a security policy.");
                 nsme.initCause(e);
