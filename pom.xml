@@ -70,7 +70,7 @@
         <apacheds.version>1.0.2</apacheds.version>
         <commons-lang.version>3.5</commons-lang.version>
         <easymock.version>3.6</easymock.version>
-        <hsqldb.version>1.8.0.7</hsqldb.version>
+        <hsqldb.version>1.8.0.10</hsqldb.version>
         <postgresql.version>42.2.5</postgresql.version>
         <jaxb-impl.version>2.2.7</jaxb-impl.version>
         <junit.version>4.12</junit.version>
