@@ -68,7 +68,7 @@
         <!-- Project Dependency Versions -->
         <aopalliance.version>1.0</aopalliance.version>
         <apacheds.version>1.0.2</apacheds.version>
-        <commons-lang.version>3.5</commons-lang.version>
+        <commons-lang.version>3.9</commons-lang.version>
         <easymock.version>3.6</easymock.version>
         <hsqldb.version>1.8.0.7</hsqldb.version>
         <postgresql.version>42.2.5</postgresql.version>
