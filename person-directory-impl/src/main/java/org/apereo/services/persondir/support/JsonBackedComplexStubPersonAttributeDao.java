@@ -96,9 +96,9 @@ public class JsonBackedComplexStubPersonAttributeDao extends ComplexStubPersonAt
          */
         try {
             unmarshalAndSetBackingMap();
-        } catch (final ClassCastException ex) {
+        } catch (final Exception ex) {
             throw new BeanCreationException(String.format("The semantic structure of the person attributes"
-                + "JSON config is not correct. Please fix it in this resource: [%s]", this.personAttributesConfigFile.getURI()));
+                + "JSON config is not correct. Please fix it in this resource: [%s]", this.personAttributesConfigFile), ex);
         }
     }
 
@@ -111,9 +111,9 @@ public class JsonBackedComplexStubPersonAttributeDao extends ComplexStubPersonAt
 
     @SuppressWarnings("unchecked")
     private void unmarshalAndSetBackingMap() throws IOException {
-        logger.info("Un-marshaling person attributes from the config file " + this.personAttributesConfigFile.getFile());
+        logger.info("Un-marshaling person attributes from the config file {}", this.personAttributesConfigFile);
         final Map<String, Map<String, List<Object>>> backingMap = this.jacksonObjectMapper.readValue(
-            this.personAttributesConfigFile.getFile(), Map.class);
+            this.personAttributesConfigFile.getInputStream(), Map.class);
         logger.debug("Person attributes have been successfully read into the map ");
         synchronized (this.synchronizationMonitor) {
             super.setBackingMap(backingMap);
