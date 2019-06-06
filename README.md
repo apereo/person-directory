@@ -108,15 +108,15 @@ Setting up a `CascadingPersonAttributeDao` in Spring to would look like the foll
 This configuration will query three IPersonAttributeDaos in order and merge their results using the default `IAttributeMerger` which is the `ReplacingAttributeAdder`.
 
 #### Configuration
-`MergingPersonAttributeDaoImpl` has an anonymous constructor.
+`CascadingPersonAttributeDao` has an anonymous constructor.
 
 | Property | Type | Default Value | Description |
 | ---------|-------|--------------|-------------- |
-| defaultAttribute | String | username | The attribute name to use for calls to `IPersonAttributes getPerson(String)`. A query Map is generated for these calls using the defaultAttribute and the value passed in.
 | personAttributeDaos | List<IPersonAttributesAttributeDao> | null | A List of `IPersonAttributeDaos` to be queried and have their results merged.
 | attrMerger  | IAttributeMerger  | new ReplacingAttributeAdder() | The result set merging strategy to be used. See the Merging 
 Strategies section for more information on available options.
 | recoverExceptions  | boolean | true | If an exception thrown by a child IPersonAttributesAttributeDao
+| stopIfFirstDaoReturnsNull  | boolean | false | Stop execution if the first `IPersonAttributeDaos` returns a null value.
 
 
 ### Merging Strategies
