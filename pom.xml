@@ -72,7 +72,7 @@
         <easymock.version>4.0.2</easymock.version>
         <hsqldb.version>1.8.0.10</hsqldb.version>
         <postgresql.version>42.2.5</postgresql.version>
-        <jaxb-impl.version>2.2.7</jaxb-impl.version>
+        <jaxb-impl.version>2.3.2</jaxb-impl.version>
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <servlet-api.version>4.0.1</servlet-api.version>
