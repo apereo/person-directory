@@ -26,9 +26,9 @@ import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.apereo.services.persondir.support.IUsernameAttributeProvider;
 import org.apereo.services.persondir.support.SimpleUsernameAttributeProvider;
+import org.apereo.services.persondir.util.CollectionsUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +109,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     public void setRules(final List<AttributeRule> rules) {
         Validate.notEmpty(rules, "Argument 'rules' cannot be null or empty.");
 
-        this.rules = Collections.unmodifiableList(new ArrayList<>(rules));
+        this.rules = CollectionsUtil.safelyWrapAsUnmodifiableList(new ArrayList<>(rules));
     }
 
     /* (non-Javadoc)

@@ -25,10 +25,10 @@ import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.CaseCanonicalizationMode;
+import org.apereo.services.persondir.util.CollectionsUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -259,7 +259,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             mappedPeople.add(mappedPerson);
         }
 
-        return Collections.unmodifiableSet(mappedPeople);
+        return CollectionsUtil.safelyWrapAsUnmodifiableSet(mappedPeople);
     }
 
     /* (non-Javadoc)

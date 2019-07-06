@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
+import org.apereo.services.persondir.util.CollectionsUtil;
 import org.apereo.services.persondir.util.PatternHelper;
 
 import java.util.ArrayList;
@@ -255,7 +256,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
             possibleAttribNames.addAll(keySet);
         }
 
-        this.possibleUserAttributeNames = Collections.unmodifiableSet(possibleAttribNames);
+        this.possibleUserAttributeNames = CollectionsUtil.safelyWrapAsUnmodifiableSet(possibleAttribNames);
     }
 }
 

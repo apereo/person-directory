@@ -86,9 +86,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     public void testGetPerson() {
         final IPersonAttributes attrs = dao.getPerson("userid", IPersonAttributeDaoFilter.alwaysChoose());
         assertFalse(attrs.getAttributes().isEmpty());
-
         assertEquals(getAttributeAsSingleValue(attrs, "name"), "userid");
-
         assertEquals(getAttributeAsList(attrs, "likes").size(), 2);
     }
 

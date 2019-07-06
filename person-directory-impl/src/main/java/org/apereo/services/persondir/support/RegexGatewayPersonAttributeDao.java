@@ -23,6 +23,7 @@ import org.apache.commons.lang3.Validate;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
+import org.apereo.services.persondir.util.CollectionsUtil;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -161,8 +162,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
 
             newPatterns.put(attribute, compiledPattern);
         }
-
-        this.patterns = Collections.unmodifiableMap(newPatterns);
+        this.patterns = CollectionsUtil.safelyWrapAsUnmodifiableMap(newPatterns);
     }
 
     /**
