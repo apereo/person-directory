@@ -7,11 +7,18 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Utility class to avoid nested Unmodifiable collections.
+ * Utility class to avoid deeply nested Unmodifiable collections and accompanying stack overflow.
  *
- * Can't use instanceof b/c classes are not public and there are multiple sub-types of
- * Unmodifiable classes so doing an equality check against the class name doesn't work
- * hence the use of contains.
+ * If a collection or map is wrapped with an Unmodifiable wrapper repeatedly, eventually
+ * a call to `get()` an item will result in a StackOverflowError.
+ * It can be difficult to keep track of whether a collection has already been wrapped
+ * since the classes are not public so an instanceof check won't work.
+ *
+ * There are multiple sub-types of Unmodifiable classes so doing an equality check
+ * against the class name doesn't work hence the use of contains looking for the word
+ * "Unmodifiable" in the class name.
+ *
+ * This class should eventually go away if the JDK provides a solution.
  */
 public class CollectionsUtil {
 
