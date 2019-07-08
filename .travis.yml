@@ -7,7 +7,7 @@ cache:
   directories:
   - "$HOME/.m2/repository"
 jdk:
-- oraclejdk8
+- openjdk11
 script: mvn package -ff -B
 before_install:
 - chmod -R 777 ./travis/init-travis-build.sh
