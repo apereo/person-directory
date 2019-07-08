@@ -28,13 +28,13 @@ import org.apereo.services.persondir.support.NamedPersonImpl;
 import org.apereo.services.persondir.support.xml.CachingJaxbLoader.UnmarshallingCallback;
 import org.apereo.services.persondir.support.xml.om.Attribute;
 import org.apereo.services.persondir.support.xml.om.Person;
+import org.apereo.services.persondir.util.CollectionsUtil;
 import org.apereo.services.persondir.util.PatternHelper;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -286,9 +286,9 @@ public class XmlPersonAttributeDao extends AbstractDefaultAttributePersonAttribu
                 }
             }
 
-            XmlPersonAttributeDao.this.attributesCache = Collections.unmodifiableSet(attributeNames);
-            XmlPersonAttributeDao.this.personByAttributeCache = Collections.unmodifiableMap(personByAttributeCache);
-            XmlPersonAttributeDao.this.personByNameCache = Collections.unmodifiableMap(personByNameCache);
+            XmlPersonAttributeDao.this.attributesCache = CollectionsUtil.safelyWrapAsUnmodifiableSet(attributeNames);
+            XmlPersonAttributeDao.this.personByAttributeCache = CollectionsUtil.safelyWrapAsUnmodifiableMap(personByAttributeCache);
+            XmlPersonAttributeDao.this.personByNameCache = CollectionsUtil.safelyWrapAsUnmodifiableMap(personByNameCache);
         }
     }
 }

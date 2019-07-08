@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support;
 
 import junit.framework.TestCase;
+import org.apereo.services.persondir.util.CollectionsUtil;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.ArrayList;
@@ -199,7 +200,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that attempting to add a result with a null value yields no change.
      */
     public void testAddResultNullValue() {
-        final Map<String, List<String>> immutableMap = Collections.unmodifiableMap(new HashMap<String, List<String>>());
+        final Map<String, List<String>> immutableMap = CollectionsUtil.safelyWrapAsUnmodifiableMap(new HashMap<String, List<String>>());
         MultivaluedPersonAttributeUtils.addResult(immutableMap, "key", null);
     }
 

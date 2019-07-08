@@ -25,11 +25,11 @@ import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.merger.IAttributeMerger;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
+import org.apereo.services.persondir.util.CollectionsUtil;
 import org.springframework.beans.factory.annotation.Required;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -190,7 +190,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             this.logger.debug("Aggregated search results '" + resultPeople + "' for query='" + query + "'");
         }
 
-        return Collections.unmodifiableSet(resultPeople);
+        return CollectionsUtil.safelyWrapAsUnmodifiableSet(resultPeople);
     }
 
     private boolean handleRuntimeException(IPersonAttributeDao currentlyConsidering, RuntimeException rte) {
@@ -274,7 +274,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             return null;
         }
 
-        return Collections.unmodifiableSet(attrNames);
+        return CollectionsUtil.safelyWrapAsUnmodifiableSet(attrNames);
     }
 
     /**
@@ -331,7 +331,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             return null;
         }
 
-        return Collections.unmodifiableSet(queryAttrs);
+        return CollectionsUtil.safelyWrapAsUnmodifiableSet(queryAttrs);
     }
 
     /**
@@ -373,7 +373,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     @Required
     public final void setPersonAttributeDaos(final List<IPersonAttributeDao> daos) {
         Validate.notNull(daos, "The IPersonAttributeDao List cannot be null");
-        this.personAttributeDaos = Collections.unmodifiableList(daos);
+        this.personAttributeDaos = CollectionsUtil.safelyWrapAsUnmodifiableList(daos);
     }
 
     /**

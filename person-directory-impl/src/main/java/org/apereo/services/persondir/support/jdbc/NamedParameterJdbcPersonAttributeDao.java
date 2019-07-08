@@ -23,6 +23,7 @@ import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.apereo.services.persondir.support.CaseInsensitiveNamedPersonImpl;
 import org.apereo.services.persondir.support.IUsernameAttributeProvider;
+import org.apereo.services.persondir.util.CollectionsUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -101,12 +102,12 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
     }
 
     public void setAvailableQueryAttributes(final Set<String> availableQueryAttributes) {
-        this.availableQueryAttributes = Collections.unmodifiableSet(availableQueryAttributes);
+        this.availableQueryAttributes = CollectionsUtil.safelyWrapAsUnmodifiableSet(availableQueryAttributes);
     }
 
     @Required
     public void setUserAttributeNames(final Set<String> userAttributeNames) {
-        this.userAttributeNames = Collections.unmodifiableSet(userAttributeNames);
+        this.userAttributeNames = CollectionsUtil.safelyWrapAsUnmodifiableSet(userAttributeNames);
     }
 
     @Override

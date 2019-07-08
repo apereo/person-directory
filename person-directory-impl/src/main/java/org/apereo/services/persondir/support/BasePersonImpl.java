@@ -24,12 +24,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apereo.services.persondir.IPersonAttributes;
+import org.apereo.services.persondir.util.CollectionsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Array;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +54,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
         // in AbstractQueryPersonAttributeDao.mapPersonAttributes when the CaseInsensitive*Impl.java
         // subclasses are used.  James W 6/15
         // See https://issues.jasig.org/browse/PERSONDIR-89
-        this.attributes = Collections.unmodifiableMap(immutableValuesBuilder);
+        this.attributes = CollectionsUtil.safelyWrapAsUnmodifiableMap(immutableValuesBuilder);
     }
 
     /**
@@ -91,7 +91,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
                         }
                     }
                 }
-                value = Collections.unmodifiableList(value);
+                value = CollectionsUtil.safelyWrapAsUnmodifiableList(value);
             }
             if (logger.isTraceEnabled()) {
                 logger.trace("Collecting attribute {} with value(s) {}", key, value);

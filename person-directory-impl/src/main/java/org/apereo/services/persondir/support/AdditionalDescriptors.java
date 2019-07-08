@@ -24,9 +24,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apereo.services.persondir.IPersonAttributes;
+import org.apereo.services.persondir.util.CollectionsUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -66,13 +66,12 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         if (values == null) {
             return null;
         }
-
-        return Collections.unmodifiableList(values);
+        return CollectionsUtil.safelyWrapAsUnmodifiableList(values);
     }
 
     @Override
     public Map<String, List<Object>> getAttributes() {
-        return Collections.unmodifiableMap(this.attributes);
+        return CollectionsUtil.safelyWrapAsUnmodifiableMap(this.attributes);
     }
 
     @Override
