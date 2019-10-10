@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,9 +20,11 @@ package org.apereo.services.persondir.support.merger;
 
 import org.apache.commons.lang3.Validate;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -38,6 +40,12 @@ import java.util.Map;
 
  */
 public class MultivaluedAttributeMerger extends BaseAdditiveAttributeMerger {
+    private boolean distinctValues;
+
+    public void setDistinctValues(final boolean distinctValues) {
+        this.distinctValues = distinctValues;
+    }
+
     /* (non-Javadoc)
      * @see org.jasig.services.persondir.support.merger.BaseAdditiveAttributeMerger#mergePersonAttributes(java.util.Map, java.util.Map)
      */
@@ -49,14 +57,20 @@ public class MultivaluedAttributeMerger extends BaseAdditiveAttributeMerger {
         for (final Map.Entry<String, List<Object>> sourceEntry : toConsider.entrySet()) {
             final String sourceKey = sourceEntry.getKey();
 
-            List<Object> destList = toModify.get(sourceKey);
-            if (destList == null) {
-                destList = new LinkedList<>();
-                toModify.put(sourceKey, destList);
+            List<Object> values = toModify.get(sourceKey);
+            if (values == null) {
+                values = new LinkedList<>();
+                toModify.put(sourceKey, values);
             }
 
             final List<Object> sourceValue = sourceEntry.getValue();
-            destList.addAll(sourceValue);
+            if (this.distinctValues) {
+                final List<Object> temp = new ArrayList<>(values);
+                temp.addAll(sourceValue);
+                toModify.put(sourceKey, temp.stream().distinct().collect(Collectors.toList()));
+            } else {
+                values.addAll(sourceValue);
+            }
         }
 
         return toModify;
