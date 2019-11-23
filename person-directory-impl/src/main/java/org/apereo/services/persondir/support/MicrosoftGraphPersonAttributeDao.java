@@ -62,6 +62,8 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
 
     private String loginBaseUrl = "https://login.microsoftonline.com/%s/";
 
+    private String domain;
+
     /**
      * NONE,BASIC,HEADERS or BODY.
      */
@@ -82,17 +84,12 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
         return personAttributes;
     }
 
-    public static void main(String[] args) {
-        String clientId = "d430f66f-bc3b-4e2d-a9bf-bf6c7ded8b7e";
-        String clientSecret = "y5v6T?0Bp.S:Gh/4CaI]oM-:U1-TaAEC";
-        String tenantId = "2bbf190a-1ee3-487d-b39f-4d5038acf9ad";
-        String u = "casuser@misaghmoayyedhotmail.onmicrosoft.com";
+    public String getDomain() {
+        return domain;
+    }
 
-        MicrosoftGraphPersonAttributeDao dao = new MicrosoftGraphPersonAttributeDao();
-        dao.setClientId(clientId);
-        dao.setClientSecret(clientSecret);
-        dao.setTenant(tenantId);
-        dao.getPerson(u, IPersonAttributeDaoFilter.alwaysChoose());
+    public void setDomain(final String domain) {
+        this.domain = domain;
     }
 
     public String getProperties() {
@@ -209,15 +206,15 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
                 .build();
 
             final GraphApiService service = retrofit.create(GraphApiService.class);
-            final Call<User> call = service.getUserByUserPrincipalName(uid,
+            final String user = this.domain == null ? uid : uid + "@" + this.domain;
+            final Call<User> call = service.getUserByUserPrincipalName(user,
                 StringUtils.defaultIfBlank(this.properties,
                     User.getDefaultFieldQuery().stream().collect(Collectors.joining(","))));
 
             final Response<User> r = call.execute();
             if (r.isSuccessful()) {
-                final User user = r.body();
-
-                final Map<String, Object> attributes = user.buildAttributes();
+                final User response = r.body();
+                final Map<String, Object> attributes = response.buildAttributes();
                 if (this.caseInsensitiveUsername) {
                     return new CaseInsensitiveNamedPersonImpl(uid, stuffAttributesIntoListValues(attributes, filter));
                 }
