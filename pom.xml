@@ -88,7 +88,7 @@
         <xerces.version>2.12.0</xerces.version>
         <jackson.version>2.10.1</jackson.version>
         <commons-io.version>2.6</commons-io.version>
-        <ldaptive.version>2.0.0-RC1</ldaptive.version>
+        <ldaptive.version>2.0.0-SNAPSHOT</ldaptive.version>
         <apachehttpclient>4.5.10</apachehttpclient>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
