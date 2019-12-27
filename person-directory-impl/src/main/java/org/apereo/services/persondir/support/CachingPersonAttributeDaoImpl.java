@@ -47,15 +47,15 @@ import java.util.Set;
  * <br>
  * <br>
  * Configuration:
- * <table border="1" summary="">
+ * <table border="1">
  * <tr>
- * <th align="left">Property</th>
- * <th align="left">Description</th>
- * <th align="left">Required</th>
- * <th align="left">Default</th>
+ * <th>Property</th>
+ * <th>Description</th>
+ * <th>Required</th>
+ * <th>Default</th>
  * </tr>
  * <tr>
- * <td align="right" valign="top">cachedPersonAttributesDao</td>
+ * <td  valign="top">cachedPersonAttributesDao</td>
  * <td>
  * The {@link IPersonAttributeDao} to delegate
  * queries to on cache misses.
@@ -64,7 +64,7 @@ import java.util.Set;
  * <td valign="top">null</td>
  * </tr>
  * <tr>
- * <td align="right" valign="top">userInfoCache</td>
+ * <td  valign="top">userInfoCache</td>
  * <td>
  * The {@link java.util.Map} to use for result caching. This class does no cache
  * maintenence. It is assumed the underlying Map implementation will ensure the cache
@@ -74,7 +74,7 @@ import java.util.Set;
  * <td valign="top">null</td>
  * </tr>
  * <tr>
- * <td align="right" valign="top">cacheKeyAttributes</td>
+ * <td  valign="top">cacheKeyAttributes</td>
  * <td>
  * A Set of attribute names to use when building the cache key. The default
  * implementation generates the key as a Map of attributeNames to values retrieved
@@ -84,7 +84,7 @@ import java.util.Set;
  * <td valign="top">null</td>
  * </tr>
  * <tr>
- * <td align="right" valign="top">cacheNullResults</td>
+ * <td  valign="top">cacheNullResults</td>
  * <td>
  * If the wrapped IPersonAttributeDao returns null for the query should that null
  * value be stored in the cache.
@@ -93,7 +93,7 @@ import java.util.Set;
  * <td valign="top">false</td>
  * </tr>
  * <tr>
- * <td align="right" valign="top">nullResultsObject</td>
+ * <td  valign="top">nullResultsObject</td>
  * <td>
  * If cacheNullResults is set to true this value is stored in the cache for any
  * query that returns null. This is used as a flag so the same query will return

@@ -46,15 +46,15 @@ import java.util.Set;
  * <br>
  * <br>
  * Configuration:
- * <table border="1" summary="">
+ * <table border="1">
  *     <tr>
- *         <th align="left">Property</th>
- *         <th align="left">Description</th>
- *         <th align="left">Required</th>
- *         <th align="left">Default</th>
+ *         <th>Property</th>
+ *         <th>Description</th>
+ *         <th>Required</th>
+ *         <th>Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">queryAttributeMapping</td>
+ *         <td  valign="top">queryAttributeMapping</td>
  *         <td>
  *             A {@link Map} from attribute names used in the query {@link Map} to attribute names to use in the SQL.
  *             The values can be either {@link String} or {@link Collection} of String to use a single Map attribute under
@@ -65,7 +65,7 @@ import java.util.Set;
  *         <td valign="top">null</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">resultAttributeMapping</td>
+ *         <td  valign="top">resultAttributeMapping</td>
  *         <td>
  *             A {@link Map} from SQL result names to returned attribute names. The values can be either {@link String}
  *             or {@link Collection} of String to use a single SQL result under multiple returned attributes. If set only
@@ -75,7 +75,7 @@ import java.util.Set;
  *         <td valign="top">null</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">requireAllQueryAttributes</td>
+ *         <td  valign="top">requireAllQueryAttributes</td>
  *         <td>
  *             If the SQL should only be run if all attributes listed in the queryAttributeMapping exist in the query
  *             {@link Map}. Ignored if queryAttributeMapping is null
@@ -84,7 +84,7 @@ import java.util.Set;
  *         <td valign="top">false</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">unmappedUsernameAttribute</td>
+ *         <td  valign="top">unmappedUsernameAttribute</td>
  *         <td>
  *             The unmapped username attribute returned by the query. If null the value returned by the configured
  *             {@link IUsernameAttributeProvider} is used.

@@ -41,15 +41,15 @@ import java.util.Set;
  * <br>
  * <br>
  * Configuration:
- * <table border="1" summary="">
+ * <table border="1">
  *     <tr>
- *         <th align="left">Property</th>
- *         <th align="left">Description</th>
- *         <th align="left">Required</th>
- *         <th align="left">Default</th>
+ *         <th>Property</th>
+ *         <th>Description</th>
+ *         <th>Required</th>
+ *         <th>Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">columnsToAttributes</td>
+ *         <td  valign="top">columnsToAttributes</td>
  *         <td>
  *             The {@link Map} of {@link String} columns names to {@link String} or {@link Set}s
  *             of {@link String}s to use as attribute names in the returned Map. If a column name

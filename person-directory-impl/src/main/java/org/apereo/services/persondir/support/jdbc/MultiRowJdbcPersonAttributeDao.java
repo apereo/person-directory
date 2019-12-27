@@ -38,7 +38,7 @@ import java.util.Set;
  * An {@link IPersonAttributeDao}
  * implementation that maps attribute names and values from name and value column
  * pairs. This is usefull if user attributes are stored in a table like:<br>
- * <table border="1" summary="">
+ * <table border="1">
  *  <tr>
  *      <th>USER_NM</th>
  *      <th>ATTR_NM</th>
@@ -76,15 +76,15 @@ import java.util.Set;
  * <br>
  * <br>
  * Configuration:
- * <table border="1" summary="">
+ * <table border="1">
  *     <tr>
- *         <th align="left">Property</th>
- *         <th align="left">Description</th>
- *         <th align="left">Required</th>
- *         <th align="left">Default</th>
+ *         <th>Property</th>
+ *         <th>Description</th>
+ *         <th>Required</th>
+ *         <th>Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">nameValueColumnMappings</td>
+ *         <td  valign="top">nameValueColumnMappings</td>
  *         <td>
  *             A {@link Map} of attribute name columns to attribute value columns. A single result row can have multiple
  *             name columns and multiple value columns associated with each name. The values of the {@link Map} can be

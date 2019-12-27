@@ -43,15 +43,15 @@ import java.util.Set;
  * <br>
  * <br>
  * Configuration:
- * <table border="1" summary="">
+ * <table border="1">
  * <tr>
- * <th align="left">Property</th>
- * <th align="left">Description</th>
- * <th align="left">Required</th>
- * <th align="left">Default</th>
+ * <th>Property</th>
+ * <th>Description</th>
+ * <th>Required</th>
+ * <th>Default</th>
  * </tr>
  * <tr>
- * <td align="right" valign="top">personAttributeDaos</td>
+ * <td  valign="top">personAttributeDaos</td>
  * <td>
  * A {@link List} of {@link IPersonAttributeDao}s to aggregate attributes from.
  * </td>
@@ -59,7 +59,7 @@ import java.util.Set;
  * <td valign="top">null</td>
  * </tr>
  * <tr>
- * <td align="right" valign="top">attrMerger</td>
+ * <td  valign="top">attrMerger</td>
  * <td>
  * A {@link IAttributeMerger} strategy to use for merging the attributes from
  * the {@link List} of {@link IPersonAttributeDao}s.
@@ -68,7 +68,7 @@ import java.util.Set;
  * <td valign="top">{@link MultivaluedAttributeMerger}</td>
  * </tr>
  * <tr>
- * <td align="right" valign="top">recoverExceptions</td>
+ * <td  valign="top">recoverExceptions</td>
  * <td>
  * Sets the action to be taken if one of the {@link IPersonAttributeDao}s in the
  * {@link List} fails with a {@link RuntimeException}. If set to true a warn level
@@ -79,7 +79,7 @@ import java.util.Set;
  * <td valign="top">true</td>
  * </tr>
  * <tr>
- * <td align="right" valign="top">stopOnSuccess</td>
+ * <td  valign="top">stopOnSuccess</td>
  * <td>
  * If true iteration of the child DAOs will stop after the first one that returns without
  * throwing an exception. This is intended to provide fail-over among attribute sources. The
@@ -109,6 +109,9 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      */
     protected boolean recoverExceptions = true;
 
+    /**
+     * The Stop on success.
+     */
     protected boolean stopOnSuccess = false;
 
 
@@ -193,6 +196,13 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         return CollectionsUtil.safelyWrapAsUnmodifiableSet(resultPeople);
     }
 
+    /**
+     * Handle runtime exception boolean.
+     *
+     * @param currentlyConsidering the currently considering
+     * @param rte                  the rte
+     * @return the boolean
+     */
     private boolean handleRuntimeException(IPersonAttributeDao currentlyConsidering, RuntimeException rte) {
         if (this.recoverExceptions) {
             this.logger.warn("Recovering From Exception thrown by '" + currentlyConsidering + "'", rte);
@@ -212,6 +222,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * @param isFirstQuery         If this is the first query, this will stay true until a call to this method returns (does not throw an exception).
      * @param currentlyConsidering The IPersonAttributeDao to execute the query on.
      * @param resultPeople         The Map of results from all previous queries, may be null.
+     * @param filter               the filter
      * @return The results from the call to the DAO, follows the same rules as {@link IPersonAttributeDao#getUserAttributes(Map, IPersonAttributeDaoFilter)}.
      */
     protected abstract Set<IPersonAttributes> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery,
@@ -400,6 +411,11 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         this.recoverExceptions = recover;
     }
 
+    /**
+     * Is stop on success boolean.
+     *
+     * @return the boolean
+     */
     public boolean isStopOnSuccess() {
         return stopOnSuccess;
     }

@@ -43,15 +43,15 @@ import java.util.Set;
  * <br>
  * <br>
  * Configuration:
- * <table border="1" summary="">
+ * <table border="1">
  *     <tr>
- *         <th align="left">Property</th>
- *         <th align="left">Description</th>
- *         <th align="left">Required</th>
- *         <th align="left">Default</th>
+ *         <th>Property</th>
+ *         <th>Description</th>
+ *         <th>Required</th>
+ *         <th>Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">formatAttributes</td>
+ *         <td  valign="top">formatAttributes</td>
  *         <td>
  *             A {@link Set} of {@link FormatAttribute} objects that define the formatted user attributes to be
  *             generated. 

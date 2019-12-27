@@ -42,15 +42,15 @@ import java.util.regex.Pattern;
  * <br>
  * <br>
  * Configuration:
- * <table border="1" summary="">
+ * <table border="1">
  *     <tr>
- *         <th align="left">Property</th>
- *         <th align="left">Description</th>
- *         <th align="left">Required</th>
- *         <th align="left">Default</th>
+ *         <th>Property</th>
+ *         <th>Description</th>
+ *         <th>Required</th>
+ *         <th>Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">patterns</td>
+ *         <td  valign="top">patterns</td>
  *         <td>
  *             A {@link Map} of {@link String} attribute names to {@link String} regular
  *             expression patterns.
@@ -59,7 +59,7 @@ import java.util.regex.Pattern;
  *         <td valign="top">null</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">targetPersonAttributeDao</td>
+ *         <td  valign="top">targetPersonAttributeDao</td>
  *         <td>
  *             A the {@link IPersonAttributeDao} to delegate the call to if the pattern matching
  *             criteria is met.
@@ -68,7 +68,7 @@ import java.util.regex.Pattern;
  *         <td valign="top">null</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">matchAllPatterns</td>
+ *         <td  valign="top">matchAllPatterns</td>
  *         <td>
  *             If true all patterns in the <code>patterns</code> map must past the value mapping
  *             criteria for the <code>targetPersonAttributeDao</code> to be delegated to. If false
@@ -78,7 +78,7 @@ import java.util.regex.Pattern;
  *         <td valign="top">false</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">matchAllValues</td>
+ *         <td  valign="top">matchAllValues</td>
  *         <td>
  *             If true all values for the attribute being tested must match the pattern testing
  *             it for the criteria to be met. If false only one of the values needs to match

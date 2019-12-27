@@ -51,15 +51,15 @@ import java.util.regex.Pattern;
  * <br>
  * <br>
  * Configuration:
- * <table border="1" summary="">
+ * <table border="1">
  *     <tr>
- *         <th align="left">Property</th>
- *         <th align="left">Description</th>
- *         <th align="left">Required</th>
- *         <th align="left">Default</th>
+ *         <th>Property</th>
+ *         <th>Description</th>
+ *         <th>Required</th>
+ *         <th>Default</th>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">searchControls</td>
+ *         <td valign="top">searchControls</td>
  *         <td>
  *             Set the {@link SearchControls} used for executing the LDAP query.
  *         </td>
@@ -67,7 +67,7 @@ import java.util.regex.Pattern;
  *         <td valign="top">Default instance with SUBTREE scope.</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">baseDN</td>
+ *         <td valign="top">baseDN</td>
  *         <td>
  *             The base DistinguishedName to use when executing the query filter.
  *         </td>
@@ -75,7 +75,7 @@ import java.util.regex.Pattern;
  *         <td valign="top">""</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">contextSource</td>
+ *         <td valign="top">contextSource</td>
  *         <td>
  *             A {@link ContextSource} from the Spring-LDAP framework. Provides a DataSource
  *             style object that this DAO can retrieve LDAP connections from.
@@ -84,7 +84,7 @@ import java.util.regex.Pattern;
  *         <td valign="top">null</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">setReturningAttributes</td>
+ *         <td valign="top">setReturningAttributes</td>
  *         <td>
  *             If the ldap attributes set in the ldapAttributesToPortalAttributes Map should be copied
  *             into the {@link SearchControls#setReturningAttributes(String[])}. Setting this helps reduce
@@ -94,7 +94,7 @@ import java.util.regex.Pattern;
  *         <td valign="top">true</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">queryType</td>
+ *         <td valign="top">queryType</td>
  *         <td>
  *             How multiple attributes in a query should be concatenated together. The other option is OR.
  *         </td>
@@ -102,7 +102,7 @@ import java.util.regex.Pattern;
  *         <td valign="top">AND</td>
  *     </tr>
  *     <tr>
- *         <td align="right" valign="top">queryTemplate</td>
+ *         <td valign="top">queryTemplate</td>
  *         <td>
  *             Optional wrapper template for the generated part of the query.  Use {0} as a placeholder for where the generated query should be inserted.
  *         </td>
