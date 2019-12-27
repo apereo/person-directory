@@ -18,28 +18,26 @@
  */
 package org.apereo.services.persondir.support.ldap;
 
-
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.apereo.services.persondir.support.CaseInsensitiveAttributeNamedPersonImpl;
 import org.apereo.services.persondir.support.CaseInsensitiveNamedPersonImpl;
 import org.ldaptive.Connection;
 import org.ldaptive.ConnectionFactory;
+import org.ldaptive.FilterTemplate;
 import org.ldaptive.LdapAttribute;
 import org.ldaptive.LdapEntry;
 import org.ldaptive.LdapException;
-import org.ldaptive.Response;
 import org.ldaptive.ReturnAttributes;
-import org.ldaptive.SearchFilter;
 import org.ldaptive.SearchOperation;
 import org.ldaptive.SearchRequest;
-import org.ldaptive.SearchResult;
+import org.ldaptive.SearchResponse;
 import org.ldaptive.SearchScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import javax.naming.directory.SearchControls;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -53,7 +51,7 @@ import java.util.Map;
  * @author Marvin S. Addison
  * @since 4.0.0
  */
-public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<SearchFilter> {
+public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<FilterTemplate> {
 
     /**
      * Logger instance.
@@ -74,11 +72,6 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      * LDAP connection factory.
      */
     private ConnectionFactory connectionFactory;
-
-    /**
-     * LDAP search scope.
-     */
-    private SearchScope searchScope;
 
     /**
      * LDAP search filter.
@@ -128,59 +121,35 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
         this.connectionFactory = connectionFactory;
     }
 
-    /**
-     * Initializes the object after properties are set.
-     */
-    @PostConstruct
-    public void initialize() {
-        for (final SearchScope scope : SearchScope.values()) {
-            if (scope.ordinal() == this.searchControls.getSearchScope()) {
-                this.searchScope = scope;
-            }
-        }
-    }
-
     @Override
-    protected List<IPersonAttributes> getPeopleForQuery(final SearchFilter filter, final String userName) {
-        Connection connection = null;
+    protected List<IPersonAttributes> getPeopleForQuery(final FilterTemplate filter, final String userName) {
+        final SearchResponse response;
         try {
-            try {
-                connection = this.connectionFactory.getConnection();
-                connection.open();
-            } catch (final LdapException e) {
-                throw new RuntimeException("Failed getting LDAP connection", e);
-            }
-            final Response<SearchResult> response;
-            try {
-                response = new SearchOperation(connection).execute(createRequest(filter));
-            } catch (final LdapException e) {
-                throw new RuntimeException("Failed executing LDAP query " + filter, e);
-            }
-            final SearchResult result = response.getResult();
-            final List<IPersonAttributes> peopleAttributes = new ArrayList<>(result.size());
-            for (final LdapEntry entry : result.getEntries()) {
-                final IPersonAttributes person;
-                final String userNameAttribute = this.getConfiguredUserNameAttribute();
-                final Map<String, List<Object>> attributes = convertLdapEntryToMap(entry);
-                if (attributes.containsKey(userNameAttribute)) {
-                    person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, attributes);
-                } else {
-                    person = new CaseInsensitiveNamedPersonImpl(userName, attributes);
-                }
-                peopleAttributes.add(person);
-            }
-
-            return peopleAttributes;
-        } finally {
-            closeConnection(connection);
+            response = new SearchOperation(this.connectionFactory).execute(createRequest(filter));
+        } catch (final LdapException e) {
+            throw new RuntimeException("Failed executing LDAP query " + filter, e);
         }
+        final List<IPersonAttributes> peopleAttributes = new ArrayList<>(response.entrySize());
+        for (final LdapEntry entry : response.getEntries()) {
+            final IPersonAttributes person;
+            final String userNameAttribute = this.getConfiguredUserNameAttribute();
+            final Map<String, List<Object>> attributes = convertLdapEntryToMap(entry);
+            if (attributes.containsKey(userNameAttribute)) {
+                person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, attributes);
+            } else {
+                person = new CaseInsensitiveNamedPersonImpl(userName, attributes);
+            }
+            peopleAttributes.add(person);
+        }
+        return peopleAttributes;
+
     }
 
     @Override
-    protected SearchFilter appendAttributeToQuery(final SearchFilter filter, final String attribute, final List<Object> values) {
-        final SearchFilter query;
+    protected FilterTemplate appendAttributeToQuery(final FilterTemplate filter, final String attribute, final List<Object> values) {
+        final FilterTemplate query;
         if (filter == null && values.size() > 0) {
-            query = new SearchFilter(this.searchFilter);
+            query = new FilterTemplate(this.searchFilter);
 
             if (this.searchFilter.contains("{0}")) {
                 query.setParameter(0, values.get(0).toString());
@@ -201,10 +170,10 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      * @param filter LDAP search filter.
      * @return ldaptive search request.
      */
-    private SearchRequest createRequest(final SearchFilter filter) {
+    private SearchRequest createRequest(final FilterTemplate filter) {
         final SearchRequest request = new SearchRequest();
         request.setBaseDn(this.baseDN);
-        request.setSearchFilter(filter);
+        request.setFilter(filter);
 
         /** LDAP attributes to fetch from search results. */
         if (getResultAttributeMapping() != null && !getResultAttributeMapping().isEmpty()) {
@@ -216,8 +185,14 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
             request.setReturnAttributes(ReturnAttributes.ALL_USER.value());
         }
 
-        request.setSearchScope(this.searchScope);
-        request.setSizeLimit(this.searchControls.getCountLimit());
+        SearchScope searchScope = SearchScope.SUBTREE;
+        for (final SearchScope scope : SearchScope.values()) {
+            if (scope.ordinal() == this.searchControls.getSearchScope()) {
+                searchScope = scope;
+            }
+        }
+        request.setSearchScope(searchScope);
+        request.setSizeLimit(Long.valueOf(this.searchControls.getCountLimit()).intValue());
         request.setTimeLimit(Duration.ofSeconds(searchControls.getTimeLimit()));
         return request;
     }

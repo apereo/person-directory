@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,9 +20,7 @@ package org.apereo.services.persondir.support.ldap;
 
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
-import org.ldaptive.DefaultConnectionFactory;
-import org.ldaptive.pool.BlockingConnectionPool;
-import org.ldaptive.pool.PooledConnectionFactory;
+import org.ldaptive.PooledConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -30,6 +28,7 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.test.AbstractDirContextTest;
 
 import javax.naming.directory.SearchControls;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,12 +70,9 @@ public class LdaptivePersonAttributeDaoTest extends AbstractDirContextTest {
     }
 
     public void testVerifyGetPerson() throws Exception {
-
         final String[] urls = ((LdapContextSource) this.getContextSource()).getUrls();
-        final DefaultConnectionFactory df = new DefaultConnectionFactory(urls[0]);
-        final BlockingConnectionPool cp = new BlockingConnectionPool(df);
-        cp.initialize();
-        final PooledConnectionFactory factory = new PooledConnectionFactory(cp);
+        final PooledConnectionFactory factory = new PooledConnectionFactory(urls[0]);
+        factory.initialize();
 
         final Map<String, String> map = new HashMap<>();
         map.put("cn", "commonName");
