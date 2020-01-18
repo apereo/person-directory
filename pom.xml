@@ -89,7 +89,7 @@
         <jackson.version>2.10.2</jackson.version>
         <commons-io.version>2.6</commons-io.version>
         <ldaptive.version>2.0.0-SNAPSHOT</ldaptive.version>
-        <apachehttpclient>4.5.10</apachehttpclient>
+        <apachehttpclient>4.5.11</apachehttpclient>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
