@@ -199,10 +199,8 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         try {
             person = DataAccessUtils.singleResult(people);
         } catch (final IncorrectResultSizeDataAccessException e) {
-            logger.debug("Unexpected multiple people returned from person attribute DAO: {} : {} ", e.getClass().getName(), e.getMessage());
-            people.stream().forEach(p -> {
-                logger.debug("Person: {}", p);
-            });
+            logger.warn("Unexpected multiple people returned from person attribute DAO: {} : {} ", e.getClass().getName(), e.getMessage());
+            people.forEach(p -> logger.debug("Person: {}", p));
             throw e;
         }
         return person;
