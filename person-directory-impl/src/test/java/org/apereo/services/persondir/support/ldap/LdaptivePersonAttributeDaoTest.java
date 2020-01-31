@@ -18,19 +18,34 @@
  */
 package org.apereo.services.persondir.support.ldap;
 
+import org.apache.directory.server.annotations.CreateLdapServer;
+import org.apache.directory.server.annotations.CreateTransport;
+import org.apache.directory.server.core.annotations.ApplyLdifs;
+import org.apache.directory.server.core.annotations.ContextEntry;
+import org.apache.directory.server.core.annotations.CreateDS;
+import org.apache.directory.server.core.annotations.CreateIndex;
+import org.apache.directory.server.core.annotations.CreatePartition;
+import org.apache.directory.server.core.integ.AbstractLdapTestUnit;
+import org.apache.directory.server.core.integ.FrameworkRunner;
+
+
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.ldaptive.PooledConnectionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.ldap.test.AbstractDirContextTest;
 
 import javax.naming.directory.SearchControls;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -39,37 +54,90 @@ import java.util.Map;
  *
  * @author Misagh Moayyed
  */
-public class LdaptivePersonAttributeDaoTest extends AbstractDirContextTest {
-    @Autowired
-    private LdapPersonAttributeDao attributeDao;
+@RunWith(FrameworkRunner.class)
+@CreateDS(name = "person-directory",
+    partitions =
+        {
+            @CreatePartition(
+                name = "example",
+                suffix = "dc=example,dc=com",
+                contextEntry = @ContextEntry(
+                    entryLdif =
+                        "dn: dc=example,dc=com\n" +
+                            "dc: example\n" +
+                            "objectClass: top\n" +
+                            "objectClass: domain\n\n"),
+                indexes =
+                    {
+                        @CreateIndex(attribute = "objectClass"),
+                        @CreateIndex(attribute = "dc"),
+                        @CreateIndex(attribute = "ou")
+                    })
+        }
+)
+@ApplyLdifs({
+    "dn: ou=people,dc=example,dc=com",
+    "objectClass: organizationalUnit",
+    "objectClass: top",
+    "ou: people",
+    "description: Contains entries which describe people",
+    "",
+    "dn: cn=Eric Dalquist,ou=people,dc=example,dc=com",
+    "objectclass: person",
+    "objectclass: organizationalPerson",
+    "objectclass: inetOrgPerson",
+    "objectclass: top",
+    "cn: Eric Dalquist",
+    "description: uPortal Developer",
+    "givenName: Eric",
+    "sn: Dalquist",
+    "uid: edalquist",
+    "mail: eric.dalquist@example.com",
+    "userpassword: {SHA}nU4eI71bcnBGqeO0t9tXvY1u5oQ=",
+    "",
+    "dn: cn=Jim Johnson,ou=people,dc=example,dc=com",
+    "objectclass: person",
+    "objectclass: organizationalPerson",
+    "objectclass: inetOrgPerson",
+    "objectclass: top",
+    "cn: Jim Johnson",
+    "description: uPortal Lackey",
+    "givenname: Jim",
+    "sn: Johnson",
+    "uid: jjohnson",
+    "mail: jim.johnson@example.com",
+    "userpassword: {SHA}nU4eI71bcnBGqeO0t9tXvY1u5aQ=",
+    "",
+})
+@CreateLdapServer(
+    transports =
+        {
+            @CreateTransport(protocol = "LDAP", port = 10201)
+        },
+    allowAnonymousAccess = true)
+public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
 
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.test.AbstractDirContextTest#getPartitionName()
+    private static ContextSource contextSource;
+    /**
+     * Create a Spring-LDAP ContextSource for the in-memory LDAP server
      */
-    @Override
-    protected String getPartitionName() {
-        return "personDirectory";
+    @BeforeClass
+    public static void initontextSource() {
+        LdapContextSource ctxSrc = new LdapContextSource();
+        ctxSrc.setUrl("ldap://localhost:10201");
+        ctxSrc.setBase("DC=example,DC=com");
+        ctxSrc.setUserDn("uid=admin,ou=system");
+        ctxSrc.setPassword("secret");
+        ctxSrc.afterPropertiesSet(); /* ! */
+        contextSource = ctxSrc;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.test.AbstractDirContextTest#getBaseDn()
-     */
-    @Override
-    protected String getBaseDn() {
-        return "ou=people,o=personDirectory";
+    private ContextSource getContextSource() {
+        return contextSource;
     }
 
-
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.test.AbstractDirContextTest#initializationData()
-     */
-    @Override
-    protected Resource[] initializationData() {
-        final ClassPathResource ldapPersonInfo = new ClassPathResource("/ldapPersonInfo.ldif");
-        return new Resource[]{ldapPersonInfo};
-    }
-
-    public void testVerifyGetPerson() throws Exception {
+    @Test
+    public void testVerifyGetPerson() {
         final String[] urls = ((LdapContextSource) this.getContextSource()).getUrls();
         final PooledConnectionFactory factory = new PooledConnectionFactory(urls[0]);
         factory.initialize();
@@ -85,7 +153,7 @@ public class LdaptivePersonAttributeDaoTest extends AbstractDirContextTest {
 
         final LdaptivePersonAttributeDao dao = new LdaptivePersonAttributeDao();
         dao.setConnectionFactory(factory);
-        dao.setBaseDN(getBaseDn());
+        dao.setBaseDN("ou=people,dc=example,dc=com");
         dao.setSearchControls(ctrs);
         dao.setSearchFilter("uid={0}");
         dao.setResultAttributeMapping(map);
