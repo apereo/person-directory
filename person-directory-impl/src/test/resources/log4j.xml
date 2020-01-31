@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+    <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c - %m%n"/>
+        </layout>
+    </appender>
+    <logger name="org.apache.directory">
+        <level value="ERROR"/>
+    </logger>
+    <logger name="org.apache.directory.api.ldap.model.entry.DefaultAttribute">
+        <level value="FATAL"/>
+    </logger>
+    <logger name="org.apache.directory.api.ldap.model.entry.Value">
+        <level value="FATAL"/>
+    </logger>
+    <logger name="org.apereo">
+        <level value="WARN"/>
+    </logger>
+    <logger name="org.apereo.services.persondir.support.CascadingPersonAttributeDao">
+        <level value="FATAL"/>
+    </logger>
+    <logger name="org.apereo.services.persondir.support.MergingPersonAttributeDaoImpl">
+        <level value="FATAL"/>
+    </logger>
+    <logger name="org.jasig">
+        <level value="INFO"/>
+    </logger>
+    <root>
+        <level value="WARN"/>
+        <appender-ref ref="stdout"/>
+    </root>
+</log4j:configuration>

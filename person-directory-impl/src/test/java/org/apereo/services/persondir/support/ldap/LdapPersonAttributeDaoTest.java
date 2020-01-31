@@ -18,13 +18,25 @@
  */
 package org.apereo.services.persondir.support.ldap;
 
+import org.apache.directory.server.annotations.CreateLdapServer;
+import org.apache.directory.server.annotations.CreateTransport;
+import org.apache.directory.server.core.annotations.ApplyLdifs;
+import org.apache.directory.server.core.annotations.ContextEntry;
+import org.apache.directory.server.core.annotations.CreateDS;
+import org.apache.directory.server.core.annotations.CreateIndex;
+import org.apache.directory.server.core.annotations.CreatePartition;
+import org.apache.directory.server.core.integ.AbstractLdapTestUnit;
+import org.apache.directory.server.core.integ.FrameworkRunner;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.ldap.test.AbstractDirContextTest;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.support.LdapContextSource;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,40 +45,99 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
+import static org.junit.Assert.fail;
+
 
 /**
  * Testcase for LdapPersonAttributeDao.
  * @author andrew.petro@yale.edu
  * @author Eric Dalquist
-
  */
-public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.test.AbstractDirContextTest#getPartitionName()
+@RunWith(FrameworkRunner.class)
+@CreateDS(name = "person-directory",
+    partitions =
+        {
+            @CreatePartition(
+                name = "example",
+                suffix = "dc=example,dc=com",
+                contextEntry = @ContextEntry(
+                    entryLdif =
+                        "dn: dc=example,dc=com\n" +
+                            "dc: example\n" +
+                            "objectClass: top\n" +
+                            "objectClass: domain\n\n"),
+                indexes =
+                    {
+                        @CreateIndex(attribute = "objectClass"),
+                        @CreateIndex(attribute = "dc"),
+                        @CreateIndex(attribute = "ou")
+                    })
+        }
+)
+@ApplyLdifs({
+    "dn: ou=people,dc=example,dc=com",
+    "objectClass: organizationalUnit",
+    "objectClass: top",
+    "ou: people",
+    "description: Contains entries which describe people",
+    "",
+    "dn: cn=Eric Dalquist,ou=people,dc=example,dc=com",
+    "objectclass: person",
+    "objectclass: organizationalPerson",
+    "objectclass: inetOrgPerson",
+    "objectclass: top",
+    "cn: Eric Dalquist",
+    "description: uPortal Developer",
+    "givenName: Eric",
+    "sn: Dalquist",
+    "uid: edalquist",
+    "mail: eric.dalquist@example.com",
+    "userpassword: {SHA}nU4eI71bcnBGqeO0t9tXvY1u5oQ=",
+    "",
+    "dn: cn=Jim Johnson,ou=people,dc=example,dc=com",
+    "objectclass: person",
+    "objectclass: organizationalPerson",
+    "objectclass: inetOrgPerson",
+    "objectclass: top",
+    "cn: Jim Johnson",
+    "description: uPortal Lackey",
+    "givenname: Jim",
+    "sn: Johnson",
+    "uid: jjohnson",
+    "mail: jim.johnson@example.com",
+    "userpassword: {SHA}nU4eI71bcnBGqeO0t9tXvY1u5aQ=",
+    "",
+})
+@CreateLdapServer(
+    transports =
+        {
+            @CreateTransport(protocol = "LDAP", port = 10200)
+        },
+    allowAnonymousAccess = true)
+public class LdapPersonAttributeDaoTest extends AbstractLdapTestUnit {
+
+    private static ContextSource contextSource;
+    /**
+     * Create a Spring-LDAP ContextSource for the in-memory LDAP server
      */
-    @Override
-    protected String getPartitionName() {
-        return "personDirectory";
+    @BeforeClass
+    public static void initontextSource() {
+        LdapContextSource ctxSrc = new LdapContextSource();
+        ctxSrc.setUrl("ldap://localhost:10200");
+        ctxSrc.setBase("DC=example,DC=com");
+        ctxSrc.setUserDn("uid=admin,ou=system");
+        ctxSrc.setPassword("secret");
+        ctxSrc.afterPropertiesSet(); /* ! */
+        contextSource = ctxSrc;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.test.AbstractDirContextTest#getBaseDn()
-     */
-    @Override
-    protected String getBaseDn() {
-        return "ou=people,o=personDirectory";
+    private ContextSource getContextSource() {
+        return contextSource;
     }
 
-
-    /* (non-Javadoc)
-     * @see org.springframework.ldap.test.AbstractDirContextTest#initializationData()
-     */
-    @Override
-    protected Resource[] initializationData() {
-        final ClassPathResource ldapPersonInfo = new ClassPathResource("/ldapPersonInfo.ldif");
-        return new Resource[]{ldapPersonInfo};
-    }
-
+    @Test
     public void testNotFoundQuery() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
 
@@ -95,6 +166,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     /**
      * Test for a query with a single attribute. 
      */
+    @Test
     public void testSingleAttrQuery() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
 
@@ -126,6 +198,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
      * This testcase will cease to work on that fateful day when edalquist
      * no longer appears in Yale University LDAP.
      */
+    @Test
     public void testMultipleMappings() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
 
@@ -155,6 +228,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         }
     }
 
+    @Test
     public void testInvalidAttrMap() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
 
@@ -180,6 +254,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         }
     }
 
+    @Test
     public void testDefaultAttrMap() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
 
@@ -209,6 +284,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
      * Test case for a query that needs multiple attributes to complete and
      * more attributes than are needed to complete are passed to it.
      */
+    @Test
     public void testMultiAttrQuery() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
 
@@ -243,6 +319,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
      * A query that needs mulitple attributes to complete but the needed
      * attributes aren't passed to it.
      */
+    @Test
     public void testInsufficientAttrQuery() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
 
@@ -269,6 +346,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     /**
      * Test proper reporting of declared attribute names.
      */
+    @Test
     public void testAttributeNames() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
 
@@ -293,6 +371,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
         assertEquals(expectedAttributeNames, impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
+    @Test
     public void testProperties() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
 
@@ -327,6 +406,7 @@ public class LdapPersonAttributeDaoTest extends AbstractDirContextTest {
     /**
      * Test proper reporting of declared attribute names.
      */
+    @Test
     public void testNullContext() throws Exception {
         final LdapPersonAttributeDao impl = new LdapPersonAttributeDao();
 
