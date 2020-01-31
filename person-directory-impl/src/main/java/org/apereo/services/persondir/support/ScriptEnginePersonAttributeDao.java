@@ -59,7 +59,7 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     private SCRIPT_TYPE scriptType;
     private String engineName;
     private boolean caseInsensitiveUsername = false;
-    private final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
+    private final IUsernameAttributeProvider usernameAttributeProvider;
 
     public String getScriptFile() {
         return scriptFile;
@@ -105,6 +105,7 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
      * This should probably be deprecated in favor of constructors that guarantee required properties are set
      */
     public ScriptEnginePersonAttributeDao() {
+        usernameAttributeProvider = new SimpleUsernameAttributeProvider();
     }
 
     /**
@@ -114,8 +115,7 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
      * If its the string version then engine name must be set using setter.
      */
     public ScriptEnginePersonAttributeDao(String scriptFile) {
-        setScriptFile(scriptFile);
-        this.engineName = getScriptEngineName(scriptFile);
+        this(scriptFile, getScriptEngineName(scriptFile));
     }
 
     /**
@@ -125,16 +125,32 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
      * If its the string version then engine name must be set using setter.
      * @param engineName Script engine name such as js, groovy, python
      */
-
     public ScriptEnginePersonAttributeDao(String scriptFile, String engineName) {
+        this(scriptFile, engineName, new SimpleUsernameAttributeProvider());
+    }
+
+    /**
+     * Create DAO with reference to file or the contents of a script.
+     *
+     * @param scriptFile This can be a path to a file, classpath resource, or the script contents as string.
+     * If its the string version then engine name must be set using setter.
+     * @param engineName Script engine name such as js, groovy, python
+     * @param usernameAttributeProvider Attribute provider
+     */
+    public ScriptEnginePersonAttributeDao(String scriptFile, String engineName, IUsernameAttributeProvider usernameAttributeProvider) {
         setScriptFile(scriptFile);
         setEngineName(engineName);
+        this.usernameAttributeProvider = usernameAttributeProvider;
     }
 
     @Override
     public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
         try {
             if (!this.isEnabled()) {
+                return null;
+            }
+            if (uid == null) {
+                logger.warn("Unable to get attributes from script {} because username is null", scriptFile);
                 return null;
             }
             final Map attributes = getScriptedAttributesFromFile(uid);
@@ -158,6 +174,9 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
                                                                      final IPersonAttributeDaoFilter filter) {
         final Set<IPersonAttributes> people = new LinkedHashSet<>();
         final String username = usernameAttributeProvider.getUsernameFromQuery(query);
+        if (username == null) {
+            logger.trace("Unable to find username in map {} using attribute {}", query, usernameAttributeProvider.getUsernameAttribute());
+        }
         final IPersonAttributes person = getPerson(username, filter);
         if (person != null) {
             people.add(person);
@@ -277,7 +296,7 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     public static String getScriptEngineName(String filename) {
         String extension = FilenameUtils.getExtension(filename);
         if (StringUtils.isBlank(extension)) {
-            logger.warn("Can't determine engine name based on filename without extension {}",filename);
+            logger.warn("Can't determine engine name based on filename without extension {}", filename);
             return null;
         }
         ScriptEngineManager manager = new ScriptEngineManager();
@@ -291,7 +310,7 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
                 }
             }
         }
-        logger.warn("Can't determine engine name based on filename and available script engines {}",filename);
+        logger.warn("Can't determine engine name based on filename and available script engines {}", filename);
         return null;
     }
 }
