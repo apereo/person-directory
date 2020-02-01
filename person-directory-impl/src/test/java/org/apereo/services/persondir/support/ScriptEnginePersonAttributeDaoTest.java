@@ -43,8 +43,8 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
         this.dao.setScriptFile("SampleScriptedJavascriptPersonAttributeDao.js");
         final IPersonAttributes person = this.dao.getPerson("testuser", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(person);
-        assertEquals(person.getName(), "testuser");
-        assertEquals(person.getAttributes().size(), 4);
+        assertEquals("testuser", person.getName());
+        assertEquals(4, person.getAttributes().size());
     }
 
     @Test
@@ -52,8 +52,8 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
         this.dao.setScriptFile("SampleScriptedGroovyPersonAttributeDao.groovy");
         final IPersonAttributes person = this.dao.getPerson("testuser", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(person);
-        assertEquals(person.getName(), "testuser");
-        assertEquals(person.getAttributes().size(), 4);
+        assertEquals("testuser", person.getName());
+        assertEquals(4, person.getAttributes().size());
     }
 
     @Test
@@ -62,8 +62,8 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
         this.dao.setEngineName("groovy");
         final IPersonAttributes person = this.dao.getPerson("testuser", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(person);
-        assertEquals(person.getName(), "testuser");
-        assertEquals(person.getAttributes().size(), 4);
+        assertEquals("testuser", person.getName());
+        assertEquals(4, person.getAttributes().size() );
     }
 
     @Test
@@ -73,31 +73,28 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
         query.put("username", Util.list("testuser"));
         final Set<IPersonAttributes> personSet = this.dao.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(personSet);
-        assertEquals(personSet.size(), 1);
-        assertEquals(((IPersonAttributes) personSet.iterator().next()).getName(), "testuser");
+        assertEquals(1, personSet.size());
+        assertEquals("testuser", ((IPersonAttributes) personSet.iterator().next()).getName());
     }
 
     @Test
     public void testGetScriptEngineName() {
         // test with an inline script, even though DAO avoids this internally
-        assertEquals(ScriptEnginePersonAttributeDao.getScriptEngineName("not a filename = a script"), null);
+        assertNull(ScriptEnginePersonAttributeDao.getScriptEngineName("not a filename = a script"));
         // test with classpath resource
-        assertEquals(ScriptEnginePersonAttributeDao.getScriptEngineName("SampleScriptedJavascriptPersonAttributeDao.js"), "nashorn");
-        assertEquals(ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js"), "nashorn");
-        assertEquals(ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedGroovyPersonAttributeDao.groovy"), "groovy");
+        assertEquals("nashorn", ScriptEnginePersonAttributeDao.getScriptEngineName("SampleScriptedJavascriptPersonAttributeDao.js"));
+        assertEquals("nashorn", ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js"));
+        assertEquals("groovy", ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedGroovyPersonAttributeDao.groovy"));
         // note jython not in classpath so null is expected return value, also test.py file doesn't exist
-        assertEquals(ScriptEnginePersonAttributeDao.getScriptEngineName("test.py"), null);
+        assertNull(ScriptEnginePersonAttributeDao.getScriptEngineName("test.py") );
     }
 
     @Test
     public void testDetermineScriptType() {
         // test with classpath resource
-        assertEquals(new ScriptEnginePersonAttributeDao("SampleScriptedJavascriptPersonAttributeDao.js").getScriptType(),
-                ScriptEnginePersonAttributeDao.SCRIPT_TYPE.RESOURCE);
-        assertEquals(new ScriptEnginePersonAttributeDao("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js").getScriptType(),
-                ScriptEnginePersonAttributeDao.SCRIPT_TYPE.FILE);
+        assertEquals(ScriptEnginePersonAttributeDao.SCRIPT_TYPE.RESOURCE, new ScriptEnginePersonAttributeDao("SampleScriptedJavascriptPersonAttributeDao.js").getScriptType());
+        assertEquals(ScriptEnginePersonAttributeDao.SCRIPT_TYPE.FILE, new ScriptEnginePersonAttributeDao("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js").getScriptType());
         // if file doesn't exist, assume script is contents of string
-        assertEquals(new ScriptEnginePersonAttributeDao("doesnotexist/src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js").getScriptType(),
-                ScriptEnginePersonAttributeDao.SCRIPT_TYPE.CONTENTS);
+        assertEquals(ScriptEnginePersonAttributeDao.SCRIPT_TYPE.CONTENTS, new ScriptEnginePersonAttributeDao("doesnotexist/src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js").getScriptType());
     }
 }
