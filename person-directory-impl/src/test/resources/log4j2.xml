@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="stdout">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c - %m%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.apache.directory" level="ERROR"/>
+        <Logger name="org.apache.directory.api.ldap.model.entry.DefaultAttribute" level="FATAL"/>
+        <Logger name="org.apache.directory.api.ldap.model.entry.Value" level="FATAL"/>
+        <Logger name="org.apereo" level="WARN"/>
+        <Logger name="org.apereo.services.persondir.support.CascadingPersonAttributeDao" level="FATAL"/>
+        <Logger name="org.apereo.services.persondir.support.MergingPersonAttributeDaoImpl" level="FATAL"/>
+        <Logger name="org.jasig" level="INFO"/>
+        <Root level="WARN">
+            <AppenderRef ref="stdout"/>
+        </Root>
+    </Loggers>
+</Configuration>

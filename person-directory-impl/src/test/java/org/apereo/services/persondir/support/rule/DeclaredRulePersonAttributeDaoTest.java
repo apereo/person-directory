@@ -18,13 +18,13 @@
  */
 package org.apereo.services.persondir.support.rule;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +68,7 @@ public class DeclaredRulePersonAttributeDaoTest extends AbstractPersonAttributeD
 
         // attributeName (empty List).
         try {
-            new DeclaredRulePersonAttributeDao(NAME, new ArrayList<AttributeRule>());
+            new DeclaredRulePersonAttributeDao(NAME, new ArrayList<>());
             fail("IllegalArgumentException should have been thrown with null 'attributeName'.");
         } catch (final IllegalArgumentException iae) {
             // expected...

@@ -24,6 +24,7 @@ import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 
 import java.util.LinkedHashMap;
@@ -56,7 +57,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed, filter);
 
         //Get the first IPersonAttributes to return data for
-        final IPersonAttributes person = DataAccessUtils.singleResult(people);
+        final IPersonAttributes person = getSinglePerson(people);
 
         //If null or no results return null
         if (person == null) {
@@ -93,7 +94,7 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         final Set<IPersonAttributes> people = this.getPeople(seed, filter);
 
         //Get the first IPersonAttributes to return data for
-        final IPersonAttributes person = DataAccessUtils.singleResult(people);
+        final IPersonAttributes person = getSinglePerson(people);
 
         //If null or no results return null
         if (person == null) {
@@ -191,6 +192,18 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
 
     public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
+    }
+
+    protected IPersonAttributes getSinglePerson(final Set<IPersonAttributes> people) {
+        IPersonAttributes person;
+        try {
+            person = DataAccessUtils.singleResult(people);
+        } catch (final IncorrectResultSizeDataAccessException e) {
+            logger.warn("Unexpected multiple people returned from person attribute DAO: {} : {} ", e.getClass().getName(), e.getMessage());
+            people.forEach(p -> logger.debug("Person: {}", p));
+            throw e;
+        }
+        return person;
     }
 
 }
