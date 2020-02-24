@@ -21,12 +21,14 @@ package org.apereo.services.persondir.support;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
+import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -51,22 +53,22 @@ public abstract class AbstractFlatteningPersonAttributeDaoTest extends AbstractP
         backingMap.put("address", Collections.emptyList());
 
         final Map<String, Object> expected = new HashMap<>();
-        expected.put("name", "edalquist");
-        expected.put("emails", "edalquist@foo.com");
-        expected.put("phone", null);
+        expected.put("name", Util.list("edalquist"));
+        expected.put("emails", Util.list("edalquist@foo.com", "ebd@none.org"));
+        expected.put("phone", Util.list((Object) null));
         expected.put("title", null);
-        expected.put("address", null);
+        expected.put("address", Collections.emptyList());
 
 
 //        final SimpleDefaultQueryPersonAttributeDao flatteningPersonAttributeDao = new SimpleDefaultQueryPersonAttributeDao(backingMap);
         final StubPersonAttributeDao flatteningPersonAttributeDao = new StubPersonAttributeDao(backingMap);
 
-        final Map<String, Object> userAttributesUid = flatteningPersonAttributeDao.getUserAttributes("seed", IPersonAttributeDaoFilter.alwaysChoose());
-        assertEquals(expected, userAttributesUid);
+        final IPersonAttributes userAttributesUid = flatteningPersonAttributeDao.getPerson("seed", IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(expected, userAttributesUid.getAttributes());
 
-        final Map<String, Object> userAttributesMap = flatteningPersonAttributeDao.getUserAttributes(Collections.singletonMap("key", new Object()),
+        final Set<IPersonAttributes> userAttributesSet = flatteningPersonAttributeDao.getPeople(Collections.singletonMap("key", new Object()),
             IPersonAttributeDaoFilter.alwaysChoose());
-        assertEquals(expected, userAttributesMap);
+        assertEquals(expected, userAttributesSet.iterator().next().getAttributes());
     }
 
 //

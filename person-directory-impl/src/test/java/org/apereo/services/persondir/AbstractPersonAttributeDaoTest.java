@@ -75,12 +75,12 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
         final Map<String, List<Object>> nullMap = null;
         try {
-            dao.getMultivaluedUserAttributes(nullMap, IPersonAttributeDaoFilter.alwaysChoose());
+            dao.getPeopleWithMultivaluedAttributes(nullMap, IPersonAttributeDaoFilter.alwaysChoose());
         } catch (final RuntimeException iae) {
             // good, as expected
             return;
         }
-        fail("Expected IllegalArgumentException on getMultivaluedUserAttributes((Map)null)");
+        fail("Expected IllegalArgumentException or NullPointerException on getMultivaluedUserAttributes((Map)null)");
 
     }
 
@@ -93,7 +93,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
         final Map<String, Object> nullMap = null;
         try {
-            dao.getUserAttributes(nullMap, IPersonAttributeDaoFilter.alwaysChoose());
+            dao.getPeople(nullMap, IPersonAttributeDaoFilter.alwaysChoose());
         } catch (final NullPointerException iae) {
             // good, as expected
             return;
@@ -111,7 +111,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
         final String nullString = null;
         try {
-            dao.getMultivaluedUserAttributes(nullString, IPersonAttributeDaoFilter.alwaysChoose());
+            dao.getPerson(nullString, IPersonAttributeDaoFilter.alwaysChoose());
         } catch (final RuntimeException iae) {
             // good, as expected
             return;
@@ -128,7 +128,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
         final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
         final String nullString = null;
         try {
-            dao.getUserAttributes(nullString, IPersonAttributeDaoFilter.alwaysChoose());
+            dao.getPerson(nullString, IPersonAttributeDaoFilter.alwaysChoose());
         } catch (final RuntimeException iae) {
             // good, as expected
             return;

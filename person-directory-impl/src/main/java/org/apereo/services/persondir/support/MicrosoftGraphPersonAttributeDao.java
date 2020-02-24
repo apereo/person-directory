@@ -76,7 +76,7 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
         for (final Map.Entry<String, ?> stringObjectEntry : personAttributesMap.entrySet()) {
             final Object value = stringObjectEntry.getValue();
             if (value instanceof List) {
-                personAttributes.put(stringObjectEntry.getKey(), (List) value);
+                personAttributes.put(stringObjectEntry.getKey(), (List<Object>) value);
             } else {
                 personAttributes.put(stringObjectEntry.getKey(), new ArrayList<>(Arrays.asList(value)));
             }

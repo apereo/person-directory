@@ -41,20 +41,19 @@ import java.util.Set;
 
 /**
  * Generates a cache key using a hash of the {@link Method} being called and for
- * {@link IPersonAttributeDao#getMultivaluedUserAttributes(String, org.apereo.services.persondir.IPersonAttributeDaoFilter)} and
- * {@link IPersonAttributeDao#getUserAttributes(String, org.apereo.services.persondir.IPersonAttributeDaoFilter)} the {@link String} uid or for
- * {@link IPersonAttributeDao#getMultivaluedUserAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)} and
- * {@link IPersonAttributeDao#getUserAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)} attributes from the seed {@link Map}
+ * {@link IPersonAttributeDao#getPerson(String, org.apereo.services.persondir.IPersonAttributeDaoFilter)} and
+ * {@link IPersonAttributeDao#getPeople(Map, IPersonAttributeDaoFilter)} (Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)} and
+ * {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)} attributes from the seed {@link Map}
  * as specified by the <code>cacheKeyAttributes</code> {@link Set}
  *
  * @author Eric Dalquist
 
  */
 public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
-    private static final Map<String, Object> POSSIBLE_USER_ATTRIBUTE_NAMES_SEED_MAP = Collections.singletonMap("getPossibleUserAttributeNames_seedMap", (Object) new Serializable() {
+    private static final Map<String, Object> POSSIBLE_USER_ATTRIBUTE_NAMES_SEED_MAP = Collections.singletonMap("getPossibleUserAttributeNames_seedMap", new Serializable() {
         private static final long serialVersionUID = 1L;
     });
-    private static final Map<String, Object> AVAILABLE_QUERY_ATTRIBUTES_SEED_MAP = Collections.singletonMap("getAvailableQueryAttributes_seedMap", (Object) new Serializable() {
+    private static final Map<String, Object> AVAILABLE_QUERY_ATTRIBUTES_SEED_MAP = Collections.singletonMap("getAvailableQueryAttributes_seedMap", new Serializable() {
         private static final long serialVersionUID = 1L;
     });
 
@@ -64,15 +63,6 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * Methods on {@link IPersonAttributeDao} that are cachable
      */
     public enum CachableMethod {
-        @Deprecated
-        MULTIVALUED_USER_ATTRIBUTES__MAP("getMultivaluedUserAttributes", Map.class, IPersonAttributeDaoFilter.class),
-        @Deprecated
-        MULTIVALUED_USER_ATTRIBUTES__STR("getMultivaluedUserAttributes", String.class, IPersonAttributeDaoFilter.class),
-        @Deprecated
-        USER_ATTRIBUTES__MAP("getUserAttributes", Map.class, IPersonAttributeDaoFilter.class),
-        @Deprecated
-        USER_ATTRIBUTES__STR("getUserAttributes", String.class, IPersonAttributeDaoFilter.class),
-
         PERSON_STR("getPerson", String.class, IPersonAttributeDaoFilter.class),
         PEOPLE_MAP("getPeople", Map.class, IPersonAttributeDaoFilter.class),
         PEOPLE_MULTIVALUED_MAP("getPeopleWithMultivaluedAttributes", Map.class, IPersonAttributeDaoFilter.class),
@@ -82,7 +72,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         private final String name;
         private final Class<?>[] args;
 
-        private CachableMethod(final String name, final Class<?>... args) {
+        CachableMethod(final String name, final Class<?>... args) {
             this.name = name;
             this.args = args;
         }
@@ -214,7 +204,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Generated cache key '" + hashCodeCacheKey + "' for MethodInvocation='" + methodInvocation + "'");
         }
-        return hashCodeCacheKey;
+        return cachableMethod.getName() + "|" + hashCodeCacheKey;
     }
 
     /**
@@ -232,25 +222,15 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         switch (cachableMethod) {
             //Both methods that take a Map argument can just have the first argument returned
             case PEOPLE_MAP:
-            case PEOPLE_MULTIVALUED_MAP:
-            case MULTIVALUED_USER_ATTRIBUTES__MAP:
-            case USER_ATTRIBUTES__MAP: {
+            case PEOPLE_MULTIVALUED_MAP: {
                 seed = (Map<String, Object>) methodArguments[0];
             }
             break;
 
-            //The multivalued attributes with a string needs to be converted to Map<String, List<Object>>
-            case MULTIVALUED_USER_ATTRIBUTES__STR: {
+            //The single valued attributes with a string needs to be converted to Map<String, List<Object>>
+            case PERSON_STR: {
                 final String uid = (String) methodArguments[0];
-                seed = Collections.singletonMap(this.defaultAttributeName, (Object) Collections.singletonList(uid));
-            }
-            break;
-
-            //The single valued attributes with a string needs to be converted to Map<String, Object>
-            case PERSON_STR:
-            case USER_ATTRIBUTES__STR: {
-                final String uid = (String) methodArguments[0];
-                seed = Collections.singletonMap(this.defaultAttributeName, (Object) uid);
+                seed = Collections.singletonMap(this.defaultAttributeName, uid);
             }
             break;
 

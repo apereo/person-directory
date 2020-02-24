@@ -34,19 +34,19 @@ public interface IAdditionalDescriptors extends IPersonAttributes {
     /**
      * @param name The user name for the attributes
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * @param attributes Attributes to add to the existing attribute Map
      */
-    public void addAttributes(Map<String, List<Object>> attributes);
+    void addAttributes(Map<String, List<Object>> attributes);
 
     /**
      * This should be atomic to the view of other methods on this interface.
      *
      * @param attributes Replace all existing attributes witht he specified Map
      */
-    public void setAttributes(Map<String, List<Object>> attributes);
+    void setAttributes(Map<String, List<Object>> attributes);
 
     /**
      * Sets the specified attribute values
@@ -55,11 +55,11 @@ public interface IAdditionalDescriptors extends IPersonAttributes {
      * @param values Values for the attribute, may be null
      * @return The previous values for the attribute if they existed
      */
-    public List<Object> setAttributeValues(String name, List<Object> values);
+    List<Object> setAttributeValues(String name, List<Object> values);
 
     /**
      * @param name Removes the specified attribute, must not be null
      * @return The removed values for the attribute if they existed
      */
-    public List<Object> removeAttribute(String name);
+    List<Object> removeAttribute(String name);
 }

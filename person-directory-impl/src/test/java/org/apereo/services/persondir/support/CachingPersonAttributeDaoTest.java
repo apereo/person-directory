@@ -99,44 +99,44 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
-        dao.setUserInfoCache(new HashMap<Serializable, Set<IPersonAttributes>>());
+        dao.setUserInfoCache(new HashMap<>());
         dao.afterPropertiesSet();
 
         assertEquals("Query count incorrect", 0, dao.getQueries());
         assertEquals("Miss count incorrect", 0, dao.getMisses());
 
-        Map<String, List<Object>> result = dao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(result);
+        IPersonAttributes result = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser1(result.getAttributes());
         assertEquals("Query count incorrect", 1, dao.getQueries());
         assertEquals("Miss count incorrect", 1, dao.getMisses());
 
-        result = dao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(result);
+        result = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser1(result.getAttributes());
         assertEquals("Query count incorrect", 2, dao.getQueries());
         assertEquals("Miss count incorrect", 1, dao.getMisses());
 
-        result = dao.getMultivaluedUserAttributes("nobody", IPersonAttributeDaoFilter.alwaysChoose());
+        result = dao.getPerson("nobody", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(result);
         assertEquals("Query count incorrect", 3, dao.getQueries());
         assertEquals("Miss count incorrect", 2, dao.getMisses());
 
-        result = dao.getMultivaluedUserAttributes("awp9", IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser2(result);
+        result = dao.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser2(result.getAttributes());
         assertEquals("Query count incorrect", 4, dao.getQueries());
         assertEquals("Miss count incorrect", 3, dao.getMisses());
 
-        result = dao.getMultivaluedUserAttributes("nobody", IPersonAttributeDaoFilter.alwaysChoose());
+        result = dao.getPerson("nobody", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(result);
         assertEquals("Query count incorrect", 5, dao.getQueries());
         assertEquals("Miss count incorrect", 4, dao.getMisses());
 
-        result = dao.getMultivaluedUserAttributes("awp9", IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser2(result);
+        result = dao.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser2(result.getAttributes());
         assertEquals("Query count incorrect", 6, dao.getQueries());
         assertEquals("Miss count incorrect", 4, dao.getMisses());
 
-        result = dao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(result);
+        result = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser1(result.getAttributes());
         assertEquals("Query count incorrect", 7, dao.getQueries());
         assertEquals("Miss count incorrect", 4, dao.getMisses());
     }
@@ -152,30 +152,30 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        Map<String, List<Object>> result = dao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(result);
+        IPersonAttributes result = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser1(result.getAttributes());
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
 
-        result = dao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(result);
+        result = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser1(result.getAttributes());
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
 
-        result = dao.getMultivaluedUserAttributes("nobody", IPersonAttributeDaoFilter.alwaysChoose());
+        result = dao.getPerson("nobody", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(result);
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
 
-        result = dao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(result);
+        result = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser1(result.getAttributes());
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
 
         //Enable null result caching
         dao.setCacheNullResults(true);
-        result = dao.getMultivaluedUserAttributes("nobody", IPersonAttributeDaoFilter.alwaysChoose());
+        result = dao.getPerson("nobody", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(result);
         assertEquals("Incorrect number of items in cache", 2, cacheMap.size());
 
-        result = dao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(result);
+        result = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser1(result.getAttributes());
         assertEquals("Incorrect number of items in cache", 2, cacheMap.size());
 
 
@@ -184,10 +184,10 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         queryMap.put("name.first", Util.list("Eric"));
         queryMap.put("name.last", Util.list("Dalquist"));
 
-        result = dao.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(result);
+        Set<IPersonAttributes> resultSet = dao.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(1, resultSet.size());
+        this.validateUser1(resultSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 2, cacheMap.size());
-
 
         dao.removeUserAttributesMultivaluedSeed(queryMap);
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
@@ -206,21 +206,23 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
         final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
-        dao.setCacheKeyAttributes(keyAttrs);
+        final AttributeBasedCacheKeyGenerator cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
+        cacheKeyGenerator.setCacheKeyAttributes(keyAttrs);
+        dao.setCacheKeyGenerator(cacheKeyGenerator);
         dao.setUserInfoCache(cacheMap);
         dao.afterPropertiesSet();
 
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        Map<String, List<Object>> result = dao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        IPersonAttributes result = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(result);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        result = dao.getMultivaluedUserAttributes("nobody", IPersonAttributeDaoFilter.alwaysChoose());
+        result = dao.getPerson("nobody", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(result);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        result = dao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        result = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(result);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
@@ -229,22 +231,24 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         queryMap1.put("name.first", Util.list("Eric"));
         queryMap1.put("name.last", Util.list("Dalquist"));
 
-        result = dao.getMultivaluedUserAttributes(queryMap1, IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(result);
+        Set<IPersonAttributes> resultSet = dao.getPeopleWithMultivaluedAttributes(queryMap1, IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(1, resultSet.size());
+        this.validateUser1(resultSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
 
 
-        final Map<String, List<Object>> queryMap2 = new HashMap<>();
+        final Map<String, Object> queryMap2 = new HashMap<>();
         queryMap2.put("name.first", Util.list("John"));
         queryMap2.put("name.last", Util.list("Doe"));
 
-        result = dao.getMultivaluedUserAttributes(queryMap2, IPersonAttributeDaoFilter.alwaysChoose());
-        assertNull(result);
+        resultSet = dao.getPeople(queryMap2, IPersonAttributeDaoFilter.alwaysChoose());
+        assertNull(resultSet);
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
 
 
-        result = dao.getMultivaluedUserAttributes(queryMap1, IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(result);
+        resultSet = dao.getPeopleWithMultivaluedAttributes(queryMap1, IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(1, resultSet.size());
+        this.validateUser1(resultSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 1, cacheMap.size());
     }
 
@@ -259,17 +263,6 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         }
         dao.setCachedPersonAttributesDao(this.stubDao);
         assertEquals(this.stubDao, dao.getCachedPersonAttributesDao());
-
-
-        dao.setCacheKeyAttributes(null);
-        assertNull(dao.getCacheKeyAttributes());
-        final Set<String> keyAttrs = new HashSet<>();
-        keyAttrs.add("name.first");
-        keyAttrs.add("name.last");
-        final Set<String> expectedAttrs = new HashSet<>(keyAttrs);
-        dao.setCacheKeyAttributes(keyAttrs);
-        assertEquals(expectedAttrs, dao.getCacheKeyAttributes());
-
 
         try {
             dao.setUserInfoCache(null);
@@ -287,7 +280,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     public void testUninitializedDao() {
         CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         try {
-            dao.getMultivaluedUserAttributes(Collections.EMPTY_MAP, IPersonAttributeDaoFilter.alwaysChoose());
+            dao.getPeople(Collections.EMPTY_MAP, IPersonAttributeDaoFilter.alwaysChoose());
             fail("Calling getUserAttributes(Map) with no initialization should result in an IllegalStateException");
         } catch (final IllegalStateException ise) {
             //expected
@@ -296,16 +289,16 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         try {
-            dao.getMultivaluedUserAttributes(Collections.EMPTY_MAP, IPersonAttributeDaoFilter.alwaysChoose());
+            dao.getPeople(Collections.EMPTY_MAP, IPersonAttributeDaoFilter.alwaysChoose());
             fail("Calling getUserAttributes(Map) with only setCachedPersonAttributesDao initialized should result in an IllegalStateException");
         } catch (final IllegalStateException ise) {
             //expected
         }
 
         dao = new CachingPersonAttributeDaoImpl();
-        dao.setUserInfoCache(new HashMap<Serializable, Set<IPersonAttributes>>());
+        dao.setUserInfoCache(new HashMap<>());
         try {
-            dao.getMultivaluedUserAttributes(Collections.EMPTY_MAP, IPersonAttributeDaoFilter.alwaysChoose());
+            dao.getPeople(Collections.EMPTY_MAP, IPersonAttributeDaoFilter.alwaysChoose());
             fail("Calling getUserAttributes(Map) with no initialization should result in an IllegalStateException");
         } catch (final IllegalStateException ise) {
             //expected
@@ -323,23 +316,25 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        Map<String, List<Object>> results = dao.getMultivaluedUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")), IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(results);
+        Set<IPersonAttributes> resultsSet = dao.getPeopleWithMultivaluedAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")), IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser1(resultsSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        results = dao.getMultivaluedUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist"))
+        resultsSet = dao.getPeopleWithMultivaluedAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist"))
             , IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(results);
+        assertEquals(1, resultsSet.size());
+        this.validateUser1(resultsSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        results = dao.getMultivaluedUserAttributes(Collections.singletonMap(defaultAttr, Util.list("nobody"))
+        resultsSet = dao.getPeopleWithMultivaluedAttributes(Collections.singletonMap(defaultAttr, Util.list("nobody"))
             , IPersonAttributeDaoFilter.alwaysChoose());
-        assertNull(results);
+        assertNull(resultsSet);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        results = dao.getMultivaluedUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist"))
+        resultsSet = dao.getPeopleWithMultivaluedAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist"))
             , IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(results);
+        assertEquals(1, resultsSet.size());
+        this.validateUser1(resultsSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
 
@@ -348,8 +343,9 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         queryMap.put("name.first", Util.list("Eric"));
         queryMap.put("name.last", Util.list("Dalquist"));
 
-        results = dao.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(results);
+        resultsSet = dao.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(1, resultsSet.size());
+        this.validateUser1(resultsSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
     }
 
@@ -359,37 +355,41 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("UNUSED_ATTR_NAME"));
-        dao.setCacheKeyAttributes(Collections.singleton("UNUSED_ATTR_NAME"));
+        final AttributeBasedCacheKeyGenerator cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
+        cacheKeyGenerator.setCacheKeyAttributes(Collections.singleton("UNUSED_ATTR_NAME"));
+        dao.setCacheKeyGenerator(cacheKeyGenerator);
         dao.setUserInfoCache(cacheMap);
         dao.afterPropertiesSet();
 
 
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        Map<String, List<Object>> results = dao.getMultivaluedUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")), IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(results);
+        Set<IPersonAttributes> resultsSet = dao.getPeopleWithMultivaluedAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")), IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(1, resultsSet.size());
+        this.validateUser1(resultsSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        results = dao.getMultivaluedUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")), IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(results);
+        resultsSet = dao.getPeopleWithMultivaluedAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")), IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(1, resultsSet.size());
+        this.validateUser1(resultsSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        results = dao.getMultivaluedUserAttributes(Collections.singletonMap(defaultAttr, Util.list("nobody")), IPersonAttributeDaoFilter.alwaysChoose());
-        assertNull(results);
+        resultsSet = dao.getPeopleWithMultivaluedAttributes(Collections.singletonMap(defaultAttr, Util.list("nobody")), IPersonAttributeDaoFilter.alwaysChoose());
+        assertNull(resultsSet);
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
-        results = dao.getMultivaluedUserAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")), IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(results);
+        resultsSet = dao.getPeopleWithMultivaluedAttributes(Collections.singletonMap(defaultAttr, Util.list("edalquist")), IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(1, resultsSet.size());
+        this.validateUser1(resultsSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
-
 
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(defaultAttr, Util.list("edalquist"));
         queryMap.put("name.first", Util.list("Eric"));
         queryMap.put("name.last", Util.list("Dalquist"));
 
-        results = dao.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
-        this.validateUser1(results);
+        resultsSet = dao.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        this.validateUser1(resultsSet.iterator().next().getAttributes());
         assertEquals("Incorrect number of items in cache", 0, cacheMap.size());
 
     }
@@ -400,7 +400,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         final CachingPersonAttributeDaoImpl dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
-        dao.setUserInfoCache(new HashMap<Serializable, Set<IPersonAttributes>>());
+        dao.setUserInfoCache(new HashMap<>());
 
         return dao;
     }

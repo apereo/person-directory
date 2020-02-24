@@ -21,13 +21,13 @@ package org.apereo.services.persondir.support;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
+import org.apereo.services.persondir.IPersonAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("deprecation")
 public class RegexGatewayPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
 
     // Instance Members.
@@ -42,7 +42,7 @@ public class RegexGatewayPersonAttributeDaoTest extends AbstractPersonAttributeD
     public RegexGatewayPersonAttributeDaoTest() {
         this.attributes = new HashMap<>();
 
-        final List list = new ArrayList<>();
+        final List<Object> list = new ArrayList<>();
         list.add("(480) 555-1212");
         attributes.put("phone", list);
         this.enclosed = new StubPersonAttributeDao(attributes);
@@ -78,21 +78,20 @@ public class RegexGatewayPersonAttributeDaoTest extends AbstractPersonAttributeD
     }
 
     public void testMatches() {
-        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey@yahoo.com", IPersonAttributeDaoFilter.alwaysChoose());
-        assertEquals(results, attributes);
+        final IPersonAttributes results = target.getPerson("monkey@yahoo.com", IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(attributes, results.getAttributes());
     }
 
     public void testDoesNotMatch() {
-        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("monkey",
+        final IPersonAttributes results = target.getPerson("monkey",
             IPersonAttributeDaoFilter.alwaysChoose());
-        assertFalse(attributes.equals(results));
+        assertNull(results);
     }
 
     public void testGetPossibleNames() {
         assertEquals(enclosed.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()),
             target.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
     }
-
 
     @Override
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {

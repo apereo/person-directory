@@ -28,8 +28,8 @@ import org.apache.directory.server.core.annotations.CreatePartition;
 import org.apache.directory.server.core.integ.AbstractLdapTestUnit;
 import org.apache.directory.server.core.integ.FrameworkRunner;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
+import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -123,7 +123,7 @@ public class LdapPersonAttributeDaoTest extends AbstractLdapTestUnit {
      * Create a Spring-LDAP ContextSource for the in-memory LDAP server
      */
     @BeforeClass
-    public static void initontextSource() {
+    public static void initContextSource() {
         LdapContextSource ctxSrc = new LdapContextSource();
         ctxSrc.setUrl("ldap://localhost:10200");
         ctxSrc.setBase("DC=example,DC=com");
@@ -156,8 +156,8 @@ public class LdapPersonAttributeDaoTest extends AbstractLdapTestUnit {
         queryMap.put("uid", Util.list("unknown"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
-            assertNull(attribs);
+            final Set<IPersonAttributes> attribs = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+            assertEquals(0, attribs.size());
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
         }
@@ -185,8 +185,9 @@ public class LdapPersonAttributeDaoTest extends AbstractLdapTestUnit {
         queryMap.put("uid", Util.list("edalquist"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
-            assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("email"));
+            final Set<IPersonAttributes> attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+            IPersonAttributes attribs = attribsSet.iterator().next();
+            assertEquals(Util.list("eric.dalquist@example.com"), attribs.getAttributes().get("email"));
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
         }
@@ -220,9 +221,10 @@ public class LdapPersonAttributeDaoTest extends AbstractLdapTestUnit {
         queryMap.put("uid", Util.list("edalquist"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
-            assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("email"));
-            assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("work.email"));
+            final Set<IPersonAttributes> attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+            IPersonAttributes attribs = attribsSet.iterator().next();
+            assertEquals(Util.list("eric.dalquist@example.com"), attribs.getAttributes().get("email"));
+            assertEquals(Util.list("eric.dalquist@example.com"), attribs.getAttributes().get("work.email"));
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
         }
@@ -247,8 +249,8 @@ public class LdapPersonAttributeDaoTest extends AbstractLdapTestUnit {
         queryMap.put("uid", Util.list("edalquist"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
-            assertNull(attribs.get("email"));
+            final Set<IPersonAttributes> attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+            assertNull(attribsSet.iterator().next().getAttributes().get("email"));
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
         }
@@ -273,8 +275,8 @@ public class LdapPersonAttributeDaoTest extends AbstractLdapTestUnit {
         queryMap.put("uid", Util.list("edalquist"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
-            assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("mail"));
+            final Set<IPersonAttributes> attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+            assertEquals(Util.list("eric.dalquist@example.com"), attribsSet.iterator().next().getAttributes().get("mail"));
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
         }
@@ -308,8 +310,8 @@ public class LdapPersonAttributeDaoTest extends AbstractLdapTestUnit {
         queryMap.put("email", Util.list("edalquist@unicon.net"));
 
         try {
-            final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
-            assertEquals(Util.list("eric.dalquist@example.com"), attribs.get("email"));
+            final Set<IPersonAttributes> attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+            assertEquals(Util.list("eric.dalquist@example.com"), attribsSet.iterator().next().getAttributes().get("email"));
         } catch (final DataAccessResourceFailureException darfe) {
             //OK, No net connection
         }
@@ -339,8 +341,8 @@ public class LdapPersonAttributeDaoTest extends AbstractLdapTestUnit {
         queryMap.put("uid", Util.list("edalquist"));
         queryMap.put("email", Util.list("edalquist@example.net"));
 
-        final Map<String, List<Object>> attribs = impl.getMultivaluedUserAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
-        assertNull(attribs);
+        final Set<IPersonAttributes> attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        assertNull(attribsSet);
     }
 
     /**

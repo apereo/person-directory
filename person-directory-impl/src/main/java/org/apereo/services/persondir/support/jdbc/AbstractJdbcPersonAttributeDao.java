@@ -68,7 +68,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
             DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS;
 
     static {
-        DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS = new HashMap();
+        DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS = new HashMap<>();
 
         DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS.put(CaseCanonicalizationMode.LOWER, new MessageFormat("lower({0})"));
         DEFAULT_DATA_ATTRIBUTE_CASE_CANONICALIZATION_FUNCTIONS.put(CaseCanonicalizationMode.UPPER, new MessageFormat("upper({0})"));

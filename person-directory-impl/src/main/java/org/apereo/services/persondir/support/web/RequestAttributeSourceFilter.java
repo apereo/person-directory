@@ -65,7 +65,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     public enum ProcessingPosition {
         PRE,
         POST,
-        BOTH;
+        BOTH
     }
 
     private String usernameAttribute;

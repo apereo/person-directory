@@ -20,5 +20,5 @@ package org.apereo.services.persondir.support;
 
 public enum QueryType {
     AND,
-    OR;
+    OR
 }

@@ -18,14 +18,15 @@
  */
 package org.apereo.services.persondir.support.jdbc;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.apereo.services.persondir.support.CaseInsensitiveNamedPersonImpl;
 import org.apereo.services.persondir.support.IUsernameAttributeProvider;
 import org.apereo.services.persondir.util.CollectionsUtil;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -85,18 +86,15 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
     private Set<String> availableQueryAttributes = null;  // default
     private Set<String> userAttributeNames = null;  // default
 
-    @Required
     public void setDataSource(final DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    @Required
     public void setSql(final String sql) {
         this.sql = sql;
     }
 
     @Override
-    @Required
     public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
         this.usernameAttributeProvider = usernameAttributeProvider;
     }
@@ -105,13 +103,16 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
         this.availableQueryAttributes = CollectionsUtil.safelyWrapAsUnmodifiableSet(availableQueryAttributes);
     }
 
-    @Required
     public void setUserAttributeNames(final Set<String> userAttributeNames) {
         this.userAttributeNames = CollectionsUtil.safelyWrapAsUnmodifiableSet(userAttributeNames);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        if (dataSource == null) throw new BeanInitializationException("dataSource property is required");
+        if (StringUtils.isEmpty(sql)) throw new BeanInitializationException("sql property is required");
+        if (userAttributeNames == null) throw new BeanInitializationException("userAttributeNames property is required");
+        if (usernameAttributeProvider == null) throw new BeanInitializationException("usernameAttributeProvider is required");
         jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 

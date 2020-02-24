@@ -68,8 +68,4 @@ public class ThrowingPersonAttributeDao extends BasePersonAttributeDao {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
-    @Override
-    protected Map<String, Object> flattenResults(final Map<String, List<Object>> multivaluedUserAttributes) {
-        throw new RuntimeException("ThrowingPersonAttributeDao always throws");
-    }
 }

@@ -69,7 +69,7 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
     protected List<IPersonAttributes> getPeopleForQuery(QueryBuilder queryBuilder, String queryUserName) {
 
         final String currentUserName = currentUserProvider.getCurrentUserName();
-        ;
+
         if (currentUserName == null) {
             this.logger.warn("A null name was returned by the currentUserProvider, returning null.");
             return Collections.emptyList();
@@ -104,7 +104,7 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
                     // Marshall what we found into an (unmapped) IPersonAttributes object
                     final Map<String, List<Object>> attributes = new HashMap<>();
                     for (Attribute a : credential.getAttributes()) {
-                        List<Object> list = new ArrayList<Object>();
+                        List<Object> list = new ArrayList<>();
                         for (XMLObject xmlo : a.getAttributeValues()) {
                             String str = extractStringValue(xmlo);
                             if (str != null) {

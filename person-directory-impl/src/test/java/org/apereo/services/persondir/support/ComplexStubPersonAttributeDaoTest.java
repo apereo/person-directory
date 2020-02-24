@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
+import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.HashMap;
@@ -97,21 +98,24 @@ public class ComplexStubPersonAttributeDaoTest
     public void testGetUserAttributesMap() {
         final Map<String, List<Object>> awp9Key = new HashMap<>();
         awp9Key.put("username", Util.list("awp9"));
-        assertEquals(this.backingMap.get("awp9"), this.testInstance.getMultivaluedUserAttributes(awp9Key, IPersonAttributeDaoFilter.alwaysChoose()));
+        Set<IPersonAttributes> resultSet = this.testInstance.getPeopleWithMultivaluedAttributes(awp9Key, IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(this.backingMap.get("awp9"), resultSet.iterator().next().getAttributes());
 
         final Map<String, List<Object>> unknownUserKey = new HashMap<>();
         unknownUserKey.put("uid", Util.list("unknownUser"));
 
-        assertNull(this.testInstance.getMultivaluedUserAttributes(unknownUserKey, IPersonAttributeDaoFilter.alwaysChoose()));
+        assertNull(this.testInstance.getPeopleWithMultivaluedAttributes(unknownUserKey, IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
     /**
      * Test getting user attributes using a String key.
      */
     public void testGetUserAttributesString() {
-        assertEquals(this.backingMap.get("aam26"), this.testInstance.getMultivaluedUserAttributes("aam26", IPersonAttributeDaoFilter.alwaysChoose()));
+        IPersonAttributes result = this.testInstance.getPerson("aam26", IPersonAttributeDaoFilter.alwaysChoose());
+        assertNotNull(result);
+        assertEquals(this.backingMap.get("aam26"), result.getAttributes());
 
-        assertNull(this.testInstance.getMultivaluedUserAttributes("unknownUser", IPersonAttributeDaoFilter.alwaysChoose()));
+        assertNull(this.testInstance.getPerson("unknownUser", IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
     @Override

@@ -45,6 +45,6 @@ public class CaseInsensitiveAttributeNamedPersonImpl extends AttributeNamedPerso
 
     @Override
     protected Map<String, List<Object>> createImmutableAttributeMap(int size) {
-        return new TreeMap(String.CASE_INSENSITIVE_ORDER);
+        return new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     }
 }

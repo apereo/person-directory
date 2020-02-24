@@ -21,6 +21,7 @@ package org.apereo.services.persondir.support;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
+import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.Collections;
@@ -72,14 +73,21 @@ public class StubPersonAttributeDaoTest
         assertEquals(Collections.EMPTY_SET, nullBacking.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
+    /**
+     * Return stub attributes regardless of input (e.g. empty map)
+     */
     public void testGetUserAttributesMap() {
-        assertEquals(this.backingMap, this.testInstance.getMultivaluedUserAttributes(new HashMap<String, List<Object>>(),
-            IPersonAttributeDaoFilter.alwaysChoose()));
+        final Set<IPersonAttributes> resultsSet = this.testInstance.getPeopleWithMultivaluedAttributes(new HashMap<>(),
+            IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(this.backingMap, resultsSet.iterator().next().getAttributes());
 
     }
 
+    /**
+     * Return stub attributes regardless of uid, e.g. random name wombat.
+     */
     public void testGetUserAttributesString() {
-        assertEquals(this.backingMap, this.testInstance.getMultivaluedUserAttributes("wombat", IPersonAttributeDaoFilter.alwaysChoose()));
+        assertEquals(this.backingMap, this.testInstance.getPerson("wombat", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes());
     }
 
     @Override

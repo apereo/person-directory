@@ -21,16 +21,14 @@ package org.apereo.services.persondir.support.rule;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
+import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-@SuppressWarnings("deprecation")
 public class DeclaredRulePersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
 
     private static final String NAME = "eduPersonPrimaryAffiliation";
@@ -85,13 +83,13 @@ public class DeclaredRulePersonAttributeDaoTest extends AbstractPersonAttributeD
     }
 
     public void testMatches() {
-        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("records-staff", IPersonAttributeDaoFilter.alwaysChoose());
-        assertNotNull(results);
-        assertEquals(Util.list(VALUE), results.get("fax"));
+        final IPersonAttributes results = target.getPerson("records-staff", IPersonAttributeDaoFilter.alwaysChoose());
+        assertNotNull(results.getAttributes());
+        assertEquals(Util.list(VALUE), results.getAttributes().get("fax"));
     }
 
     public void testDoesNotMatch() {
-        final Map<String, List<Object>> results = target.getMultivaluedUserAttributes("faculty", IPersonAttributeDaoFilter.alwaysChoose());
+        final IPersonAttributes results = target.getPerson("faculty", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(results);
     }
 
