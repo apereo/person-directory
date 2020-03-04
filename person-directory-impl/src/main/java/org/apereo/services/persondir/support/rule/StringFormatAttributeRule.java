@@ -18,10 +18,12 @@
  */
 package org.apereo.services.persondir.support.rule;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.IUsernameAttributeProvider;
 import org.apereo.services.persondir.support.NamedPersonImpl;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,14 +39,13 @@ import java.util.Set;
  *
  * @author awills
  */
-public final class StringFormatAttributeRule implements AttributeRule {
+public final class StringFormatAttributeRule implements AttributeRule, InitializingBean {
 
     private String formatString;
     private List<String> formatArguments;
     private String outputAttribute;
     private IUsernameAttributeProvider usernameAttributeProvider;
 
-    @Required
     public void setFormatString(final String formatString) {
         this.formatString = formatString;
     }
@@ -53,12 +54,10 @@ public final class StringFormatAttributeRule implements AttributeRule {
         this.formatArguments = formatArguments;
     }
 
-    @Required
     public void setOutputAttribute(final String outputAttribute) {
         this.outputAttribute = outputAttribute;
     }
 
-    @Required
     public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
         this.usernameAttributeProvider = usernameAttributeProvider;
     }
@@ -126,4 +125,10 @@ public final class StringFormatAttributeRule implements AttributeRule {
         return Collections.singleton(outputAttribute);
     }
 
+    @Override
+    public void afterPropertiesSet() {
+        if (StringUtils.isEmpty(formatString)) throw new BeanInitializationException("formatString is required");
+        if (usernameAttributeProvider == null) throw new BeanInitializationException("usernameAttributeProvider is required");
+        if (outputAttribute == null) throw new BeanInitializationException("outputAttribute is required");
+    }
 }

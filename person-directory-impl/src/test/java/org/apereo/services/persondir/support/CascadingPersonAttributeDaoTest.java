@@ -20,6 +20,7 @@ package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
+import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.apereo.services.persondir.util.Util;
@@ -106,7 +107,7 @@ public class CascadingPersonAttributeDaoTest
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        final IPersonAttributes results = targetDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("username", Util.list("edalquist"));
@@ -114,14 +115,14 @@ public class CascadingPersonAttributeDaoTest
         expected.put("major", Util.list("CS"));
         expected.put("phone", Util.list("777-7777", "777-7777x777"));
 
-        assertEquals(expected, results);
+        assertEquals(expected, results.getAttributes());
     }
 
     public void testNoChildren() {
         final CascadingPersonAttributeDao targetDao = new CascadingPersonAttributeDao();
 
         try {
-            targetDao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+            targetDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
             fail("IllegalStateException should have been thrown with no child DAOs");
         } catch (final IllegalStateException ise) {
             //expected
@@ -140,7 +141,7 @@ public class CascadingPersonAttributeDaoTest
 
 
         targetDao.setRecoverExceptions(true);
-        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist",
+        final IPersonAttributes results = targetDao.getPerson("edalquist",
             IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
@@ -149,12 +150,12 @@ public class CascadingPersonAttributeDaoTest
         expected.put("username", Util.list("edalquist"));
         expected.put("phone", Util.list("777-7777", "777-7777x777"));
 
-        assertEquals(expected, results);
+        assertEquals(expected, results.getAttributes());
 
 
         targetDao.setRecoverExceptions(false);
         try {
-            targetDao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+            targetDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
             fail("RuntimeException should have been thrown with no child DAOs");
         } catch (final RuntimeException ise) {
             //expected
@@ -171,7 +172,7 @@ public class CascadingPersonAttributeDaoTest
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist",
+        final IPersonAttributes results = targetDao.getPerson("edalquist",
             IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
@@ -180,7 +181,7 @@ public class CascadingPersonAttributeDaoTest
         expected.put("major", Util.list("CS"));
         expected.put("phone", Util.list("777-7777", "777-7777x777"));
 
-        assertEquals(expected, results);
+        assertEquals(expected, results.getAttributes());
     }
 
     public void testNullFirstResultStop() {
@@ -194,7 +195,7 @@ public class CascadingPersonAttributeDaoTest
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final Map<String, List<Object>> results = targetDao.getMultivaluedUserAttributes("edalquist",
+        final IPersonAttributes results = targetDao.getPerson("edalquist",
             IPersonAttributeDaoFilter.alwaysChoose());
 
         assertNull(results);

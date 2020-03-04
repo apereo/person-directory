@@ -18,18 +18,14 @@
  */
 package org.apereo.services.persondir.support;
 
-import org.apache.commons.lang3.Validate;
 import org.apereo.services.persondir.IPersonAttributeDao;
-import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+
 import java.util.Set;
 
 /**
@@ -47,121 +43,6 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         super();
     }
 
-
-    @Override
-    public final Map<String, List<Object>> getMultivaluedUserAttributes(final Map<String, List<Object>> seed,
-                                                                        final IPersonAttributeDaoFilter filter) {
-        if (!this.enabled) {
-            return null;
-        }
-        final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed, filter);
-
-        //Get the first IPersonAttributes to return data for
-        final IPersonAttributes person = getSinglePerson(people);
-
-        //If null or no results return null
-        if (person == null) {
-            return null;
-        }
-
-        //Make a mutable copy of the person's attributes
-        return new LinkedHashMap<>(person.getAttributes());
-    }
-
-
-    @Override
-    public final Map<String, List<Object>> getMultivaluedUserAttributes(final String uid,
-                                                                        final IPersonAttributeDaoFilter filter) {
-        if (!this.enabled) {
-            return null;
-        }
-        final IPersonAttributes person = this.getPerson(uid, filter);
-
-        if (person == null) {
-            return null;
-        }
-
-        //Make a mutable copy of the person's attributes
-        return new LinkedHashMap<>(person.getAttributes());
-    }
-
-    @Override
-    public final Map<String, Object> getUserAttributes(final Map<String, Object> seed,
-                                                       final IPersonAttributeDaoFilter filter) {
-        if (!this.enabled) {
-            return null;
-        }
-        final Set<IPersonAttributes> people = this.getPeople(seed, filter);
-
-        //Get the first IPersonAttributes to return data for
-        final IPersonAttributes person = getSinglePerson(people);
-
-        //If null or no results return null
-        if (person == null) {
-            return null;
-        }
-
-        final Map<String, List<Object>> multivaluedUserAttributes = new LinkedHashMap<>(person.getAttributes());
-        return this.flattenResults(multivaluedUserAttributes);
-    }
-
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getUserAttributes(java.lang.String)
-     */
-    @Override
-    public final Map<String, Object> getUserAttributes(final String uid,
-                                                       final IPersonAttributeDaoFilter filter) {
-        if (!this.enabled) {
-            return null;
-        }
-        Validate.notNull(uid, "uid may not be null.");
-
-        //Get the attributes from the subclass
-        final Map<String, List<Object>> multivaluedUserAttributes = this.getMultivaluedUserAttributes(uid, filter);
-
-        return this.flattenResults(multivaluedUserAttributes);
-    }
-
-    /**
-     * Takes a &lt;String, List&lt;Object&gt;&gt; Map and coverts it to a &lt;String, Object&gt; Map. This implementation takes
-     * the first value of each List to use as the value for the new Map.
-     *
-     * @param multivaluedUserAttributes The attribute map to flatten.
-     * @return A flattened version of the Map, null if the argument was null.
-     * @deprecated This method is just used internally and will be removed with this class in 1.6
-     */
-    @Deprecated
-    protected Map<String, Object> flattenResults(final Map<String, List<Object>> multivaluedUserAttributes) {
-        if (!this.enabled) {
-            return null;
-        }
-
-        if (multivaluedUserAttributes == null) {
-            return null;
-        }
-
-        //Convert the <String, List<Object> results map to a <String, Object> map using the first value of each List
-        final Map<String, Object> userAttributes = new LinkedHashMap<>(multivaluedUserAttributes.size());
-
-        for (final Map.Entry<String, List<Object>> attrEntry : multivaluedUserAttributes.entrySet()) {
-            final String attrName = attrEntry.getKey();
-            final List<Object> attrValues = attrEntry.getValue();
-
-            final Object value;
-            if (attrValues == null || attrValues.size() == 0) {
-                value = null;
-            } else {
-                value = attrValues.get(0);
-            }
-
-            userAttributes.put(attrName, value);
-        }
-
-        logger.debug("Flattened Map='{}' into Map='{}'", multivaluedUserAttributes, userAttributes);
-
-        return userAttributes;
-    }
-
     @Override
     public int getOrder() {
         return order;
@@ -173,7 +54,13 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
 
     @Override
     public int compareTo(final IPersonAttributeDao o) {
-        return this.order;
+        if (this.order == o.getOrder()) {
+            return 0;
+        }
+        if (this.order > o.getOrder()) {
+            return 1;
+        }
+        return -1;
     }
 
     @Override

@@ -66,7 +66,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
             final IPersonAttributeScriptDao groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
             return groovyObject;
         } catch (IOException e) {
-            logger.error("Unable to load groovy file {} ", e);
+            logger.error("Unable to load groovy file {} ", filename, e);
         } catch (InstantiationException e) {
             logger.error("Unable to instantiate groovy class specified in file {}", filename, e);
         } catch (IllegalAccessException e) {
@@ -79,7 +79,11 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     @Override
     @After
     public void tearDown() {
-        IOUtils.closeQuietly(loader);
+        try {
+            if (loader != null) loader.close();
+        } catch (IOException e) {
+            logger.debug("Error closing groovy classloader");
+        }
     }
 
     @Test
@@ -93,8 +97,8 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     @Test
     public void testGetPeopleWithMultivaluedAttributes() {
         final Set<IPersonAttributes> results = dao.getPeopleWithMultivaluedAttributes(items, IPersonAttributeDaoFilter.alwaysChoose());
-        assertTrue("script did not add one attribute to passed-in attribute list",
-                results.iterator().next().getAttributes().size() == items.size() + 1);
+        assertEquals("script did not add one attribute to passed-in attribute list",
+            items.size() + 1, results.iterator().next().getAttributes().size());
     }
 
     @Test

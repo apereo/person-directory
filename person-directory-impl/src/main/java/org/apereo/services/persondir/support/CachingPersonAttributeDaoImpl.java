@@ -74,16 +74,6 @@ import java.util.Set;
  * <td valign="top">null</td>
  * </tr>
  * <tr>
- * <td  valign="top">cacheKeyAttributes</td>
- * <td>
- * A Set of attribute names to use when building the cache key. The default
- * implementation generates the key as a Map of attributeNames to values retrieved
- * from the seed for the query. Zero length sets are treaded as null.
- * </td>
- * <td valign="top">No</td>
- * <td valign="top">null</td>
- * </tr>
- * <tr>
  * <td  valign="top">cacheNullResults</td>
  * <td>
  * If the wrapped IPersonAttributeDao returns null for the query should that null
@@ -119,7 +109,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     private long misses = 0;
 
     static {
-        NULL_RESULTS_OBJECT = new HashSet();
+        NULL_RESULTS_OBJECT = new HashSet<>();
         NULL_RESULTS_OBJECT.add(new SingletonPersonImpl());
     }
 
@@ -137,11 +127,6 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * The cache to store query results in.
      */
     private Map<Serializable, Set<IPersonAttributes>> userInfoCache = null;
-
-    /*
-     * The set of attributes to use to generate the cache key.
-     */
-    private Set<String> cacheKeyAttributes = null;
 
     /*
      * If null resutls should be cached
@@ -173,24 +158,6 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         }
 
         this.cachedPersonAttributesDao = cachedPersonAttributesDao;
-    }
-
-    /**
-     * @return Returns the cacheKeyAttributes.
-     * @deprecated these should be retrieved from the provided {@link CacheKeyGenerator} if applicable
-     */
-    @Deprecated
-    public Set<String> getCacheKeyAttributes() {
-        return this.cacheKeyAttributes;
-    }
-
-    /**
-     * @param cacheKeyAttributes The cacheKeyAttributes to set.
-     * @deprecated these should be set on the provided {@link CacheKeyGenerator} if applicable
-     */
-    @Deprecated
-    public void setCacheKeyAttributes(final Set<String> cacheKeyAttributes) {
-        this.cacheKeyAttributes = cacheKeyAttributes;
     }
 
     /**
@@ -279,10 +246,9 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (this.cacheKeyGenerator == null) {
             final AttributeBasedCacheKeyGenerator cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
-            cacheKeyGenerator.setCacheKeyAttributes(this.cacheKeyAttributes);
 
             final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
             final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
@@ -463,7 +429,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         }
 
         @Override
-        public Object proceed() throws Throwable {
+        public Object proceed() {
             throw new UnsupportedOperationException("This is a fake MethodInvocation, proceed() is not supported.");
         }
     }
@@ -473,7 +439,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
 
         @SuppressWarnings("unchecked")
         public SingletonPersonImpl() {
-            super(new HashMap<String, List<Object>>());
+            super(new HashMap<>());
         }
 
         @Override

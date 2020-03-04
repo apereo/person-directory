@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * Looks up the user's attribute Map in the backingMap. If using the {@link IPersonAttributeDao#getUserAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)}
+ * Looks up the user's attribute Map in the backingMap. If using the {@link IPersonAttributeDao#getPeople(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)}
  * method the attribute value returned for the key {@link #getUsernameAttributeProvider()} will
  * be used as the key for the backingMap.
  *
@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
  *             Sets the backing map to use to return user attributes from. The backing map
  *             should have keys of type {@link String} which are the uid for the user. The
  *             values should be of type {@link Map} which follow the Map restrictions decribed
- *             by {@link IPersonAttributeDao#getUserAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)}.
+ *             by {@link IPersonAttributeDao#getPeople(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)}.
  *         </td>
  *         <td valign="top">No</td>
  *         <td valign="top">{@link Collections#EMPTY_MAP}</td>
@@ -144,7 +144,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
         final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
 
-        final Set list = new HashSet();
+        final Set<String> list = new HashSet<>();
         list.add(usernameAttribute);
 
         return list;
@@ -210,7 +210,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         }
 
         final IPersonAttributes person = this.createPerson(seedValue, queryUserName, attributes);
-        final List list = new ArrayList();
+        final List<IPersonAttributes> list = new ArrayList<>();
         list.add(person);
 
         return list;

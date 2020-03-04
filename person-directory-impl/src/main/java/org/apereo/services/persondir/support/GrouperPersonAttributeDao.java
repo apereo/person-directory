@@ -39,8 +39,6 @@ import java.util.Set;
  * <br>
  * This implementation uses Grouper's <i>grouperClient</i> library to query Grouper's back-end repository.
  * <br>
- * Note: This class extends the adapter implementing deprecated methods of <code>IPersonAttributeDao</code> which is scheduled to be removed
- * in person-directory 1.6
  *
  * Note: All the Grouper server connection configuration for grouperClient is defined in
  * <i>grouper.client.properties</i> file and must be available

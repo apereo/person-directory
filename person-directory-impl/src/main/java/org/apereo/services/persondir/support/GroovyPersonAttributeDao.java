@@ -23,9 +23,7 @@ import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributeScriptDao;
 import org.apereo.services.persondir.IPersonAttributes;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -119,7 +117,7 @@ import java.util.Set;
  * @author James Wennmacher
  * @since 1.6.0
  */
-public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
+public class GroovyPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
 
     private final IPersonAttributeScriptDao groovyObject;
     private Set<String> possibleUserAttributeNames = null;
@@ -136,7 +134,6 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;
@@ -147,7 +144,7 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
         final Map<String, Object> personAttributesMap = groovyObject.getAttributesForUser(uid);
         if (personAttributesMap != null) {
             logger.debug("Creating person attributes with the username {} and attributes {}", uid, personAttributesMap);
-            final Map<String, List<Object>> personAttributes = stuffAttributesIntoListValues(personAttributesMap);
+            final Map<String, List<Object>> personAttributes = MultivaluedPersonAttributeUtils.toMultivaluedMap(personAttributesMap);
 
             if (this.caseInsensitiveUsername) {
                 return new CaseInsensitiveNamedPersonImpl(uid, personAttributes);
@@ -158,41 +155,18 @@ public class GroovyPersonAttributeDao extends BasePersonAttributeDao {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, Object> personAttributesMap) {
-        final Map<String, List<Object>> personAttributes = new HashMap<>();
-
-        for (final String key : personAttributesMap.keySet()) {
-            final Object value = personAttributesMap.get(key);
-            if (value instanceof List) {
-                personAttributes.put(key, (List) value);
-            } else {
-                personAttributes.put(key, Arrays.asList(value));
-            }
-        }
-        return personAttributes;
-    }
-
     @Override
-    public Set<IPersonAttributes> getPeople(final Map<String, Object> attributes,
-                                            final IPersonAttributeDaoFilter filter) {
-        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(attributes), filter);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> attributes,
                                                                      final IPersonAttributeDaoFilter filter) {
         logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters {}",
                 attributes);
 
-        @SuppressWarnings("unchecked")
         final Map<String, List<Object>> personAttributesMap =
                 groovyObject.getPersonAttributesFromMultivaluedAttributes(attributes);
 
         if (personAttributesMap != null) {
             logger.debug("Creating person attributes: {}", personAttributesMap);
-            return Collections.singleton((IPersonAttributes) new AttributeNamedPersonImpl(personAttributesMap));
+            return Collections.singleton(new AttributeNamedPersonImpl(personAttributesMap));
         }
         return null;
     }

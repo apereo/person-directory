@@ -115,58 +115,6 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      */
     Set<String> getAvailableQueryAttributes(IPersonAttributeDaoFilter filter);
 
-
-    /**
-     * Returns a mutable {@link Map} of the attributes of the first {@link IPersonAttributes} returned by calling
-     * {@link #getPeople(Map, IPersonAttributeDaoFilter)}
-     *
-     * @param seed   A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
-     * @param filter the filter
-     * @return A {@link Map} of PersonAttributess that match the query {@link Map}. If no matches are found an empty {@link Map} is returned. If the query could not be run null is returned.
-     * @deprecated Use {@link #getPeople(Map, IPersonAttributeDaoFilter)} instead. This method will be removed in 1.6
-     */
-    @Deprecated
-    Map<String, List<Object>> getMultivaluedUserAttributes(Map<String, List<Object>> seed,
-                                                           IPersonAttributeDaoFilter filter);
-
-    /**
-     * Returns a mutable {@link Map} of the attributes of the {@link IPersonAttributes} returned by calling
-     * {@link #getPerson(String, IPersonAttributeDaoFilter)}
-     *
-     * @param uid    The userName of the person to find.
-     * @param filter the filter
-     * @return The populated {@link Map} of person attributes for the specified uid, null if no person could be found for the uid.
-     * @deprecated Use {@link #getPerson(String, IPersonAttributeDaoFilter)} instead. This method will be removed in 1.6
-     */
-    @Deprecated
-    Map<String, List<Object>> getMultivaluedUserAttributes(String uid, IPersonAttributeDaoFilter filter);
-
-    /**
-     * Returns a mutable {@link Map} of the single-valued attributes of the first {@link IPersonAttributes} returned by calling
-     * {@link #getPeople(Map, IPersonAttributeDaoFilter)}
-     *
-     * @param seed   A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
-     * @param filter the filter
-     * @return A {@link Map} of PersonAttributess that match the query {@link Map}. If no matches are found an empty {@link Map} is returned. If the query could not be run null is returned.
-     * @deprecated Use {@link #getPeople(Map, IPersonAttributeDaoFilter)} instead. This method will be removed in 1.6
-     */
-    @Deprecated
-    Map<String, Object> getUserAttributes(Map<String, Object> seed,
-                                          IPersonAttributeDaoFilter filter);
-
-    /**
-     * Returns a mutable {@link Map} of the single-valued attributes of the {@link IPersonAttributes} returned by calling
-     * {@link #getPerson(String, IPersonAttributeDaoFilter)}
-     *
-     * @param uid    The userName of the person to find.
-     * @param filter the filter
-     * @return The populated {@link Map} of person attributes for the specified uid, null if no person could be found for the uid.
-     * @deprecated Use {@link #getPerson(String, IPersonAttributeDaoFilter)} instead. This method will be removed in 1.6
-     */
-    @Deprecated
-    Map<String, Object> getUserAttributes(String uid,
-                                          IPersonAttributeDaoFilter filter);
-
     /**
      * Describes the order by which this DAO may be sorted
      * and put into an ordered collection.

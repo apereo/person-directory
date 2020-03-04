@@ -73,7 +73,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
             if (value != null) {
                 if (!value.isEmpty()) {
                     final Object result = value.get(0);
-                    if (Array.class.isInstance(result)) {
+                    if (result instanceof Array) {
                         if (logger.isTraceEnabled()) {
                             logger.trace("Column {} is classified as a SQL array", key);
                         }
@@ -130,12 +130,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
      */
     @Override
     public List<Object> getAttributeValues(final String name) {
-        final List<Object> values = this.attributes.get(name);
-        if (values == null) {
-            return null;
-        }
-
-        return values;
+        return this.attributes.get(name);
     }
 
     /* (non-Javadoc)

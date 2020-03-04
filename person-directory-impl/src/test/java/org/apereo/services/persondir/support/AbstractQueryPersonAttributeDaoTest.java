@@ -62,7 +62,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
     }
 
     public void testDefaultAttributeNameUsage() {
-        this.testQueryPersonAttributeDao.getUserAttributes("eric", IPersonAttributeDaoFilter.alwaysChoose());
+        this.testQueryPersonAttributeDao.getPerson("eric", IPersonAttributeDaoFilter.alwaysChoose());
         final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
 
         //Do asList for an easy comparison
@@ -70,12 +70,12 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
     }
 
     public void testNoQueryAttributeMapping() {
-        this.testQueryPersonAttributeDao.getUserAttributes("eric", IPersonAttributeDaoFilter.alwaysChoose());
+        this.testQueryPersonAttributeDao.getPerson("eric", IPersonAttributeDaoFilter.alwaysChoose());
         final List<List<Object>> args1 = this.testQueryPersonAttributeDao.getArgs();
         assertEquals(Arrays.asList(Arrays.asList("eric")), args1);
 
         this.testQueryPersonAttributeDao.setUseAllQueryAttributes(false);
-        this.testQueryPersonAttributeDao.getUserAttributes("eric", IPersonAttributeDaoFilter.alwaysChoose());
+        this.testQueryPersonAttributeDao.getPerson("eric", IPersonAttributeDaoFilter.alwaysChoose());
         final List<List<Object>> args2 = this.testQueryPersonAttributeDao.getArgs();
         assertNull(args2);
     }
@@ -85,7 +85,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         queryAttributes.put("userid", null);
 
         this.testQueryPersonAttributeDao.setQueryAttributeMapping(queryAttributes);
-        this.testQueryPersonAttributeDao.getUserAttributes("eric", IPersonAttributeDaoFilter.alwaysChoose());
+        this.testQueryPersonAttributeDao.getPerson("eric", IPersonAttributeDaoFilter.alwaysChoose());
         final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
         assertNull(args);
     }
@@ -97,9 +97,9 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         this.testQueryPersonAttributeDao.setQueryAttributeMapping(queryAttributes);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("name.first", Collections.singletonList((Object) "eric"));
-        seed.put("name.last", Collections.singletonList((Object) "dalquist"));
-        this.testQueryPersonAttributeDao.getMultivaluedUserAttributes(seed, IPersonAttributeDaoFilter.alwaysChoose());
+        seed.put("name.first", Collections.singletonList("eric"));
+        seed.put("name.last", Collections.singletonList("dalquist"));
+        this.testQueryPersonAttributeDao.getPeopleWithMultivaluedAttributes(seed, IPersonAttributeDaoFilter.alwaysChoose());
         final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
         final Object[] expectedArgs = new Object[]{Collections.singletonList("eric"), Collections.singletonList("dalquist")};
 
@@ -116,7 +116,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object) "edalquist"));
+        seed.put("username", Collections.singletonList("edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
@@ -144,7 +144,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         dao.setResultAttributeMapping(resultAttributeMappings);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object) "edalquist"));
+        seed.put("username", Collections.singletonList("edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
@@ -172,7 +172,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         dao.setCaseInsensitiveResultAttributes(caseInsensitiveAttributes);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object) "edalquist"));
+        seed.put("username", Collections.singletonList("edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
@@ -203,7 +203,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         dao.setResultAttributeMapping(resultAttributeMappings);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object) "edalquist"));
+        seed.put("username", Collections.singletonList("edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
@@ -239,7 +239,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         dao.setUsernameCaseCanonicalizationMode(CaseCanonicalizationMode.LOWER);
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object) "edalquist"));
+        seed.put("username", Collections.singletonList("edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
@@ -269,7 +269,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         // Intentionally *not* calling setUsernameCaseCanonicalizationMode()
 
         final Map<String, List<Object>> seed = new HashMap<>();
-        seed.put("username", Collections.singletonList((Object) "edalquist"));
+        seed.put("username", Collections.singletonList("edalquist"));
 
         final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
@@ -299,7 +299,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
 
         @Override
         protected List<IPersonAttributes> getPeopleForQuery(final List<List<Object>> queryBuilder, final String queryUserName) {
-            return new ArrayList(storage.getPeopleWithMultivaluedAttributes(new HashMap<String, List<Object>>(),
+            return new ArrayList<>(storage.getPeopleWithMultivaluedAttributes(new HashMap<String, List<Object>>(),
                 IPersonAttributeDaoFilter.alwaysChoose()));
         }
 

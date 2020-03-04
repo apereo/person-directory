@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -43,6 +42,7 @@ import java.util.Set;
    def Map&lt;String, List&lt;Object&gt;&gt; run(final Object... args) {
        def uid = args[0]
        def logger = args[1]
+       def currentAttributes = args[2]
        return[username:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
    }
  * </pre>
@@ -52,14 +52,13 @@ import java.util.Set;
  *
  * @author Misagh Moayyed
  */
-public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
+public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     private static final Logger logger = LoggerFactory.getLogger(ScriptEnginePersonAttributeDao.class);
     private String scriptFile;
     public enum SCRIPT_TYPE {RESOURCE, FILE, CONTENTS}
     private SCRIPT_TYPE scriptType;
     private String engineName;
     private boolean caseInsensitiveUsername = false;
-    private final IUsernameAttributeProvider usernameAttributeProvider;
 
     public String getScriptFile() {
         return scriptFile;
@@ -105,7 +104,6 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
      * This should probably be deprecated in favor of constructors that guarantee required properties are set
      */
     public ScriptEnginePersonAttributeDao() {
-        usernameAttributeProvider = new SimpleUsernameAttributeProvider();
     }
 
     /**
@@ -126,7 +124,8 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
      * @param engineName Script engine name such as js, groovy, python
      */
     public ScriptEnginePersonAttributeDao(String scriptFile, String engineName) {
-        this(scriptFile, engineName, new SimpleUsernameAttributeProvider());
+        setScriptFile(scriptFile);
+        setEngineName(engineName);
     }
 
     /**
@@ -138,9 +137,8 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
      * @param usernameAttributeProvider Attribute provider
      */
     public ScriptEnginePersonAttributeDao(String scriptFile, String engineName, IUsernameAttributeProvider usernameAttributeProvider) {
-        setScriptFile(scriptFile);
-        setEngineName(engineName);
-        this.usernameAttributeProvider = usernameAttributeProvider;
+        this(scriptFile, engineName);
+        setUsernameAttributeProvider(usernameAttributeProvider);
     }
 
     @Override
@@ -153,35 +151,41 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
                 logger.warn("Unable to get attributes from script {} because username is null", scriptFile);
                 return null;
             }
-            final Map attributes = getScriptedAttributesFromFile(uid);
+            final Map<String, Object> attributes = getScriptedAttributesFromFile(uid, Collections.EMPTY_MAP );
             if (this.caseInsensitiveUsername) {
-                return new CaseInsensitiveNamedPersonImpl(uid, stuffAttributesIntoListValues(attributes));
+                return new CaseInsensitiveNamedPersonImpl(uid, MultivaluedPersonAttributeUtils.toMultivaluedMap(attributes));
             }
-            return new NamedPersonImpl(uid, stuffAttributesIntoListValues(attributes));
+            return new NamedPersonImpl(uid, MultivaluedPersonAttributeUtils.toMultivaluedMap((attributes)));
         } catch (final Exception e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
     }
 
     @Override
-    public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
-                                            final IPersonAttributeDaoFilter filter) {
-        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(query), filter);
-    }
-
-    @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
                                                                      final IPersonAttributeDaoFilter filter) {
-        final Set<IPersonAttributes> people = new LinkedHashSet<>();
-        final String username = usernameAttributeProvider.getUsernameFromQuery(query);
-        if (username == null) {
-            logger.trace("Unable to find username in map {} using attribute {}", query, usernameAttributeProvider.getUsernameAttribute());
-        }
-        final IPersonAttributes person = getPerson(username, filter);
-        if (person != null) {
+        try {
+            if (!this.isEnabled()) {
+                return null;
+            }
+            final String uid = getUsernameAttributeProvider().getUsernameFromQuery(query);
+            if (uid == null) {
+                logger.warn("Unable to find username in map {} using attribute {}", query, getUsernameAttributeProvider().getUsernameAttribute());
+                return null;
+            }
+            final Set<IPersonAttributes> people = new LinkedHashSet<>();
+            IPersonAttributes person;
+            final Map<String, Object> attributes = getScriptedAttributesFromFile(uid, query );
+            if (this.caseInsensitiveUsername) {
+                person = new CaseInsensitiveNamedPersonImpl(uid, MultivaluedPersonAttributeUtils.toMultivaluedMap(attributes));
+            } else {
+                person = new NamedPersonImpl(uid, MultivaluedPersonAttributeUtils.toMultivaluedMap((attributes)));
+            }
             people.add(person);
+            return people;
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage(), e);
         }
-        return people;
     }
 
     @Override
@@ -196,7 +200,7 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
         return Collections.EMPTY_SET;
     }
 
-    private Map<String, Object> getScriptedAttributesFromFile(final String uid) throws Exception {
+    private Map<String, Object> getScriptedAttributesFromFile(final String uid, final Map<String, List<Object>> queryAttributes) throws Exception {
 
         if (StringUtils.isBlank(scriptFile)) {
             logger.warn("Script file or contents not set.");
@@ -221,7 +225,7 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
         }
 
         logger.debug("Created script engine instance for [{}]", engineName);
-        final Object[] args = {uid, logger};
+        final Object[] args = {uid, logger, queryAttributes};
 
         switch (scriptType) {
             case RESOURCE:
@@ -273,18 +277,7 @@ public class ScriptEnginePersonAttributeDao extends BasePersonAttributeDao {
     }
 
 
-    private static Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, Object> personAttributesMap) {
-        final Map<String, List<Object>> personAttributes = new HashMap<>();
-        for (final Map.Entry<String, Object> stringObjectEntry : personAttributesMap.entrySet()) {
-            final Object value = stringObjectEntry.getValue();
-            if (value instanceof List) {
-                personAttributes.put(stringObjectEntry.getKey(), (List) value);
-            } else {
-                personAttributes.put(stringObjectEntry.getKey(), Arrays.asList(value));
-            }
-        }
-        return personAttributes;
-    }
+
 
     /**
      * This method is static is available as utility for users that are passing the contents of a script

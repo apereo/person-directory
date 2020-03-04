@@ -103,7 +103,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
 
         final Set<Object> badSet = new HashSet<>();
         badSet.add("goodString");
-        badSet.add(new Long(1234));
+        badSet.add(1234L);
         badSet.add("anotherGoodString");
 
         nullKeyMap.put("wombat", badSet);
@@ -200,7 +200,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that attempting to add a result with a null value yields no change.
      */
     public void testAddResultNullValue() {
-        final Map<String, List<String>> immutableMap = CollectionsUtil.safelyWrapAsUnmodifiableMap(new HashMap<String, List<String>>());
+        final Map<String, List<String>> immutableMap = CollectionsUtil.safelyWrapAsUnmodifiableMap(new HashMap<>());
         MultivaluedPersonAttributeUtils.addResult(immutableMap, "key", null);
     }
 

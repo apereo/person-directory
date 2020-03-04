@@ -184,10 +184,10 @@ public final class MultivaluedPersonAttributeUtils {
 
     /**
      * Convert the &lt;String, Object&gt; map to a &lt;String, List&lt;Object&gt;&gt; map by simply wrapping
-     * each value in a singleton (read-only) List
+     * each value in a List, unless Object is already a List in which cas it is returned.
      *
      * @param seed Map of objects
-     * @return Map where each value is a List with the value in it
+     * @return Map where each value is a List with the value(s) in it
      */
     public static Map<String, List<Object>> toMultivaluedMap(final Map<String, Object> seed) {
         Validate.notNull(seed, "seed can not be null");
@@ -196,7 +196,11 @@ public final class MultivaluedPersonAttributeUtils {
         for (final Map.Entry<String, Object> seedEntry : seed.entrySet()) {
             final String seedName = seedEntry.getKey();
             final Object seedValue = seedEntry.getValue();
-            multiSeed.put(seedName, Collections.singletonList(seedValue));
+            if (seedValue instanceof List) {
+                multiSeed.put(seedName, (List<Object>) seedValue);
+            } else {
+                multiSeed.put(seedName, Collections.singletonList(seedValue));
+            }
         }
         return multiSeed;
     }

@@ -272,8 +272,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             return new HashSet<>();
         }
 
-        final Set list = new HashSet(this.queryAttributeMapping.keySet());
-        return list;
+        return new HashSet<>(this.queryAttributeMapping.keySet());
     }
 
     /* (non-Javadoc)

@@ -58,7 +58,7 @@ public class AttributeBasedCacheKeyGeneratorTest {
         assertEquals(0, cacheProviderFacade.getRemoveCount());
 
         //Should be a miss
-        personAttributeDao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        personAttributeDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(1, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());
         assertEquals(0, cacheProviderFacade.getHitCount());
@@ -67,7 +67,7 @@ public class AttributeBasedCacheKeyGeneratorTest {
         assertEquals(0, cacheProviderFacade.getRemoveCount());
 
         //Should be a hit
-        personAttributeDao.getMultivaluedUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        personAttributeDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(1, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());
         assertEquals(1, cacheProviderFacade.getHitCount());
@@ -75,18 +75,19 @@ public class AttributeBasedCacheKeyGeneratorTest {
         assertEquals(1, cacheProviderFacade.getPutCount());
         assertEquals(0, cacheProviderFacade.getRemoveCount());
 
-        //Should be a hit
-        personAttributeDao.getMultivaluedUserAttributes(Collections.singletonMap("userName", Collections.singletonList((Object) "edalquist"))
+        // Should be a miss b/c we can't cache single IPersonAttributes and Set<IPersonAttributes> with same key
+        // method name added to key to avoid caching across methods
+        personAttributeDao.getPeopleWithMultivaluedAttributes(Collections.singletonMap("userName", Collections.singletonList("edalquist"))
             , IPersonAttributeDaoFilter.alwaysChoose());
-        assertEquals(1, cacheProviderFacade.getCacheSize());
+        assertEquals(2, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());
-        assertEquals(2, cacheProviderFacade.getHitCount());
-        assertEquals(1, cacheProviderFacade.getMissCount());
-        assertEquals(1, cacheProviderFacade.getPutCount());
+        assertEquals(1, cacheProviderFacade.getHitCount());
+        assertEquals(2, cacheProviderFacade.getMissCount());
+        assertEquals(2, cacheProviderFacade.getPutCount());
         assertEquals(0, cacheProviderFacade.getRemoveCount());
 
-        //Should be a miss
-        personAttributeDao.getUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        //Should be a hit
+        personAttributeDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());
         assertEquals(2, cacheProviderFacade.getHitCount());
@@ -95,7 +96,7 @@ public class AttributeBasedCacheKeyGeneratorTest {
         assertEquals(0, cacheProviderFacade.getRemoveCount());
 
         //Should be a hit
-        personAttributeDao.getUserAttributes("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        personAttributeDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());
         assertEquals(3, cacheProviderFacade.getHitCount());
@@ -103,32 +104,32 @@ public class AttributeBasedCacheKeyGeneratorTest {
         assertEquals(2, cacheProviderFacade.getPutCount());
         assertEquals(0, cacheProviderFacade.getRemoveCount());
 
-        //Should be a hit
-        personAttributeDao.getUserAttributes(Collections.singletonMap("userName", (Object) "edalquist")
+        //Should be a miss
+        personAttributeDao.getPeople(Collections.singletonMap("userName", "edalquist")
             , IPersonAttributeDaoFilter.alwaysChoose());
-        assertEquals(2, cacheProviderFacade.getCacheSize());
+        assertEquals(3, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());
-        assertEquals(4, cacheProviderFacade.getHitCount());
-        assertEquals(2, cacheProviderFacade.getMissCount());
-        assertEquals(2, cacheProviderFacade.getPutCount());
+        assertEquals(3, cacheProviderFacade.getHitCount());
+        assertEquals(3, cacheProviderFacade.getMissCount());
+        assertEquals(3, cacheProviderFacade.getPutCount());
         assertEquals(0, cacheProviderFacade.getRemoveCount());
 
         //Should miss
         personAttributeDao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
-        assertEquals(3, cacheProviderFacade.getCacheSize());
+        assertEquals(4, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());
-        assertEquals(4, cacheProviderFacade.getHitCount());
-        assertEquals(3, cacheProviderFacade.getMissCount());
-        assertEquals(3, cacheProviderFacade.getPutCount());
+        assertEquals(3, cacheProviderFacade.getHitCount());
+        assertEquals(4, cacheProviderFacade.getMissCount());
+        assertEquals(4, cacheProviderFacade.getPutCount());
         assertEquals(0, cacheProviderFacade.getRemoveCount());
 
         //Should hit
         personAttributeDao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
-        assertEquals(3, cacheProviderFacade.getCacheSize());
+        assertEquals(4, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());
-        assertEquals(5, cacheProviderFacade.getHitCount());
-        assertEquals(3, cacheProviderFacade.getMissCount());
-        assertEquals(3, cacheProviderFacade.getPutCount());
+        assertEquals(4, cacheProviderFacade.getHitCount());
+        assertEquals(4, cacheProviderFacade.getMissCount());
+        assertEquals(4, cacheProviderFacade.getPutCount());
         assertEquals(0, cacheProviderFacade.getRemoveCount());
     }
 }

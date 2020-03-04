@@ -49,15 +49,4 @@ public abstract class AbstractFlatteningPersonAttributeDao extends BasePersonAtt
         final Map<String, List<Object>> multivaluedSeed = MultivaluedPersonAttributeUtils.toMultivaluedMap(query);
         return this.getPeopleWithMultivaluedAttributes(multivaluedSeed, filter);
     }
-
-    /**
-     * @deprecated Use {@link MultivaluedPersonAttributeUtils#toMultivaluedMap(Map)} instead. This will be removed in 1.6
-     *
-     * @param seed Map of seed names and values
-     * @return Map of seed names with list of values
-     */
-    @Deprecated
-    protected Map<String, List<Object>> toMultivaluedSeed(final Map<String, Object> seed) {
-        return MultivaluedPersonAttributeUtils.toMultivaluedMap(seed);
-    }
 }

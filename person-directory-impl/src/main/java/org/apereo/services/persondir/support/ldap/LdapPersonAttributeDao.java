@@ -142,7 +142,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         final Map<String, Set<String>> resultAttributeMapping = this.getResultAttributeMapping();
         if (this.setReturningAttributes && resultAttributeMapping != null) {
             this.searchControls.setReturningAttributes(resultAttributeMapping.keySet().toArray(new String[resultAttributeMapping.size()]));
@@ -236,26 +236,6 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         }
 
         return peopleAttributes;
-    }
-
-    /**
-     * @see javax.naming.directory.SearchControls#getTimeLimit()
-     * @return time limit
-     * @deprecated Set the property on the {@link SearchControls} and set that via {@link #setSearchControls(SearchControls)}
-     */
-    @Deprecated
-    public int getTimeLimit() {
-        return this.searchControls.getTimeLimit();
-    }
-
-    /**
-     * @see javax.naming.directory.SearchControls#setTimeLimit(int)
-     * @param ms time limit in milliseconds
-     * @deprecated
-     */
-    @Deprecated
-    public void setTimeLimit(final int ms) {
-        this.searchControls.setTimeLimit(ms);
     }
 
     /**
