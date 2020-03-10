@@ -94,7 +94,7 @@ is queried the attributes from the first IPersonAttributes in the result set are
 Setting up a `CascadingPersonAttributeDao` in Spring to would look like the following:
 
 ```xml
-<bean id="mergingPersonAttributeDao" class="org.apereo.services.persondir.support.CascadingPersonAttributeDao">
+<bean id="cascadingPersonAttributeDao" class="org.apereo.services.persondir.support.CascadingPersonAttributeDao">
     <property name="personAttributeDaos">
         <list>
             <ref bean="jdbcPersonAttributeDao" />

@@ -95,8 +95,11 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
         // test with an inline script, even though DAO avoids this internally
         assertNull(ScriptEnginePersonAttributeDao.getScriptEngineName("not a filename = a script"));
         // test with classpath resource
-        assertEquals("nashorn", ScriptEnginePersonAttributeDao.getScriptEngineName("SampleScriptedJavascriptPersonAttributeDao.js"));
-        assertEquals("nashorn", ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js"));
+        final String scriptEngineName = ScriptEnginePersonAttributeDao.getScriptEngineName("SampleScriptedJavascriptPersonAttributeDao.js");
+        
+        assertTrue(scriptEngineName.equalsIgnoreCase("nashorn") || scriptEngineName.equalsIgnoreCase("Graal.js"));
+        final String engineName2 = ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js");
+        assertTrue(engineName2.equalsIgnoreCase("nashorn") || scriptEngineName.equalsIgnoreCase("Graal.js"));
         assertEquals("groovy", ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedGroovyPersonAttributeDao.groovy"));
         // note jython not in classpath so null is expected return value, also test.py file doesn't exist
         assertNull(ScriptEnginePersonAttributeDao.getScriptEngineName("test.py") );

@@ -76,6 +76,8 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
      */
     private boolean stopIfFirstDaoReturnsNull = false;
 
+    private boolean addOriginalAttributesToQuery = false;
+
     public void setStopIfFirstDaoReturnsNull(final boolean stopIfFirstDaoReturnsNull) {
         this.stopIfFirstDaoReturnsNull = stopIfFirstDaoReturnsNull;
     }
@@ -116,6 +118,10 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
             final Map<String, List<Object>> personAttributes = person.getAttributes();
             queryAttributes.putAll(personAttributes);
 
+            if (this.addOriginalAttributesToQuery) {
+                queryAttributes.putAll(seed);
+            }
+            
             final Set<IPersonAttributes> newResults = currentlyConsidering.getPeopleWithMultivaluedAttributes(queryAttributes, filter);
             if (newResults != null) {
                 if (mergedPeopleResults == null) {
@@ -129,5 +135,9 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
         }
 
         return mergedPeopleResults;
+    }
+
+    public void setAddOriginalAttributesToQuery(final boolean addOriginalAttributesToQuery) {
+        this.addOriginalAttributesToQuery = addOriginalAttributesToQuery;
     }
 }

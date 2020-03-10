@@ -59,6 +59,10 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
     IPersonAttributes getPerson(String uid,
                                 IPersonAttributeDaoFilter filter);
 
+    default IPersonAttributes getPerson(final String uid) {
+        return getPerson(uid, IPersonAttributeDaoFilter.alwaysChoose());
+    }
+
     /**
      * Searches for {@link IPersonAttributes}s that match the set of attributes provided in the query {@link Map}. Each
      * implementation is free to define what qualifies as a 'match' is on its own. The provided query Map contains
@@ -75,6 +79,10 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
     Set<IPersonAttributes> getPeople(Map<String, Object> query,
                                      IPersonAttributeDaoFilter filter);
 
+    default Set<IPersonAttributes> getPeople(final Map<String, Object> query) {
+        return getPeople(query, IPersonAttributeDaoFilter.alwaysChoose());
+    }
+
     /**
      * Searches for {@link IPersonAttributes}s that match the set of attributes provided in the query {@link Map}. Each
      * implementation is free to define what qualifies as a 'match' is on its own. The provided query Map contains
@@ -90,6 +98,10 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      */
     Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query,
                                                               IPersonAttributeDaoFilter filter);
+
+    default Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
+        return getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
+    }
 
     /**
      * Gets a {@link Set} of attribute names that may be returned for an IPersonAttributes. The names returned represent all
