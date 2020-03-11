@@ -9,6 +9,8 @@ It consists of a collection of DAOs that retrieve, cache, resolve, aggregate, me
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apereo.service.persondir/person-directory-parent/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.apereo.service.persondir/person-directory-parent)
 
+[![Build Status](https://travis-ci.org/apereo/person-directory.svg?branch=master)](https://travis-ci.org/apereo/person-directory)
+
 ```xml
 <dependency>
     <groupId>org.apereo.service.persondir</groupId>
