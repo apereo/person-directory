@@ -22,6 +22,7 @@ import java.util.Set;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/annotationContext.xml"})
+@Deprecated
 public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
 
     @Autowired

@@ -20,7 +20,6 @@ package org.apereo.services.persondir.support.jdbc;
 
 import com.google.common.collect.ImmutableMap;
 import junit.framework.TestCase;
-import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;

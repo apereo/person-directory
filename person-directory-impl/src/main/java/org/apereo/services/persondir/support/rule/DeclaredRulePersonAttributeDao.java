@@ -60,6 +60,7 @@ import java.util.Set;
  *     </tr>
  * </table>
  */
+@Deprecated
 public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
 
     /**

@@ -52,6 +52,7 @@ import java.util.Set;
  *
  * @author Misagh Moayyed
  */
+@Deprecated
 public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     private static final Logger logger = LoggerFactory.getLogger(ScriptEnginePersonAttributeDao.class);
     private String scriptFile;

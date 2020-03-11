@@ -116,6 +116,7 @@ import java.util.regex.Pattern;
 
  * @since uPortal 2.5
  */
+@Deprecated
 public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<LogicalFilterWrapper> implements InitializingBean {
     private static final Pattern QUERY_PLACEHOLDER = Pattern.compile("\\{0\\}");
     private final static AttributesMapper MAPPER = new AttributeMapAttributesMapper();

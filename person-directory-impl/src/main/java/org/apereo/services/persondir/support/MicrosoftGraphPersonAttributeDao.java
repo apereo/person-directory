@@ -69,20 +69,7 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
      */
     private String loggingLevel = "BASIC";
 
-    private static Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, ?> personAttributesMap,
-                                                                           final IPersonAttributeDaoFilter filter) {
-        final Map<String, List<Object>> personAttributes = new HashMap<>();
 
-        for (final Map.Entry<String, ?> stringObjectEntry : personAttributesMap.entrySet()) {
-            final Object value = stringObjectEntry.getValue();
-            if (value instanceof List) {
-                personAttributes.put(stringObjectEntry.getKey(), (List<Object>) value);
-            } else {
-                personAttributes.put(stringObjectEntry.getKey(), new ArrayList<>(Arrays.asList(value)));
-            }
-        }
-        return personAttributes;
-    }
 
     public String getDomain() {
         return domain;
@@ -216,9 +203,9 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
                 final User response = r.body();
                 final Map<String, Object> attributes = response.buildAttributes();
                 if (this.caseInsensitiveUsername) {
-                    return new CaseInsensitiveNamedPersonImpl(uid, stuffAttributesIntoListValues(attributes, filter));
+                    return new CaseInsensitiveNamedPersonImpl(uid, MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(attributes, filter));
                 }
-                return new NamedPersonImpl(uid, stuffAttributesIntoListValues(attributes, filter));
+                return new NamedPersonImpl(uid, MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(attributes, filter));
             }
             throw new RuntimeException("error requesting token (" + r.code() + "): " + r.errorBody());
         } catch (final Exception e) {
@@ -229,7 +216,7 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
                                             final IPersonAttributeDaoFilter filter) {
-        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(query, filter), filter);
+        return getPeopleWithMultivaluedAttributes(MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(query, filter), filter);
     }
 
     @Override

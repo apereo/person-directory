@@ -19,7 +19,10 @@
 package org.apereo.services.persondir.support;
 
 import org.apache.commons.lang3.Validate;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -203,6 +206,21 @@ public final class MultivaluedPersonAttributeUtils {
             }
         }
         return multiSeed;
+    }
+
+    public static Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, ?> personAttributesMap,
+                                                                           final IPersonAttributeDaoFilter filter) {
+        final Map<String, List<Object>> personAttributes = new HashMap<>();
+
+        for (final Map.Entry<String, ?> stringObjectEntry : personAttributesMap.entrySet()) {
+            final Object value = stringObjectEntry.getValue();
+            if (value instanceof List) {
+                personAttributes.put(stringObjectEntry.getKey(), (List<Object>) value);
+            } else {
+                personAttributes.put(stringObjectEntry.getKey(), new ArrayList<>(Arrays.asList(value)));
+            }
+        }
+        return personAttributes;
     }
 
     /**

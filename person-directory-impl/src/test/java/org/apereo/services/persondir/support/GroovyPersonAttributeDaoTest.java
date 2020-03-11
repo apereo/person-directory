@@ -19,7 +19,6 @@
 package org.apereo.services.persondir.support;
 
 import groovy.lang.GroovyClassLoader;
-import org.apache.commons.io.IOUtils;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;

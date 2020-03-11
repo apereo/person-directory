@@ -62,8 +62,8 @@ import java.util.Set;
  * </table>
  *
  * @author Eric Dalquist
-
  */
+@Deprecated
 public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
     private Set<FormatAttribute> formatAttributes;
     private Set<String> possibleUserAttributeNames;

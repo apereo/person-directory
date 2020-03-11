@@ -23,7 +23,6 @@ import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.apereo.services.persondir.util.Util;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

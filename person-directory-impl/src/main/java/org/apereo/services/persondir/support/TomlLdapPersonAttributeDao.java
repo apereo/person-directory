@@ -80,6 +80,7 @@ import java.util.Map;
  * </code></pre>
  * @author Misagh Moayyed
  */
+@Deprecated
 public class TomlLdapPersonAttributeDao extends LdapPersonAttributeDao {
 
     private final Resource tomlConfigFile;

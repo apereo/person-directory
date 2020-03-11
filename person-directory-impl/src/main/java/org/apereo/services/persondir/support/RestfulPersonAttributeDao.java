@@ -19,10 +19,7 @@ import org.apereo.services.persondir.IPersonAttributes;
 import org.springframework.http.HttpMethod;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -110,9 +107,9 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
             final Map attributes = jacksonObjectMapper.readValue(response.getEntity().getContent(), Map.class);
 
             if (this.caseInsensitiveUsername) {
-                return new CaseInsensitiveNamedPersonImpl(uid, stuffAttributesIntoListValues(attributes, filter));
+                return new CaseInsensitiveNamedPersonImpl(uid, MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(attributes, filter));
             }
-            return new NamedPersonImpl(uid, stuffAttributesIntoListValues(attributes, filter));
+            return new NamedPersonImpl(uid, MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(attributes, filter));
 
         } catch (final Exception e) {
             throw new IllegalArgumentException(e.getMessage(), e);
@@ -122,7 +119,7 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
                                             final IPersonAttributeDaoFilter filter) {
-        return getPeopleWithMultivaluedAttributes(stuffAttributesIntoListValues(query, filter), filter);
+        return getPeopleWithMultivaluedAttributes(MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(query, filter), filter);
     }
 
     @Override
@@ -149,18 +146,4 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
         return Collections.EMPTY_SET;
     }
 
-    private static Map<String, List<Object>> stuffAttributesIntoListValues(final Map<String, ?> personAttributesMap,
-                                                                           final IPersonAttributeDaoFilter filter) {
-        final Map<String, List<Object>> personAttributes = new HashMap<>();
-
-        for (final Map.Entry<String, ?> stringObjectEntry : personAttributesMap.entrySet()) {
-            final Object value = stringObjectEntry.getValue();
-            if (value instanceof List) {
-                personAttributes.put(stringObjectEntry.getKey(), (List) value);
-            } else {
-                personAttributes.put(stringObjectEntry.getKey(), new ArrayList<>(Arrays.asList(value)));
-            }
-        }
-        return personAttributes;
-    }
 }

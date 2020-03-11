@@ -22,7 +22,6 @@ import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractQueryPersonAttributeDao;
 import org.apereo.services.persondir.support.CaseInsensitiveAttributeNamedPersonImpl;
 import org.apereo.services.persondir.support.CaseInsensitiveNamedPersonImpl;
-import org.ldaptive.Connection;
 import org.ldaptive.ConnectionFactory;
 import org.ldaptive.FilterTemplate;
 import org.ldaptive.LdapAttribute;
@@ -211,15 +210,5 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
         }
         logger.debug("Converted ldap DN entry [{}] to attribute map {}", entry.getDn(), attributeMap.toString());
         return attributeMap;
-    }
-
-    private void closeConnection(final Connection context) {
-        if (context != null && context.isOpen()) {
-            try {
-                context.close();
-            } catch (final Exception ex) {
-                logger.warn("Could not close ldap connection", ex);
-            }
-        }
     }
 }

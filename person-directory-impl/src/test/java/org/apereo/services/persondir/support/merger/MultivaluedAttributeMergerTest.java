@@ -19,7 +19,6 @@
 package org.apereo.services.persondir.support.merger;
 
 import org.apereo.services.persondir.util.Util;
-import org.junit.Before;
 
 import java.util.HashMap;
 import java.util.List;
