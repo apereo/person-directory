@@ -42,7 +42,9 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import javax.naming.directory.SearchControls;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -166,6 +168,14 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
 
         dao.setSearchFilter("uid={user}");
         person = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        assertTrue(person.getAttributes().size() > 0);
+        assertNotNull(person.getAttributeValue("commonName"));
+        assertNotNull(person.getAttributeValue("displayName"));
+        assertNotNull(person.getAttributeValue("givenName"));
+
+        dao.setSearchFilter("uid={username}");
+        Set<IPersonAttributes> people = dao.getPeople(Map.of("username", List.of("edalquist")));
+        person = people.iterator().next();
         assertTrue(person.getAttributes().size() > 0);
         assertNotNull(person.getAttributeValue("commonName"));
         assertNotNull(person.getAttributeValue("displayName"));
