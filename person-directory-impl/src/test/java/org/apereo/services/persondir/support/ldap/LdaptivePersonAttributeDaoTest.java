@@ -29,6 +29,7 @@ import org.apache.directory.server.core.integ.AbstractLdapTestUnit;
 import org.apache.directory.server.core.integ.FrameworkRunner;
 
 
+import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.junit.BeforeClass;
@@ -41,11 +42,13 @@ import org.springframework.ldap.core.support.LdapContextSource;
 
 import javax.naming.directory.SearchControls;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -124,7 +127,7 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
      * Create a Spring-LDAP ContextSource for the in-memory LDAP server
      */
     @BeforeClass
-    public static void initontextSource() {
+    public static void initContextSource() {
         LdapContextSource ctxSrc = new LdapContextSource();
         ctxSrc.setUrl("ldap://localhost:10201");
         ctxSrc.setBase("DC=example,DC=com");
@@ -144,10 +147,10 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         final PooledConnectionFactory factory = new PooledConnectionFactory(urls[0]);
         factory.initialize();
 
-        final Map<String, String> map = new HashMap<>();
-        map.put("cn", "commonName");
-        map.put("mail", "displayName");
-        map.put("givenName", "givenName");
+        final Map<String, String> resultAttributeMap = new HashMap<>();
+        resultAttributeMap.put("cn", "commonName");
+        resultAttributeMap.put("mail", "displayName");
+        resultAttributeMap.put("givenName", "givenName");
 
         final SearchControls ctrs = new SearchControls();
         ctrs.setSearchScope(1);
@@ -158,7 +161,7 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         dao.setBaseDN("ou=people,dc=example,dc=com");
         dao.setSearchControls(ctrs);
         dao.setSearchFilter("uid={0}");
-        dao.setResultAttributeMapping(map);
+        dao.setResultAttributeMapping(resultAttributeMap);
 
         IPersonAttributes person = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
         assertTrue(person.getAttributes().size() > 0);
@@ -180,6 +183,118 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         assertNotNull(person.getAttributeValue("commonName"));
         assertNotNull(person.getAttributeValue("displayName"));
         assertNotNull(person.getAttributeValue("givenName"));
+    }
+
+
+    /**
+     * Show using multiple attributes to get person with QueryAttributeMapping set on DAO.
+     */
+    @Test
+    public void testVerifyGetPeopleWithQueryAttributeMapping() {
+        final String[] urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        final PooledConnectionFactory factory = new PooledConnectionFactory(urls[0]);
+        factory.initialize();
+
+        final Map<String, String> resultAttributeMap = new HashMap<>();
+        resultAttributeMap.put("cn", "commonName");
+        resultAttributeMap.put("mail", "displayName");
+        resultAttributeMap.put("givenName", "givenName");
+
+        final SearchControls ctrs = new SearchControls();
+        ctrs.setSearchScope(1);
+        ctrs.setCountLimit(2);
+
+        final LdaptivePersonAttributeDao dao = new LdaptivePersonAttributeDao();
+        Map attributeMapping = new HashMap();
+        attributeMapping.put("username","thename");
+        dao.setQueryAttributeMapping(attributeMapping);
+        dao.setConnectionFactory(factory);
+        dao.setBaseDN("ou=people,dc=example,dc=com");
+        dao.setSearchControls(ctrs);
+        dao.setSearchFilter("uid={thename}");
+        dao.setResultAttributeMapping(resultAttributeMap);
+
+        final Map<String, Object> query = new HashMap<>();
+        query.put("sn", Collections.singletonList("Johnson"));
+        query.put("username", Collections.singletonList("jjohnson"));
+
+        Set<IPersonAttributes> people = dao.getPeople(query);
+        assertTrue(people.iterator().hasNext());
+        IPersonAttributes person = people.iterator().next();
+        assertEquals("Jim", person.getAttributeValue("givenName"));
+    }
+
+    /**
+     * Show using multiple attributes to get person without QueryAttributeMapping set on DAO.
+     * This demonstrates that as long as the filter doesn't use <code>{0}</code> or <code>{user}</code>
+     * then it can work with multiple attributes and no username specifier. This allows for complex
+     * multi-attribute search filters.
+     */
+    @Test
+    public void testVerifyGetPeopleWithoutQueryAttributeMapping() {
+        final String[] urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        final PooledConnectionFactory factory = new PooledConnectionFactory(urls[0]);
+        factory.initialize();
+
+        final Map<String, String> resultAttributeMap = new HashMap<>();
+        resultAttributeMap.put("cn", "commonName");
+        resultAttributeMap.put("mail", "displayName");
+        resultAttributeMap.put("givenName", "givenName");
+
+        final SearchControls ctrs = new SearchControls();
+        ctrs.setSearchScope(1);
+        ctrs.setCountLimit(2);
+
+        final LdaptivePersonAttributeDao dao = new LdaptivePersonAttributeDao();
+        dao.setConnectionFactory(factory);
+        dao.setBaseDN("ou=people,dc=example,dc=com");
+        dao.setSearchControls(ctrs);
+        dao.setSearchFilter("uid={thename}");
+        dao.setResultAttributeMapping(resultAttributeMap);
+
+        final Map<String, Object> query = new HashMap<>();
+        query.put("sn", Collections.singletonList("Johnson"));
+        query.put("thename", Collections.singletonList("jjohnson"));
+
+        Set<IPersonAttributes> people = dao.getPeople(query);
+        assertTrue(people.iterator().hasNext());
+        IPersonAttributes person = people.iterator().next();
+        assertEquals("Jim", person.getAttributeValue("givenName"));
+    }
+
+    /**
+     * Show using multiple attributes to get person with multiple arguments in search filter.
+     */
+    @Test
+    public void testVerifyGetPeopleWithMultiArgSearchFilter() {
+        final String[] urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        final PooledConnectionFactory factory = new PooledConnectionFactory(urls[0]);
+        factory.initialize();
+
+        final Map<String, String> resultAttributeMap = new HashMap<>();
+        resultAttributeMap.put("cn", "commonName");
+        resultAttributeMap.put("mail", "displayName");
+        resultAttributeMap.put("givenName", "givenName");
+
+        final SearchControls ctrs = new SearchControls();
+        ctrs.setSearchScope(1);
+        ctrs.setCountLimit(2);
+
+        final LdaptivePersonAttributeDao dao = new LdaptivePersonAttributeDao();
+        dao.setConnectionFactory(factory);
+        dao.setBaseDN("ou=people,dc=example,dc=com");
+        dao.setSearchControls(ctrs);
+        dao.setSearchFilter("(&(uid={thename})(sn={sn})");
+        dao.setResultAttributeMapping(resultAttributeMap);
+
+        final Map<String, Object> query = new HashMap<>();
+        query.put("sn", Collections.singletonList("Johnson"));
+        query.put("thename", Collections.singletonList("jjohnson"));
+
+        Set<IPersonAttributes> people = dao.getPeople(query);
+        assertTrue(people.iterator().hasNext());
+        IPersonAttributes person = people.iterator().next();
+        assertEquals("Jim", person.getAttributeValue("givenName"));
     }
 }
 

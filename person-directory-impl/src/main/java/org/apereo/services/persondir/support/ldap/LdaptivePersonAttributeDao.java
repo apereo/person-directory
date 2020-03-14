@@ -152,6 +152,15 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
         } else {
             query = filter;
         }
+
+        if (this.isUseAllQueryAttributes() &&
+            values.size() > 1 &&
+            (this.searchFilter.contains("{0}") ||
+             this.searchFilter.contains("{user}"))) {
+            logger.warn("Query value will be indeterminate due to multiple attributes and no username indicator. Use attribute [{}] in query instead of {0} or {user}",
+                attribute);
+        }
+
         if (values.size() > 0) {
             if (this.searchFilter.contains("{0}")) {
                 query.setParameter(0, values.get(0).toString());
