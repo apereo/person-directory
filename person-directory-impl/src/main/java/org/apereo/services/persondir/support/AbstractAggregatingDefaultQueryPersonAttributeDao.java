@@ -223,7 +223,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * @param currentlyConsidering The IPersonAttributeDao to execute the query on.
      * @param resultPeople         The Map of results from all previous queries, may be null.
      * @param filter               the filter
-     * @return The results from the call to the DAO, follows the same rules as {@link IPersonAttributeDao#getUserAttributes(Map, IPersonAttributeDaoFilter)}.
+     * @return The results from the call to the DAO.
      */
     protected abstract Set<IPersonAttributes> getAttributesFromDao(Map<String, List<Object>> seed, boolean isFirstQuery,
                                                                    IPersonAttributeDao currentlyConsidering,
