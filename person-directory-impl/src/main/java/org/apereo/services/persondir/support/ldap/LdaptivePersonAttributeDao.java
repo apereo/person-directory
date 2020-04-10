@@ -120,6 +120,13 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
         this.connectionFactory = connectionFactory;
     }
 
+    /*
+     * Closes the underlying connectionFactory.
+    */
+    public void close() {
+        this.connectionFactory.close();
+    }
+
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(final FilterTemplate filter, final String userName) {
         final SearchResponse response;
