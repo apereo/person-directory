@@ -77,6 +77,11 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      */
     private String searchFilter;
 
+    /**
+     * LDAP binary attributes.
+     */
+    private String[] binaryAttributes;
+
     public LdaptivePersonAttributeDao() {
         super();
     }
@@ -118,6 +123,15 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      */
     public void setConnectionFactory(final ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
+    }
+
+    /**
+     * Sets binary attributes.
+     *
+     * @param binary attributes array.
+     */
+    public void setBinaryAttributes(final String[] binaryAttributes) {
+        this.binaryAttributes = binaryAttributes;
     }
 
     @Override
@@ -184,6 +198,7 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
         final SearchRequest request = new SearchRequest();
         request.setBaseDn(this.baseDN);
         request.setFilter(filter);
+        request.setBinaryAttributes(binaryAttributes);
 
         /** LDAP attributes to fetch from search results. */
         if (getResultAttributeMapping() != null && !getResultAttributeMapping().isEmpty()) {
