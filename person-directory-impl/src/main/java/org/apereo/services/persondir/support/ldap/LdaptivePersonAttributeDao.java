@@ -32,6 +32,8 @@ import org.ldaptive.SearchOperation;
 import org.ldaptive.SearchRequest;
 import org.ldaptive.SearchResponse;
 import org.ldaptive.SearchScope;
+import org.ldaptive.handler.LdapEntryHandler;
+import org.ldaptive.handler.SearchResultHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,6 +84,16 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      */
     private String[] binaryAttributes;
 
+    /**
+     * LDAP entry handlers.
+     */
+    private LdapEntryHandler[] entryHandlers;
+
+    /**
+     * LDAP search result handlers.
+     */
+    private SearchResultHandler[] searchResultHandlers;
+
     public LdaptivePersonAttributeDao() {
         super();
     }
@@ -128,17 +140,38 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
     /**
      * Sets binary attributes.
      *
-     * @param binary attributes array.
+     * @param binaryAttributes array.
      */
     public void setBinaryAttributes(final String[] binaryAttributes) {
         this.binaryAttributes = binaryAttributes;
+    }
+
+    /**
+     * Sets entry handlers.
+     *
+     * @param handlers for LDAP entries.
+     */
+    public void setEntryHandlers(final LdapEntryHandler[] handlers) {
+        this.entryHandlers = handlers;
+    }
+
+    /**
+     * Sets search result handlers.
+     *
+     * @param handlers for LDAP search results.
+     */
+    public void setSearchResultHandlers(final SearchResultHandler[] handlers) {
+        this.searchResultHandlers = handlers;
     }
 
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(final FilterTemplate filter, final String userName) {
         final SearchResponse response;
         try {
-            response = new SearchOperation(this.connectionFactory).execute(createRequest(filter));
+            final SearchOperation search = new SearchOperation(this.connectionFactory);
+            search.setEntryHandlers(entryHandlers);
+            search.setSearchResultHandlers(searchResultHandlers);
+            response = search.execute(createRequest(filter));
         } catch (final LdapException e) {
             throw new RuntimeException("Failed executing LDAP query " + filter, e);
         }
