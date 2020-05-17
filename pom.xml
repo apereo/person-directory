@@ -118,7 +118,7 @@
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>logging-interceptor</artifactId>
-                <version>4.6.0</version>
+                <version>4.7.0</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
