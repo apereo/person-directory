@@ -52,7 +52,7 @@ import java.util.Map;
  * @author Marvin S. Addison
  * @since 4.0.0
  */
-public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<FilterTemplate> {
+public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<FilterTemplate> implements AutoCloseable {
 
     /**
      * Logger instance.
@@ -269,5 +269,12 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
         }
         logger.debug("Converted ldap DN entry [{}] to attribute map {}", entry.getDn(), attributeMap.toString());
         return attributeMap;
+    }
+
+    @Override
+    public void close() {
+         if (connectionFactory != null) {
+             connectionFactory.close();
+         }
     }
 }
