@@ -78,7 +78,7 @@
         <log4j.version>2.13.3</log4j.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <slf4j.version>1.7.30</slf4j.version>
-        <spring.version>5.2.7.RELEASE</spring.version>
+        <spring.version>5.2.8.RELEASE</spring.version>
         <spring-ldap.version>2.3.3.RELEASE</spring-ldap.version>
         <spring-security.version>5.3.3.RELEASE</spring-security.version>
         <spring-modules.version>0.8a</spring-modules.version>
