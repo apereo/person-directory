@@ -82,7 +82,7 @@
         <spring-ldap.version>2.3.3.RELEASE</spring-ldap.version>
         <spring-security.version>5.3.3.RELEASE</spring-security.version>
         <spring-modules.version>0.8a</spring-modules.version>
-        <groovy.version>3.0.4</groovy.version>
+        <groovy.version>3.0.5</groovy.version>
         <grouper.client.version>2.5.33</grouper.client.version>
         <guava.version>29.0-jre</guava.version>
         <toml.version>1.0.0</toml.version>
