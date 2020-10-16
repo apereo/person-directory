@@ -24,7 +24,6 @@ import org.apereo.services.persondir.support.CaseInsensitiveAttributeNamedPerson
 import org.apereo.services.persondir.support.CaseInsensitiveNamedPersonImpl;
 import org.ldaptive.ConnectionFactory;
 import org.ldaptive.FilterTemplate;
-import org.ldaptive.LdapAttribute;
 import org.ldaptive.LdapEntry;
 import org.ldaptive.LdapException;
 import org.ldaptive.ReturnAttributes;
@@ -168,7 +167,7 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
     protected List<IPersonAttributes> getPeopleForQuery(final FilterTemplate filter, final String userName) {
         final SearchResponse response;
         try {
-            final SearchOperation search = new SearchOperation(this.connectionFactory);
+            final var search = new SearchOperation(this.connectionFactory);
             search.setEntryHandlers(entryHandlers);
             search.setSearchResultHandlers(searchResultHandlers);
             response = search.execute(createRequest(filter));
@@ -176,10 +175,10 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
             throw new RuntimeException("Failed executing LDAP query " + filter, e);
         }
         final List<IPersonAttributes> peopleAttributes = new ArrayList<>(response.entrySize());
-        for (final LdapEntry entry : response.getEntries()) {
+        for (final var entry : response.getEntries()) {
             final IPersonAttributes person;
-            final String userNameAttribute = this.getConfiguredUserNameAttribute();
-            final Map<String, List<Object>> attributes = convertLdapEntryToMap(entry);
+            final var userNameAttribute = this.getConfiguredUserNameAttribute();
+            final var attributes = convertLdapEntryToMap(entry);
             if (attributes.containsKey(userNameAttribute)) {
                 person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, attributes);
             } else {
@@ -228,14 +227,14 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      * @return ldaptive search request.
      */
     private SearchRequest createRequest(final FilterTemplate filter) {
-        final SearchRequest request = new SearchRequest();
+        final var request = new SearchRequest();
         request.setBaseDn(this.baseDN);
         request.setFilter(filter);
         request.setBinaryAttributes(binaryAttributes);
 
         /** LDAP attributes to fetch from search results. */
         if (getResultAttributeMapping() != null && !getResultAttributeMapping().isEmpty()) {
-            final String[] attributes = getResultAttributeMapping().keySet().toArray(new String[getResultAttributeMapping().size()]);
+            final var attributes = getResultAttributeMapping().keySet().toArray(new String[getResultAttributeMapping().size()]);
             request.setReturnAttributes(attributes);
         } else if (searchControls.getReturningAttributes() != null && searchControls.getReturningAttributes().length > 0) {
             request.setReturnAttributes(searchControls.getReturningAttributes());
@@ -243,8 +242,8 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
             request.setReturnAttributes(ReturnAttributes.ALL_USER.value());
         }
 
-        SearchScope searchScope = SearchScope.SUBTREE;
-        for (final SearchScope scope : SearchScope.values()) {
+        var searchScope = SearchScope.SUBTREE;
+        for (final var scope : SearchScope.values()) {
             if (scope.ordinal() == this.searchControls.getSearchScope()) {
                 searchScope = scope;
             }
@@ -264,7 +263,7 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      */
     private Map<String, List<Object>> convertLdapEntryToMap(final LdapEntry entry) {
         final Map<String, List<Object>> attributeMap = new LinkedHashMap<>(entry.size());
-        for (final LdapAttribute attr : entry.getAttributes()) {
+        for (final var attr : entry.getAttributes()) {
             attributeMap.put(attr.getName(), new ArrayList<Object>(attr.getStringValues()));
         }
         logger.debug("Converted ldap DN entry [{}] to attribute map {}", entry.getDn(), attributeMap.toString());

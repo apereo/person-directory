@@ -94,6 +94,20 @@
                         </entry>
                     </map>
                 </entry>
+                <entry key="tensada">
+                      <map>
+                          <entry key="firstName">
+                              <list><value>Tens</value></list>
+                          </entry>
+                      </map>
+                </entry>
+                <entry key="friabili">
+                    <map>
+                        <entry key="firstName">
+                            <list><value>Fri</value></list>
+                        </entry>
+                    </map>
+                </entry>
             </map>
         </property>
     </bean>

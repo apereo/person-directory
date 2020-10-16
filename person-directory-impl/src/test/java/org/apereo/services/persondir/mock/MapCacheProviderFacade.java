@@ -35,10 +35,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * The type Map cache provider facade.
+ *
  * @author Eric Dalquist
-
  */
 public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
+    /**
+     * The Cache.
+     */
     final Map<Serializable, Object> cache = new HashMap<>();
 
     private int hitCount = 0;
@@ -48,6 +52,8 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     private int removeCount = 0;
 
     /**
+     * Gets hit count.
+     *
      * @return the hitCount
      */
     public int getHitCount() {
@@ -55,6 +61,8 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     }
 
     /**
+     * Gets miss count.
+     *
      * @return the missCount
      */
     public int getMissCount() {
@@ -62,6 +70,8 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     }
 
     /**
+     * Gets flush count.
+     *
      * @return the flushCount
      */
     public int getFlushCount() {
@@ -69,6 +79,8 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     }
 
     /**
+     * Gets put count.
+     *
      * @return the putCount
      */
     public int getPutCount() {
@@ -76,6 +88,8 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     }
 
     /**
+     * Gets remove count.
+     *
      * @return the removeCount
      */
     public int getRemoveCount() {
@@ -83,6 +97,8 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     }
 
     /**
+     * Gets cache size.
+     *
      * @return the cacheSize
      */
     public int getCacheSize() {
@@ -151,7 +167,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
      */
     @Override
     public PropertyEditor getCachingModelEditor() {
-        final ReflectionCacheModelEditor editor = new ReflectionCacheModelEditor();
+        final var editor = new ReflectionCacheModelEditor();
         editor.setCacheModelClass(EhCacheCachingModel.class);
         return editor;
     }
@@ -161,7 +177,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
      */
     @Override
     public PropertyEditor getFlushingModelEditor() {
-        final ReflectionCacheModelEditor editor = new ReflectionCacheModelEditor();
+        final var editor = new ReflectionCacheModelEditor();
         editor.setCacheModelClass(EhCacheFlushingModel.class);
         return editor;
     }
@@ -172,5 +188,18 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
     @Override
     public CacheModelValidator modelValidator() {
         return new EhCacheModelValidator();
+    }
+
+    /**
+     * Reset.
+     */
+    public final void reset() {
+        this.cache.clear();
+        
+        this.hitCount = 0;
+        this.missCount = 0;
+        this.flushCount = 0;
+        this.putCount = 0;
+        this.removeCount = 0;
     }
 }

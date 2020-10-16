@@ -40,11 +40,11 @@ public class NoncollidingAttributeAdder extends BaseAdditiveAttributeMerger {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
 
-        for (final Map.Entry<String, List<Object>> sourceEntry : toConsider.entrySet()) {
-            final String sourceKey = sourceEntry.getKey();
+        for (final var sourceEntry : toConsider.entrySet()) {
+            final var sourceKey = sourceEntry.getKey();
 
             if (!toModify.containsKey(sourceKey)) {
-                final List<Object> sourceValue = sourceEntry.getValue();
+                final var sourceValue = sourceEntry.getValue();
                 toModify.put(sourceKey, sourceValue);
             }
         }

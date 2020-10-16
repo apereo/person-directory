@@ -50,7 +50,7 @@ public class ReplacingAttributeAdderTest extends AbstractAttributeMergerTest {
         expected.putAll(mapOne);
         expected.putAll(mapTwo);
 
-        final Map<String, List<Object>> result = this.adder.mergeAttributes(mapOne, mapTwo);
+        final var result = this.adder.mergeAttributes(mapOne, mapTwo);
         assertEquals(expected, result);
     }
 

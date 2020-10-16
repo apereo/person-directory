@@ -66,18 +66,18 @@ public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvid
      */
     @Override
     public String getUsernameFromQuery(final Map<String, List<Object>> query) {
-        final List<Object> usernameAttributeValues = query.get(this.usernameAttribute);
+        final var usernameAttributeValues = query.get(this.usernameAttribute);
 
         if (usernameAttributeValues == null || usernameAttributeValues.size() == 0) {
             return null;
         }
 
-        final Object firstValue = usernameAttributeValues.get(0);
+        final var firstValue = usernameAttributeValues.get(0);
         if (firstValue == null) {
             return null;
         }
 
-        final String username = StringUtils.trimToNull(String.valueOf(firstValue));
+        final var username = StringUtils.trimToNull(String.valueOf(firstValue));
         if (username == null || username.contains(IPersonAttributeDao.WILDCARD)) {
             return null;
         }

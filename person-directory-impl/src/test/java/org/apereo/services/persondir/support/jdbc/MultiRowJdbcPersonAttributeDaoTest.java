@@ -21,7 +21,6 @@ package org.apereo.services.persondir.support.jdbc;
 import com.google.common.collect.ImmutableMap;
 import junit.framework.TestCase;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.apereo.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.apereo.services.persondir.util.CaseCanonicalizationMode;
@@ -29,7 +28,6 @@ import org.apereo.services.persondir.util.Util;
 import org.springframework.jdbc.BadSqlGrammarException;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -50,7 +48,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
     @Override
     protected void setUpSchema(final DataSource dataSource) throws SQLException {
-        final Connection con = dataSource.getConnection();
+        final var con = dataSource.getConnection();
 
         con.prepareStatement("CREATE TABLE user_table " +
                 "(netid VARCHAR, " +
@@ -102,7 +100,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
     @Override
     protected void tearDownSchema(final DataSource dataSource) throws SQLException {
-        final Connection con = dataSource.getConnection();
+        final var con = dataSource.getConnection();
 
         con.prepareStatement("DROP TABLE user_table").execute();
 
@@ -111,7 +109,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
     @Override
     protected AbstractJdbcPersonAttributeDao<Map<String, Object>> newDao(final DataSource dataSource) {
-        final MultiRowJdbcPersonAttributeDao dao = new MultiRowJdbcPersonAttributeDao(dataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        final var dao = new MultiRowJdbcPersonAttributeDao(dataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
         dao.setNameValueColumnMappings(ImmutableMap.of("attr_name", "attr_val"));
         return dao;
     }
@@ -134,16 +132,16 @@ public class MultiRowJdbcPersonAttributeDaoTest
     }
 
     protected void processQueryAttributeMappingValues_BeforeNonUsernameQuery(final AbstractJdbcPersonAttributeDao<Map<String, Object>> dao) {
-        final Map<String, Set<String>> origMappings = dao.getQueryAttributeMapping();
+        final var origMappings = dao.getQueryAttributeMapping();
         if (origMappings == null || origMappings.isEmpty()) {
             return;
         }
         final Map<String, Set<String>> newMappings = new LinkedHashMap<>();
-        for (final Map.Entry<String, Set<String>> origMapping : origMappings.entrySet()) {
+        for (final var origMapping : origMappings.entrySet()) {
             final Set<String> newMappingValue = new LinkedHashSet<>();
             // multi-row dao maps all non-username attr values to the same
             // data layer column
-            for (final String origMappingValue : origMapping.getValue()) {
+            for (final var origMappingValue : origMapping.getValue()) {
                 if (!("netid".equals(origMappingValue))) {
                     newMappingValue.add("attr_val");
                 } else {
@@ -156,12 +154,12 @@ public class MultiRowJdbcPersonAttributeDaoTest
     }
 
     protected void processCaseInsensitiveDataAttributeMappingValues_BeforeNonUsernameQuery(final AbstractJdbcPersonAttributeDao<Map<String, Object>> dao) {
-        final Map<String, CaseCanonicalizationMode> origMappings = dao.getCaseInsensitiveDataAttributes();
+        final var origMappings = dao.getCaseInsensitiveDataAttributes();
         if (origMappings == null || origMappings.isEmpty()) {
             return;
         }
         final Map<String, CaseCanonicalizationMode> newMappings = new LinkedHashMap<>();
-        for (final Map.Entry<String, CaseCanonicalizationMode> origMapping : origMappings.entrySet()) {
+        for (final var origMapping : origMappings.entrySet()) {
             // that's right, it's all or nothing for the multi-row DAO w/r/t
             // case sensitivity of non-username attribs b/c the canonicalization
             // is based on data-layer attribute names, which are all the same for
@@ -177,7 +175,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
 
     public void testNoQueryAttributeMapping() {
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE netid = 'awp9'");
+        final var impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE netid = 'awp9'");
         impl.setUseAllQueryAttributes(false);
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -196,7 +194,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
 
-        final Map<String, List<Object>> attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        final var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         TestCase.assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -209,7 +207,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
      * expects to map.
      */
     public void testPossibleUserAttributeNames() {
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT attr_name, attr_val FROM user_table WHERE {0}");
+        final var impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT attr_name, attr_val FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
@@ -228,7 +226,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         expectedAttributeNames.add("emailAddress");
         expectedAttributeNames.add("dressShirtColor");
 
-        final Set<String> attributeNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        final var attributeNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(attributeNames, expectedAttributeNames);
     }
 
@@ -236,7 +234,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
      * Test for a query with a single attribute
      */
     public void testSingleAttrQuery() {
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        final var impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -255,7 +253,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
 
-        final Map<String, List<Object>> attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        final var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         TestCase.assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -267,7 +265,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
      * Test for a query with a single attribute
      */
     public void testInvalidColumnName() {
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        final var impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -303,7 +301,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
      * Test for a query with a single attribute
      */
     public void testSetNullAttributeMapping() {
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        final var impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -321,7 +319,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-        final Map<String, List<Object>> attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        final var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         TestCase.assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         TestCase.assertEquals(Util.list("blue"), attribs.get("shirt_color"));
@@ -332,7 +330,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
      * Test for a query with a single attribute
      */
     public void testSetNullAttributeName() {
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        final var impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -353,7 +351,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
      * Test for a query with a null value attribute
      */
     public void testNullAttrQuery() {
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        final var impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -366,7 +364,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-        final Map<String, List<Object>> attribs = impl.getPerson("susan", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        final var attribs = impl.getPerson("susan", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         TestCase.assertEquals(Collections.singletonList(null), attribs.get("dressShirtColor"));
         TestCase.assertEquals(Util.list("Susan"), attribs.get("firstName"));
     }
@@ -380,7 +378,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         queryAttributeMapping.put("uid", "netid");
         queryAttributeMapping.put("shirtColor", "attr_val");
 
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        final var impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(queryAttributeMapping);
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -397,7 +395,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         queryMap.put("shirtColor", Util.list("blue"));
         queryMap.put("Name", Util.list("John"));
 
-        final Set<IPersonAttributes> attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        final var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(Util.list("blue"), attribsSet.iterator().next().getAttributes().get("color"));
     }
 
@@ -410,7 +408,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         queryAttributeMapping.put("uid", "netid");
         queryAttributeMapping.put("shirtColor", "attr_val");
 
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
+        final var impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(queryAttributeMapping);
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -432,12 +430,12 @@ public class MultiRowJdbcPersonAttributeDaoTest
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("Name", Util.list("John"));
 
-        Set<IPersonAttributes> attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertNull(attribsSet);
     }
 
     public void testProperties() {
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE shirt_color = ?");
+        final var impl = new MultiRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE shirt_color = ?");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("shirt"));
@@ -473,7 +471,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
     @Override
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
-        final MultiRowJdbcPersonAttributeDao impl = new MultiRowJdbcPersonAttributeDao(this.testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
+        final var impl = new MultiRowJdbcPersonAttributeDao(this.testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
 
         return impl;

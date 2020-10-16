@@ -35,7 +35,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -146,8 +145,8 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     
     @Override
     protected PartialWhereClause appendAttributeToQuery(PartialWhereClause queryBuilder, String dataAttribute, final List<Object> queryValues) {
-        for (final Object queryValue : queryValues) {
-            final String queryString = queryValue != null ? queryValue.toString() : null;
+        for (final var queryValue : queryValues) {
+            final var queryString = queryValue != null ? queryValue.toString() : null;
             if (StringUtils.isNotBlank(queryString)) {
                 if (queryBuilder == null) {
                     queryBuilder = new PartialWhereClause();
@@ -156,8 +155,8 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
                 }
 
                 //Convert to SQL wildcard
-                final Matcher queryValueMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
-                final String formattedQueryValue = queryValueMatcher.replaceAll("%");
+                final var queryValueMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
+                final var formattedQueryValue = queryValueMatcher.replaceAll("%");
 
                 queryBuilder.arguments.add(formattedQueryValue);
                 if (dataAttribute != null) {
@@ -196,11 +195,11 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
         if (this.dataAttributeCaseCanonicalizationFunctions == null || this.dataAttributeCaseCanonicalizationFunctions.isEmpty()) {
             return dataAttribute;
         }
-        CaseCanonicalizationMode canonicalizationMode = this.caseInsensitiveDataAttributes.get(dataAttribute);
+        var canonicalizationMode = this.caseInsensitiveDataAttributes.get(dataAttribute);
         if (canonicalizationMode == null) {
             canonicalizationMode = getDefaultCaseCanonicalizationMode();
         }
-        final MessageFormat mf = this.dataAttributeCaseCanonicalizationFunctions.get(canonicalizationMode);
+        final var mf = this.dataAttributeCaseCanonicalizationFunctions.get(canonicalizationMode);
         if (mf == null) {
             return dataAttribute;
         }
@@ -214,14 +213,14 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(final PartialWhereClause queryBuilder, final String queryUserName) {
         //Execute the query
-        final RowMapper<R> rowMapper = this.getRowMapper();
+        final var rowMapper = this.getRowMapper();
 
         final List<R> results;
         if (queryBuilder != null) {
             //Merge the generated SQL with the base query template
-            final StringBuilder partialSqlWhere = queryBuilder.sql;
-            final Matcher queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
-            final String querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
+            final var partialSqlWhere = queryBuilder.sql;
+            final var queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
+            final var querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
 
             results = this.simpleJdbcTemplate.query(querySQL, rowMapper, queryBuilder.arguments.toArray());
 
@@ -252,7 +251,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
             setCaseInsensitiveDataAttributes(null);
         } else {
             final Map<String, CaseCanonicalizationMode> asMap = new HashMap<>();
-            for (final String attrib : caseInsensitiveDataAttributes) {
+            for (final var attrib : caseInsensitiveDataAttributes) {
                 asMap.put(attrib, null);
             }
             setCaseInsensitiveDataAttributes(asMap);

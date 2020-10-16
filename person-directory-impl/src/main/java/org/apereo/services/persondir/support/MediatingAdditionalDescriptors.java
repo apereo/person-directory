@@ -49,7 +49,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      */
     @Override
     public void addAttributes(final Map<String, List<Object>> attributes) {
-        for (final IAdditionalDescriptors additionalDescriptors : this.delegateDescriptors) {
+        for (final var additionalDescriptors : this.delegateDescriptors) {
             additionalDescriptors.addAttributes(attributes);
         }
     }
@@ -63,8 +63,8 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     public List<Object> removeAttribute(final String name) {
         List<Object> removedValues = null;
 
-        for (final IAdditionalDescriptors additionalDescriptors : this.delegateDescriptors) {
-            final List<Object> values = additionalDescriptors.removeAttribute(name);
+        for (final var additionalDescriptors : this.delegateDescriptors) {
+            final var values = additionalDescriptors.removeAttribute(name);
             if (values != null) {
                 if (removedValues == null) {
                     removedValues = new ArrayList<>(values);
@@ -86,8 +86,8 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
     public List<Object> setAttributeValues(final String name, final List<Object> values) {
         List<Object> replacedValues = null;
 
-        for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
-            final List<Object> oldValues = additionalDescriptors.setAttributeValues(name, values);
+        for (final var additionalDescriptors : delegateDescriptors) {
+            final var oldValues = additionalDescriptors.setAttributeValues(name, values);
             if (oldValues != null) {
                 if (replacedValues == null) {
                     replacedValues = new ArrayList<>(oldValues);
@@ -105,7 +105,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      */
     @Override
     public void setAttributes(final Map<String, List<Object>> attributes) {
-        for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
+        for (final var additionalDescriptors : delegateDescriptors) {
             additionalDescriptors.setAttributes(attributes);
         }
     }
@@ -115,7 +115,7 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      */
     @Override
     public void setName(final String name) {
-        for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
+        for (final var additionalDescriptors : delegateDescriptors) {
             additionalDescriptors.setName(name);
         }
     }
@@ -125,8 +125,8 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      */
     @Override
     public Object getAttributeValue(final String name) {
-        for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
-            final Map<String, List<Object>> attributes = additionalDescriptors.getAttributes();
+        for (final var additionalDescriptors : delegateDescriptors) {
+            final var attributes = additionalDescriptors.getAttributes();
             if (attributes != null && attributes.containsKey(name)) {
                 return additionalDescriptors.getAttributeValue(name);
             }
@@ -140,8 +140,8 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      */
     @Override
     public List<Object> getAttributeValues(final String name) {
-        for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
-            final Map<String, List<Object>> attributes = additionalDescriptors.getAttributes();
+        for (final var additionalDescriptors : delegateDescriptors) {
+            final var attributes = additionalDescriptors.getAttributes();
             if (attributes != null && attributes.containsKey(name)) {
                 return additionalDescriptors.getAttributeValues(name);
             }
@@ -155,8 +155,8 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      */
     @Override
     public Map<String, List<Object>> getAttributes() {
-        for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
-            final Map<String, List<Object>> attributes = additionalDescriptors.getAttributes();
+        for (final var additionalDescriptors : delegateDescriptors) {
+            final var attributes = additionalDescriptors.getAttributes();
             if (attributes != null && !attributes.isEmpty()) {
                 return attributes;
             }
@@ -170,8 +170,8 @@ public class MediatingAdditionalDescriptors implements IAdditionalDescriptors {
      */
     @Override
     public String getName() {
-        for (final IAdditionalDescriptors additionalDescriptors : delegateDescriptors) {
-            final String name = additionalDescriptors.getName();
+        for (final var additionalDescriptors : delegateDescriptors) {
+            final var name = additionalDescriptors.getName();
             if (name != null) {
                 return name;
             }

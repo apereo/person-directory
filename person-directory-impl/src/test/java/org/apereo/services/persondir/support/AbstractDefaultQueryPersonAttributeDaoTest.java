@@ -47,7 +47,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
     protected abstract AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao();
 
     public void testNullDefaultAttributeName() {
-        final AbstractDefaultAttributePersonAttributeDao dao = getAbstractDefaultQueryPersonAttributeDao();
+        final var dao = getAbstractDefaultQueryPersonAttributeDao();
         try {
             dao.setUsernameAttributeProvider(null);
             TestCase.fail("Expected Exception on setUsernameAttributeProvider(null)");

@@ -26,7 +26,6 @@ import org.apereo.services.persondir.IPersonAttributes;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -79,13 +78,13 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
         Validate.notNull(uid, "uid may not be null.");
 
         //Generate the seed map for the uid
-        final Map<String, List<Object>> seed = this.toSeedMap(uid);
+        final var seed = this.toSeedMap(uid);
 
         //Run the query using the seed
-        final Set<IPersonAttributes> people = this.getPeopleWithMultivaluedAttributes(seed, filter);
+        final var people = this.getPeopleWithMultivaluedAttributes(seed, filter);
 
         //Ensure a single result is returned
-        IPersonAttributes person = getSinglePerson(people);
+        var person = getSinglePerson(people);
         if (person == null) {
             return null;
         }
@@ -107,9 +106,9 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      * @return multi-valued seed Map containing the uid
      */
     protected Map<String, List<Object>> toSeedMap(final String uid) {
-        final List<Object> values = Collections.singletonList((Object) uid);
-        final String usernameAttribute = this.usernameAttributeProvider.getUsernameAttribute();
-        final Map<String, List<Object>> seed = Collections.singletonMap(usernameAttribute, values);
+        final var values = Collections.singletonList((Object) uid);
+        final var usernameAttribute = this.usernameAttributeProvider.getUsernameAttribute();
+        final var seed = Collections.singletonMap(usernameAttribute, values);
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Created seed map='" + seed + "' for uid='" + uid + "'");
         }

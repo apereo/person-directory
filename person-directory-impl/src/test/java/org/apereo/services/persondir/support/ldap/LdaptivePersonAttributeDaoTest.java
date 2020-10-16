@@ -29,9 +29,7 @@ import org.apache.directory.server.core.integ.AbstractLdapTestUnit;
 import org.apache.directory.server.core.integ.FrameworkRunner;
 
 
-import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +44,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -128,7 +125,7 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
      */
     @BeforeClass
     public static void initContextSource() {
-        LdapContextSource ctxSrc = new LdapContextSource();
+        var ctxSrc = new LdapContextSource();
         ctxSrc.setUrl("ldap://localhost:10201");
         ctxSrc.setBase("DC=example,DC=com");
         ctxSrc.setUserDn("uid=admin,ou=system");
@@ -143,8 +140,8 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
 
     @Test
     public void testVerifyGetPerson() {
-        final String[] urls = ((LdapContextSource) this.getContextSource()).getUrls();
-        final PooledConnectionFactory factory = new PooledConnectionFactory(urls[0]);
+        final var urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        final var factory = new PooledConnectionFactory(urls[0]);
         factory.initialize();
 
         final Map<String, String> resultAttributeMap = new HashMap<>();
@@ -152,18 +149,18 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         resultAttributeMap.put("mail", "displayName");
         resultAttributeMap.put("givenName", "givenName");
 
-        final SearchControls ctrs = new SearchControls();
+        final var ctrs = new SearchControls();
         ctrs.setSearchScope(1);
         ctrs.setCountLimit(2);
 
-        final LdaptivePersonAttributeDao dao = new LdaptivePersonAttributeDao();
+        final var dao = new LdaptivePersonAttributeDao();
         dao.setConnectionFactory(factory);
         dao.setBaseDN("ou=people,dc=example,dc=com");
         dao.setSearchControls(ctrs);
         dao.setSearchFilter("uid={0}");
         dao.setResultAttributeMapping(resultAttributeMap);
 
-        IPersonAttributes person = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        var person = dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
         assertTrue(person.getAttributes().size() > 0);
         assertNotNull(person.getAttributeValue("commonName"));
         assertNotNull(person.getAttributeValue("displayName"));
@@ -177,7 +174,7 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         assertNotNull(person.getAttributeValue("givenName"));
 
         dao.setSearchFilter("uid={username}");
-        Set<IPersonAttributes> people = dao.getPeople(Map.of("username", List.of("edalquist")));
+        var people = dao.getPeople(Map.of("username", List.of("edalquist")));
         person = people.iterator().next();
         assertTrue(person.getAttributes().size() > 0);
         assertNotNull(person.getAttributeValue("commonName"));
@@ -191,8 +188,8 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
      */
     @Test
     public void testVerifyGetPeopleWithQueryAttributeMapping() {
-        final String[] urls = ((LdapContextSource) this.getContextSource()).getUrls();
-        final PooledConnectionFactory factory = new PooledConnectionFactory(urls[0]);
+        final var urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        final var factory = new PooledConnectionFactory(urls[0]);
         factory.initialize();
 
         final Map<String, String> resultAttributeMap = new HashMap<>();
@@ -200,11 +197,11 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         resultAttributeMap.put("mail", "displayName");
         resultAttributeMap.put("givenName", "givenName");
 
-        final SearchControls ctrs = new SearchControls();
+        final var ctrs = new SearchControls();
         ctrs.setSearchScope(1);
         ctrs.setCountLimit(2);
 
-        final LdaptivePersonAttributeDao dao = new LdaptivePersonAttributeDao();
+        final var dao = new LdaptivePersonAttributeDao();
         Map attributeMapping = new HashMap();
         attributeMapping.put("username","thename");
         dao.setQueryAttributeMapping(attributeMapping);
@@ -218,9 +215,9 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         query.put("sn", Collections.singletonList("Johnson"));
         query.put("username", Collections.singletonList("jjohnson"));
 
-        Set<IPersonAttributes> people = dao.getPeople(query);
+        var people = dao.getPeople(query);
         assertTrue(people.iterator().hasNext());
-        IPersonAttributes person = people.iterator().next();
+        var person = people.iterator().next();
         assertEquals("Jim", person.getAttributeValue("givenName"));
     }
 
@@ -232,8 +229,8 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
      */
     @Test
     public void testVerifyGetPeopleWithoutQueryAttributeMapping() {
-        final String[] urls = ((LdapContextSource) this.getContextSource()).getUrls();
-        final PooledConnectionFactory factory = new PooledConnectionFactory(urls[0]);
+        final var urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        final var factory = new PooledConnectionFactory(urls[0]);
         factory.initialize();
 
         final Map<String, String> resultAttributeMap = new HashMap<>();
@@ -241,11 +238,11 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         resultAttributeMap.put("mail", "displayName");
         resultAttributeMap.put("givenName", "givenName");
 
-        final SearchControls ctrs = new SearchControls();
+        final var ctrs = new SearchControls();
         ctrs.setSearchScope(1);
         ctrs.setCountLimit(2);
 
-        final LdaptivePersonAttributeDao dao = new LdaptivePersonAttributeDao();
+        final var dao = new LdaptivePersonAttributeDao();
         dao.setConnectionFactory(factory);
         dao.setBaseDN("ou=people,dc=example,dc=com");
         dao.setSearchControls(ctrs);
@@ -256,9 +253,9 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         query.put("sn", Collections.singletonList("Johnson"));
         query.put("thename", Collections.singletonList("jjohnson"));
 
-        Set<IPersonAttributes> people = dao.getPeople(query);
+        var people = dao.getPeople(query);
         assertTrue(people.iterator().hasNext());
-        IPersonAttributes person = people.iterator().next();
+        var person = people.iterator().next();
         assertEquals("Jim", person.getAttributeValue("givenName"));
     }
 
@@ -267,8 +264,8 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
      */
     @Test
     public void testVerifyGetPeopleWithMultiArgSearchFilter() {
-        final String[] urls = ((LdapContextSource) this.getContextSource()).getUrls();
-        final PooledConnectionFactory factory = new PooledConnectionFactory(urls[0]);
+        final var urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        final var factory = new PooledConnectionFactory(urls[0]);
         factory.initialize();
 
         final Map<String, String> resultAttributeMap = new HashMap<>();
@@ -276,11 +273,11 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         resultAttributeMap.put("mail", "displayName");
         resultAttributeMap.put("givenName", "givenName");
 
-        final SearchControls ctrs = new SearchControls();
+        final var ctrs = new SearchControls();
         ctrs.setSearchScope(1);
         ctrs.setCountLimit(2);
 
-        final LdaptivePersonAttributeDao dao = new LdaptivePersonAttributeDao();
+        final var dao = new LdaptivePersonAttributeDao();
         dao.setConnectionFactory(factory);
         dao.setBaseDN("ou=people,dc=example,dc=com");
         dao.setSearchControls(ctrs);
@@ -291,9 +288,9 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         query.put("sn", Collections.singletonList("Johnson"));
         query.put("thename", Collections.singletonList("jjohnson"));
 
-        Set<IPersonAttributes> people = dao.getPeople(query);
+        var people = dao.getPeople(query);
         assertTrue(people.iterator().hasNext());
-        IPersonAttributes person = people.iterator().next();
+        var person = people.iterator().next();
         assertEquals("Jim", person.getAttributeValue("givenName"));
     }
 }

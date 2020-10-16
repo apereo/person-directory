@@ -21,7 +21,6 @@ package org.apereo.services.persondir.support;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,12 +77,12 @@ public class RegexGatewayPersonAttributeDaoTest extends AbstractPersonAttributeD
     }
 
     public void testMatches() {
-        final IPersonAttributes results = target.getPerson("monkey@yahoo.com", IPersonAttributeDaoFilter.alwaysChoose());
+        final var results = target.getPerson("monkey@yahoo.com", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(attributes, results.getAttributes());
     }
 
     public void testDoesNotMatch() {
-        final IPersonAttributes results = target.getPerson("monkey",
+        final var results = target.getPerson("monkey",
             IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(results);
     }

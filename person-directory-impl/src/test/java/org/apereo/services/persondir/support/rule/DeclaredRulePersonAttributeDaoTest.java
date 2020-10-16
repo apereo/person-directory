@@ -21,7 +21,6 @@ package org.apereo.services.persondir.support.rule;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.ArrayList;
@@ -83,13 +82,13 @@ public class DeclaredRulePersonAttributeDaoTest extends AbstractPersonAttributeD
     }
 
     public void testMatches() {
-        final IPersonAttributes results = target.getPerson("records-staff", IPersonAttributeDaoFilter.alwaysChoose());
+        final var results = target.getPerson("records-staff", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(results.getAttributes());
         assertEquals(Util.list(VALUE), results.getAttributes().get("fax"));
     }
 
     public void testDoesNotMatch() {
-        final IPersonAttributes results = target.getPerson("faculty", IPersonAttributeDaoFilter.alwaysChoose());
+        final var results = target.getPerson("faculty", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(results);
     }
 

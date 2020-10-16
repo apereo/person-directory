@@ -21,13 +21,11 @@ package org.apereo.services.persondir.support;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Eric Dalquist
@@ -41,7 +39,7 @@ public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTe
     }
 
     public void testMapEcho() {
-        final EchoPersonAttributeDaoImpl dao = new EchoPersonAttributeDaoImpl();
+        final var dao = new EchoPersonAttributeDaoImpl();
 
         final Map<String, List<Object>> testMap = new HashMap<>();
         testMap.put("key1", Util.list("val1"));
@@ -49,7 +47,7 @@ public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTe
 
         final Map<String, Object> goalMap = new HashMap<>(testMap);
 
-        final Set<IPersonAttributes> resultSet = dao.getPeopleWithMultivaluedAttributes(testMap, IPersonAttributeDaoFilter.alwaysChoose());
+        final var resultSet = dao.getPeopleWithMultivaluedAttributes(testMap, IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(goalMap, resultSet.iterator().next().getAttributes());
     }

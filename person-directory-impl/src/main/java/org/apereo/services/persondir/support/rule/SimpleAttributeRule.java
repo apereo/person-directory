@@ -61,23 +61,23 @@ public final class SimpleAttributeRule implements AttributeRule {
 
         // Assertions.
         if (whenKey == null) {
-            final String msg = "Argument 'whenKey' cannot be null.";
+            final var msg = "Argument 'whenKey' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (whenPattern == null) {
-            final String msg = "Argument 'whenPattern' cannot be null.";
+            final var msg = "Argument 'whenPattern' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (setKey == null) {
-            final String msg = "Argument 'setKey' cannot be null.";
+            final var msg = "Argument 'setKey' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (setUserName == null) {
-            final String msg = "Argument 'setUserName' cannot be null.";
+            final var msg = "Argument 'setUserName' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (setValue == null) {
-            final String msg = "Argument 'setValue' cannot be null.";
+            final var msg = "Argument 'setValue' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
 
@@ -99,11 +99,11 @@ public final class SimpleAttributeRule implements AttributeRule {
 
         // Assertions.
         if (userInfo == null) {
-            final String msg = "Argument 'userInfo' cannot be null.";
+            final var msg = "Argument 'userInfo' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
 
-        final List<Object> value = userInfo.get(whenKey);
+        final var value = userInfo.get(whenKey);
         if (value == null) {
             // No problem... but we certainly don't apply in this case.
             return false;
@@ -114,12 +114,12 @@ public final class SimpleAttributeRule implements AttributeRule {
         try {
             compare = value.toArray(new String[value.size()]);
         } catch (final ClassCastException cce) {
-            final String msg = "List values may contain only String instances.";
+            final var msg = "List values may contain only String instances.";
             throw new RuntimeException(msg, cce);
         }
 
-        boolean rslt = false;   // default...
-        for (int i = 0; i < compare.length; i++) {
+        var rslt = false;   // default...
+        for (var i = 0; i < compare.length; i++) {
             if (compare[i].matches(whenPattern)) {
                 rslt = true;
                 break;
@@ -135,11 +135,11 @@ public final class SimpleAttributeRule implements AttributeRule {
 
         // Assertions.
         if (userInfo == null) {
-            final String msg = "Argument 'userInfo' cannot be null.";
+            final var msg = "Argument 'userInfo' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (!appliesTo(userInfo)) {
-            final String msg = "May not evaluate.  This rule does not apply.";
+            final var msg = "May not evaluate.  This rule does not apply.";
             throw new IllegalArgumentException(msg);
         }
 

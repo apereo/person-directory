@@ -36,7 +36,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Eric Dalquist 
@@ -63,7 +62,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
 
     public void testDefaultAttributeNameUsage() {
         this.testQueryPersonAttributeDao.getPerson("eric", IPersonAttributeDaoFilter.alwaysChoose());
-        final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
+        final var args = this.testQueryPersonAttributeDao.getArgs();
 
         //Do asList for an easy comparison
         assertEquals(Collections.singletonList(Collections.singletonList("eric")), args);
@@ -71,12 +70,12 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
 
     public void testNoQueryAttributeMapping() {
         this.testQueryPersonAttributeDao.getPerson("eric", IPersonAttributeDaoFilter.alwaysChoose());
-        final List<List<Object>> args1 = this.testQueryPersonAttributeDao.getArgs();
+        final var args1 = this.testQueryPersonAttributeDao.getArgs();
         assertEquals(Arrays.asList(Arrays.asList("eric")), args1);
 
         this.testQueryPersonAttributeDao.setUseAllQueryAttributes(false);
         this.testQueryPersonAttributeDao.getPerson("eric", IPersonAttributeDaoFilter.alwaysChoose());
-        final List<List<Object>> args2 = this.testQueryPersonAttributeDao.getArgs();
+        final var args2 = this.testQueryPersonAttributeDao.getArgs();
         assertNull(args2);
     }
 
@@ -86,7 +85,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
 
         this.testQueryPersonAttributeDao.setQueryAttributeMapping(queryAttributes);
         this.testQueryPersonAttributeDao.getPerson("eric", IPersonAttributeDaoFilter.alwaysChoose());
-        final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
+        final var args = this.testQueryPersonAttributeDao.getArgs();
         assertNull(args);
     }
 
@@ -100,8 +99,8 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         seed.put("name.first", Collections.singletonList("eric"));
         seed.put("name.last", Collections.singletonList("dalquist"));
         this.testQueryPersonAttributeDao.getPeopleWithMultivaluedAttributes(seed, IPersonAttributeDaoFilter.alwaysChoose());
-        final List<List<Object>> args = this.testQueryPersonAttributeDao.getArgs();
-        final Object[] expectedArgs = new Object[]{Collections.singletonList("eric"), Collections.singletonList("dalquist")};
+        final var args = this.testQueryPersonAttributeDao.getArgs();
+        final var expectedArgs = new Object[]{Collections.singletonList("eric"), Collections.singletonList("dalquist")};
 
         //Do asList for an easy comparison
         assertTrue(Arrays.asList(expectedArgs).containsAll(args));
@@ -113,16 +112,16 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         storedAttrs.put("name.first", Util.list("eric"));
         storedAttrs.put("name.last", Util.list("dalquist"));
 
-        final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
+        final var dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
 
         final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList("edalquist"));
 
-        final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
+        final var allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(1, allResults.size());
-        final IPersonAttributes result = allResults.iterator().next();
+        final var result = allResults.iterator().next();
         // By default should just echo attribs from data layer as-is
         assertEquals("edalquist", result.getName());
         assertEquals(Util.genList("edalquist"), result.getAttributeValues("username"));
@@ -136,7 +135,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         storedAttrs.put("name.first", Util.list("eric"));
         storedAttrs.put("name.last", Util.list("dalquist"));
 
-        final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
+        final var dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
 
         final Map<String, String> resultAttributeMappings = new LinkedHashMap<>();
         resultAttributeMappings.put("name.first", "fname");
@@ -146,11 +145,11 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList("edalquist"));
 
-        final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
+        final var allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(1, allResults.size());
-        final IPersonAttributes result = allResults.iterator().next();
+        final var result = allResults.iterator().next();
         assertEquals("edalquist", result.getName());
         // Don't actually get a username attribute in this case because it's
         // not in the result attribute mappings. But it *is* successfully mapped
@@ -166,7 +165,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         storedAttrs.put("name.first", Util.list("eric"));
         storedAttrs.put("name.last", Util.list("dalquist"));
 
-        final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
+        final var dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
         final Map<String, CaseCanonicalizationMode> caseInsensitiveAttributes = new HashMap<>();
         caseInsensitiveAttributes.put("name.first", CaseCanonicalizationMode.UPPER);
         dao.setCaseInsensitiveResultAttributes(caseInsensitiveAttributes);
@@ -174,11 +173,11 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList("edalquist"));
 
-        final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
+        final var allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(1, allResults.size());
-        final IPersonAttributes result = allResults.iterator().next();
+        final var result = allResults.iterator().next();
         // By default should just echo attribs from data layer as-is
         assertEquals("edalquist", result.getName());
         assertEquals(Util.genList("edalquist"), result.getAttributeValues("username"));
@@ -192,7 +191,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         storedAttrs.put("name.first", Util.list("eric"));
         storedAttrs.put("name.last", Util.list("dalquist"));
 
-        final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
+        final var dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
         final Map<String, CaseCanonicalizationMode> caseInsensitiveAttributes = new HashMap<>();
         caseInsensitiveAttributes.put("fname", CaseCanonicalizationMode.UPPER);
         dao.setCaseInsensitiveResultAttributes(caseInsensitiveAttributes);
@@ -205,11 +204,11 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList("edalquist"));
 
-        final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
+        final var allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(1, allResults.size());
-        final IPersonAttributes result = allResults.iterator().next();
+        final var result = allResults.iterator().next();
         assertEquals("edalquist", result.getName());
         // Don't actually get a username attribute in this case because it's
         // not in the result attribute mappings. But it *is* successfully mapped
@@ -225,7 +224,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         storedAttrs.put("name.first", Util.list("ERIC"));
         storedAttrs.put("name.last", Util.list("dalquist"));
 
-        final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
+        final var dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
         // Not setting the CaseCanonicalizationMode here nor with an explicit
         // setter
         final Collection<String> caseInsensitiveAttributes = new HashSet<>();
@@ -241,11 +240,11 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList("edalquist"));
 
-        final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
+        final var allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(1, allResults.size());
-        final IPersonAttributes result = allResults.iterator().next();
+        final var result = allResults.iterator().next();
         // By default should just echo attribs from data layer as-is
         assertEquals("edalquist", result.getName());
         assertEquals(Util.genList("edalquist"), result.getAttributeValues("username"));
@@ -259,7 +258,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         storedAttrs.put("name.first", Util.list("ERIC"));
         storedAttrs.put("name.last", Util.list("dalquist"));
 
-        final InMemoryAbstractQueryPersonAttributeDao dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
+        final var dao = new InMemoryAbstractQueryPersonAttributeDao(storedAttrs);
         // Not setting the CaseCanonicalizationMode here nor with an explicit
         // setter
         final Collection<String> caseInsensitiveAttributes = new HashSet<>();
@@ -271,11 +270,11 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         final Map<String, List<Object>> seed = new HashMap<>();
         seed.put("username", Collections.singletonList("edalquist"));
 
-        final Set<IPersonAttributes> allResults = dao.getPeopleWithMultivaluedAttributes(seed,
+        final var allResults = dao.getPeopleWithMultivaluedAttributes(seed,
             IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(1, allResults.size());
-        final IPersonAttributes result = allResults.iterator().next();
+        final var result = allResults.iterator().next();
         // Username canonicalization always independent, for better or worse,
         // of attribute canonicalization. See setUsernameCaseCanonicalizationMode()
         assertEquals("EDALQUIST", result.getName());

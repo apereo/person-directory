@@ -40,9 +40,9 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         secondAttributes.put("attName", Util.list("attValue", "attrValue1"));
         secondAttributes.put("attName3", Util.list("attValue2"));
 
-        MultivaluedAttributeMerger adder = new MultivaluedAttributeMerger();
+        var adder = new MultivaluedAttributeMerger();
         adder.setDistinctValues(true);
-        final Map<String, List<Object>> result = adder.mergeAttributes(someAttributes, secondAttributes);
+        final var result = adder.mergeAttributes(someAttributes, secondAttributes);
 
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("attName", Util.list("attValue", "attrValue1"));
@@ -63,8 +63,8 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(someAttributes);
 
-        MultivaluedAttributeMerger adder = new MultivaluedAttributeMerger();
-        final Map<String, List<Object>> result = adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
+        var adder = new MultivaluedAttributeMerger();
+        final var result = adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
         assertEquals(expected, result);
     }
 
@@ -85,8 +85,8 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         expected.putAll(someAttributes);
         expected.putAll(otherAttributes);
 
-        MultivaluedAttributeMerger adder = new MultivaluedAttributeMerger();
-        final Map<String, List<Object>> result = adder.mergeAttributes(someAttributes, otherAttributes);
+        var adder = new MultivaluedAttributeMerger();
+        final var result = adder.mergeAttributes(someAttributes, otherAttributes);
         assertEquals(expected, result);
     }
 
@@ -143,8 +143,8 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         expected.put("attName12", Util.list("attValue12.1", "attValue12.2", "attValue12"));
         expected.put("attName13", Util.list("attValue13.1.1", "attValue13.1.2", "attValue13.2.1", "attValue13.2.2"));
 
-        MultivaluedAttributeMerger adder = new MultivaluedAttributeMerger();
-        final Map<String, List<Object>> result = adder.mergeAttributes(someAttributes, otherAttributes);
+        var adder = new MultivaluedAttributeMerger();
+        final var result = adder.mergeAttributes(someAttributes, otherAttributes);
         assertEquals(expected, result);
     }
 

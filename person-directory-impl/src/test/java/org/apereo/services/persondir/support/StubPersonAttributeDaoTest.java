@@ -21,7 +21,6 @@ package org.apereo.services.persondir.support;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.Collections;
@@ -66,10 +65,10 @@ public class StubPersonAttributeDaoTest
         final Set<String> expectedAttributeNames = new HashSet<>();
         expectedAttributeNames.add("shirtColor");
         expectedAttributeNames.add("phone");
-        final Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        final var possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expectedAttributeNames, possibleAttributeNames);
 
-        final StubPersonAttributeDao nullBacking = new StubPersonAttributeDao();
+        final var nullBacking = new StubPersonAttributeDao();
         assertEquals(Collections.EMPTY_SET, nullBacking.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
     }
 
@@ -77,7 +76,7 @@ public class StubPersonAttributeDaoTest
      * Return stub attributes regardless of input (e.g. empty map)
      */
     public void testGetUserAttributesMap() {
-        final Set<IPersonAttributes> resultsSet = this.testInstance.getPeopleWithMultivaluedAttributes(new HashMap<>(),
+        final var resultsSet = this.testInstance.getPeopleWithMultivaluedAttributes(new HashMap<>(),
             IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(this.backingMap, resultsSet.iterator().next().getAttributes());
 

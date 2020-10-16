@@ -121,7 +121,7 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
                                                                      final IPersonAttributeDaoFilter filter) {
         Validate.notNull(seed, "Argument 'seed' cannot be null.");
 
-        for (final AttributeRule rule : this.rules) {
+        for (final var rule : this.rules) {
             if (rule.appliesTo(seed)) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Evaluating rule='" + rule + "' from the rules List");
@@ -145,8 +145,8 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     public Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         final Set<String> rslt = new LinkedHashSet<>();
 
-        for (final AttributeRule rule : this.rules) {
-            final Set<String> possibleUserAttributeNames = rule.getPossibleUserAttributeNames();
+        for (final var rule : this.rules) {
+            final var possibleUserAttributeNames = rule.getPossibleUserAttributeNames();
             rslt.addAll(possibleUserAttributeNames);
         }
 
@@ -161,8 +161,8 @@ public final class DeclaredRulePersonAttributeDao extends AbstractDefaultAttribu
     public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         final Set<String> rslt = new LinkedHashSet<>();
 
-        for (final AttributeRule rule : this.rules) {
-            final Set<String> possibleUserAttributeNames = rule.getAvailableQueryAttributes();
+        for (final var rule : this.rules) {
+            final var possibleUserAttributeNames = rule.getAvailableQueryAttributes();
             rslt.addAll(possibleUserAttributeNames);
         }
 

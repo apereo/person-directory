@@ -35,8 +35,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -141,8 +139,8 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     @JsonIgnore
     @Override
     public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
-        final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
-        final String usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
+        final var usernameAttributeProvider = this.getUsernameAttributeProvider();
+        final var usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
 
         final Set<String> list = new HashSet<>();
         list.add(usernameAttribute);
@@ -163,7 +161,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         if (this.queryAttributeName != null) {
             keyAttributeName = this.queryAttributeName;
         } else {
-            final IUsernameAttributeProvider usernameAttributeProvider = this.getUsernameAttributeProvider();
+            final var usernameAttributeProvider = this.getUsernameAttributeProvider();
             keyAttributeName = usernameAttributeProvider.getUsernameAttribute();
         }
 
@@ -180,17 +178,17 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(final String seedValue, final String queryUserName) {
         if (seedValue != null && seedValue.contains(IPersonAttributeDao.WILDCARD)) {
-            final Pattern seedPattern = PatternHelper.compilePattern(seedValue);
+            final var seedPattern = PatternHelper.compilePattern(seedValue);
 
             final List<IPersonAttributes> results = new LinkedList<>();
 
-            for (final Map.Entry<String, Map<String, List<Object>>> attributesEntry : this.backingMap.entrySet()) {
-                final String attributesKey = attributesEntry.getKey();
-                final Matcher keyMatcher = seedPattern.matcher(attributesKey);
+            for (final var attributesEntry : this.backingMap.entrySet()) {
+                final var attributesKey = attributesEntry.getKey();
+                final var keyMatcher = seedPattern.matcher(attributesKey);
                 if (keyMatcher.matches()) {
-                    final Map<String, List<Object>> attributes = attributesEntry.getValue();
+                    final var attributes = attributesEntry.getValue();
                     if (attributes != null) {
-                        final IPersonAttributes person = this.createPerson(null, queryUserName, attributes);
+                        final var person = this.createPerson(null, queryUserName, attributes);
                         results.add(person);
                     }
                 }
@@ -203,13 +201,13 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
             return results;
         }
 
-        final Map<String, List<Object>> attributes = this.backingMap.get(seedValue);
+        final var attributes = this.backingMap.get(seedValue);
 
         if (attributes == null) {
             return null;
         }
 
-        final IPersonAttributes person = this.createPerson(seedValue, queryUserName, attributes);
+        final var person = this.createPerson(seedValue, queryUserName, attributes);
         final List<IPersonAttributes> list = new ArrayList<>();
         list.add(person);
 
@@ -218,7 +216,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
 
     private IPersonAttributes createPerson(final String seedValue, final String queryUserName, final Map<String, List<Object>> attributes) {
         final IPersonAttributes person;
-        final String userNameAttribute = this.getConfiguredUserNameAttribute();
+        final var userNameAttribute = this.getConfiguredUserNameAttribute();
         if (this.isUserNameAttributeConfigured() && attributes.containsKey(userNameAttribute)) {
             // Option #1:  An attribute is named explicitly in the config, 
             // and that attribute is present in the results from LDAP;  use it
@@ -251,8 +249,8 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     private void initializePossibleAttributeNames() {
         final Set<String> possibleAttribNames = new LinkedHashSet<>();
 
-        for (final Map<String, List<Object>> attributeMapForSomeUser : this.backingMap.values()) {
-            final Set<String> keySet = attributeMapForSomeUser.keySet();
+        for (final var attributeMapForSomeUser : this.backingMap.values()) {
+            final var keySet = attributeMapForSomeUser.keySet();
             possibleAttribNames.addAll(keySet);
         }
 

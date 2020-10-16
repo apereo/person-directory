@@ -20,7 +20,6 @@ package org.apereo.services.persondir.support.jdbc;
 
 import junit.framework.TestResult;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.apereo.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.apereo.services.persondir.util.Util;
@@ -30,7 +29,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -66,7 +64,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
 
     @Override
     protected void setUpSchema(final DataSource dataSource) throws SQLException {
-        final Connection con = dataSource.getConnection();
+        final var con = dataSource.getConnection();
 
         con.prepareStatement("CREATE TABLE user_table " +
             "(netid VARCHAR, " +
@@ -96,7 +94,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
 
     @Override
     protected void tearDownSchema(final DataSource dataSource) throws SQLException {
-        final Connection con = dataSource.getConnection();
+        final var con = dataSource.getConnection();
         con.prepareStatement("DROP TABLE user_table").execute();
         con.close();
     }
@@ -117,7 +115,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
     }
 
     public void testNoQueryAttributeMapping() {
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE netid = 'awp9'");
+        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE netid = 'awp9'");
         impl.setUseAllQueryAttributes(false);
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -132,7 +130,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final Map<String, List<Object>> attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        final var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -145,7 +143,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
      * expects to map.
      */
     public void testPossibleUserAttributeNames() {
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
+        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         final Map<String, Object> columnsToAttributes = new HashMap<>();
@@ -164,7 +162,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
         expectedAttributeNames.add("emailAddress");
         expectedAttributeNames.add("dressShirtColor");
 
-        final Set<String> attributeNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        final var attributeNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(attributeNames, expectedAttributeNames);
     }
 
@@ -172,7 +170,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
      * Test for a query with a single attribute
      */
     public void testSingleAttrQuery() {
-        final SingleRowJdbcPersonAttributeDao impl = new
+        final var impl = new
             SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color, locations FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
@@ -189,7 +187,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
         columnsToAttributes.put("locations", "locations");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final Map<String, List<Object>> attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        final var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -201,7 +199,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
      * Test for a query with a single attribute
      */
     public void testNullColumnName() {
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE netid = {0}");
+        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE netid = {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -212,7 +210,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
         columnsToAttributes.put("email", "emailAddress");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final Map<String, List<Object>> attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        final var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("Andrew"), attribs.get("firstName"));
     }
@@ -221,7 +219,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
      * Test for a query with a single attribute
      */
     public void testSetNullAttributeMapping() {
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
+        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -236,7 +234,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
         columnsToAttributes.put("shirt_color", null);
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final Map<String, List<Object>> attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        final var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.get("shirt_color"));
@@ -247,7 +245,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
      * Test for a query with a single attribute
      */
     public void testSetNullAttributeName() {
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
+        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         final Map<String, Object> columnsToAttributes = new HashMap<>();
@@ -265,7 +263,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
      * Test for a query with a null value attribute
      */
     public void testNullAttrQuery() {
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
+        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -275,7 +273,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final Map<String, List<Object>> attribs = impl.getPerson("susan", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        final var attribs = impl.getPerson("susan", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         assertNull(attribs.get("dressShirtColor"));
         assertEquals(Util.list("Susan"), attribs.get("firstName"));
     }
@@ -289,7 +287,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
         queryAttributeMapping.put("uid", "netid");
         queryAttributeMapping.put("shirtColor", "shirt_color");
 
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE {0}");
+        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(queryAttributeMapping);
 
 
@@ -307,9 +305,9 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
         queryMap.put("shirtColor", Util.list("blue"));
         queryMap.put("Name", Util.list("John"));
 
-        final Set<IPersonAttributes> attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        final var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(1, attribsSet.size());
-        IPersonAttributes result = attribsSet.iterator().next();
+        var result = attribsSet.iterator().next();
         assertNotNull(result.getAttributes());
         assertEquals(Util.list("andrew.petro@yale.edu"), result.getAttributes().get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), result.getAttributes().get("emailAddress"));
@@ -325,7 +323,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
         queryAttributeMapping.put("uid", "netid");
         queryAttributeMapping.put("shirtColor", "shirt_color");
 
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE {0}");
+        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(queryAttributeMapping);
         impl.setRequireAllQueryAttributes(true);
 
@@ -342,7 +340,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("Name", Util.list("John"));
 
-        final Set<IPersonAttributes> attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        final var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(attribsSet);
     }
 
@@ -350,7 +348,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
      * Test for a query with a single attribute
      */
     public void testMultiPersonQuery() {
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
+        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
@@ -379,7 +377,7 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
     }
 
     public void testProperties() {
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
+        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
 
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
         assertEquals(Collections.singletonMap("shirt", Collections.singleton("shirt_color")), impl.getQueryAttributeMapping());
@@ -398,13 +396,13 @@ public class PostgresSingleRowJdbcPersonAttributeDaoTest extends AbstractCaseSen
 
     @Override
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
-        final String queryAttr = "shirt";
+        final var queryAttr = "shirt";
         final List<String> queryAttrList = new LinkedList<>();
         queryAttrList.add(queryAttr);
 
         // shirt_color = ?
 
-        final SingleRowJdbcPersonAttributeDao impl = new SingleRowJdbcPersonAttributeDao(this.testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
+        final var impl = new SingleRowJdbcPersonAttributeDao(this.testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
 
         return impl;

@@ -22,7 +22,6 @@ import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,7 +45,7 @@ public abstract class AbstractFlatteningPersonAttributeDao extends BasePersonAtt
     @Override
     public final Set<IPersonAttributes> getPeople(final Map<String, Object> query,
                                                   final IPersonAttributeDaoFilter filter) {
-        final Map<String, List<Object>> multivaluedSeed = MultivaluedPersonAttributeUtils.toMultivaluedMap(query);
+        final var multivaluedSeed = MultivaluedPersonAttributeUtils.toMultivaluedMap(query);
         return this.getPeopleWithMultivaluedAttributes(multivaluedSeed, filter);
     }
 }

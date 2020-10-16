@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -27,10 +27,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import java.util.Collections;
-
-import static org.junit.Assert.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * @author Eric Dalquist
@@ -44,11 +46,60 @@ public class AttributeBasedCacheKeyGeneratorTest {
     private ApplicationContext applicationContext;
 
     @Test
+    public void testCacheKeyGeneratorUnique() {
+        final var personAttributeDao = applicationContext.getBean("personAttributeDao", IPersonAttributeDao.class);
+        final var cacheProviderFacade = applicationContext.getBean("cacheProviderFacade", MapCacheProviderFacade.class);
+        cacheProviderFacade.reset();
+        assertEquals(0, cacheProviderFacade.getCacheSize());
+        assertEquals(0, cacheProviderFacade.getFlushCount());
+        assertEquals(0, cacheProviderFacade.getHitCount());
+        assertEquals(0, cacheProviderFacade.getMissCount());
+        assertEquals(0, cacheProviderFacade.getPutCount());
+        assertEquals(0, cacheProviderFacade.getRemoveCount());
+        
+        //Should be a miss
+        personAttributeDao.getPerson("tensada", IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(1, cacheProviderFacade.getCacheSize());
+        assertEquals(0, cacheProviderFacade.getFlushCount());
+        assertEquals(0, cacheProviderFacade.getHitCount());
+        assertEquals(1, cacheProviderFacade.getMissCount());
+        assertEquals(1, cacheProviderFacade.getPutCount());
+        assertEquals(0, cacheProviderFacade.getRemoveCount());
+
+        //Should be a hit
+        personAttributeDao.getPerson("tensada", IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(1, cacheProviderFacade.getCacheSize());
+        assertEquals(0, cacheProviderFacade.getFlushCount());
+        assertEquals(1, cacheProviderFacade.getHitCount());
+        assertEquals(1, cacheProviderFacade.getMissCount());
+        assertEquals(1, cacheProviderFacade.getPutCount());
+        assertEquals(0, cacheProviderFacade.getRemoveCount());
+
+
+        //Should be a miss
+        personAttributeDao.getPerson("friabili", IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(2, cacheProviderFacade.getCacheSize());
+        assertEquals(0, cacheProviderFacade.getFlushCount());
+        assertEquals(1, cacheProviderFacade.getHitCount());
+        assertEquals(2, cacheProviderFacade.getMissCount());
+        assertEquals(2, cacheProviderFacade.getPutCount());
+        assertEquals(0, cacheProviderFacade.getRemoveCount());
+
+        //Should be a hit
+        personAttributeDao.getPerson("friabili", IPersonAttributeDaoFilter.alwaysChoose());
+        assertEquals(2, cacheProviderFacade.getCacheSize());
+        assertEquals(0, cacheProviderFacade.getFlushCount());
+        assertEquals(2, cacheProviderFacade.getHitCount());
+        assertEquals(2, cacheProviderFacade.getMissCount());
+        assertEquals(2, cacheProviderFacade.getPutCount());
+        assertEquals(0, cacheProviderFacade.getRemoveCount());
+    }
+
+    @Test
     public void testCacheKeyGeneratorWithFactoryBean() {
-
-        final IPersonAttributeDao personAttributeDao = applicationContext.getBean("personAttributeDao", IPersonAttributeDao.class);
-
-        final MapCacheProviderFacade cacheProviderFacade = applicationContext.getBean("cacheProviderFacade", MapCacheProviderFacade.class);
+        final var personAttributeDao = applicationContext.getBean("personAttributeDao", IPersonAttributeDao.class);
+        final var cacheProviderFacade = applicationContext.getBean("cacheProviderFacade", MapCacheProviderFacade.class);
+        cacheProviderFacade.reset();
 
         assertEquals(0, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());
@@ -131,5 +182,29 @@ public class AttributeBasedCacheKeyGeneratorTest {
         assertEquals(4, cacheProviderFacade.getMissCount());
         assertEquals(4, cacheProviderFacade.getPutCount());
         assertEquals(0, cacheProviderFacade.getRemoveCount());
+    }
+
+    @Test
+    public void testUniqueCacheKeysAsLists() {
+        var generator = new AttributeBasedCacheKeyGenerator();
+        generator.setCacheKeyAttributes(Set.of("username"));
+        generator.setUseAllAttributes(true);
+        var hash1 = generator.getKeyHash(Map.of("username", List.of("tensada")));
+        var hash2 = generator.getKeyHash(Map.of("username", List.of("friabili")));
+        assertNotEquals(hash1, hash2);
+    }
+
+
+    @Test
+    public void testUniqueCacheKeysAsSingleValues() {
+        var generator = new AttributeBasedCacheKeyGenerator();
+        generator.setCacheKeyAttributes(Set.of("username"));
+        generator.setUseAllAttributes(true);
+        var hash1 = generator.getKeyHash(Map.of("username", "tensada"));
+        var hash2 = generator.getKeyHash(Map.of("username", "friabili"));
+        assertNotEquals(hash1, hash2);
+
+        assertEquals(hash1, generator.getKeyHash(Map.of("username", "tensada")));
+        assertEquals(hash2, generator.getKeyHash(Map.of("username", "friabili")));
     }
 }

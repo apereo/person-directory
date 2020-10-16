@@ -20,7 +20,6 @@ package org.apereo.services.persondir.util;
 
 import org.apereo.services.persondir.IPersonAttributeDao;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -37,19 +36,19 @@ public class PatternHelper {
      * @return compiled Pattern
      */
     public static Pattern compilePattern(final String queryString) {
-        final StringBuilder queryBuilder = new StringBuilder();
+        final var queryBuilder = new StringBuilder();
 
-        final Matcher queryMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
+        final var queryMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
 
         if (!queryMatcher.find()) {
             return Pattern.compile(Pattern.quote(queryString));
         }
 
-        int start = queryMatcher.start();
-        int previousEnd = -1;
+        var start = queryMatcher.start();
+        var previousEnd = -1;
         if (start > 0) {
-            final String queryPart = queryString.substring(0, start);
-            final String quotedQueryPart = Pattern.quote(queryPart);
+            final var queryPart = queryString.substring(0, start);
+            final var quotedQueryPart = Pattern.quote(queryPart);
             queryBuilder.append(quotedQueryPart);
         }
         queryBuilder.append(".*");
@@ -58,8 +57,8 @@ public class PatternHelper {
             start = queryMatcher.start();
 
             if (previousEnd != -1) {
-                final String queryPart = queryString.substring(previousEnd, start);
-                final String quotedQueryPart = Pattern.quote(queryPart);
+                final var queryPart = queryString.substring(previousEnd, start);
+                final var quotedQueryPart = Pattern.quote(queryPart);
                 queryBuilder.append(quotedQueryPart);
                 queryBuilder.append(".*");
             }
@@ -68,8 +67,8 @@ public class PatternHelper {
         } while (queryMatcher.find());
 
         if (previousEnd < queryString.length()) {
-            final String queryPart = queryString.substring(previousEnd);
-            final String quotedQueryPart = Pattern.quote(queryPart);
+            final var queryPart = queryString.substring(previousEnd);
+            final var quotedQueryPart = Pattern.quote(queryPart);
             queryBuilder.append(quotedQueryPart);
         }
 

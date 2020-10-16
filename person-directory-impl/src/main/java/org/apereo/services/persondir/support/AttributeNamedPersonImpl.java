@@ -55,7 +55,7 @@ public class AttributeNamedPersonImpl extends BasePersonImpl {
      */
     @Override
     public String getName() {
-        final Object attributeValue = this.getAttributeValue(this.userNameAttribute);
+        final var attributeValue = this.getAttributeValue(this.userNameAttribute);
         if (attributeValue == null) {
             return null;
         }

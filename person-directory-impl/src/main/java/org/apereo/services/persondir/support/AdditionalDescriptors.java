@@ -56,13 +56,13 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
 
     @Override
     public Object getAttributeValue(final String name) {
-        final List<Object> values = attributes.get(name);
+        final var values = attributes.get(name);
         return values == null || values.size() == 0 ? null : values.get(0);
     }
 
     @Override
     public List<Object> getAttributeValues(final String name) {
-        final List<Object> values = this.attributes.get(name);
+        final var values = this.attributes.get(name);
         if (values == null) {
             return null;
         }
@@ -86,9 +86,9 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
 
     @Override
     public void addAttributes(final Map<String, List<Object>> attributes) {
-        for (final Map.Entry<String, List<Object>> newAttribute : attributes.entrySet()) {
-            final String name = newAttribute.getKey();
-            final List<Object> values = newAttribute.getValue();
+        for (final var newAttribute : attributes.entrySet()) {
+            final var name = newAttribute.getKey();
+            final var values = newAttribute.getValue();
 
             if (values == null) {
                 this.attributes.put(name, null);
@@ -103,9 +103,9 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         Validate.notNull(attributes, "Argument 'attributes' cannot be null");
         final Map<String, List<Object>> newAttributes = new ConcurrentHashMap<>();
 
-        for (final Map.Entry<String, List<Object>> newAttribute : attributes.entrySet()) {
-            final String name = newAttribute.getKey();
-            final List<Object> values = newAttribute.getValue();
+        for (final var newAttribute : attributes.entrySet()) {
+            final var name = newAttribute.getKey();
+            final var values = newAttribute.getValue();
 
             if (values == null) {
                 newAttributes.put(name, null);
@@ -121,7 +121,7 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
     public List<Object> setAttributeValues(final String name, final List<Object> values) {
         // Assertions.
         if (name == null) {
-            final String msg = "Argument 'name' cannot be null.";
+            final var msg = "Argument 'name' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
 
@@ -150,7 +150,7 @@ public class AdditionalDescriptors implements IAdditionalDescriptors {
         if (!(object instanceof IPersonAttributes)) {
             return false;
         }
-        final IPersonAttributes rhs = (IPersonAttributes) object;
+        final var rhs = (IPersonAttributes) object;
         return new EqualsBuilder()
                 .append(this.name, rhs.getName())
                 .isEquals();

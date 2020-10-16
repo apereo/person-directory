@@ -29,7 +29,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -289,7 +288,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     }
 
     private Map<String, Set<String>> makeMapValueSetOfStrings(Map<String, ?> attributeMapping) {
-        final Map<String, Set<String>> parsedParameterAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(attributeMapping);
+        final var parsedParameterAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(attributeMapping);
 
         if (parsedParameterAttributeMapping.containsKey("")) {
             throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
@@ -363,7 +362,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
 
     private void doProcessing(final ServletRequest servletRequest) {
         if (servletRequest instanceof HttpServletRequest) {
-            final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+            final var httpServletRequest = (HttpServletRequest) servletRequest;
 
             final Map<String, List<Object>> attributes = new LinkedHashMap<>();
 
@@ -378,7 +377,7 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
             addRequestAttributes(httpServletRequest, attributes);
 
             final String username;
-            final List<Object> usernameAttributes = attributes.get(this.usernameAttribute);
+            final var usernameAttributes = attributes.get(this.usernameAttribute);
             if (usernameAttributes == null || usernameAttributes.isEmpty() || usernameAttributes.get(0) == null) {
                 logger.info("No username found as attribute '{}' among {}", usernameAttribute, attributes);
                 username = null;
@@ -406,23 +405,23 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      */
     protected void addRequestProperties(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
         if (this.remoteUserAttribute != null) {
-            final String remoteUser = httpServletRequest.getRemoteUser();
+            final var remoteUser = httpServletRequest.getRemoteUser();
             attributes.put(this.remoteUserAttribute, list(remoteUser));
         }
         if (this.remoteAddrAttribute != null) {
-            final String remoteAddr = httpServletRequest.getRemoteAddr();
+            final var remoteAddr = httpServletRequest.getRemoteAddr();
             attributes.put(this.remoteAddrAttribute, list(remoteAddr));
         }
         if (this.remoteHostAttribute != null) {
-            final String remoteHost = httpServletRequest.getRemoteHost();
+            final var remoteHost = httpServletRequest.getRemoteHost();
             attributes.put(this.remoteHostAttribute, list(remoteHost));
         }
         if (this.serverNameAttribute != null) {
-            final String serverName = httpServletRequest.getServerName();
+            final var serverName = httpServletRequest.getServerName();
             attributes.put(this.serverNameAttribute, list(serverName));
         }
         if (this.serverPortAttribute != null) {
-            final int serverPort = httpServletRequest.getServerPort();
+            final var serverPort = httpServletRequest.getServerPort();
             attributes.put(this.serverPortAttribute, list(serverPort));
         }
     }
@@ -434,15 +433,15 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * @param attributes Map of attributes to add additional attributes to from the Http Request
      */
     protected void addRequestCookies(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
-        final Cookie[] cookies = httpServletRequest.getCookies();
+        final var cookies = httpServletRequest.getCookies();
         if (cookies == null) {
             return;
         }
 
-        for (final Cookie cookie : cookies) {
-            final String cookieName = cookie.getName();
+        for (final var cookie : cookies) {
+            final var cookieName = cookie.getName();
             if (this.cookieAttributeMapping.containsKey(cookieName)) {
-                for (final String attributeName : this.cookieAttributeMapping.get(cookieName)) {
+                for (final var attributeName : this.cookieAttributeMapping.get(cookieName)) {
                     attributes.put(attributeName, list(cookie.getValue()));
                 }
             }
@@ -456,12 +455,12 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * @param attributes Map of attributes to add additional attributes to from the Http Request
      */
     protected void addRequestHeaders(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
-        for (final Map.Entry<String, Set<String>> headerAttributeEntry : this.headerAttributeMapping.entrySet()) {
-            final String headerName = headerAttributeEntry.getKey();
-            final String value = httpServletRequest.getHeader(headerName);
+        for (final var headerAttributeEntry : this.headerAttributeMapping.entrySet()) {
+            final var headerName = headerAttributeEntry.getKey();
+            final var value = httpServletRequest.getHeader(headerName);
 
             if (value != null) {
-                for (final String attributeName : headerAttributeEntry.getValue()) {
+                for (final var attributeName : headerAttributeEntry.getValue()) {
                     attributes.put(attributeName,
                             headersToIgnoreSemicolons.contains(headerName) ?
                                     list(value)
@@ -482,13 +481,13 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
      * @since 1.7.1
      */
     protected void addRequestAttributes(final HttpServletRequest httpServletRequest, final Map<String, List<Object>> attributes) {
-        for (final Map.Entry<String, Set<String>> attributeMapping : requestAttributeMapping.entrySet()) {
-            final String attributeName = attributeMapping.getKey();
-            final Object value = httpServletRequest.getAttribute(attributeName);
+        for (final var attributeMapping : requestAttributeMapping.entrySet()) {
+            final var attributeName = attributeMapping.getKey();
+            final var value = httpServletRequest.getAttribute(attributeName);
 
             if (value != null) {
                 if (value instanceof String) {
-                    for (final String attrName : attributeMapping.getValue()) {
+                    for (final var attrName : attributeMapping.getValue()) {
                         attributes.put(attrName, splitOnSemiColonHandlingBackslashEscaping((String) value));
                     }
                 } else {
@@ -514,25 +513,25 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         // If a referringParameterName is specified, first match against
         if (referringParameterName != null
                 && StringUtils.isNotBlank(httpServletRequest.getParameter(referringParameterName))) {
-            String referringValue = httpServletRequest.getParameter(referringParameterName);
-            Map<String, String> referringParameters = parseRequestParameterString(referringValue);
-            for (final Map.Entry<String, Set<String>> parameterMapping : parameterAttributeMapping.entrySet()) {
-                final String parameterName = parameterMapping.getKey();
-                final String value = referringParameters.get(parameterName);
+            var referringValue = httpServletRequest.getParameter(referringParameterName);
+            var referringParameters = parseRequestParameterString(referringValue);
+            for (final var parameterMapping : parameterAttributeMapping.entrySet()) {
+                final var parameterName = parameterMapping.getKey();
+                final var value = referringParameters.get(parameterName);
 
                 if (value != null) {
-                    for (final String attributeName : parameterMapping.getValue()) {
+                    for (final var attributeName : parameterMapping.getValue()) {
                         attributes.put(attributeName, list(value));
                     }
                 }
             }
         }
-        for (final Map.Entry<String, Set<String>> parameterMapping : parameterAttributeMapping.entrySet()) {
-            final String parameterName = parameterMapping.getKey();
-            final String value = httpServletRequest.getParameter(parameterName);
+        for (final var parameterMapping : parameterAttributeMapping.entrySet()) {
+            final var parameterName = parameterMapping.getKey();
+            final var value = httpServletRequest.getParameter(parameterName);
 
             if (value != null) {
-                for (final String attributeName : parameterMapping.getValue()) {
+                for (final var attributeName : parameterMapping.getValue()) {
                     attributes.put(attributeName, list(value));
                 }
             }
@@ -544,9 +543,9 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
         if (requestParameterString.indexOf("?") > 0) {
             requestParameterString = requestParameterString.substring(requestParameterString.indexOf("?") + 1);
         }
-        String[] parameterStrings = requestParameterString.trim().split("&");
-        for (String parameterString : parameterStrings) {
-            String[] parts = parameterString.split("=");
+        var parameterStrings = requestParameterString.trim().split("&");
+        for (var parameterString : parameterStrings) {
+            var parts = parameterString.split("=");
             if (parts.length > 1) {
                 parameters.put(parts[0], parts[1]);
             } else {
@@ -565,11 +564,11 @@ public class RequestAttributeSourceFilter extends GenericFilterBean {
     private static List<Object> splitOnSemiColonHandlingBackslashEscaping(final String in) {
         final List<Object> result = new LinkedList<>();
 
-        int i = 1;
-        String prefix = "";
-        final String[] splitStringArr = in.split(";");
-        for (final String s : splitStringArr) {
-            final String s2 = s.replaceFirst("\\\\$", ";");
+        var i = 1;
+        var prefix = "";
+        final var splitStringArr = in.split(";");
+        for (final var s : splitStringArr) {
+            final var s2 = s.replaceFirst("\\\\$", ";");
             if (s.equals(s2) || i == splitStringArr.length) {
                 result.add(prefix + s2);
                 prefix = "";

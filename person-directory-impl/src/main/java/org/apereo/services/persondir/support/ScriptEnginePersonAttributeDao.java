@@ -9,13 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.Collections;
@@ -87,7 +84,7 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
 
     public void setEngineName(final String engineName) {
         this.engineName = engineName;
-        final ScriptEngine engine = new ScriptEngineManager().getEngineByName(engineName);
+        final var engine = new ScriptEngineManager().getEngineByName(engineName);
         if (engine == null) {
             logger.warn("Specified engineName {} is not available in classpath.", engineName);
         }
@@ -169,14 +166,14 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
             if (!this.isEnabled()) {
                 return null;
             }
-            final String uid = getUsernameAttributeProvider().getUsernameFromQuery(query);
+            final var uid = getUsernameAttributeProvider().getUsernameFromQuery(query);
             if (uid == null) {
                 logger.warn("Unable to find username in map {} using attribute {}", query, getUsernameAttributeProvider().getUsernameAttribute());
                 return null;
             }
             final Set<IPersonAttributes> people = new LinkedHashSet<>();
             IPersonAttributes person;
-            final Map<String, Object> attributes = getScriptedAttributesFromFile(uid, query );
+            final var attributes = getScriptedAttributesFromFile(uid, query );
             if (this.caseInsensitiveUsername) {
                 person = new CaseInsensitiveNamedPersonImpl(uid, MultivaluedPersonAttributeUtils.toMultivaluedMap(attributes));
             } else {
@@ -219,7 +216,7 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
         }
 
         // ScriptEngineManager().getEngineByName(engineName) will throw NPE if engineName is null
-        final ScriptEngine engine = new ScriptEngineManager().getEngineByName(engineName);
+        final var engine = new ScriptEngineManager().getEngineByName(engineName);
         if (engine == null) {
             logger.warn("Script engine is not available in classpath for [{}]", engineName);
             return new HashMap<>();
@@ -230,7 +227,7 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
 
         switch (scriptType) {
             case RESOURCE:
-                try (InputStream in = getClass().getClassLoader().getResourceAsStream(this.scriptFile)) {
+                try (var in = getClass().getClassLoader().getResourceAsStream(this.scriptFile)) {
                     if (in != null && in.markSupported() && in.available() > 0) {
                         logger.debug("Loading script [{}] from classloader as a stream", this.scriptFile);
                         engine.eval(new InputStreamReader(in));
@@ -238,7 +235,7 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
                 }
                 break;
             case FILE:
-                final File theScriptFile = new File(this.scriptFile);
+                final var theScriptFile = new File(this.scriptFile);
                 logger.debug("Loading script from [{}]", theScriptFile);
                 engine.eval(new FileReader(theScriptFile));
                 break;
@@ -252,20 +249,20 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
         }
 
         logger.debug("Executing script's run method, with parameters [{}]", args);
-        final Invocable invocable = (Invocable) engine;
-        final Map<String, Object> personAttributesMap = (Map<String, Object>) invocable.invokeFunction("run", args);
+        final var invocable = (Invocable) engine;
+        final var personAttributesMap = (Map<String, Object>) invocable.invokeFunction("run", args);
 
         logger.debug("Final set of attributes determined by the script are [{}]", personAttributesMap);
         return personAttributesMap;
     }
 
     private SCRIPT_TYPE determineScriptType(String fileName) {
-        File f = new File(fileName);
+        var f = new File(fileName);
         if (f.exists() && f.isFile()) {
             return SCRIPT_TYPE.FILE;
         }
 
-        InputStream in = ScriptEnginePersonAttributeDao.class.getClassLoader().getResourceAsStream(fileName);
+        var in = ScriptEnginePersonAttributeDao.class.getClassLoader().getResourceAsStream(fileName);
         try {
             if (in != null && in.markSupported() && in.available() > 0) {
                 return SCRIPT_TYPE.RESOURCE;
@@ -288,16 +285,16 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
      * @return script engine name
      */
     public static String getScriptEngineName(String filename) {
-        String extension = FilenameUtils.getExtension(filename);
+        var extension = FilenameUtils.getExtension(filename);
         if (StringUtils.isBlank(extension)) {
             logger.warn("Can't determine engine name based on filename without extension {}", filename);
             return null;
         }
-        ScriptEngineManager manager = new ScriptEngineManager();
-        List<ScriptEngineFactory> engines = manager.getEngineFactories();
-        for (ScriptEngineFactory engineFactory : engines) {
-            List<String> extensions = engineFactory.getExtensions();
-            for (String supportedExt : extensions) {
+        var manager = new ScriptEngineManager();
+        var engines = manager.getEngineFactories();
+        for (var engineFactory : engines) {
+            var extensions = engineFactory.getExtensions();
+            for (var supportedExt : extensions) {
                 if (extension.equals(supportedExt)) {
                     // return first short name
                     return engineFactory.getNames().get(0);

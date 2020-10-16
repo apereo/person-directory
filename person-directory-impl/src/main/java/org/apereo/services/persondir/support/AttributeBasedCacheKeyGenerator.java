@@ -19,6 +19,7 @@
 package org.apereo.services.persondir.support;
 
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.logging.Log;
@@ -39,6 +40,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static org.apache.commons.codec.digest.MessageDigestAlgorithms.SHA_512;
+
 /**
  * Generates a cache key using a hash of the {@link Method} being called and for
  * {@link IPersonAttributeDao#getPerson(String, org.apereo.services.persondir.IPersonAttributeDaoFilter)} and
@@ -50,6 +53,7 @@ import java.util.Set;
 
  */
 public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
+
     private static final Map<String, Object> POSSIBLE_USER_ATTRIBUTE_NAMES_SEED_MAP = Collections.singletonMap("getPossibleUserAttributeNames_seedMap", new Serializable() {
         private static final long serialVersionUID = 1L;
     });
@@ -177,12 +181,12 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     @Override
     public Serializable generateKey(final MethodInvocation methodInvocation) {
         //Determine the tareted CachableMethod
-        final CachableMethod cachableMethod = this.resolveCacheableMethod(methodInvocation);
+        final var cachableMethod = this.resolveCacheableMethod(methodInvocation);
 
         //Use the resolved cachableMethod to determine the seed Map and then get the hash of the key elements
-        final Object[] methodArguments = methodInvocation.getArguments();
-        final Map<String, Object> seed = this.getSeed(methodArguments, cachableMethod);
-        final Integer keyHashCode = this.getKeyHash(seed);
+        final var methodArguments = methodInvocation.getArguments();
+        final var seed = this.getSeed(methodArguments, cachableMethod);
+        final var keyHashCode = this.getKeyHash(seed);
 
         //If no code generated return null
         if (keyHashCode == null) {
@@ -193,13 +197,13 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         }
 
         //Calculate the hashCode and checkSum
-        final HashCodeCalculator hashCodeCalculator = new HashCodeCalculator();
+        final var hashCodeCalculator = new HashCodeCalculator();
         hashCodeCalculator.append(keyHashCode);
 
         //Assemble the serializable key object
-        final long checkSum = hashCodeCalculator.getCheckSum();
-        final int hashCode = hashCodeCalculator.getHashCode();
-        final HashCodeCacheKey hashCodeCacheKey = new HashCodeCacheKey(checkSum, hashCode);
+        final var checkSum = hashCodeCalculator.getCheckSum();
+        final var hashCode = hashCodeCalculator.getHashCode();
+        final var hashCodeCacheKey = new HashCodeCacheKey(checkSum, hashCode);
 
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Generated cache key '" + hashCodeCacheKey + "' for MethodInvocation='" + methodInvocation + "'");
@@ -229,7 +233,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
 
             //The single valued attributes with a string needs to be converted to Map<String, List<Object>>
             case PERSON_STR: {
-                final String uid = (String) methodArguments[0];
+                final var uid = (String) methodArguments[0];
                 seed = Collections.singletonMap(this.defaultAttributeName, uid);
             }
             break;
@@ -273,23 +277,23 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         }
 
         //Build the cache key based on the attribute Set
-        final HashMap<String, Object> cacheKey = new HashMap<>(cacheAttributes.size());
-        for (final String attr : cacheAttributes) {
+        var cacheKey = new HashMap<String, Object>(cacheAttributes.size());
+        for (final var attr : cacheAttributes) {
             if (seed.containsKey(attr)) {
-                final Object value = seed.get(attr);
+                final var value = seed.get(attr);
 
                 if (!this.ignoreEmptyAttributes) {
-                    cacheKey.put(attr, value);
+                    putAttributeInCache(cacheKey, attr, value);
                 } else if (value instanceof Collection) {
                     if (!CollectionUtils.isEmpty((Collection<?>) value)) {
-                        cacheKey.put(attr, value);
+                        putAttributeInCache(cacheKey, attr, value);
                     }
                 } else if (value instanceof String) {
                     if (StringUtils.isNotEmpty((String) value)) {
-                        cacheKey.put(attr, value);
+                        putAttributeInCache(cacheKey, attr, value);
                     }
                 } else if (value != null) {
-                    cacheKey.put(attr, value);
+                    putAttributeInCache(cacheKey, attr, value);
                 }
             }
         }
@@ -303,8 +307,13 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
             return null;
         }
 
-        //Return the key map's hash code
+        // Return the key map's hash code
         return cacheKey.hashCode();
+    }
+
+    private void putAttributeInCache(final Map<String, Object> cacheKey, final String attr, final Object value) {
+        var hexed = new DigestUtils(SHA_512).digestAsHex(value.toString());
+        cacheKey.put(hexed, value);
     }
 
     /**
@@ -315,17 +324,18 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * @return Cachable method
      */
     protected CachableMethod resolveCacheableMethod(final MethodInvocation methodInvocation) {
-        final Method targetMethod = methodInvocation.getMethod();
-        final Class<?> targetClass = targetMethod.getDeclaringClass();
+        final var targetMethod = methodInvocation.getMethod();
+        final var targetClass = targetMethod.getDeclaringClass();
 
-        for (final CachableMethod cachableMethod : CachableMethod.values()) {
+        for (final var cachableMethod : CachableMethod.values()) {
             Method cacheableMethod = null;
             try {
                 cacheableMethod = targetClass.getMethod(cachableMethod.getName(), cachableMethod.getArgs());
             } catch (final SecurityException e) {
                 this.logger.warn("Security exception while attempting to if the target class '" + targetClass + "' implements the cachable method '" + cachableMethod + "'", e);
             } catch (final NoSuchMethodException e) {
-                final String message = "Taret class '" + targetClass + "' does not implement possible cachable method '" + cachableMethod + "'. Is the advice applied to the correct bean and methods?";
+                final var
+                    message = "Taret class '" + targetClass + "' does not implement possible cachable method '" + cachableMethod + "'. Is the advice applied to the correct bean and methods?";
 
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug(message, e);

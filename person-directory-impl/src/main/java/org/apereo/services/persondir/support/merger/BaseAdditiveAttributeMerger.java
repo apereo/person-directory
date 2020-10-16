@@ -65,14 +65,14 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
 
         //Convert the toModify Set into a Map to allow for easier lookups
         final Map<String, IPersonAttributes> toModfyPeople = new LinkedHashMap<>();
-        for (final IPersonAttributes toModifyPerson : toModify) {
+        for (final var toModifyPerson : toModify) {
             toModfyPeople.put(toModifyPerson.getName(), toModifyPerson);
         }
 
         //Merge in the toConsider people
-        for (final IPersonAttributes toConsiderPerson : toConsider) {
-            final String toConsiderName = toConsiderPerson.getName();
-            final IPersonAttributes toModifyPerson = toModfyPeople.get(toConsiderName);
+        for (final var toConsiderPerson : toConsider) {
+            final var toConsiderName = toConsiderPerson.getName();
+            final var toModifyPerson = toModfyPeople.get(toConsiderName);
 
             //No matching toModify person, just add the new person
             if (toModifyPerson == null) {
@@ -80,9 +80,9 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
             }
             //Matching toModify person, merge their attributes
             else {
-                final Map<String, List<Object>> toModifyAttributes = this.buildMutableAttributeMap(toModifyPerson.getAttributes());
-                final Map<String, List<Object>> mergedAttributes = this.mergePersonAttributes(toModifyAttributes, toConsiderPerson.getAttributes());
-                final NamedPersonImpl mergedPerson = new NamedPersonImpl(toConsiderName, mergedAttributes);
+                final var toModifyAttributes = this.buildMutableAttributeMap(toModifyPerson.getAttributes());
+                final var mergedAttributes = this.mergePersonAttributes(toModifyAttributes, toConsiderPerson.getAttributes());
+                final var mergedPerson = new NamedPersonImpl(toConsiderName, mergedAttributes);
 
                 //Remove then re-add the mergedPerson entry
                 toModify.remove(mergedPerson);
@@ -100,11 +100,11 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
      * @return Mutable attribute map
      */
     protected Map<String, List<Object>> buildMutableAttributeMap(final Map<String, List<Object>> attributes) {
-        final Map<String, List<Object>> mutableValuesBuilder = this.createMutableAttributeMap(attributes.size());
+        final var mutableValuesBuilder = this.createMutableAttributeMap(attributes.size());
 
-        for (final Map.Entry<String, List<Object>> attrEntry : attributes.entrySet()) {
-            final String key = attrEntry.getKey();
-            List<Object> value = attrEntry.getValue();
+        for (final var attrEntry : attributes.entrySet()) {
+            final var key = attrEntry.getKey();
+            var value = attrEntry.getValue();
 
             if (value != null) {
                 value = new ArrayList<>(value);

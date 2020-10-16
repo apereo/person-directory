@@ -21,7 +21,6 @@ package org.apereo.services.persondir.support;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import junit.framework.TestCase;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 
@@ -30,7 +29,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class AdditionalDescriptorsPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
 
@@ -54,11 +52,11 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends AbstractPersonA
 
     public void testGetPeopleWithMultivaluedAttributes() {
 
-        final AdditionalDescriptors ad = new AdditionalDescriptors();
+        final var ad = new AdditionalDescriptors();
         ad.setName(USERNAME);
         ad.setAttributeValues(ATTRIBUTE_NAME, ATTRIBUTE_VALUES);
 
-        final AdditionalDescriptorsPersonAttributeDao adpad = new AdditionalDescriptorsPersonAttributeDao();
+        final var adpad = new AdditionalDescriptorsPersonAttributeDao();
         adpad.setUsernameAttributeProvider(UAP);
         adpad.setCurrentUserProvider(CUP);
         adpad.setDescriptors(ad);
@@ -66,7 +64,7 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends AbstractPersonA
         final Map<String, List<Object>> query = new HashMap<>();
         query.put(ATTRIBUTE_NAME, ATTRIBUTE_VALUES);
 
-        Set<IPersonAttributes> rslt = adpad.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
+        var rslt = adpad.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertNull(rslt);
 
         query.put(USERNAME_ATTRIBUTE, Collections.singletonList((Object) USERNAME));
@@ -80,10 +78,10 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends AbstractPersonA
 
     @Override
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {
-        final AdditionalDescriptors ad = new AdditionalDescriptors();
+        final var ad = new AdditionalDescriptors();
         ad.setName(USERNAME);
 
-        final AdditionalDescriptorsPersonAttributeDao adpad = new AdditionalDescriptorsPersonAttributeDao();
+        final var adpad = new AdditionalDescriptorsPersonAttributeDao();
         adpad.setUsernameAttributeProvider(UAP);
         adpad.setCurrentUserProvider(CUP);
         adpad.setDescriptors(ad);

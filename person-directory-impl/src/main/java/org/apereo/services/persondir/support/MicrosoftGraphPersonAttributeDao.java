@@ -3,15 +3,12 @@ package org.apereo.services.persondir.support;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.squareup.moshi.Json;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.lang.StringUtils;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.springframework.util.ReflectionUtils;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 import retrofit2.http.Field;
@@ -174,34 +171,34 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
         try {
-            final HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            final var loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(this.loggingLevel.toUpperCase()));
 
-            final String token = getToken();
-            final OkHttpClient client = new OkHttpClient.Builder()
+            final var token = getToken();
+            final var client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
-                    final Request request = chain.request().newBuilder().header("Authorization", "Bearer " + token).build();
+                    final var request = chain.request().newBuilder().header("Authorization", "Bearer " + token).build();
                     return chain.proceed(request);
                 })
                 .addInterceptor(loggingInterceptor)
                 .build();
-            final Retrofit retrofit = new Retrofit
+            final var retrofit = new Retrofit
                 .Builder()
                 .baseUrl(this.apiBaseUrl)
                 .addConverterFactory(MoshiConverterFactory.create())
                 .client(client)
                 .build();
 
-            final GraphApiService service = retrofit.create(GraphApiService.class);
-            final String user = this.domain == null ? uid : uid + "@" + this.domain;
-            final Call<User> call = service.getUserByUserPrincipalName(user,
+            final var service = retrofit.create(GraphApiService.class);
+            final var user = this.domain == null ? uid : uid + "@" + this.domain;
+            final var call = service.getUserByUserPrincipalName(user,
                 StringUtils.defaultIfBlank(this.properties,
                     User.getDefaultFieldQuery().stream().collect(Collectors.joining(","))));
 
-            final Response<User> r = call.execute();
+            final var r = call.execute();
             if (r.isSuccessful()) {
-                final User response = r.body();
-                final Map<String, Object> attributes = response.buildAttributes();
+                final var response = r.body();
+                final var attributes = response.buildAttributes();
                 if (this.caseInsensitiveUsername) {
                     return new CaseInsensitiveNamedPersonImpl(uid, MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(attributes, filter));
                 }
@@ -223,8 +220,8 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
                                                                      final IPersonAttributeDaoFilter filter) {
         final Set<IPersonAttributes> people = new LinkedHashSet<>();
-        final String username = usernameAttributeProvider.getUsernameFromQuery(query);
-        final IPersonAttributes person = getPerson(username, filter);
+        final var username = usernameAttributeProvider.getUsernameFromQuery(query);
+        final var person = getPerson(username, filter);
         if (person != null) {
             people.add(person);
         }
@@ -244,20 +241,20 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     private String getToken() throws Exception {
-        final HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        final var loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(this.loggingLevel.toUpperCase()));
 
-        final OkHttpClient client = new OkHttpClient.Builder()
+        final var client = new OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .build();
 
-        final Retrofit retrofit = new Retrofit.Builder()
+        final var retrofit = new Retrofit.Builder()
             .baseUrl(String.format(this.loginBaseUrl, this.tenant))
             .addConverterFactory(MoshiConverterFactory.create())
             .client(client)
             .build();
-        final GraphAuthApiService service = retrofit.create(GraphAuthApiService.class);
-        final Response<OAuthTokenInfo> response = service.getOauth2Token(
+        final var service = retrofit.create(GraphAuthApiService.class);
+        final var response = service.getOauth2Token(
             this.grantType,
             this.clientId,
             this.clientSecret,
@@ -265,10 +262,10 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
             this.resource)
             .execute();
         if (response.isSuccessful()) {
-            final OAuthTokenInfo info = response.body();
+            final var info = response.body();
             return info.accessToken;
         }
-        final ResponseBody errorBody = response.errorBody();
+        final var errorBody = response.errorBody();
         throw new RuntimeException("error requesting token (" + response.code() + "): " + errorBody);
     }
 

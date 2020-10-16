@@ -139,19 +139,19 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         Set<IPersonAttributes> resultPeople = null;
 
         //Denotes that this is the first time we are running a query and the original seed should be used
-        boolean isFirstQuery = true;
+        var isFirstQuery = true;
 
         if (this.personAttributeDaos == null) {
             throw new IllegalStateException("personAttributeDaos must be set");
         }
 
         //Iterate through the configured IPersonAttributeDaos, querying each.
-        for (final IPersonAttributeDao currentlyConsidering : this.personAttributeDaos) {
+        for (final var currentlyConsidering : this.personAttributeDaos) {
             if (filter != null && !filter.choosePersonAttributeDao(currentlyConsidering)) {
                 continue;
             }
 
-            boolean handledException = false;
+            var handledException = false;
             Set<IPersonAttributes> currentPeople = null;
             try {
                 currentPeople = this.getAttributesFromDao(query, isFirstQuery, currentlyConsidering, resultPeople, filter);
@@ -243,12 +243,12 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     public final Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         Set<String> attrNames = null;
 
-        for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
+        for (final var currentDao : this.personAttributeDaos) {
 
             if (filter != null && !filter.choosePersonAttributeDao(currentDao)) {
                 continue;
             }
-            boolean handledException = false;
+            var handledException = false;
             Set<String> currentDaoAttrNames = null;
             try {
                 currentDaoAttrNames = currentDao.getPossibleUserAttributeNames(filter);
@@ -300,11 +300,11 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         Set<String> queryAttrs = null;
 
-        for (final IPersonAttributeDao currentDao : this.personAttributeDaos) {
+        for (final var currentDao : this.personAttributeDaos) {
             if (filter != null && !filter.choosePersonAttributeDao(currentDao)) {
                 continue;
             }
-            boolean handledException = false;
+            var handledException = false;
             Set<String> currentDaoQueryAttrs = null;
             try {
                 currentDaoQueryAttrs = currentDao.getAvailableQueryAttributes(filter);

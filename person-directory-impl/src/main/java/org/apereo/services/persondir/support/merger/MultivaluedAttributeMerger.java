@@ -54,16 +54,16 @@ public class MultivaluedAttributeMerger extends BaseAdditiveAttributeMerger {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
 
-        for (final Map.Entry<String, List<Object>> sourceEntry : toConsider.entrySet()) {
-            final String sourceKey = sourceEntry.getKey();
+        for (final var sourceEntry : toConsider.entrySet()) {
+            final var sourceKey = sourceEntry.getKey();
 
-            List<Object> values = toModify.get(sourceKey);
+            var values = toModify.get(sourceKey);
             if (values == null) {
                 values = new LinkedList<>();
                 toModify.put(sourceKey, values);
             }
 
-            final List<Object> sourceValue = sourceEntry.getValue();
+            final var sourceValue = sourceEntry.getValue();
             if (this.distinctValues) {
                 final List<Object> temp = new ArrayList<>(values);
                 temp.addAll(sourceValue);

@@ -21,14 +21,12 @@ package org.apereo.services.persondir.support;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -61,12 +59,12 @@ public abstract class AbstractFlatteningPersonAttributeDaoTest extends AbstractP
 
 
 //        final SimpleDefaultQueryPersonAttributeDao flatteningPersonAttributeDao = new SimpleDefaultQueryPersonAttributeDao(backingMap);
-        final StubPersonAttributeDao flatteningPersonAttributeDao = new StubPersonAttributeDao(backingMap);
+        final var flatteningPersonAttributeDao = new StubPersonAttributeDao(backingMap);
 
-        final IPersonAttributes userAttributesUid = flatteningPersonAttributeDao.getPerson("seed", IPersonAttributeDaoFilter.alwaysChoose());
+        final var userAttributesUid = flatteningPersonAttributeDao.getPerson("seed", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expected, userAttributesUid.getAttributes());
 
-        final Set<IPersonAttributes> userAttributesSet = flatteningPersonAttributeDao.getPeople(Collections.singletonMap("key", new Object()),
+        final var userAttributesSet = flatteningPersonAttributeDao.getPeople(Collections.singletonMap("key", new Object()),
             IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expected, userAttributesSet.iterator().next().getAttributes());
     }

@@ -3,7 +3,6 @@ package org.apereo.services.persondir.support;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -18,7 +17,6 @@ import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.springframework.http.HttpMethod;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -88,23 +86,23 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
             if (!this.isEnabled()) {
                 return null;
             }
-            final HttpClientBuilder builder = HttpClientBuilder.create();
+            final var builder = HttpClientBuilder.create();
 
             if (StringUtils.isNotBlank(this.basicAuthUsername) && StringUtils.isNotBlank(this.basicAuthPassword)) {
                 final CredentialsProvider provider = new BasicCredentialsProvider();
-                final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(this.basicAuthUsername, this.basicAuthPassword);
+                final var credentials = new UsernamePasswordCredentials(this.basicAuthUsername, this.basicAuthPassword);
                 provider.setCredentials(AuthScope.ANY, credentials);
                 builder.setDefaultCredentialsProvider(provider);
             }
 
             final HttpClient client = builder.build();
 
-            final URIBuilder uriBuilder = new URIBuilder(this.url);
+            final var uriBuilder = new URIBuilder(this.url);
             uriBuilder.addParameter("username", uid);
-            final URI uri = uriBuilder.build();
+            final var uri = uriBuilder.build();
             final HttpUriRequest request = method.equalsIgnoreCase(HttpMethod.GET.name()) ? new HttpGet(uri) : new HttpPost(uri);
-            final HttpResponse response = client.execute(request);
-            final Map attributes = jacksonObjectMapper.readValue(response.getEntity().getContent(), Map.class);
+            final var response = client.execute(request);
+            final var attributes = jacksonObjectMapper.readValue(response.getEntity().getContent(), Map.class);
 
             if (this.caseInsensitiveUsername) {
                 return new CaseInsensitiveNamedPersonImpl(uid, MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(attributes, filter));
@@ -126,8 +124,8 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
                                                                      final IPersonAttributeDaoFilter filter) {
         final Set<IPersonAttributes> people = new LinkedHashSet<>();
-        final String username = usernameAttributeProvider.getUsernameFromQuery(query);
-        final IPersonAttributes person = getPerson(username, filter);
+        final var username = usernameAttributeProvider.getUsernameFromQuery(query);
+        final var person = getPerson(username, filter);
         if (person != null) {
             people.add(person);
         }

@@ -21,7 +21,6 @@ package org.apereo.services.persondir.support;
 import junit.framework.TestCase;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.apereo.services.persondir.util.Util;
@@ -56,7 +55,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
 
 
     public void testGetPossibleNamesWithException() {
-        final AbstractAggregatingDefaultQueryPersonAttributeDao dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
+        final var dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
         final Map<String, List<Object>> attrMap1 = new HashMap<>();
         attrMap1.put("key1.1", Util.list("val1.1"));
@@ -79,7 +78,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
 
         //Test exception recovery
         dao.setRecoverExceptions(true);
-        final Set<String> resultNames = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        final var resultNames = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(expectedNames, resultNames);
 
         //Test fail on exception
@@ -94,7 +93,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
 
 
     public void testStopOnSuccess() {
-        final AbstractAggregatingDefaultQueryPersonAttributeDao dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
+        final var dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
         final Map<String, List<Object>> attrMap1 = new HashMap<>();
         attrMap1.put("username", Util.list("test"));
@@ -123,25 +122,25 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
 
         dao.setStopOnSuccess(true);
 
-        final Set<String> resultNamesWithStop = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        final var resultNamesWithStop = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(expectedNamesWithStop, resultNamesWithStop);
 
-        final IPersonAttributes personWithStop = dao.getPerson("test", IPersonAttributeDaoFilter.alwaysChoose());
+        final var personWithStop = dao.getPerson("test", IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithStop);
 
 
         dao.setStopOnSuccess(false);
 
-        final Set<String> resultNamesWithoutStop = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        final var resultNamesWithoutStop = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(expectedNamesWithoutStop, resultNamesWithoutStop);
 
-        final IPersonAttributes personWithoutStop = dao.getPerson("test", IPersonAttributeDaoFilter.alwaysChoose());
+        final var personWithoutStop = dao.getPerson("test", IPersonAttributeDaoFilter.alwaysChoose());
         TestCase.assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithoutStop);
 
     }
 
     public void testSetNullMerger() {
-        final AbstractAggregatingDefaultQueryPersonAttributeDao dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
+        final var dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
         try {
             dao.setMerger(null);
@@ -152,7 +151,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
     }
 
     public void testSetNullPersonAttributeDaos() {
-        final AbstractAggregatingDefaultQueryPersonAttributeDao dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
+        final var dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
         try {
             dao.setPersonAttributeDaos(null);
@@ -164,9 +163,9 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
 
     @SuppressWarnings("unchecked")
     public void testProperties() {
-        final AbstractAggregatingDefaultQueryPersonAttributeDao dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
+        final var dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
-        final MultivaluedAttributeMerger merger = new MultivaluedAttributeMerger();
+        final var merger = new MultivaluedAttributeMerger();
         dao.setMerger(merger);
         TestCase.assertEquals(merger, dao.getMerger());
 

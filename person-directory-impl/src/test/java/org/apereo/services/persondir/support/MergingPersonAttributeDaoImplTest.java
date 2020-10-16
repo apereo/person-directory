@@ -78,7 +78,7 @@ public class MergingPersonAttributeDaoImplTest
         this.collidesWithOne.setBackingMap(collidingMap);
 
         this.oneAndTwoAndThree = new HashMap<>();
-        final MultivaluedAttributeMerger merger = new MultivaluedAttributeMerger();
+        final var merger = new MultivaluedAttributeMerger();
         this.oneAndTwoAndThree = merger.mergeAttributes(this.oneAndTwoAndThree, sourceOneMap);
         this.oneAndTwoAndThree = merger.mergeAttributes(this.oneAndTwoAndThree, sourceTwoMap);
         this.oneAndTwoAndThree = merger.mergeAttributes(this.oneAndTwoAndThree, collidingMap);
@@ -94,7 +94,7 @@ public class MergingPersonAttributeDaoImplTest
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
 
-        final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        final var impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
 
         return impl;
@@ -120,13 +120,13 @@ public class MergingPersonAttributeDaoImplTest
         attributeSources.add(this.sourceNull);
         attributeSources.add(this.sourceTwo);
 
-        final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        final var impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
 
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
 
-        final Set<IPersonAttributes> result = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        final var result = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(this.oneAndTwo, result.iterator().next().getAttributes());
     }
 
@@ -139,10 +139,10 @@ public class MergingPersonAttributeDaoImplTest
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
 
-        final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        final var impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
 
-        final Set<String> attributeNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        final var attributeNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(this.oneAndTwo.keySet(), attributeNames);
     }
@@ -159,13 +159,13 @@ public class MergingPersonAttributeDaoImplTest
         attributeSources.add(new ThrowingPersonAttributeDao());
         attributeSources.add(this.collidesWithOne);
 
-        final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        final var impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
 
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
 
-        final Set<IPersonAttributes> result = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        final var result = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(this.oneAndTwoAndThree, result.iterator().next().getAttributes());
     }
 
@@ -181,10 +181,10 @@ public class MergingPersonAttributeDaoImplTest
         attributeSources.add(new NullAttribNamesPersonAttributeDao());
         attributeSources.add(this.collidesWithOne);
 
-        final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        final var impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
 
-        final Set<String> attribNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        final var attribNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
 
         final Set<String> expectedAttribNames = new HashSet<>();
         expectedAttribNames.addAll(this.sourceOne.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose()));
@@ -206,7 +206,7 @@ public class MergingPersonAttributeDaoImplTest
         attributeSources.add(new ThrowingPersonAttributeDao());
         attributeSources.add(this.collidesWithOne);
 
-        final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        final var impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
         impl.setRecoverExceptions(false);
 
@@ -233,19 +233,19 @@ public class MergingPersonAttributeDaoImplTest
         attributeSources.add(this.sourceTwo);
         attributeSources.add(this.collidesWithOne);
 
-        final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        final var impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
         impl.setMerger(new NoncollidingAttributeAdder());
 
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
 
-        final Set<IPersonAttributes> result = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        final var result = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(this.oneAndTwo, result.iterator().next().getAttributes());
     }
 
     public void testNoChildDaos() {
-        final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        final var impl = new MergingPersonAttributeDaoImpl();
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
 
@@ -263,7 +263,7 @@ public class MergingPersonAttributeDaoImplTest
     public void testUsernameWildcardQuery() {
         final List<IPersonAttributeDao> attributeSources = new ArrayList<>();
 
-        final ComplexStubPersonAttributeDao complexSourceOne = new ComplexStubPersonAttributeDao();
+        final var complexSourceOne = new ComplexStubPersonAttributeDao();
         final Map<String, Map<String, List<Object>>> backingMapOne = new HashMap<>();
 
         final Map<String, List<Object>> loHomeAttrs = new HashMap<>();
@@ -282,7 +282,7 @@ public class MergingPersonAttributeDaoImplTest
         attributeSources.add(complexSourceOne);
 
 
-        final ComplexStubPersonAttributeDao complexSourceTwo = new ComplexStubPersonAttributeDao();
+        final var complexSourceTwo = new ComplexStubPersonAttributeDao();
         final Map<String, Map<String, List<Object>>> backingMapTwo = new HashMap<>();
 
         final Map<String, List<Object>> edalquistAttrs = new HashMap<>();
@@ -301,10 +301,10 @@ public class MergingPersonAttributeDaoImplTest
         attributeSources.add(complexSourceTwo);
 
 
-        final MergingPersonAttributeDaoImpl impl = new MergingPersonAttributeDaoImpl();
+        final var impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
 
-        final Set<IPersonAttributes> layoutOwners = impl.getPeople(Collections.singletonMap("username", (Object) "lo-*"), IPersonAttributeDaoFilter.alwaysChoose());
+        final var layoutOwners = impl.getPeople(Collections.singletonMap("username", (Object) "lo-*"), IPersonAttributeDaoFilter.alwaysChoose());
 
         final Set<IPersonAttributes> excepectedLayoutOwners = new HashSet<>();
         excepectedLayoutOwners.add(new NamedPersonImpl("lo-welcome", loWelcomeAttrs));
@@ -313,7 +313,7 @@ public class MergingPersonAttributeDaoImplTest
         assertEquals(excepectedLayoutOwners, layoutOwners);
 
 
-        final Set<IPersonAttributes> homeUsers = impl.getPeople(Collections.singletonMap("username", (Object) "*home"), IPersonAttributeDaoFilter.alwaysChoose());
+        final var homeUsers = impl.getPeople(Collections.singletonMap("username", (Object) "*home"), IPersonAttributeDaoFilter.alwaysChoose());
 
         final Set<IPersonAttributes> excepectedHomeUsers = new HashSet<>();
         excepectedHomeUsers.add(new NamedPersonImpl("jshome", jshomeAttrs));

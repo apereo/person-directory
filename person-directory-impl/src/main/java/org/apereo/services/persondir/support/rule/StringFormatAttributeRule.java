@@ -67,12 +67,12 @@ public final class StringFormatAttributeRule implements AttributeRule, Initializ
 
         // Assertions.
         if (userInfo == null) {
-            final String msg = "Argument 'userInfo' cannot be null.";
+            final var msg = "Argument 'userInfo' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
 
-        boolean rslt = true;  // default
-        for (final String attributeName : formatArguments) {
+        var rslt = true;  // default
+        for (final var attributeName : formatArguments) {
             if (!userInfo.containsKey(attributeName)) {
                 rslt = false;
                 break;
@@ -88,28 +88,28 @@ public final class StringFormatAttributeRule implements AttributeRule, Initializ
 
         // Assertions.
         if (userInfo == null) {
-            final String msg = "Argument 'userInfo' cannot be null.";
+            final var msg = "Argument 'userInfo' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (!appliesTo(userInfo)) {
-            final String msg = "May not evaluate.  This rule does not apply.";
+            final var msg = "May not evaluate.  This rule does not apply.";
             throw new IllegalArgumentException(msg);
         }
 
-        final Object[] args = new Object[formatArguments.size()];
-        for (int i = 0; i < formatArguments.size(); i++) {
-            final String key = formatArguments.get(i);
-            final List<Object> values = userInfo.get(key);
+        final var args = new Object[formatArguments.size()];
+        for (var i = 0; i < formatArguments.size(); i++) {
+            final var key = formatArguments.get(i);
+            final var values = userInfo.get(key);
             args[i] = values.isEmpty() ? null : values.get(0);
         }
 
-        final String outputAttributeValue = String.format(this.formatString, args);
+        final var outputAttributeValue = String.format(this.formatString, args);
 
 
         final Map<String, List<Object>> rslt = new HashMap<>();
         rslt.put(this.outputAttribute, Arrays.asList(new Object[]{outputAttributeValue}));
 
-        final String username = this.usernameAttributeProvider.getUsernameFromQuery(userInfo);
+        final var username = this.usernameAttributeProvider.getUsernameFromQuery(userInfo);
         final IPersonAttributes person = new NamedPersonImpl(username, rslt);
         return Collections.singleton(person);
 

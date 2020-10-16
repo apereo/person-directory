@@ -19,14 +19,12 @@
 package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -72,12 +70,12 @@ public class ComplexStubPersonAttributeDaoTest
      * possible attribute names.
      */
     public void testGetPossibleUserAttributeNames() {
-        final HashSet<String> expectedAttributeNames = new HashSet<>();
+        final var expectedAttributeNames = new HashSet<String>();
         expectedAttributeNames.add("shirtColor");
         expectedAttributeNames.add("phone");
         expectedAttributeNames.add("musicalInstrumentOfChoice");
         expectedAttributeNames.add("wearsTie");
-        final Set<String> possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        final var possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
 
         // test that it properly computed the set of possible attribute names
 
@@ -98,7 +96,7 @@ public class ComplexStubPersonAttributeDaoTest
     public void testGetUserAttributesMap() {
         final Map<String, List<Object>> awp9Key = new HashMap<>();
         awp9Key.put("username", Util.list("awp9"));
-        Set<IPersonAttributes> resultSet = this.testInstance.getPeopleWithMultivaluedAttributes(awp9Key, IPersonAttributeDaoFilter.alwaysChoose());
+        var resultSet = this.testInstance.getPeopleWithMultivaluedAttributes(awp9Key, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(this.backingMap.get("awp9"), resultSet.iterator().next().getAttributes());
 
         final Map<String, List<Object>> unknownUserKey = new HashMap<>();
@@ -111,7 +109,7 @@ public class ComplexStubPersonAttributeDaoTest
      * Test getting user attributes using a String key.
      */
     public void testGetUserAttributesString() {
-        IPersonAttributes result = this.testInstance.getPerson("aam26", IPersonAttributeDaoFilter.alwaysChoose());
+        var result = this.testInstance.getPerson("aam26", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(result);
         assertEquals(this.backingMap.get("aam26"), result.getAttributes());
 

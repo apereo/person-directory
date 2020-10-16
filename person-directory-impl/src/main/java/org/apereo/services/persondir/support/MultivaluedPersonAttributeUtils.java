@@ -80,10 +80,10 @@ public final class MultivaluedPersonAttributeUtils {
         final Map<String, Set<String>> mappedAttributesBuilder = new LinkedHashMap<>();
 
         for (final Map.Entry<String, ? extends Object> mappingEntry : mapping.entrySet()) {
-            final String sourceAttrName = mappingEntry.getKey();
+            final var sourceAttrName = mappingEntry.getKey();
             Validate.notNull(sourceAttrName, "attribute name can not be null in Map");
 
-            final Object mappedAttribute = mappingEntry.getValue();
+            final var mappedAttribute = mappingEntry.getValue();
 
             //Create a mapping to null
             if (mappedAttribute == null) {
@@ -97,7 +97,7 @@ public final class MultivaluedPersonAttributeUtils {
             }
             //Create a defenisve copy of the mapped set & verify its contents are strings
             else if (mappedAttribute instanceof Collection) {
-                final Collection<?> sourceSet = (Collection<?>) mappedAttribute;
+                final var sourceSet = (Collection<?>) mappedAttribute;
 
                 //Ensure the collection only contains strings.
                 final Set<String> mappedSet = new LinkedHashSet<>();
@@ -146,7 +146,7 @@ public final class MultivaluedPersonAttributeUtils {
             return;
         }
 
-        List<V> currentValue = results.get(key);
+        var currentValue = results.get(key);
         if (currentValue == null) {
             currentValue = new LinkedList<>();
             results.put(key, currentValue);
@@ -175,7 +175,7 @@ public final class MultivaluedPersonAttributeUtils {
 
         for (final Object value : source) {
             if (value instanceof Collection) {
-                final Collection<Object> flatCollection = flattenCollection((Collection<Object>) value);
+                final var flatCollection = flattenCollection((Collection<Object>) value);
                 result.addAll((Collection<T>) flatCollection);
             } else {
                 result.add((T) value);
@@ -196,9 +196,9 @@ public final class MultivaluedPersonAttributeUtils {
         Validate.notNull(seed, "seed can not be null");
 
         final Map<String, List<Object>> multiSeed = new LinkedHashMap<>(seed.size());
-        for (final Map.Entry<String, Object> seedEntry : seed.entrySet()) {
-            final String seedName = seedEntry.getKey();
-            final Object seedValue = seedEntry.getValue();
+        for (final var seedEntry : seed.entrySet()) {
+            final var seedName = seedEntry.getKey();
+            final var seedValue = seedEntry.getValue();
             if (seedValue instanceof List) {
                 multiSeed.put(seedName, (List<Object>) seedValue);
             } else {
@@ -213,7 +213,7 @@ public final class MultivaluedPersonAttributeUtils {
         final Map<String, List<Object>> personAttributes = new HashMap<>();
 
         for (final Map.Entry<String, ?> stringObjectEntry : personAttributesMap.entrySet()) {
-            final Object value = stringObjectEntry.getValue();
+            final var value = stringObjectEntry.getValue();
             if (value instanceof List) {
                 personAttributes.put(stringObjectEntry.getKey(), (List<Object>) value);
             } else {

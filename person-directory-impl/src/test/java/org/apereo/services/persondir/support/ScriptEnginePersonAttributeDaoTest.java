@@ -4,7 +4,6 @@ import org.apache.commons.io.IOUtils;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/annotationContext.xml"})
@@ -42,7 +40,7 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
     @Test
     public void testGetAttributesWithJavascript() {
         this.dao.setScriptFile("SampleScriptedJavascriptPersonAttributeDao.js");
-        final IPersonAttributes person = this.dao.getPerson("testuser", IPersonAttributeDaoFilter.alwaysChoose());
+        final var person = this.dao.getPerson("testuser", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(person);
         assertEquals("testuser", person.getName());
         assertEquals(4, person.getAttributes().size());
@@ -51,7 +49,7 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
     @Test
     public void testGetAttributesWithGroovy() {
         this.dao.setScriptFile("SampleScriptedGroovyPersonAttributeDao.groovy");
-        final IPersonAttributes person = this.dao.getPerson("testuser", IPersonAttributeDaoFilter.alwaysChoose());
+        final var person = this.dao.getPerson("testuser", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(person);
         assertEquals("testuser", person.getName());
         assertEquals(4, person.getAttributes().size());
@@ -61,7 +59,7 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
     public void testGetAttributesWithGroovyString() throws IOException {
         this.dao.setScriptFile(IOUtils.toString(applicationContext.getResource("file:./src/test/resources/SampleScriptedGroovyPersonAttributeDao.groovy").getInputStream(), StandardCharsets.UTF_8));
         this.dao.setEngineName("groovy");
-        final IPersonAttributes person = this.dao.getPerson("testuser", IPersonAttributeDaoFilter.alwaysChoose());
+        final var person = this.dao.getPerson("testuser", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(person);
         assertEquals("testuser", person.getName());
         assertEquals(4, person.getAttributes().size() );
@@ -72,7 +70,7 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
         this.dao.setScriptFile("SampleScriptedGroovyPersonAttributeDao.groovy");
         final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("username", Util.list("testuser"));
-        final Set<IPersonAttributes> personSet = this.dao.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
+        final var personSet = this.dao.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(personSet);
         assertEquals(1, personSet.size());
         assertEquals("testuser", (personSet.iterator().next()).getName());
@@ -84,7 +82,7 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
         final Map<String, List<Object>> query = new LinkedHashMap<>();
         query.put("username", Util.list("testuser"));
         query.put("current_attribute", Util.list("something"));
-        final Set<IPersonAttributes> personSet = this.dao.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
+        final var personSet = this.dao.getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(personSet);
         assertEquals(1, personSet.size());
         assertEquals("testuser", (personSet.iterator().next()).getName());
@@ -96,10 +94,10 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
         // test with an inline script, even though DAO avoids this internally
         assertNull(ScriptEnginePersonAttributeDao.getScriptEngineName("not a filename = a script"));
         // test with classpath resource
-        final String scriptEngineName = ScriptEnginePersonAttributeDao.getScriptEngineName("SampleScriptedJavascriptPersonAttributeDao.js");
+        final var scriptEngineName = ScriptEnginePersonAttributeDao.getScriptEngineName("SampleScriptedJavascriptPersonAttributeDao.js");
         
         assertTrue(scriptEngineName.equalsIgnoreCase("nashorn") || scriptEngineName.equalsIgnoreCase("Graal.js"));
-        final String engineName2 = ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js");
+        final var engineName2 = ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js");
         assertTrue(engineName2.equalsIgnoreCase("nashorn") || scriptEngineName.equalsIgnoreCase("Graal.js"));
         assertEquals("groovy", ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedGroovyPersonAttributeDao.groovy"));
         // note jython not in classpath so null is expected return value, also test.py file doesn't exist

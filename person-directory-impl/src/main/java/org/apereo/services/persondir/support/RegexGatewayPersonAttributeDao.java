@@ -30,7 +30,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -134,9 +133,9 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
 
         final Map<String, String> toReturn = new LinkedHashMap<>(this.patterns.size());
 
-        for (final Map.Entry<String, Pattern> patternEntry : this.patterns.entrySet()) {
-            final String attribute = patternEntry.getKey();
-            final Pattern pattern = patternEntry.getValue();
+        for (final var patternEntry : this.patterns.entrySet()) {
+            final var attribute = patternEntry.getKey();
+            final var pattern = patternEntry.getValue();
             toReturn.put(attribute, pattern.pattern());
         }
 
@@ -152,13 +151,13 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
         final Map<String, Pattern> newPatterns = new LinkedHashMap<>(patterns.size());
 
         //Pre-compile patterns for performance
-        for (final Map.Entry<String, String> patternEntry : patterns.entrySet()) {
-            final String attribute = patternEntry.getKey();
+        for (final var patternEntry : patterns.entrySet()) {
+            final var attribute = patternEntry.getKey();
 
-            final String pattern = patternEntry.getValue();
+            final var pattern = patternEntry.getValue();
             Validate.notNull(pattern, "pattern can not be null. attribute=" + attribute);
 
-            final Pattern compiledPattern = Pattern.compile(pattern);
+            final var compiledPattern = Pattern.compile(pattern);
 
             newPatterns.put(attribute, compiledPattern);
         }
@@ -225,12 +224,12 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
         }
 
         //Flag for patterns that match
-        boolean matchedPatterns = false;
+        var matchedPatterns = false;
 
         //Iterate through all attributeName/pattern pairs
-        for (final Map.Entry<String, Pattern> patternEntry : this.patterns.entrySet()) {
-            final String attributeName = patternEntry.getKey();
-            final List<Object> attributeValues = seed.get(attributeName);
+        for (final var patternEntry : this.patterns.entrySet()) {
+            final var attributeName = patternEntry.getKey();
+            final var attributeValues = seed.get(attributeName);
 
             //Check if the value exists
             if (attributeValues == null) {
@@ -248,27 +247,27 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
             }
 
             //The pattern to test the attribute's value(s) with
-            final Pattern compiledPattern = patternEntry.getValue();
+            final var compiledPattern = patternEntry.getValue();
             if (compiledPattern == null) {
                 throw new IllegalStateException("Attribute '" + attributeName + "' has a null pattern");
             }
 
             //Flag for matching the pattern on the values
-            boolean matchedValues = false;
+            var matchedValues = false;
 
             //Iterate over the values for the attribute, testing each against the pattern
-            for (final Object valueObj : attributeValues) {
+            for (final var valueObj : attributeValues) {
                 final String value;
                 try {
                     value = (String) valueObj;
                 } catch (final ClassCastException cce) {
-                    final IllegalArgumentException iae = new IllegalArgumentException("RegexGatewayPersonAttributeDao can only accept seeds who's values are String or List of String. Attribute '" + attributeName + "' has a non-String value.");
+                    final var iae = new IllegalArgumentException("RegexGatewayPersonAttributeDao can only accept seeds who's values are String or List of String. Attribute '" + attributeName + "' has a non-String value.");
                     iae.initCause(cce);
                     throw iae;
                 }
 
                 //Check if the value matches the pattern
-                final Matcher valueMatcher = compiledPattern.matcher(value);
+                final var valueMatcher = compiledPattern.matcher(value);
                 matchedValues = valueMatcher.matches();
 
                 //Only one value needs to be matched, this one matched so no need to test the rest, break out of the loop

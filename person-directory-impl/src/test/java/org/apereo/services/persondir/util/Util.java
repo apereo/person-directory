@@ -39,7 +39,7 @@ public class Util {
 
         final List<Object> list = new ArrayList<>(objects.length);
 
-        for (final Object obj : objects) {
+        for (final var obj : objects) {
             list.add(obj);
         }
 
@@ -58,7 +58,7 @@ public class Util {
 
         final List<T> list = new ArrayList<>(objects.length);
 
-        for (final T obj : objects) {
+        for (final var obj : objects) {
             list.add(obj);
         }
 
@@ -73,7 +73,7 @@ public class Util {
      * @return the boolean
      */
     public static boolean isPortInUse(final String host, final int port) {
-        boolean result = false;
+        var result = false;
 
         try {
             (new Socket(host, port)).close();

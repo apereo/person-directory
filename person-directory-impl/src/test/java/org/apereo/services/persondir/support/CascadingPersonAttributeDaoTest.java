@@ -20,7 +20,6 @@ package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.apereo.services.persondir.util.Util;
@@ -103,11 +102,11 @@ public class CascadingPersonAttributeDaoTest
         targets.add(this.nullSource);
         targets.add(this.sourceTwo);
 
-        final CascadingPersonAttributeDao targetDao = new CascadingPersonAttributeDao();
+        final var targetDao = new CascadingPersonAttributeDao();
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final IPersonAttributes results = targetDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        final var results = targetDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("username", Util.list("edalquist"));
@@ -119,7 +118,7 @@ public class CascadingPersonAttributeDaoTest
     }
 
     public void testNoChildren() {
-        final CascadingPersonAttributeDao targetDao = new CascadingPersonAttributeDao();
+        final var targetDao = new CascadingPersonAttributeDao();
 
         try {
             targetDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
@@ -135,13 +134,13 @@ public class CascadingPersonAttributeDaoTest
         targets.add(new ThrowingPersonAttributeDao());
         targets.add(this.sourceTwo);
 
-        final CascadingPersonAttributeDao targetDao = new CascadingPersonAttributeDao();
+        final var targetDao = new CascadingPersonAttributeDao();
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
 
         targetDao.setRecoverExceptions(true);
-        final IPersonAttributes results = targetDao.getPerson("edalquist",
+        final var results = targetDao.getPerson("edalquist",
             IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
@@ -168,11 +167,11 @@ public class CascadingPersonAttributeDaoTest
         targets.add(this.sourceOne);
         targets.add(this.sourceTwo);
 
-        final CascadingPersonAttributeDao targetDao = new CascadingPersonAttributeDao();
+        final var targetDao = new CascadingPersonAttributeDao();
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final IPersonAttributes results = targetDao.getPerson("edalquist",
+        final var results = targetDao.getPerson("edalquist",
             IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
@@ -190,12 +189,12 @@ public class CascadingPersonAttributeDaoTest
         targets.add(this.sourceOne);
         targets.add(this.sourceTwo);
 
-        final CascadingPersonAttributeDao targetDao = new CascadingPersonAttributeDao();
+        final var targetDao = new CascadingPersonAttributeDao();
         targetDao.setStopIfFirstDaoReturnsNull(true);
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final IPersonAttributes results = targetDao.getPerson("edalquist",
+        final var results = targetDao.getPerson("edalquist",
             IPersonAttributeDaoFilter.alwaysChoose());
 
         assertNull(results);
@@ -211,7 +210,7 @@ public class CascadingPersonAttributeDaoTest
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
 
-        final CascadingPersonAttributeDao impl = new CascadingPersonAttributeDao();
+        final var impl = new CascadingPersonAttributeDao();
         impl.setPersonAttributeDaos(attributeSources);
 
         return impl;

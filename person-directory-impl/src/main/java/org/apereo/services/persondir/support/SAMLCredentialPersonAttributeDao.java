@@ -19,11 +19,9 @@
 package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributes;
-import org.opensaml.saml2.core.Attribute;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSString;
 import org.opensaml.xml.schema.impl.XSAnyImpl;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.saml.SAMLCredential;
 
@@ -68,7 +66,7 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(QueryBuilder queryBuilder, String queryUserName) {
 
-        final String currentUserName = currentUserProvider.getCurrentUserName();
+        final var currentUserName = currentUserProvider.getCurrentUserName();
 
         if (currentUserName == null) {
             this.logger.warn("A null name was returned by the currentUserProvider, returning null.");
@@ -80,21 +78,21 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
                 this.logger.debug("Adding attributes from the SAMLCredential for user " + currentUserName);
             }
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            var authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null) {
-                SAMLCredential credential = (SAMLCredential) authentication.getCredentials();
+                var credential = (SAMLCredential) authentication.getCredentials();
 
                 if (credential != null) {
 
                     // Provide some optional, TRACE-level logging for what we found
                     if (logger.isTraceEnabled()) {
-                        StringBuilder msg = new StringBuilder();
+                        var msg = new StringBuilder();
                         msg.append("Credential obtained!");
-                        for (Attribute a : credential.getAttributes()) {
+                        for (var a : credential.getAttributes()) {
                             msg.append("\n    a.getName()=").append(a.getName())
                                     .append("\n    a.getFriendlyName()=").append(a.getFriendlyName());
-                            for (XMLObject xmlo : a.getAttributeValues()) {
-                                    String str = extractStringValue(xmlo);
+                            for (var xmlo : a.getAttributeValues()) {
+                                var str = extractStringValue(xmlo);
                                     msg.append("\n        value="+str);
                             }
                         }
@@ -103,10 +101,10 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
 
                     // Marshall what we found into an (unmapped) IPersonAttributes object
                     final Map<String, List<Object>> attributes = new HashMap<>();
-                    for (Attribute a : credential.getAttributes()) {
+                    for (var a : credential.getAttributes()) {
                         List<Object> list = new ArrayList<>();
-                        for (XMLObject xmlo : a.getAttributeValues()) {
-                            String str = extractStringValue(xmlo);
+                        for (var xmlo : a.getAttributeValues()) {
+                            var str = extractStringValue(xmlo);
                             if (str != null) {
                                 list.add(str);
                             }

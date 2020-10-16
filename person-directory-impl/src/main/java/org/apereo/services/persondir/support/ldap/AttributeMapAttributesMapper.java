@@ -22,7 +22,6 @@ import org.springframework.ldap.core.AttributesMapper;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import java.util.Collections;
 import java.util.List;
@@ -52,18 +51,18 @@ class AttributeMapAttributesMapper implements AttributesMapper {
      */
     @Override
     public Object mapFromAttributes(final Attributes attributes) throws NamingException {
-        final int attributeCount = attributes.size();
-        final Map<String, Object> mapOfAttrValues = this.createAttributeMap(attributeCount);
+        final var attributeCount = attributes.size();
+        final var mapOfAttrValues = this.createAttributeMap(attributeCount);
 
-        for (final NamingEnumeration<? extends Attribute> attributesEnum = attributes.getAll(); attributesEnum.hasMore(); ) {
-            final Attribute attribute = attributesEnum.next();
+        for (final var attributesEnum = attributes.getAll(); attributesEnum.hasMore(); ) {
+            final var attribute = attributesEnum.next();
 
             if (!this.ignoreNull || attribute.size() > 0) {
-                final String attrName = attribute.getID();
-                final String key = this.getAttributeKey(attrName);
+                final var attrName = attribute.getID();
+                final var key = this.getAttributeKey(attrName);
 
-                final NamingEnumeration<?> valuesEnum = attribute.getAll();
-                final List<?> values = this.getAttributeValues(valuesEnum);
+                final var valuesEnum = attribute.getAll();
+                final var values = this.getAttributeValues(valuesEnum);
 
                 mapOfAttrValues.put(key, values);
             }

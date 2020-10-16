@@ -21,7 +21,6 @@ package org.apereo.services.persondir.support;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
 
 import java.util.HashSet;
@@ -39,7 +38,7 @@ public class MessageFormatPersonAttributeDaoTest extends AbstractPersonAttribute
 
     public MessageFormatPersonAttributeDaoTest() {
 
-        final MessageFormatPersonAttributeDao.FormatAttribute formatAttribute = new MessageFormatPersonAttributeDao.FormatAttribute();
+        final var formatAttribute = new MessageFormatPersonAttributeDao.FormatAttribute();
         final Set<String> set2 =
                 new HashSet<>();
         set2.add("displayName");
@@ -60,7 +59,7 @@ public class MessageFormatPersonAttributeDaoTest extends AbstractPersonAttribute
         query.put("firstName", Util.list("Eric"));
         query.put("lastName", Util.list("Dalquist"));
 
-        final Set<IPersonAttributes> result = messageFormatPersonAttributeDao.getPeopleWithMultivaluedAttributes(query,
+        final var result = messageFormatPersonAttributeDao.getPeopleWithMultivaluedAttributes(query,
             IPersonAttributeDaoFilter.alwaysChoose());
 
 

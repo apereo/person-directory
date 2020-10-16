@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Test conformance to IPersonAttributeDao interface specified
@@ -72,7 +71,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * interface declaration.
      */
     public void testNullSeed() {
-        final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        final var dao = getPersonAttributeDaoInstance();
         final Map<String, List<Object>> nullMap = null;
         try {
             dao.getPeopleWithMultivaluedAttributes(nullMap, IPersonAttributeDaoFilter.alwaysChoose());
@@ -90,7 +89,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * interface declaration.
      */
     public void testMultiNullSeed() {
-        final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        final var dao = getPersonAttributeDaoInstance();
         final Map<String, Object> nullMap = null;
         try {
             dao.getPeople(nullMap, IPersonAttributeDaoFilter.alwaysChoose());
@@ -108,7 +107,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * interface declaration.
      */
     public void testMultiNullUid() {
-        final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        final var dao = getPersonAttributeDaoInstance();
         final String nullString = null;
         try {
             dao.getPerson(nullString, IPersonAttributeDaoFilter.alwaysChoose());
@@ -125,7 +124,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * interface declaration.
      */
     public void testNullUid() {
-        final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
+        final var dao = getPersonAttributeDaoInstance();
         final String nullString = null;
         try {
             dao.getPerson(nullString, IPersonAttributeDaoFilter.alwaysChoose());
@@ -141,11 +140,11 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * null and immutable
      */
     public void testPossibleSetConstraints() {
-        final IPersonAttributeDao dao = getPersonAttributeDaoInstance();
-        final Set<String> possibleNames = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        final var dao = getPersonAttributeDaoInstance();
+        final var possibleNames = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         try {
             if (possibleNames != null) {
-                final String newObj = new String();
+                final var newObj = new String();
                 possibleNames.add(newObj);
             }
         } catch (final UnsupportedOperationException e) {
@@ -159,7 +158,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
 
     protected String serializeJson(final Object obj) {
         try {
-            final String output = getJsonWriter().writeValueAsString(obj);
+            final var output = getJsonWriter().writeValueAsString(obj);
             logger.debug(output);
             return output;
         } catch (final Exception e) {
@@ -169,7 +168,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
 
     protected <T> T deserializeJson(final String json, final Class<T> clz) {
         try {
-            final StringWriter writer = new StringWriter();
+            final var writer = new StringWriter();
             return this.mapper.readValue(json, clz);
 
         } catch (final Exception e) {
@@ -178,7 +177,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
     }
 
     public void testJson() {
-        final IPersonAttributeDao obj = getPersonAttributeDaoInstance();
+        final var obj = getPersonAttributeDaoInstance();
         deserializeJson(serializeJson(obj), obj.getClass());
     }
 

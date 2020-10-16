@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.TreeMap;
@@ -50,15 +49,15 @@ public class ColumnMapParameterizedRowMapper implements RowMapper<Map<String, Ob
      */
     @Override
     public final Map<String, Object> mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final ResultSetMetaData rsmd = rs.getMetaData();
-        final int columnCount = rsmd.getColumnCount();
-        final Map<String, Object> mapOfColValues = this.createColumnMap(columnCount);
+        final var rsmd = rs.getMetaData();
+        final var columnCount = rsmd.getColumnCount();
+        final var mapOfColValues = this.createColumnMap(columnCount);
 
-        for (int i = 1; i <= columnCount; i++) {
-            final String columnName = JdbcUtils.lookupColumnName(rsmd, i);
-            final Object obj = this.getColumnValue(rs, i);
+        for (var i = 1; i <= columnCount; i++) {
+            final var columnName = JdbcUtils.lookupColumnName(rsmd, i);
+            final var obj = this.getColumnValue(rs, i);
             if (!this.ignoreNull || obj != null) {
-                final String key = this.getColumnKey(columnName);
+                final var key = this.getColumnKey(columnName);
                 mapOfColValues.put(key, obj);
             }
         }
