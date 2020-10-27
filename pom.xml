@@ -80,7 +80,7 @@
         <slf4j.version>1.7.30</slf4j.version>
         <okhttp3.version>4.9.0</okhttp3.version>
         <retrofit.version>2.9.0</retrofit.version>
-        <spring.version>5.2.9.RELEASE</spring.version>
+        <spring.version>5.2.10.RELEASE</spring.version>
         <spring-ldap.version>2.3.3.RELEASE</spring-ldap.version>
         <spring-security.version>5.4.1</spring-security.version>
         <spring-modules.version>0.8a</spring-modules.version>
