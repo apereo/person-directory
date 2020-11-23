@@ -27,7 +27,6 @@ import org.apereo.services.persondir.support.merger.IAttributeMerger;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.apereo.services.persondir.util.CollectionsUtil;
 import org.springframework.beans.factory.annotation.Required;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -114,6 +113,12 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      */
     protected boolean stopOnSuccess = false;
 
+    /**
+     * Force all provided person attribute DAOs to
+     * produce results, and otherwise, halt execution
+     * if any of them cannot resolve the principal and return null.
+     */
+    protected boolean requireAll;
 
     @Override
     public String[] getId() {
@@ -174,6 +179,12 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                     //Merge the Sets of IPersons
                     resultPeople = this.attrMerger.mergeResults(resultPeople, currentPeople);
                 }
+            } else if (this.requireAll) {
+                this.logger.debug("Attribute repository dao {} did not resolve a person "
+                        + "and configuration requires all sources to produce valid results. "
+                        + "Short-circuiting the execution and returning null instead",
+                    currentlyConsidering);
+                return null;
             }
 
             if (this.stopOnSuccess && !handledException) {
@@ -431,5 +442,11 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         this.stopOnSuccess = stopOnSuccess;
     }
 
+    public boolean isRequireAll() {
+        return requireAll;
+    }
 
+    public void setRequireAll(final boolean requireAll) {
+        this.requireAll = requireAll;
+    }
 }
