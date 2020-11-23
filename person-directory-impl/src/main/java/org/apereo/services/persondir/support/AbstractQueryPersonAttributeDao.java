@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Provides common functionality for DAOs using a set of attribute values from the seed to
@@ -424,17 +425,24 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
 
             for (final var resultAttrEntry : this.resultAttributeMapping.entrySet()) {
                 final var dataKey = resultAttrEntry.getKey();
+                var resultKeys = resultAttrEntry.getValue();
 
-                // Only map found data attributes.
-                // .  See https://issues.jasig.org/browse/PERSONDIR-89
-                // Currently respects CaseInsensitive*NamedPersonImpl because BasePersonImpl's constructor
-                if (personAttributes.containsKey(dataKey)) {
-                    var resultKeys = resultAttrEntry.getValue();
-
-                    //If dataKey has no mapped resultKeys just use the dataKey
-                    if (resultKeys == null) {
-                        resultKeys = ImmutableSet.of(dataKey);
+                //If dataKey has no mapped resultKeys just use the dataKey
+                if (resultKeys == null) {
+                    resultKeys = ImmutableSet.of(dataKey);
+                }
+                if (resultKeys.size() == 1 && resultKeys.stream().allMatch(s -> s.endsWith(";"))) {
+                    var allKeys = personAttributes.keySet().stream().filter(name -> name.startsWith(dataKey + ";")).collect(Collectors.toList());
+                    for (final var resultKey : allKeys) {
+                        var value = personAttributes.get(resultKey);
+                        value = canonicalizeAttribute(resultKey, value, caseInsensitiveResultAttributes);
+                        mappedAttributes.put(resultKey, value);
                     }
+                } else if (personAttributes.containsKey(dataKey)) {
+
+                    // Only map found data attributes.
+                    // .  See https://issues.jasig.org/browse/PERSONDIR-89
+                    // Currently respects CaseInsensitive*NamedPersonImpl because BasePersonImpl's constructor
 
                     //Add the value to the mapped attributes for each mapped key,
                     //possibly canonicalizing casing for each value

@@ -264,7 +264,7 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
     private Map<String, List<Object>> convertLdapEntryToMap(final LdapEntry entry) {
         final Map<String, List<Object>> attributeMap = new LinkedHashMap<>(entry.size());
         for (final var attr : entry.getAttributes()) {
-            attributeMap.put(attr.getName(), new ArrayList<Object>(attr.getStringValues()));
+            attributeMap.put(attr.getName(), new ArrayList<>(attr.getStringValues()));
         }
         logger.debug("Converted ldap DN entry [{}] to attribute map {}", entry.getDn(), attributeMap.toString());
         return attributeMap;
