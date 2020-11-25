@@ -73,7 +73,7 @@
         <hsqldb.version>1.8.0.10</hsqldb.version>
         <postgresql.version>42.2.18</postgresql.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
-        <jaxb-impl.version>2.3.3</jaxb-impl.version>
+        <jaxb-impl.version>3.0.0</jaxb-impl.version>
         <junit.version>4.13.1</junit.version>
         <log4j.version>2.14.0</log4j.version>
         <servlet-api.version>4.0.1</servlet-api.version>
