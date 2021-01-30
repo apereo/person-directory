@@ -78,7 +78,7 @@
         <log4j.version>2.14.0</log4j.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <slf4j.version>1.7.30</slf4j.version>
-        <okhttp3.version>4.9.0</okhttp3.version>
+        <okhttp3.version>4.9.1</okhttp3.version>
         <retrofit.version>2.9.0</retrofit.version>
         <spring.version>5.3.3</spring.version>
         <spring-ldap.version>2.3.3.RELEASE</spring-ldap.version>
