@@ -82,7 +82,7 @@
         <retrofit.version>2.9.0</retrofit.version>
         <spring.version>5.3.3</spring.version>
         <spring-ldap.version>2.3.3.RELEASE</spring-ldap.version>
-        <spring-security.version>5.4.2</spring-security.version>
+        <spring-security.version>5.4.4</spring-security.version>
         <spring-modules.version>0.8a</spring-modules.version>
         <groovy.version>3.0.7</groovy.version>
         <grouper.client.version>2.5.41</grouper.client.version>
