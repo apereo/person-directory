@@ -21,9 +21,13 @@ package org.apereo.services.persondir.support.merger;
 import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 
@@ -50,7 +54,8 @@ public class MultivaluedAttributeMerger extends BaseAdditiveAttributeMerger {
      * @see org.jasig.services.persondir.support.merger.BaseAdditiveAttributeMerger#mergePersonAttributes(java.util.Map, java.util.Map)
      */
     @Override
-    protected Map<String, List<Object>> mergePersonAttributes(final Map<String, List<Object>> toModify, final Map<String, List<Object>> toConsider) {
+    protected Map<String, List<Object>> mergePersonAttributes(final Map<String, List<Object>> toModify,
+                                                              final Map<String, List<Object>> toConsider) {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
 
@@ -65,9 +70,18 @@ public class MultivaluedAttributeMerger extends BaseAdditiveAttributeMerger {
 
             final var sourceValue = sourceEntry.getValue();
             if (this.distinctValues) {
-                final List<Object> temp = new ArrayList<>(values);
+                final Set<Object> temp = new TreeSet<>((o1, o2) -> {
+                    if (o1 instanceof String && o2 instanceof String && o1.toString().equalsIgnoreCase(o2.toString())) {
+                        return 0;
+                    }
+                    if (o1 instanceof Comparable) {
+                        return ((Comparable<Object>) o1).compareTo(o2);
+                    }
+                    return -1;
+                });
+                temp.addAll(values);
                 temp.addAll(sourceValue);
-                toModify.put(sourceKey, temp.stream().distinct().collect(Collectors.toList()));
+                toModify.put(sourceKey, new ArrayList<>(temp));
             } else {
                 values.addAll(sourceValue);
             }

@@ -33,11 +33,11 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
 
     public void testAddDistinct() {
         final Map<String, List<Object>> someAttributes = new HashMap<>();
-        someAttributes.put("attName", Util.list("attValue"));
+        someAttributes.put("attName", Util.list("AttValue"));
         someAttributes.put("attName2", Util.list("attValue2"));
 
         final Map<String, List<Object>> secondAttributes = new HashMap<>();
-        secondAttributes.put("attName", Util.list("attValue", "attrValue1"));
+        secondAttributes.put("attName", Util.list("attValue", "atTvAlue", "attrValue1"));
         secondAttributes.put("attName3", Util.list("attValue2"));
 
         var adder = new MultivaluedAttributeMerger();
@@ -45,7 +45,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         final var result = adder.mergeAttributes(someAttributes, secondAttributes);
 
         final Map<String, List<Object>> expected = new HashMap<>();
-        expected.put("attName", Util.list("attValue", "attrValue1"));
+        expected.put("attName", Util.list("AttValue", "attrValue1"));
         expected.put("attName2", Util.list("attValue2"));
         expected.put("attName3", Util.list("attValue2"));
 
