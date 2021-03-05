@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -125,7 +126,7 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
             var client = builder.build();
 
             var uriBuilder = new URIBuilder(this.url);
-            uriBuilder.addParameter("username", uid);
+            uriBuilder.addParameter("username", Objects.requireNonNull(uid, "username cannot be null"));
             this.parameters.forEach(uriBuilder::addParameter);
 
             var uri = uriBuilder.build();

@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,9 +66,7 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
      * NONE,BASIC,HEADERS or BODY.
      */
     private String loggingLevel = "BASIC";
-
-
-
+    
     public String getDomain() {
         return domain;
     }
@@ -171,6 +170,8 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
         try {
+            Objects.requireNonNull(uid, "username cannot be null");
+
             var loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.valueOf(this.loggingLevel.toUpperCase()));
 

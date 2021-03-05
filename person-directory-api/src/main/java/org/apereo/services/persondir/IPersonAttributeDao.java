@@ -18,6 +18,8 @@
  */
 package org.apereo.services.persondir;
 
+import org.springframework.core.Ordered;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +32,7 @@ import java.util.regex.Pattern;
  * @author andrew.petro @yale.edu
  * @author Eric Dalquist
  */
-public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
+public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao>, Ordered {
     /**
      * The constant WILDCARD.
      */
@@ -133,6 +135,7 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao> {
      *
      * @return the numeric order.
      */
+    @Override
     default int getOrder() {
         return 0;
     }

@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -86,8 +87,9 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
         if (!this.isEnabled()) {
             return null;
         }
-        var groupsClient = new GcGetGroups();
+        Objects.requireNonNull(subjectId, "username cannot be null");
 
+        var groupsClient = new GcGetGroups();
         switch (this.subjectType) {
             case SUBJECT_IDENTIFIER:
                 groupsClient.addSubjectIdentifier(subjectId);
