@@ -47,8 +47,8 @@ public class AttributeBasedCacheKeyGeneratorTest {
 
     @Test
     public void testCacheKeyGeneratorUnique() {
-        final var personAttributeDao = applicationContext.getBean("personAttributeDao", IPersonAttributeDao.class);
-        final var cacheProviderFacade = applicationContext.getBean("cacheProviderFacade", MapCacheProviderFacade.class);
+        var personAttributeDao = applicationContext.getBean("personAttributeDao", IPersonAttributeDao.class);
+        var cacheProviderFacade = applicationContext.getBean("cacheProviderFacade", MapCacheProviderFacade.class);
         cacheProviderFacade.reset();
         assertEquals(0, cacheProviderFacade.getCacheSize());
         assertEquals(0, cacheProviderFacade.getFlushCount());
@@ -97,8 +97,8 @@ public class AttributeBasedCacheKeyGeneratorTest {
 
     @Test
     public void testCacheKeyGeneratorWithFactoryBean() {
-        final var personAttributeDao = applicationContext.getBean("personAttributeDao", IPersonAttributeDao.class);
-        final var cacheProviderFacade = applicationContext.getBean("cacheProviderFacade", MapCacheProviderFacade.class);
+        var personAttributeDao = applicationContext.getBean("personAttributeDao", IPersonAttributeDao.class);
+        var cacheProviderFacade = applicationContext.getBean("cacheProviderFacade", MapCacheProviderFacade.class);
         cacheProviderFacade.reset();
 
         assertEquals(0, cacheProviderFacade.getCacheSize());

@@ -86,7 +86,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
 
         // Assertions.
         if (descriptors == null) {
-            final var msg = "Argument 'descriptors' cannot be null";
+            var msg = "Argument 'descriptors' cannot be null";
             throw new IllegalArgumentException(msg);
         }
 
@@ -118,7 +118,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
     @Override
     @JsonIgnore
     public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
-        final var usernameAttributeProvider = super.getUsernameAttributeProvider();
+        var usernameAttributeProvider = super.getUsernameAttributeProvider();
         return Collections.singleton(usernameAttributeProvider.getUsernameAttribute());
     }
 
@@ -133,7 +133,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
             this.logger.debug("invoking getPeopleWithMultivaluedAttributes(" + query + ")");
         }
 
-        final var usernameAttributeProvider = super.getUsernameAttributeProvider();
+        var usernameAttributeProvider = super.getUsernameAttributeProvider();
         var uid = usernameAttributeProvider.getUsernameFromQuery(query);
         if (uid == null) {
             if (this.logger.isDebugEnabled()) {
@@ -162,7 +162,7 @@ public class AdditionalDescriptorsPersonAttributeDao extends AbstractDefaultAttr
                 this.logger.debug("Adding additional descriptors " + this.descriptors);
             }
 
-            final IPersonAttributes personAttributes = new CaseInsensitiveNamedPersonImpl(targetName, this.descriptors.getAttributes());
+            var personAttributes = new CaseInsensitiveNamedPersonImpl(targetName, this.descriptors.getAttributes());
             return Collections.singleton(personAttributes);
         }
 

@@ -66,7 +66,7 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(QueryBuilder queryBuilder, String queryUserName) {
 
-        final var currentUserName = currentUserProvider.getCurrentUserName();
+        var currentUserName = currentUserProvider.getCurrentUserName();
 
         if (currentUserName == null) {
             this.logger.warn("A null name was returned by the currentUserProvider, returning null.");
@@ -111,7 +111,7 @@ public class SAMLCredentialPersonAttributeDao extends AbstractQueryPersonAttribu
                         }
                         attributes.put(a.getName(), list);
                     }
-                    final IPersonAttributes personAttributes = new CaseInsensitiveNamedPersonImpl(currentUserName, attributes);
+                    var personAttributes = new CaseInsensitiveNamedPersonImpl(currentUserName, attributes);
                     return Collections.singletonList(personAttributes);
                 }
 

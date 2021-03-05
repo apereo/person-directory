@@ -141,10 +141,10 @@ public class GroovyPersonAttributeDao extends AbstractDefaultAttributePersonAttr
 
         logger.debug("Executing groovy script's getAttributesForUser method");
 
-        final var personAttributesMap = groovyObject.getAttributesForUser(uid);
+        var personAttributesMap = groovyObject.getAttributesForUser(uid);
         if (personAttributesMap != null) {
             logger.debug("Creating person attributes with the username {} and attributes {}", uid, personAttributesMap);
-            final var personAttributes = MultivaluedPersonAttributeUtils.toMultivaluedMap(personAttributesMap);
+            var personAttributes = MultivaluedPersonAttributeUtils.toMultivaluedMap(personAttributesMap);
 
             if (this.caseInsensitiveUsername) {
                 return new CaseInsensitiveNamedPersonImpl(uid, personAttributes);
@@ -161,7 +161,7 @@ public class GroovyPersonAttributeDao extends AbstractDefaultAttributePersonAttr
         logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters {}",
                 attributes);
 
-        final var personAttributesMap =
+        var personAttributesMap =
                 groovyObject.getPersonAttributesFromMultivaluedAttributes(attributes);
 
         if (personAttributesMap != null) {

@@ -18,6 +18,7 @@ import org.apereo.services.persondir.IPersonAttributes;
 import org.springframework.http.HttpMethod;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +33,39 @@ import java.util.Set;
  */
 public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     private final ObjectMapper jacksonObjectMapper = new ObjectMapper().findAndRegisterModules();
-    private final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
+    private IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
    
     private boolean caseInsensitiveUsername = false;
     private String url;
     private String basicAuthUsername;
     private String basicAuthPassword;
     private String method;
+    private Map<String, String> parameters = new LinkedHashMap<>();
+    private Map<String, String> headers = new LinkedHashMap<>();
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(final Map<String, String> parameters) {
+        this.parameters = parameters;
+    }
+
+    public IUsernameAttributeProvider getUsernameAttributeProvider() {
+        return usernameAttributeProvider;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(final Map<String, String> headers) {
+        this.headers = headers;
+    }
+
+    public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
+        this.usernameAttributeProvider = usernameAttributeProvider;
+    }
 
     public boolean isCaseInsensitiveUsername() {
         return caseInsensitiveUsername;
@@ -86,23 +113,27 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
             if (!this.isEnabled()) {
                 return null;
             }
-            final var builder = HttpClientBuilder.create();
+            var builder = HttpClientBuilder.create();
 
             if (StringUtils.isNotBlank(this.basicAuthUsername) && StringUtils.isNotBlank(this.basicAuthPassword)) {
-                final CredentialsProvider provider = new BasicCredentialsProvider();
-                final var credentials = new UsernamePasswordCredentials(this.basicAuthUsername, this.basicAuthPassword);
+                var provider = new BasicCredentialsProvider();
+                var credentials = new UsernamePasswordCredentials(this.basicAuthUsername, this.basicAuthPassword);
                 provider.setCredentials(AuthScope.ANY, credentials);
                 builder.setDefaultCredentialsProvider(provider);
             }
 
-            final HttpClient client = builder.build();
+            var client = builder.build();
 
-            final var uriBuilder = new URIBuilder(this.url);
+            var uriBuilder = new URIBuilder(this.url);
             uriBuilder.addParameter("username", uid);
-            final var uri = uriBuilder.build();
-            final HttpUriRequest request = method.equalsIgnoreCase(HttpMethod.GET.name()) ? new HttpGet(uri) : new HttpPost(uri);
-            final var response = client.execute(request);
-            final var attributes = jacksonObjectMapper.readValue(response.getEntity().getContent(), Map.class);
+            this.parameters.forEach(uriBuilder::addParameter);
+
+            var uri = uriBuilder.build();
+            var request = method.equalsIgnoreCase(HttpMethod.GET.name()) ? new HttpGet(uri) : new HttpPost(uri);
+            this.headers.forEach(request::addHeader);
+            
+            var response = client.execute(request);
+            var attributes = jacksonObjectMapper.readValue(response.getEntity().getContent(), Map.class);
 
             if (this.caseInsensitiveUsername) {
                 return new CaseInsensitiveNamedPersonImpl(uid, MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(attributes, filter));
@@ -123,9 +154,9 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
                                                                      final IPersonAttributeDaoFilter filter) {
-        final Set<IPersonAttributes> people = new LinkedHashSet<>();
-        final var username = usernameAttributeProvider.getUsernameFromQuery(query);
-        final var person = getPerson(username, filter);
+        var people = new LinkedHashSet<IPersonAttributes>();
+        var username = usernameAttributeProvider.getUsernameFromQuery(query);
+        var person = getPerson(username, filter);
         if (person != null) {
             people.add(person);
         }

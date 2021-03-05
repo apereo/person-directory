@@ -96,7 +96,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
 
     public void testCacheStats() throws Exception {
-        final var dao = new CachingPersonAttributeDaoImpl();
+        var dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
         dao.setUserInfoCache(new HashMap<>());
@@ -144,7 +144,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     public void testCaching() throws Exception {
         final Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<>();
 
-        final var dao = new CachingPersonAttributeDaoImpl();
+        var dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
         dao.setUserInfoCache(cacheMap);
@@ -204,9 +204,9 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
         keyAttrs.add("name.first");
         keyAttrs.add("name.last");
 
-        final var dao = new CachingPersonAttributeDaoImpl();
+        var dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
-        final var cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
+        var cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
         cacheKeyGenerator.setCacheKeyAttributes(keyAttrs);
         dao.setCacheKeyGenerator(cacheKeyGenerator);
         dao.setUserInfoCache(cacheMap);
@@ -253,7 +253,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     }
 
     public void testPropertyConstraints() {
-        final var dao = new CachingPersonAttributeDaoImpl();
+        var dao = new CachingPersonAttributeDaoImpl();
 
         try {
             dao.setCachedPersonAttributesDao(null);
@@ -308,7 +308,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     public void testEmptyCacheKeyWithDefaultAttr() throws Exception {
         final Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<>();
 
-        final var dao = new CachingPersonAttributeDaoImpl();
+        var dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("UNUSED_ATTR_NAME"));
         dao.setUserInfoCache(cacheMap);
@@ -352,10 +352,10 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
     public void testEmptyCacheKeyWithKeyAttrs() throws Exception {
         final Map<Serializable, Set<IPersonAttributes>> cacheMap = new HashMap<>();
 
-        final var dao = new CachingPersonAttributeDaoImpl();
+        var dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("UNUSED_ATTR_NAME"));
-        final var cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
+        var cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
         cacheKeyGenerator.setCacheKeyAttributes(Collections.singleton("UNUSED_ATTR_NAME"));
         dao.setCacheKeyGenerator(cacheKeyGenerator);
         dao.setUserInfoCache(cacheMap);
@@ -397,7 +397,7 @@ public class CachingPersonAttributeDaoTest extends AbstractDefaultQueryPersonAtt
 
     @Override
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
-        final var dao = new CachingPersonAttributeDaoImpl();
+        var dao = new CachingPersonAttributeDaoImpl();
         dao.setCachedPersonAttributesDao(this.stubDao);
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider(defaultAttr));
         dao.setUserInfoCache(new HashMap<>());

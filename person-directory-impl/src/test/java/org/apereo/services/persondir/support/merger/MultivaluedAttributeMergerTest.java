@@ -42,7 +42,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
 
         var adder = new MultivaluedAttributeMerger();
         adder.setDistinctValues(true);
-        final var result = adder.mergeAttributes(someAttributes, secondAttributes);
+        var result = adder.mergeAttributes(someAttributes, secondAttributes);
 
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("attName", Util.list("AttValue", "attrValue1"));
@@ -64,7 +64,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         expected.putAll(someAttributes);
 
         var adder = new MultivaluedAttributeMerger();
-        final var result = adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
+        var result = adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
         assertEquals(expected, result);
     }
 
@@ -86,7 +86,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         expected.putAll(otherAttributes);
 
         var adder = new MultivaluedAttributeMerger();
-        final var result = adder.mergeAttributes(someAttributes, otherAttributes);
+        var result = adder.mergeAttributes(someAttributes, otherAttributes);
         assertEquals(expected, result);
     }
 
@@ -144,7 +144,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         expected.put("attName13", Util.list("attValue13.1.1", "attValue13.1.2", "attValue13.2.1", "attValue13.2.2"));
 
         var adder = new MultivaluedAttributeMerger();
-        final var result = adder.mergeAttributes(someAttributes, otherAttributes);
+        var result = adder.mergeAttributes(someAttributes, otherAttributes);
         assertEquals(expected, result);
     }
 

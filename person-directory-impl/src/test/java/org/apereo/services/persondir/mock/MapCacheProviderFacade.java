@@ -167,7 +167,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
      */
     @Override
     public PropertyEditor getCachingModelEditor() {
-        final var editor = new ReflectionCacheModelEditor();
+        var editor = new ReflectionCacheModelEditor();
         editor.setCacheModelClass(EhCacheCachingModel.class);
         return editor;
     }
@@ -177,7 +177,7 @@ public class MapCacheProviderFacade extends AbstractCacheProviderFacade {
      */
     @Override
     public PropertyEditor getFlushingModelEditor() {
-        final var editor = new ReflectionCacheModelEditor();
+        var editor = new ReflectionCacheModelEditor();
         editor.setCacheModelClass(EhCacheFlushingModel.class);
         return editor;
     }

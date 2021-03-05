@@ -45,7 +45,7 @@ public abstract class AbstractFlatteningPersonAttributeDao extends BasePersonAtt
     @Override
     public final Set<IPersonAttributes> getPeople(final Map<String, Object> query,
                                                   final IPersonAttributeDaoFilter filter) {
-        final var multivaluedSeed = MultivaluedPersonAttributeUtils.toMultivaluedMap(query);
+        var multivaluedSeed = MultivaluedPersonAttributeUtils.toMultivaluedMap(query);
         return this.getPeopleWithMultivaluedAttributes(multivaluedSeed, filter);
     }
 }

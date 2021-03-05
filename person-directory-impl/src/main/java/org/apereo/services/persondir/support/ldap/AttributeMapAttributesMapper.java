@@ -51,18 +51,18 @@ class AttributeMapAttributesMapper implements AttributesMapper {
      */
     @Override
     public Object mapFromAttributes(final Attributes attributes) throws NamingException {
-        final var attributeCount = attributes.size();
-        final var mapOfAttrValues = this.createAttributeMap(attributeCount);
+        var attributeCount = attributes.size();
+        var mapOfAttrValues = this.createAttributeMap(attributeCount);
 
-        for (final var attributesEnum = attributes.getAll(); attributesEnum.hasMore(); ) {
-            final var attribute = attributesEnum.next();
+        for (var attributesEnum = attributes.getAll(); attributesEnum.hasMore(); ) {
+            var attribute = attributesEnum.next();
 
             if (!this.ignoreNull || attribute.size() > 0) {
-                final var attrName = attribute.getID();
-                final var key = this.getAttributeKey(attrName);
+                var attrName = attribute.getID();
+                var key = this.getAttributeKey(attrName);
 
-                final var valuesEnum = attribute.getAll();
-                final var values = this.getAttributeValues(valuesEnum);
+                var valuesEnum = attribute.getAll();
+                var values = this.getAttributeValues(valuesEnum);
 
                 mapOfAttrValues.put(key, values);
             }

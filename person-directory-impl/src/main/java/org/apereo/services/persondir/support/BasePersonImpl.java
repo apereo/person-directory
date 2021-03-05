@@ -46,7 +46,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
     public BasePersonImpl(final Map<String, List<Object>> attributes) {
         Validate.notNull(attributes, "attributes can not be null");
 
-        final var immutableValuesBuilder = this.buildImmutableAttributeMap(attributes);
+        var immutableValuesBuilder = this.buildImmutableAttributeMap(attributes);
 
         // NOTE:  Do not return a copy of the map.  This must return the existing map or wrap the map with
         // an unmodifiable map so the underlying map still operates as case-insensitive for key comparison
@@ -63,26 +63,26 @@ public abstract class BasePersonImpl implements IPersonAttributes {
      * @return Read-only map of attributes
      */
     protected Map<String, List<Object>> buildImmutableAttributeMap(final Map<String, List<Object>> attributes) {
-        final var immutableValuesBuilder = this.createImmutableAttributeMap(attributes.size());
-        final var arrayPattern = Pattern.compile("\\{(.*)\\}");
-        for (final var attrEntry : attributes.entrySet()) {
-            final var key = attrEntry.getKey();
+        var immutableValuesBuilder = this.createImmutableAttributeMap(attributes.size());
+        var arrayPattern = Pattern.compile("\\{(.*)\\}");
+        for (var attrEntry : attributes.entrySet()) {
+            var key = attrEntry.getKey();
             var value = attrEntry.getValue();
 
             if (value != null) {
                 if (!value.isEmpty()) {
-                    final var result = value.get(0);
+                    var result = value.get(0);
                     if (result instanceof Array) {
                         if (logger.isTraceEnabled()) {
                             logger.trace("Column {} is classified as a SQL array", key);
                         }
-                        final var values = result.toString();
+                        var values = result.toString();
                         if (logger.isTraceEnabled()) {
                             logger.trace("Converting SQL array values {} using pattern {}", values, arrayPattern.pattern());
                         }
-                        final var matcher = arrayPattern.matcher(values);
+                        var matcher = arrayPattern.matcher(values);
                         if (matcher.matches()) {
-                            final var groups = matcher.group(1).split(",");
+                            var groups = matcher.group(1).split(",");
                             value = Arrays.asList(groups);
                             if (logger.isTraceEnabled()) {
                                 logger.trace("Converted SQL array values {}", values);
@@ -116,7 +116,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
      */
     @Override
     public Object getAttributeValue(final String name) {
-        final var values = this.attributes.get(name);
+        var values = this.attributes.get(name);
         if (values == null || values.size() == 0) {
             return null;
         }
@@ -151,7 +151,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
         if (!(object instanceof IPersonAttributes)) {
             return false;
         }
-        final var rhs = (IPersonAttributes) object;
+        var rhs = (IPersonAttributes) object;
         return new EqualsBuilder()
             .append(this.getName(), rhs.getName())
             .isEquals();

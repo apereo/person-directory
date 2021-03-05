@@ -39,7 +39,7 @@ public class Util {
 
         final List<Object> list = new ArrayList<>(objects.length);
 
-        for (final var obj : objects) {
+        for (var obj : objects) {
             list.add(obj);
         }
 
@@ -58,7 +58,7 @@ public class Util {
 
         final List<T> list = new ArrayList<>(objects.length);
 
-        for (final var obj : objects) {
+        for (var obj : objects) {
             list.add(obj);
         }
 

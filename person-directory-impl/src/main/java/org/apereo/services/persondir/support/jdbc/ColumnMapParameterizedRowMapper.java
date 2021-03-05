@@ -49,15 +49,15 @@ public class ColumnMapParameterizedRowMapper implements RowMapper<Map<String, Ob
      */
     @Override
     public final Map<String, Object> mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        final var rsmd = rs.getMetaData();
-        final var columnCount = rsmd.getColumnCount();
-        final var mapOfColValues = this.createColumnMap(columnCount);
+        var rsmd = rs.getMetaData();
+        var columnCount = rsmd.getColumnCount();
+        var mapOfColValues = this.createColumnMap(columnCount);
 
         for (var i = 1; i <= columnCount; i++) {
-            final var columnName = JdbcUtils.lookupColumnName(rsmd, i);
-            final var obj = this.getColumnValue(rs, i);
+            var columnName = JdbcUtils.lookupColumnName(rsmd, i);
+            var obj = this.getColumnValue(rs, i);
             if (!this.ignoreNull || obj != null) {
-                final var key = this.getColumnKey(columnName);
+                var key = this.getColumnKey(columnName);
                 mapOfColValues.put(key, obj);
             }
         }

@@ -33,7 +33,7 @@ public class AdditionalDescriptorsTest extends TestCase {
 
     public void testGetAttributeValue() {
 
-        final var ad = new AdditionalDescriptors();
+        var ad = new AdditionalDescriptors();
         ad.setAttributeValues("foo", VALUES_LIST);
 
         TestCase.assertEquals(ad.getAttributeValue("foo"), VALUES_LIST.get(0));
@@ -46,7 +46,7 @@ public class AdditionalDescriptorsTest extends TestCase {
 
     public void testGetAttributeValues() {
 
-        final var ad = new AdditionalDescriptors();
+        var ad = new AdditionalDescriptors();
         ad.setAttributeValues("foo", VALUES_LIST);
 
         TestCase.assertEquals(ad.getAttributeValues("foo"), VALUES_LIST);
@@ -57,7 +57,7 @@ public class AdditionalDescriptorsTest extends TestCase {
 
     public void testSetAttributeValues() {
 
-        final var ad = new AdditionalDescriptors();
+        var ad = new AdditionalDescriptors();
 
         var caught = false;
         try {

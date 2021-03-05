@@ -39,7 +39,7 @@ public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTe
     }
 
     public void testMapEcho() {
-        final var dao = new EchoPersonAttributeDaoImpl();
+        var dao = new EchoPersonAttributeDaoImpl();
 
         final Map<String, List<Object>> testMap = new HashMap<>();
         testMap.put("key1", Util.list("val1"));
@@ -47,7 +47,7 @@ public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTe
 
         final Map<String, Object> goalMap = new HashMap<>(testMap);
 
-        final var resultSet = dao.getPeopleWithMultivaluedAttributes(testMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var resultSet = dao.getPeopleWithMultivaluedAttributes(testMap, IPersonAttributeDaoFilter.alwaysChoose());
 
         assertEquals(goalMap, resultSet.iterator().next().getAttributes());
     }

@@ -58,13 +58,13 @@ public abstract class AbstractFlatteningPersonAttributeDaoTest extends AbstractP
         expected.put("address", Collections.emptyList());
 
 
-//        final SimpleDefaultQueryPersonAttributeDao flatteningPersonAttributeDao = new SimpleDefaultQueryPersonAttributeDao(backingMap);
-        final var flatteningPersonAttributeDao = new StubPersonAttributeDao(backingMap);
+//        var flatteningPersonAttributeDao = new SimpleDefaultQueryPersonAttributeDao(backingMap);
+        var flatteningPersonAttributeDao = new StubPersonAttributeDao(backingMap);
 
-        final var userAttributesUid = flatteningPersonAttributeDao.getPerson("seed", IPersonAttributeDaoFilter.alwaysChoose());
+        var userAttributesUid = flatteningPersonAttributeDao.getPerson("seed", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expected, userAttributesUid.getAttributes());
 
-        final var userAttributesSet = flatteningPersonAttributeDao.getPeople(Collections.singletonMap("key", new Object()),
+        var userAttributesSet = flatteningPersonAttributeDao.getPeople(Collections.singletonMap("key", new Object()),
             IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expected, userAttributesSet.iterator().next().getAttributes());
     }

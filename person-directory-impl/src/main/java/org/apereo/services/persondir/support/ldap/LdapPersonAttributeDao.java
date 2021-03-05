@@ -142,7 +142,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
      */
     @Override
     public void afterPropertiesSet() {
-        final var resultAttributeMapping = this.getResultAttributeMapping();
+        var resultAttributeMapping = this.getResultAttributeMapping();
         if (this.setReturningAttributes && resultAttributeMapping != null) {
             this.searchControls.setReturningAttributes(resultAttributeMapping.keySet().toArray(new String[resultAttributeMapping.size()]));
         }
@@ -162,8 +162,8 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
             queryBuilder = new LogicalFilterWrapper(this.queryType);
         }
 
-        for (final var queryValue : queryValues) {
-            final var queryValueString = queryValue == null ? null : queryValue.toString();
+        for (var queryValue : queryValues) {
+            var queryValueString = queryValue == null ? null : queryValue.toString();
 
             if (StringUtils.isNotBlank(queryValueString)) {
                 final Filter filter;
@@ -185,7 +185,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
      */
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(final LogicalFilterWrapper queryBuilder, final String queryUserName) {
-        final var generatedLdapQuery = queryBuilder.encode();
+        var generatedLdapQuery = queryBuilder.encode();
 
         //If no query is generated return null since the query cannot be run
         if (StringUtils.isBlank(generatedLdapQuery)) {
@@ -197,7 +197,7 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         if (this.queryTemplate == null) {
             ldapQuery = generatedLdapQuery;
         } else {
-            final var queryMatcher = QUERY_PLACEHOLDER.matcher(this.queryTemplate);
+            var queryMatcher = QUERY_PLACEHOLDER.matcher(this.queryTemplate);
             ldapQuery = queryMatcher.replaceAll(generatedLdapQuery);
             if (logger.isDebugEnabled()) {
                 logger.debug("Final ldapQuery after applying queryTemplate: '" + ldapQuery + "'");
@@ -209,11 +209,11 @@ public class LdapPersonAttributeDao extends AbstractQueryPersonAttributeDao<Logi
         final List<Map<String, List<Object>>> queryResults = this.ldapTemplate.search(this.baseDN, ldapQuery, this.searchControls, MAPPER);
 
         final List<IPersonAttributes> peopleAttributes = new ArrayList<>(queryResults.size());
-        for (final var queryResult : queryResults) {
+        for (var queryResult : queryResults) {
             final IPersonAttributes person;
 
             // Choose a username from the best available option
-            final var userNameAttribute = this.getConfiguredUserNameAttribute();
+            var userNameAttribute = this.getConfiguredUserNameAttribute();
             if (this.isUserNameAttributeConfigured() && queryResult.containsKey(userNameAttribute)) {
                 // Option #1:  An attribute is named explicitly in the config, 
                 // and that attribute is present in the results from LDAP;  use it

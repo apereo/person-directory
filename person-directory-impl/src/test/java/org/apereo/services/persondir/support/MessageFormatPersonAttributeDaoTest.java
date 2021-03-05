@@ -38,7 +38,7 @@ public class MessageFormatPersonAttributeDaoTest extends AbstractPersonAttribute
 
     public MessageFormatPersonAttributeDaoTest() {
 
-        final var formatAttribute = new MessageFormatPersonAttributeDao.FormatAttribute();
+        var formatAttribute = new MessageFormatPersonAttributeDao.FormatAttribute();
         final Set<String> set2 =
                 new HashSet<>();
         set2.add("displayName");
@@ -59,7 +59,7 @@ public class MessageFormatPersonAttributeDaoTest extends AbstractPersonAttribute
         query.put("firstName", Util.list("Eric"));
         query.put("lastName", Util.list("Dalquist"));
 
-        final var result = messageFormatPersonAttributeDao.getPeopleWithMultivaluedAttributes(query,
+        var result = messageFormatPersonAttributeDao.getPeopleWithMultivaluedAttributes(query,
             IPersonAttributeDaoFilter.alwaysChoose());
 
 

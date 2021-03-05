@@ -140,8 +140,8 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
 
     @Test
     public void testVerifyGetPerson() {
-        final var urls = ((LdapContextSource) this.getContextSource()).getUrls();
-        final var factory = new PooledConnectionFactory(urls[0]);
+        var urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        var factory = new PooledConnectionFactory(urls[0]);
         factory.initialize();
 
         final Map<String, String> resultAttributeMap = new HashMap<>();
@@ -149,11 +149,11 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         resultAttributeMap.put("mail", "displayName");
         resultAttributeMap.put("givenName", "givenName");
 
-        final var ctrs = new SearchControls();
+        var ctrs = new SearchControls();
         ctrs.setSearchScope(1);
         ctrs.setCountLimit(2);
 
-        final var dao = new LdaptivePersonAttributeDao();
+        var dao = new LdaptivePersonAttributeDao();
         dao.setConnectionFactory(factory);
         dao.setBaseDN("ou=people,dc=example,dc=com");
         dao.setSearchControls(ctrs);
@@ -188,8 +188,8 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
      */
     @Test
     public void testVerifyGetPeopleWithQueryAttributeMapping() {
-        final var urls = ((LdapContextSource) this.getContextSource()).getUrls();
-        final var factory = new PooledConnectionFactory(urls[0]);
+        var urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        var factory = new PooledConnectionFactory(urls[0]);
         factory.initialize();
 
         final Map<String, String> resultAttributeMap = new HashMap<>();
@@ -197,11 +197,11 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         resultAttributeMap.put("mail", "displayName");
         resultAttributeMap.put("givenName", "givenName");
 
-        final var ctrs = new SearchControls();
+        var ctrs = new SearchControls();
         ctrs.setSearchScope(1);
         ctrs.setCountLimit(2);
 
-        final var dao = new LdaptivePersonAttributeDao();
+        var dao = new LdaptivePersonAttributeDao();
         Map attributeMapping = new HashMap();
         attributeMapping.put("username","thename");
         dao.setQueryAttributeMapping(attributeMapping);
@@ -229,8 +229,8 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
      */
     @Test
     public void testVerifyGetPeopleWithoutQueryAttributeMapping() {
-        final var urls = ((LdapContextSource) this.getContextSource()).getUrls();
-        final var factory = new PooledConnectionFactory(urls[0]);
+        var urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        var factory = new PooledConnectionFactory(urls[0]);
         factory.initialize();
 
         final Map<String, String> resultAttributeMap = new HashMap<>();
@@ -238,11 +238,11 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         resultAttributeMap.put("mail", "displayName");
         resultAttributeMap.put("givenName", "givenName");
 
-        final var ctrs = new SearchControls();
+        var ctrs = new SearchControls();
         ctrs.setSearchScope(1);
         ctrs.setCountLimit(2);
 
-        final var dao = new LdaptivePersonAttributeDao();
+        var dao = new LdaptivePersonAttributeDao();
         dao.setConnectionFactory(factory);
         dao.setBaseDN("ou=people,dc=example,dc=com");
         dao.setSearchControls(ctrs);
@@ -264,8 +264,8 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
      */
     @Test
     public void testVerifyGetPeopleWithMultiArgSearchFilter() {
-        final var urls = ((LdapContextSource) this.getContextSource()).getUrls();
-        final var factory = new PooledConnectionFactory(urls[0]);
+        var urls = ((LdapContextSource) this.getContextSource()).getUrls();
+        var factory = new PooledConnectionFactory(urls[0]);
         factory.initialize();
 
         final Map<String, String> resultAttributeMap = new HashMap<>();
@@ -273,11 +273,11 @@ public class LdaptivePersonAttributeDaoTest extends AbstractLdapTestUnit {
         resultAttributeMap.put("mail", "displayName");
         resultAttributeMap.put("givenName", "givenName");
 
-        final var ctrs = new SearchControls();
+        var ctrs = new SearchControls();
         ctrs.setSearchScope(1);
         ctrs.setCountLimit(2);
 
-        final var dao = new LdaptivePersonAttributeDao();
+        var dao = new LdaptivePersonAttributeDao();
         dao.setConnectionFactory(factory);
         dao.setBaseDN("ou=people,dc=example,dc=com");
         dao.setSearchControls(ctrs);

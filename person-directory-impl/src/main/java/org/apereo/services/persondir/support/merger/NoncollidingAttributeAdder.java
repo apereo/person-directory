@@ -40,11 +40,11 @@ public class NoncollidingAttributeAdder extends BaseAdditiveAttributeMerger {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
 
-        for (final var sourceEntry : toConsider.entrySet()) {
-            final var sourceKey = sourceEntry.getKey();
+        for (var sourceEntry : toConsider.entrySet()) {
+            var sourceKey = sourceEntry.getKey();
 
             if (!toModify.containsKey(sourceKey)) {
-                final var sourceValue = sourceEntry.getValue();
+                var sourceValue = sourceEntry.getValue();
                 toModify.put(sourceKey, sourceValue);
             }
         }

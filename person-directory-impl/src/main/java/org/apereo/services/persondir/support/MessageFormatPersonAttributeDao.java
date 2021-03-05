@@ -80,7 +80,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
         Validate.notNull(formatAttributes, "formatAttributes can not be null");
 
         final Set<String> possibleUserAttributeNames = new LinkedHashSet<>();
-        for (final var formatAttribute : formatAttributes) {
+        for (var formatAttribute : formatAttributes) {
             possibleUserAttributeNames.addAll(formatAttribute.attributeNames);
         }
 
@@ -105,9 +105,9 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
                                                                      final IPersonAttributeDaoFilter filter) {
         final Map<String, List<Object>> formattedAttributes = new LinkedHashMap<>();
 
-        for (final var formatAttribute : this.formatAttributes) {
-            final var format = formatAttribute.getFormat();
-            final var sourceAttributes = formatAttribute.getSourceAttributes();
+        for (var formatAttribute : this.formatAttributes) {
+            var format = formatAttribute.getFormat();
+            var sourceAttributes = formatAttribute.getSourceAttributes();
 
             //If the query doesn't contain all source attributes skip the formats
             if (!query.keySet().containsAll(sourceAttributes)) {
@@ -117,16 +117,16 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
 
             //Add attribute values to list
             final List<Object> sourceValues = new ArrayList<>(sourceAttributes.size());
-            for (final var sourceAttribute : sourceAttributes) {
-                final var values = query.get(sourceAttribute);
+            for (var sourceAttribute : sourceAttributes) {
+                var values = query.get(sourceAttribute);
                 sourceValues.add(values == null || values.size() == 0 ? null : values.get(0));
             }
 
             //Format the attribute
-            final var formattedAttribute = MessageFormat.format(format, sourceValues.toArray());
+            var formattedAttribute = MessageFormat.format(format, sourceValues.toArray());
 
             //Add formatted attribute under each name
-            for (final var attributeName : formatAttribute.getAttributeNames()) {
+            for (var attributeName : formatAttribute.getAttributeNames()) {
                 formattedAttributes.put(attributeName, Collections.singletonList((Object) formattedAttribute));
             }
         }
@@ -138,12 +138,12 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
 
         //Create the person attributes object to return
         final IPersonAttributes personAttributes;
-        final var usernameAttributeProvider = this.getUsernameAttributeProvider();
-        final var usernameFromQuery = usernameAttributeProvider.getUsernameFromQuery(query);
+        var usernameAttributeProvider = this.getUsernameAttributeProvider();
+        var usernameFromQuery = usernameAttributeProvider.getUsernameFromQuery(query);
         if (usernameFromQuery != null) {
             personAttributes = new NamedPersonImpl(usernameFromQuery, formattedAttributes);
         } else {
-            final var usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
+            var usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
             personAttributes = new AttributeNamedPersonImpl(usernameAttribute, formattedAttributes);
         }
 
@@ -221,7 +221,7 @@ public class MessageFormatPersonAttributeDao extends AbstractDefaultAttributePer
             if (!(object instanceof FormatAttribute)) {
                 return false;
             }
-            final var rhs = (FormatAttribute) object;
+            var rhs = (FormatAttribute) object;
             return new EqualsBuilder()
                     .append(this.attributeNames, rhs.attributeNames)
                     .append(this.format, rhs.format)

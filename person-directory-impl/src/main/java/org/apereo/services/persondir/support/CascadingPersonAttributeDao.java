@@ -104,25 +104,25 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
         }
 
         Set<IPersonAttributes> mergedPeopleResults = null;
-        for (final var person : resultPeople) {
+        for (var person : resultPeople) {
             final Map<String, List<Object>> queryAttributes = new LinkedHashMap<>();
 
             //Add the userName into the query map
-            final var userName = person.getName();
+            var userName = person.getName();
             if (userName != null) {
-                final var userNameMap = this.toSeedMap(userName);
+                var userNameMap = this.toSeedMap(userName);
                 queryAttributes.putAll(userNameMap);
             }
 
             //Add the rest of the attributes into the query map
-            final var personAttributes = person.getAttributes();
+            var personAttributes = person.getAttributes();
             queryAttributes.putAll(personAttributes);
 
             if (this.addOriginalAttributesToQuery) {
                 queryAttributes.putAll(seed);
             }
             
-            final var newResults = currentlyConsidering.getPeopleWithMultivaluedAttributes(queryAttributes, filter);
+            var newResults = currentlyConsidering.getPeopleWithMultivaluedAttributes(queryAttributes, filter);
             if (newResults != null) {
                 if (mergedPeopleResults == null) {
                     //If this is the first valid result set just use it.

@@ -84,7 +84,7 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
 
     public void setEngineName(final String engineName) {
         this.engineName = engineName;
-        final var engine = new ScriptEngineManager().getEngineByName(engineName);
+        var engine = new ScriptEngineManager().getEngineByName(engineName);
         if (engine == null) {
             logger.warn("Specified engineName {} is not available in classpath.", engineName);
         }
@@ -166,14 +166,14 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
             if (!this.isEnabled()) {
                 return null;
             }
-            final var uid = getUsernameAttributeProvider().getUsernameFromQuery(query);
+            var uid = getUsernameAttributeProvider().getUsernameFromQuery(query);
             if (uid == null) {
                 logger.warn("Unable to find username in map {} using attribute {}", query, getUsernameAttributeProvider().getUsernameAttribute());
                 return null;
             }
             final Set<IPersonAttributes> people = new LinkedHashSet<>();
             IPersonAttributes person;
-            final var attributes = getScriptedAttributesFromFile(uid, query );
+            var attributes = getScriptedAttributesFromFile(uid, query );
             if (this.caseInsensitiveUsername) {
                 person = new CaseInsensitiveNamedPersonImpl(uid, MultivaluedPersonAttributeUtils.toMultivaluedMap(attributes));
             } else {
@@ -216,7 +216,7 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
         }
 
         // ScriptEngineManager().getEngineByName(engineName) will throw NPE if engineName is null
-        final var engine = new ScriptEngineManager().getEngineByName(engineName);
+        var engine = new ScriptEngineManager().getEngineByName(engineName);
         if (engine == null) {
             logger.warn("Script engine is not available in classpath for [{}]", engineName);
             return new HashMap<>();
@@ -235,7 +235,7 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
                 }
                 break;
             case FILE:
-                final var theScriptFile = new File(this.scriptFile);
+                var theScriptFile = new File(this.scriptFile);
                 logger.debug("Loading script from [{}]", theScriptFile);
                 engine.eval(new FileReader(theScriptFile));
                 break;
@@ -249,8 +249,8 @@ public class ScriptEnginePersonAttributeDao extends AbstractDefaultAttributePers
         }
 
         logger.debug("Executing script's run method, with parameters [{}]", args);
-        final var invocable = (Invocable) engine;
-        final var personAttributesMap = (Map<String, Object>) invocable.invokeFunction("run", args);
+        var invocable = (Invocable) engine;
+        var personAttributesMap = (Map<String, Object>) invocable.invokeFunction("run", args);
 
         logger.debug("Final set of attributes determined by the script are [{}]", personAttributesMap);
         return personAttributesMap;

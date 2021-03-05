@@ -27,6 +27,8 @@ import org.apereo.services.persondir.IPersonAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,19 +49,63 @@ import java.util.Set;
  * @author Dmitriy Kopylenko
  */
 public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
+    private IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
 
     public static final String DEFAULT_GROUPER_ATTRIBUTES_KEY = "grouperGroups";
+
+    private Map<String, String> parameters = new LinkedHashMap<>();
+
+    private GrouperSubjectType subjectType = GrouperSubjectType.SUBJECT_ID;
+
+    public IUsernameAttributeProvider getUsernameAttributeProvider() {
+        return usernameAttributeProvider;
+    }
+
+    public GrouperSubjectType getSubjectType() {
+        return subjectType;
+    }
+
+    public void setSubjectType(final GrouperSubjectType subjectType) {
+        this.subjectType = subjectType;
+    }
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(final Map<String, String> parameters) {
+        this.parameters = parameters;
+    }
+
+    public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
+        this.usernameAttributeProvider = usernameAttributeProvider;
+    }
 
     @Override
     public IPersonAttributes getPerson(final String subjectId, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;
         }
-        final GcGetGroups groupsClient = new GcGetGroups().addSubjectId(subjectId);
+        var groupsClient = new GcGetGroups();
+
+        switch (this.subjectType) {
+            case SUBJECT_IDENTIFIER:
+                groupsClient.addSubjectIdentifier(subjectId);
+                break;
+            case SUBJECT_ATTRIBUTE_NAME:
+                groupsClient.addSubjectAttributeName(subjectId);
+                break;
+            case SUBJECT_ID:
+            default:
+                groupsClient.addSubjectId(subjectId);
+                break;
+        }
+        
+        parameters.forEach(groupsClient::addParam);
         final Map<String, List<Object>> grouperGroupsAsAttributesMap = new HashMap<>(1);
         final List<Object> groupsList = new ArrayList<>();
         grouperGroupsAsAttributesMap.put("grouperGroups", groupsList);
-        final IPersonAttributes personAttributes = new AttributeNamedPersonImpl(grouperGroupsAsAttributesMap);
+        var personAttributes = new AttributeNamedPersonImpl(grouperGroupsAsAttributesMap);
 
         //Now retrieve and populate the attributes (groups from Grouper)
         for (final WsGetGroupsResult groupsResult : groupsClient.execute().getResults()) {
@@ -83,14 +129,26 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public Set<IPersonAttributes> getPeople(final Map<String, Object> stringObjectMap,
+    public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
                                             final IPersonAttributeDaoFilter filter) {
-        throw new UnsupportedOperationException("This method is not implemented.");
+        return getPeopleWithMultivaluedAttributes(MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(query, filter), filter);
     }
 
     @Override
-    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> stringListMap,
+    public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
                                                                      final IPersonAttributeDaoFilter filter) {
-        throw new UnsupportedOperationException("This method is not implemented.");
+        final Set<IPersonAttributes> people = new LinkedHashSet<>();
+        var username = usernameAttributeProvider.getUsernameFromQuery(query);
+        var person = getPerson(username, filter);
+        if (person != null) {
+            people.add(person);
+        }
+        return people;
+    }
+
+    public enum GrouperSubjectType {
+        SUBJECT_ID,
+        SUBJECT_IDENTIFIER,
+        SUBJECT_ATTRIBUTE_NAME
     }
 }

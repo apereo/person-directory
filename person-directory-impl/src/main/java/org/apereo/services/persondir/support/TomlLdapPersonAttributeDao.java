@@ -91,7 +91,7 @@ public class TomlLdapPersonAttributeDao extends LdapPersonAttributeDao {
 
         validateTomlResource();
 
-        final var config = buildTomlLdapConfiguration();
+        var config = buildTomlLdapConfiguration();
         applyTomlConfigurationToDao(config);
     }
 
@@ -128,7 +128,7 @@ public class TomlLdapPersonAttributeDao extends LdapPersonAttributeDao {
             this.setUseAllQueryAttributes(config.isUseAllQueryAttributes());
         }
 
-        final var ctxSource = new LdapContextSource();
+        var ctxSource = new LdapContextSource();
 
         if (config.isPooled() != null) {
             ctxSource.setPooled(config.isPooled());
@@ -158,7 +158,7 @@ public class TomlLdapPersonAttributeDao extends LdapPersonAttributeDao {
             ctxSource.setReferral(config.getReferral());
         }
 
-        final var template = new LdapTemplate(ctxSource);
+        var template = new LdapTemplate(ctxSource);
 
         if (config.isIgnoreNameNotFoundException() != null) {
             template.setIgnoreNameNotFoundException(config.isIgnoreNameNotFoundException());
@@ -173,9 +173,9 @@ public class TomlLdapPersonAttributeDao extends LdapPersonAttributeDao {
 
     private TomlLdapConfiguration buildTomlLdapConfiguration() throws Exception {
         try {
-            final var toml = Toml.parse(this.tomlConfigFile.getFile());
+            var toml = Toml.parse(this.tomlConfigFile.getFile());
 
-            final var config = toml.getAs("ldap", TomlLdapConfiguration.class);
+            var config = toml.getAs("ldap", TomlLdapConfiguration.class);
             return config;
         } catch (final Exception e) {
             logger.error(e.getMessage(), e);

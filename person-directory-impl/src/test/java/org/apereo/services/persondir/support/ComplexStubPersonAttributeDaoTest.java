@@ -70,12 +70,12 @@ public class ComplexStubPersonAttributeDaoTest
      * possible attribute names.
      */
     public void testGetPossibleUserAttributeNames() {
-        final var expectedAttributeNames = new HashSet<String>();
+        var expectedAttributeNames = new HashSet<String>();
         expectedAttributeNames.add("shirtColor");
         expectedAttributeNames.add("phone");
         expectedAttributeNames.add("musicalInstrumentOfChoice");
         expectedAttributeNames.add("wearsTie");
-        final var possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        var possibleAttributeNames = this.testInstance.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
 
         // test that it properly computed the set of possible attribute names
 

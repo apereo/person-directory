@@ -104,10 +104,10 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
             }
         }
 
-        final var xmlInputStream = this.getXmlInputStream();
-        final var jaxbContext = this.getJAXBContext();
-        final var unmarshaller = this.getUnmarshaller(jaxbContext);
-        final var unmarshalledObject = this.unmarshal(xmlInputStream, unmarshaller);
+        var xmlInputStream = this.getXmlInputStream();
+        var jaxbContext = this.getJAXBContext();
+        var unmarshaller = this.getUnmarshaller(jaxbContext);
+        var unmarshalledObject = this.unmarshal(xmlInputStream, unmarshaller);
 
         if (callback != null) {
             callback.postProcessUnmarshalling(unmarshalledObject);
@@ -162,8 +162,8 @@ public class CachingJaxbLoaderImpl<T> implements CachingJaxbLoader<T> {
      * @return The JAXB context to parse the XML resource with
      */
     protected JAXBContext getJAXBContext() {
-        final var loadedPackage = this.loadedType.getPackage();
-        final var filterDisplayPackage = loadedPackage.getName();
+        var loadedPackage = this.loadedType.getPackage();
+        var filterDisplayPackage = loadedPackage.getName();
         try {
             return JAXBContext.newInstance(filterDisplayPackage);
         } catch (final JAXBException e) {

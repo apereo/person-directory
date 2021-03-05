@@ -36,9 +36,9 @@ public class PatternHelper {
      * @return compiled Pattern
      */
     public static Pattern compilePattern(final String queryString) {
-        final var queryBuilder = new StringBuilder();
+        var queryBuilder = new StringBuilder();
 
-        final var queryMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
+        var queryMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
 
         if (!queryMatcher.find()) {
             return Pattern.compile(Pattern.quote(queryString));
@@ -47,8 +47,8 @@ public class PatternHelper {
         var start = queryMatcher.start();
         var previousEnd = -1;
         if (start > 0) {
-            final var queryPart = queryString.substring(0, start);
-            final var quotedQueryPart = Pattern.quote(queryPart);
+            var queryPart = queryString.substring(0, start);
+            var quotedQueryPart = Pattern.quote(queryPart);
             queryBuilder.append(quotedQueryPart);
         }
         queryBuilder.append(".*");
@@ -57,8 +57,8 @@ public class PatternHelper {
             start = queryMatcher.start();
 
             if (previousEnd != -1) {
-                final var queryPart = queryString.substring(previousEnd, start);
-                final var quotedQueryPart = Pattern.quote(queryPart);
+                var queryPart = queryString.substring(previousEnd, start);
+                var quotedQueryPart = Pattern.quote(queryPart);
                 queryBuilder.append(quotedQueryPart);
                 queryBuilder.append(".*");
             }
@@ -67,8 +67,8 @@ public class PatternHelper {
         } while (queryMatcher.find());
 
         if (previousEnd < queryString.length()) {
-            final var queryPart = queryString.substring(previousEnd);
-            final var quotedQueryPart = Pattern.quote(queryPart);
+            var queryPart = queryString.substring(previousEnd);
+            var quotedQueryPart = Pattern.quote(queryPart);
             queryBuilder.append(quotedQueryPart);
         }
 

@@ -65,14 +65,14 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
 
         //Convert the toModify Set into a Map to allow for easier lookups
         final Map<String, IPersonAttributes> toModfyPeople = new LinkedHashMap<>();
-        for (final var toModifyPerson : toModify) {
+        for (var toModifyPerson : toModify) {
             toModfyPeople.put(toModifyPerson.getName(), toModifyPerson);
         }
 
         //Merge in the toConsider people
-        for (final var toConsiderPerson : toConsider) {
-            final var toConsiderName = toConsiderPerson.getName();
-            final var toModifyPerson = toModfyPeople.get(toConsiderName);
+        for (var toConsiderPerson : toConsider) {
+            var toConsiderName = toConsiderPerson.getName();
+            var toModifyPerson = toModfyPeople.get(toConsiderName);
 
             //No matching toModify person, just add the new person
             if (toModifyPerson == null) {
@@ -80,9 +80,9 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
             }
             //Matching toModify person, merge their attributes
             else {
-                final var toModifyAttributes = this.buildMutableAttributeMap(toModifyPerson.getAttributes());
-                final var mergedAttributes = this.mergePersonAttributes(toModifyAttributes, toConsiderPerson.getAttributes());
-                final var mergedPerson = new NamedPersonImpl(toConsiderName, mergedAttributes);
+                var toModifyAttributes = this.buildMutableAttributeMap(toModifyPerson.getAttributes());
+                var mergedAttributes = this.mergePersonAttributes(toModifyAttributes, toConsiderPerson.getAttributes());
+                var mergedPerson = new NamedPersonImpl(toConsiderName, mergedAttributes);
 
                 //Remove then re-add the mergedPerson entry
                 toModify.remove(mergedPerson);
@@ -100,10 +100,10 @@ public abstract class BaseAdditiveAttributeMerger implements IAttributeMerger {
      * @return Mutable attribute map
      */
     protected Map<String, List<Object>> buildMutableAttributeMap(final Map<String, List<Object>> attributes) {
-        final var mutableValuesBuilder = this.createMutableAttributeMap(attributes.size());
+        var mutableValuesBuilder = this.createMutableAttributeMap(attributes.size());
 
-        for (final var attrEntry : attributes.entrySet()) {
-            final var key = attrEntry.getKey();
+        for (var attrEntry : attributes.entrySet()) {
+            var key = attrEntry.getKey();
             var value = attrEntry.getValue();
 
             if (value != null) {

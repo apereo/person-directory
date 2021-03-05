@@ -47,7 +47,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     @Override
     @Before
     public void setUp() {
-        final var parent = getClass().getClassLoader();
+        var parent = getClass().getClassLoader();
         loader = new GroovyClassLoader(parent);
         dao = new GroovyPersonAttributeDao(loadGroovyClass("SampleGroovyPersonAttributeDao.groovy"));
 
@@ -58,10 +58,10 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
 
     private IPersonAttributeScriptDao loadGroovyClass(String filename) {
         try {
-            final var scriptFile = new ClassPathResource(filename);
+            var scriptFile = new ClassPathResource(filename);
             final Class<?> groovyClass = loader.parseClass(scriptFile.getFile());
 
-            final var groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
+            var groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
             return groovyObject;
         } catch (IOException e) {
             logger.error("Unable to load groovy file {} ", filename, e);
@@ -86,7 +86,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
 
     @Test
     public void testGetPerson() {
-        final var attrs = dao.getPerson("userid", IPersonAttributeDaoFilter.alwaysChoose());
+        var attrs = dao.getPerson("userid", IPersonAttributeDaoFilter.alwaysChoose());
         assertFalse(attrs.getAttributes().isEmpty());
         assertEquals(getAttributeAsSingleValue(attrs, "name"), "userid");
         assertEquals(getAttributeAsList(attrs, "likes").size(), 2);
@@ -94,7 +94,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
 
     @Test
     public void testGetPeopleWithMultivaluedAttributes() {
-        final var results = dao.getPeopleWithMultivaluedAttributes(items, IPersonAttributeDaoFilter.alwaysChoose());
+        var results = dao.getPeopleWithMultivaluedAttributes(items, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals("script did not add one attribute to passed-in attribute list",
             items.size() + 1, results.iterator().next().getAttributes().size());
     }
@@ -102,14 +102,14 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     @Test
     public void testGetPersonNullResult() {
         var nullResponseDao = new GroovyPersonAttributeDao(loadGroovyClass("SampleGroovyPersonAttributeDaoForTestingUpdates.groovy"));
-        final var attrs = nullResponseDao.getPerson("userid", IPersonAttributeDaoFilter.alwaysChoose());
+        var attrs = nullResponseDao.getPerson("userid", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(attrs);
     }
 
     @Test
     public void testGetPeopleWithMultivaluedAttributesNullResult() {
         var nullResponseDao = new GroovyPersonAttributeDao(loadGroovyClass("SampleGroovyPersonAttributeDaoForTestingUpdates.groovy"));
-        final var results = nullResponseDao.getPeopleWithMultivaluedAttributes(items, IPersonAttributeDaoFilter.alwaysChoose());
+        var results = nullResponseDao.getPeopleWithMultivaluedAttributes(items, IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(results);
     }
 

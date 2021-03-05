@@ -59,16 +59,12 @@ public class MultivaluedAttributeMerger extends BaseAdditiveAttributeMerger {
         Validate.notNull(toModify, "toModify cannot be null");
         Validate.notNull(toConsider, "toConsider cannot be null");
 
-        for (final var sourceEntry : toConsider.entrySet()) {
-            final var sourceKey = sourceEntry.getKey();
+        for (var sourceEntry : toConsider.entrySet()) {
+            var sourceKey = sourceEntry.getKey();
 
-            var values = toModify.get(sourceKey);
-            if (values == null) {
-                values = new LinkedList<>();
-                toModify.put(sourceKey, values);
-            }
+            var values = toModify.computeIfAbsent(sourceKey, k -> new LinkedList<>());
 
-            final var sourceValue = sourceEntry.getValue();
+            var sourceValue = sourceEntry.getValue();
             if (this.distinctValues) {
                 final Set<Object> temp = new TreeSet<>((o1, o2) -> {
                     if (o1 instanceof String && o2 instanceof String && o1.toString().equalsIgnoreCase(o2.toString())) {

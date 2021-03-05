@@ -128,8 +128,8 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> queryParameters,
                                                                      final IPersonAttributeDaoFilter filter) {
-        final var username = usernameAttributeProvider.getUsernameFromQuery(queryParameters);
-        final var rslt = new RowCallbackHandlerImpl(username);
+        var username = usernameAttributeProvider.getUsernameFromQuery(queryParameters);
+        var rslt = new RowCallbackHandlerImpl(username);
         jdbcTemplate.query(sql, new SqlParameterSourceImpl(queryParameters), rslt);
         return rslt.getResults();
     }
@@ -155,7 +155,7 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
         @Override
         public Object getValue(final String paramName) throws IllegalArgumentException {
             // Use the first one
-            final var val = queryParameters.get(paramName);
+            var val = queryParameters.get(paramName);
             return val != null && val.size() != 0
                     ? val.get(0)
                     : null;
@@ -163,7 +163,7 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
 
         @Override
         public boolean hasValue(final String paramName) {
-            final var val = queryParameters.get(paramName);
+            var val = queryParameters.get(paramName);
             return val != null && val.size() != 0;
         }
 
@@ -182,13 +182,13 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
         @Override
         public void processRow(final ResultSet rs) throws SQLException {
 
-            for (final var attrName : userAttributeNames) {
+            for (var attrName : userAttributeNames) {
                 var values = attributes.get(attrName);
                 if (values == null) {
                     values = new HashSet<>();
                     attributes.put(attrName, values);
                 }
-                final var val = rs.getObject(attrName);
+                var val = rs.getObject(attrName);
                 if (val != null) {
                     values.add(val);
                 }
@@ -198,10 +198,10 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
 
         public Set<IPersonAttributes> getResults() {
             final Map<String, List<Object>> mapOfLists = new HashMap<>();
-            for (final var y : attributes.entrySet()) {
+            for (var y : attributes.entrySet()) {
                 mapOfLists.put(y.getKey(), new ArrayList<>(y.getValue()));
             }
-            final IPersonAttributes person = new CaseInsensitiveNamedPersonImpl(username, mapOfLists);
+            var person = new CaseInsensitiveNamedPersonImpl(username, mapOfLists);
             return Collections.singleton(person);
         }
 

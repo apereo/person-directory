@@ -248,10 +248,10 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
     @Override
     public void afterPropertiesSet() {
         if (this.cacheKeyGenerator == null) {
-            final var cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
+            var cacheKeyGenerator = new AttributeBasedCacheKeyGenerator();
 
-            final var usernameAttributeProvider = this.getUsernameAttributeProvider();
-            final var usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
+            var usernameAttributeProvider = this.getUsernameAttributeProvider();
+            var usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
             cacheKeyGenerator.setDefaultAttributeName(usernameAttribute);
             this.cacheKeyGenerator = cacheKeyGenerator;
         }
@@ -293,8 +293,8 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
         }
 
         //Get the cache key
-        final MethodInvocation methodInvocation = new PersonAttributeDaoMethodInvocation(seed);
-        final var cacheKey = this.cacheKeyGenerator.generateKey(methodInvocation);
+        var methodInvocation = new PersonAttributeDaoMethodInvocation(seed);
+        var cacheKey = this.cacheKeyGenerator.generateKey(methodInvocation);
 
         if (cacheKey != null) {
             var cacheResults = this.userInfoCache.get(cacheKey);
@@ -317,7 +317,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
             }
         }
 
-        final var queryResults = this.cachedPersonAttributesDao.getPeopleWithMultivaluedAttributes(seed, filter);
+        var queryResults = this.cachedPersonAttributesDao.getPeopleWithMultivaluedAttributes(seed, filter);
 
         if (cacheKey != null) {
             if (queryResults != null) {
@@ -343,18 +343,18 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
 
     public void removeUserAttributes(final String uid) {
         Validate.notNull(uid, "uid may not be null.");
-        final var seed = this.toSeedMap(uid);
+        var seed = this.toSeedMap(uid);
         this.removeUserAttributesMultivaluedSeed(seed);
     }
 
     public void removeUserAttributes(final Map<String, Object> seed) {
-        final var multiSeed = MultivaluedPersonAttributeUtils.toMultivaluedMap(seed);
+        var multiSeed = MultivaluedPersonAttributeUtils.toMultivaluedMap(seed);
         this.removeUserAttributesMultivaluedSeed(multiSeed);
     }
 
     public void removeUserAttributesMultivaluedSeed(final Map<String, List<Object>> seed) {
-        final MethodInvocation methodInvocation = new PersonAttributeDaoMethodInvocation(seed);
-        final var cacheKey = this.cacheKeyGenerator.generateKey(methodInvocation);
+        var methodInvocation = new PersonAttributeDaoMethodInvocation(seed);
+        var cacheKey = this.cacheKeyGenerator.generateKey(methodInvocation);
         this.userInfoCache.remove(cacheKey);
     }
 
@@ -392,11 +392,11 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
                 getPeopleWithMultivaluedAttributesMethod = IPersonAttributeDao.class.getMethod("getPeopleWithMultivaluedAttributes",
                     Map.class, IPersonAttributeDaoFilter.class);
             } catch (final SecurityException e) {
-                final var nsme = new NoSuchMethodError("The 'getPeopleWithMultivaluedAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' is not accessible due to a security policy.");
+                var nsme = new NoSuchMethodError("The 'getPeopleWithMultivaluedAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' is not accessible due to a security policy.");
                 nsme.initCause(e);
                 throw nsme;
             } catch (final NoSuchMethodException e) {
-                final var nsme = new NoSuchMethodError("The 'getPeopleWithMultivaluedAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' does not exist.");
+                var nsme = new NoSuchMethodError("The 'getPeopleWithMultivaluedAttributes(" + Map.class + ")' method on the '" + IPersonAttributeDao.class + "' does not exist.");
                 nsme.initCause(e);
                 throw nsme;
             }

@@ -78,10 +78,10 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
         Validate.notNull(uid, "uid may not be null.");
 
         //Generate the seed map for the uid
-        final var seed = this.toSeedMap(uid);
+        var seed = this.toSeedMap(uid);
 
         //Run the query using the seed
-        final var people = this.getPeopleWithMultivaluedAttributes(seed, filter);
+        var people = this.getPeopleWithMultivaluedAttributes(seed, filter);
 
         //Ensure a single result is returned
         var person = getSinglePerson(people);
@@ -106,9 +106,9 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
      * @return multi-valued seed Map containing the uid
      */
     protected Map<String, List<Object>> toSeedMap(final String uid) {
-        final var values = Collections.singletonList((Object) uid);
-        final var usernameAttribute = this.usernameAttributeProvider.getUsernameAttribute();
-        final var seed = Collections.singletonMap(usernameAttribute, values);
+        var values = Collections.singletonList((Object) uid);
+        var usernameAttribute = this.usernameAttributeProvider.getUsernameAttribute();
+        var seed = Collections.singletonMap(usernameAttribute, values);
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Created seed map='" + seed + "' for uid='" + uid + "'");
         }

@@ -150,7 +150,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @param queryAttributeMapping the queryAttributeMapping to set
      */
     public void setQueryAttributeMapping(final Map<String, ?> queryAttributeMapping) {
-        final var parsedQueryAttributeMapping =
+        var parsedQueryAttributeMapping =
                 MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(queryAttributeMapping);
 
         if (parsedQueryAttributeMapping.containsKey("")) {
@@ -180,7 +180,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @see MultivaluedPersonAttributeUtils#parseAttributeToAttributeMapping(Map)
      */
     public void setResultAttributeMapping(final Map<String, ?> resultAttributeMapping) {
-        final var parsedResultAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(resultAttributeMapping);
+        var parsedResultAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(resultAttributeMapping);
 
         if (parsedResultAttributeMapping.containsKey("")) {
             throw new IllegalArgumentException("The map from attribute names to attributes must not have any empty keys.");
@@ -236,7 +236,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         Validate.notNull(query, "query may not be null.");
 
         //Generate the query to pass to the subclass
-        final var queryBuilder = this.generateQuery(query);
+        var queryBuilder = this.generateQuery(query);
         if (queryBuilder == null && (this.queryAttributeMapping != null || this.useAllQueryAttributes == true)) {
             this.logger.debug("No queryBuilder was generated for query " + query + ", null will be returned");
 
@@ -244,19 +244,19 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         }
 
         //Get the username from the query, if specified
-        final var usernameAttributeProvider = this.getUsernameAttributeProvider();
-        final var username = usernameAttributeProvider.getUsernameFromQuery(query);
+        var usernameAttributeProvider = this.getUsernameAttributeProvider();
+        var username = usernameAttributeProvider.getUsernameFromQuery(query);
 
         //Execute the query in the subclass
-        final var unmappedPeople = this.getPeopleForQuery(queryBuilder, username);
+        var unmappedPeople = this.getPeopleForQuery(queryBuilder, username);
         if (unmappedPeople == null) {
             return null;
         }
 
         //Map the attributes of the found people according to resultAttributeMapping if it is set
         final Set<IPersonAttributes> mappedPeople = new LinkedHashSet<>();
-        for (final var unmappedPerson : unmappedPeople) {
-            final var mappedPerson = this.mapPersonAttributes(unmappedPerson);
+        for (var unmappedPerson : unmappedPeople) {
+            var mappedPerson = this.mapPersonAttributes(unmappedPerson);
             mappedPeople.add(mappedPerson);
         }
 
@@ -325,7 +325,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     protected QB appendCanonicalizedAttributeToQuery(final QB queryBuilder, final String queryAttribute, final String dataAttribute, final List<Object> queryValues) {
         // All logging messages were previously in generateQuery() and were
         // copy/pasted verbatim
-        final var canonicalizedQueryValues = this.canonicalizeAttribute(queryAttribute, queryValues, caseInsensitiveQueryAttributes);
+        var canonicalizedQueryValues = this.canonicalizeAttribute(queryAttribute, queryValues, caseInsensitiveQueryAttributes);
         if (dataAttribute == null) {
             // preserved from historical versions which just pass queryValues through without any association to a dataAttribute,
             // and a slightly different log message
@@ -363,15 +363,15 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         QB queryBuilder = null;
 
         if (this.queryAttributeMapping != null) {
-            for (final var queryAttrEntry : this.queryAttributeMapping.entrySet()) {
-                final var queryAttr = queryAttrEntry.getKey();
-                final var queryValues = query.get(queryAttr);
+            for (var queryAttrEntry : this.queryAttributeMapping.entrySet()) {
+                var queryAttr = queryAttrEntry.getKey();
+                var queryValues = query.get(queryAttr);
                 if (queryValues != null) {
-                    final var dataAttributes = queryAttrEntry.getValue();
+                    var dataAttributes = queryAttrEntry.getValue();
                     if (dataAttributes == null) {
                         queryBuilder = this.appendCanonicalizedAttributeToQuery(queryBuilder, queryAttr, null, queryValues);
                     } else {
-                        for (final var dataAttribute : dataAttributes) {
+                        for (var dataAttribute : dataAttributes) {
                             queryBuilder = this.appendCanonicalizedAttributeToQuery(queryBuilder, queryAttr, dataAttribute, queryValues);
                         }
                     }
@@ -381,9 +381,9 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                 }
             }
         } else if (this.useAllQueryAttributes) {
-            for (final var queryAttrEntry : query.entrySet()) {
-                final var queryKey = queryAttrEntry.getKey();
-                final var queryValues = queryAttrEntry.getValue();
+            for (var queryAttrEntry : query.entrySet()) {
+                var queryKey = queryAttrEntry.getKey();
+                var queryValues = queryAttrEntry.getValue();
 
                 queryBuilder = this.appendCanonicalizedAttributeToQuery(queryBuilder, queryKey, queryKey, queryValues);
             }
@@ -404,15 +404,15 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
      * @return A copy of the IPersonAttributes with mapped attributes, the original IPersonAttributes if resultAttributeMapping is null.
      */
     protected final IPersonAttributes mapPersonAttributes(final IPersonAttributes person) {
-        final var personAttributes = person.getAttributes();
+        var personAttributes = person.getAttributes();
 
         final Map<String, List<Object>> mappedAttributes;
         //If no mapping just use the attributes as-is
         if (this.resultAttributeMapping == null) {
             if (caseInsensitiveResultAttributes != null && !(caseInsensitiveResultAttributes.isEmpty())) {
                 mappedAttributes = new LinkedHashMap<>();
-                for (final var attribute : personAttributes.entrySet()) {
-                    final var attributeName = attribute.getKey();
+                for (var attribute : personAttributes.entrySet()) {
+                    var attributeName = attribute.getKey();
                     mappedAttributes.put(attributeName, canonicalizeAttribute(attributeName, attribute.getValue(), caseInsensitiveResultAttributes));
                 }
             } else {
@@ -423,8 +423,8 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
         else {
             mappedAttributes = new LinkedHashMap<>();
 
-            for (final var resultAttrEntry : this.resultAttributeMapping.entrySet()) {
-                final var dataKey = resultAttrEntry.getKey();
+            for (var resultAttrEntry : this.resultAttributeMapping.entrySet()) {
+                var dataKey = resultAttrEntry.getKey();
                 var resultKeys = resultAttrEntry.getValue();
 
                 //If dataKey has no mapped resultKeys just use the dataKey
@@ -433,7 +433,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                 }
                 if (resultKeys.size() == 1 && resultKeys.stream().allMatch(s -> s.endsWith(";"))) {
                     var allKeys = personAttributes.keySet().stream().filter(name -> name.startsWith(dataKey + ";")).collect(Collectors.toList());
-                    for (final var resultKey : allKeys) {
+                    for (var resultKey : allKeys) {
                         var value = personAttributes.get(resultKey);
                         value = canonicalizeAttribute(resultKey, value, caseInsensitiveResultAttributes);
                         mappedAttributes.put(resultKey, value);
@@ -447,7 +447,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
                     //Add the value to the mapped attributes for each mapped key,
                     //possibly canonicalizing casing for each value
                     var value = personAttributes.get(dataKey);
-                    for (final var resultKey : resultKeys) {
+                    for (var resultKey : resultKeys) {
                         value = canonicalizeAttribute(resultKey, value, caseInsensitiveResultAttributes);
                         if (resultKey == null) {
                             //TODO is this possible?
@@ -462,12 +462,12 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
 
         final IPersonAttributes newPerson;
 
-        final var name = person.getName();
+        var name = person.getName();
         if (name != null) {
             newPerson = new NamedPersonImpl(usernameCaseCanonicalizationMode.canonicalize(name), mappedAttributes);
         } else {
-            final var userNameAttribute = this.getConfiguredUserNameAttribute();
-            final IPersonAttributes tmpNewPerson = new AttributeNamedPersonImpl(userNameAttribute, mappedAttributes);
+            var userNameAttribute = this.getConfiguredUserNameAttribute();
+            var tmpNewPerson = new AttributeNamedPersonImpl(userNameAttribute, mappedAttributes);
             newPerson = new NamedPersonImpl(usernameCaseCanonicalizationMode.canonicalize(tmpNewPerson.getName()), mappedAttributes);
         }
 
@@ -494,7 +494,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             canonicalizationMode = defaultCaseCanonicalizationMode;
         }
         final List<Object> canonicalizedValues = new ArrayList<>(value.size());
-        for (final var origValue : value) {
+        for (var origValue : value) {
             if (origValue instanceof String) {
                 canonicalizedValues.add(canonicalizationMode.canonicalize((String) origValue, caseCanonicalizationLocale));
             } else {
@@ -520,7 +520,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             return this.unmappedUsernameAttribute;
         }
 
-        final var usernameAttributeProvider = this.getUsernameAttributeProvider();
+        var usernameAttributeProvider = this.getUsernameAttributeProvider();
         return usernameAttributeProvider.getUsernameAttribute();
     }
 
@@ -590,7 +590,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             setCaseInsensitiveResultAttributes(null);
         } else {
             final Map<String, CaseCanonicalizationMode> asMap = new HashMap<>();
-            for (final var attrib : caseInsensitiveResultAttributes) {
+            for (var attrib : caseInsensitiveResultAttributes) {
                 asMap.put(attrib, null);
             }
             setCaseInsensitiveResultAttributes(asMap);
@@ -613,7 +613,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
             setCaseInsensitiveQueryAttributes(null);
         } else {
             final Map<String, CaseCanonicalizationMode> asMap = new HashMap<>();
-            for (final var attrib : caseInsensitiveQueryAttributes) {
+            for (var attrib : caseInsensitiveQueryAttributes) {
                 asMap.put(attrib, null);
             }
             setCaseInsensitiveQueryAttributes(asMap);

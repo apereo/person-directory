@@ -26,19 +26,19 @@ import junit.framework.TestCase;
  */
 public class PatternHelperTest extends TestCase {
     public void testCompilePattern() {
-        final var pattern1 = PatternHelper.compilePattern("*f.oo*ba.r*");
+        var pattern1 = PatternHelper.compilePattern("*f.oo*ba.r*");
         assertEquals(".*\\Qf.oo\\E.*\\Qba.r\\E.*", pattern1.pattern());
 
-        final var pattern2 = PatternHelper.compilePattern("f.oo*ba.r*");
+        var pattern2 = PatternHelper.compilePattern("f.oo*ba.r*");
         assertEquals("\\Qf.oo\\E.*\\Qba.r\\E.*", pattern2.pattern());
 
-        final var pattern3 = PatternHelper.compilePattern("*f.oo*ba.r");
+        var pattern3 = PatternHelper.compilePattern("*f.oo*ba.r");
         assertEquals(".*\\Qf.oo\\E.*\\Qba.r\\E", pattern3.pattern());
 
-        final var pattern4 = PatternHelper.compilePattern("f.oo*ba.r");
+        var pattern4 = PatternHelper.compilePattern("f.oo*ba.r");
         assertEquals("\\Qf.oo\\E.*\\Qba.r\\E", pattern4.pattern());
 
-        final var pattern5 = PatternHelper.compilePattern("f.ooba.r");
+        var pattern5 = PatternHelper.compilePattern("f.ooba.r");
         assertEquals("\\Qf.ooba.r\\E", pattern5.pattern());
     }
 }

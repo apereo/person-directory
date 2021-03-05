@@ -46,7 +46,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
 
     @Override
     protected void setUpSchema(final DataSource dataSource) throws SQLException {
-        final var con = dataSource.getConnection();
+        var con = dataSource.getConnection();
 
         con.prepareStatement("CREATE TABLE user_table " +
                 "(netid VARCHAR, " +
@@ -75,7 +75,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
 
     @Override
     protected void tearDownSchema(final DataSource dataSource) throws SQLException {
-        final var con = dataSource.getConnection();
+        var con = dataSource.getConnection();
 
         con.prepareStatement("DROP TABLE user_table").execute();
         con.prepareStatement("SHUTDOWN").execute();
@@ -98,7 +98,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     }
 
     public void testNoQueryAttributeMapping() {
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE netid = 'awp9'");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE netid = 'awp9'");
         impl.setUseAllQueryAttributes(false);
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -113,7 +113,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final var attribs= impl.getPerson("awp9",
+        var attribs= impl.getPerson("awp9",
             IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.getAttributes().get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.getAttributes().get("emailAddress"));
@@ -127,7 +127,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * expects to map.
      */
     public void testPossibleUserAttributeNames() {
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         final Map<String, Object> columnsToAttributes = new HashMap<>();
@@ -146,7 +146,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         expectedAttributeNames.add("emailAddress");
         expectedAttributeNames.add("dressShirtColor");
 
-        final var attributeNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
+        var attributeNames = impl.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(attributeNames, expectedAttributeNames);
     }
 
@@ -154,7 +154,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * Test for a query with a single attribute
      */
     public void testSingleAttrQuery() {
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -169,7 +169,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -181,7 +181,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * Test for a query with a single attribute
      */
     public void testNullColumnName() {
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE netid = {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE netid = {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -192,7 +192,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("email", "emailAddress");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("Andrew"), attribs.get("firstName"));
     }
@@ -201,7 +201,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * Test for a query with a single attribute
      */
     public void testSetNullAttributeMapping() {
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -216,7 +216,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("shirt_color", null);
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.get("shirt_color"));
@@ -227,7 +227,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * Test for a query with a single attribute
      */
     public void testSetNullAttributeName() {
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         final Map<String, Object> columnsToAttributes = new HashMap<>();
@@ -245,7 +245,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * Test for a query with a null value attribute
      */
     public void testNullAttrQuery() {
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
 
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
@@ -255,7 +255,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        final var attribs = impl.getPerson("susan", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("susan", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
         assertNull(attribs.get("dressShirtColor"));
         assertEquals(Util.list("Susan"), attribs.get("firstName"));
     }
@@ -269,7 +269,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         queryAttributeMapping.put("uid", "netid");
         queryAttributeMapping.put("shirtColor", "shirt_color");
 
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(queryAttributeMapping);
 
 
@@ -287,7 +287,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         queryMap.put("shirtColor", Util.list("blue"));
         queryMap.put("Name", Util.list("John"));
 
-        final var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(attribsSet);
         var attribs = attribsSet.iterator().next();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.getAttributes().get("email"));
@@ -304,7 +304,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         queryAttributeMapping.put("uid", "netid");
         queryAttributeMapping.put("shirtColor", "shirt_color");
 
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(queryAttributeMapping);
         impl.setRequireAllQueryAttributes(true);
 
@@ -321,7 +321,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("Name", Util.list("John"));
 
-        final var attribs = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var attribs = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(attribs);
     }
 
@@ -329,7 +329,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * Test for a query with a single attribute
      */
     public void testMultiPersonQuery() {
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
         impl.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("uid"));
 
@@ -356,7 +356,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     }
 
     public void testProperties() {
-        final var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
 
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
         assertEquals(Collections.singletonMap("shirt", Collections.singleton("shirt_color")), impl.getQueryAttributeMapping());
@@ -375,13 +375,13 @@ public class SingleRowJdbcPersonAttributeDaoTest
 
     @Override
     protected AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao() {
-        final var queryAttr = "shirt";
+        var queryAttr = "shirt";
         final List<String> queryAttrList = new LinkedList<>();
         queryAttrList.add(queryAttr);
 
         // shirt_color = ?
 
-        final var impl = new SingleRowJdbcPersonAttributeDao(this.testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
+        var impl = new SingleRowJdbcPersonAttributeDao(this.testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
 
         return impl;

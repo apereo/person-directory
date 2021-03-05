@@ -79,7 +79,7 @@ public class SimpleAttributeRuleTest extends TestCase {
 
     public void testAppliesToParameters() {
 
-        final AttributeRule r = new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
+        var r = new SimpleAttributeRule(WHEN_KEY, WHEN_PATTERN, SET_UID, SET_KEY, SET_VALUE);
 
         // null.
         try {

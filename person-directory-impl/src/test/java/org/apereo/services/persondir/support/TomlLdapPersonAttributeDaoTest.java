@@ -33,7 +33,7 @@ public class TomlLdapPersonAttributeDaoTest extends AbstractPersonAttributeDaoTe
 
 
     public TomlLdapPersonAttributeDaoTest() throws Exception {
-        final Resource tomlConfigFile = new FileSystemResource("src/test/resources/ldap.toml");
+        var tomlConfigFile = new FileSystemResource("src/test/resources/ldap.toml");
         this.dao = new TomlLdapPersonAttributeDao(tomlConfigFile);
     }
 

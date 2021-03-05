@@ -80,7 +80,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     }
 
     public void testCaseSensitiveUsernameQuery() {
-        final var impl = newDao(testDataSource);
+        var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
@@ -89,15 +89,15 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         attributesToColumns.put("username", "netid");
         impl.setQueryAttributeMapping(attributesToColumns);
 
-        final var wrongCaseResult = impl.getPerson("AWP9", IPersonAttributeDaoFilter.alwaysChoose());
+        var wrongCaseResult = impl.getPerson("AWP9", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(wrongCaseResult);
-        final var correctCaseResult = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose());
+        var correctCaseResult = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(correctCaseResult);
         assertEquals("awp9", correctCaseResult.getName());
     }
 
     public void testCaseSensitiveUsernameQuery_CanonicalizedUsernameResult() {
-        final var impl = newDao(testDataSource);
+        var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
@@ -108,15 +108,15 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         // above was all boilerplate... here's the important stuff...
         impl.setUsernameCaseCanonicalizationMode(CaseCanonicalizationMode.UPPER);
 
-        final var wrongCaseResult = impl.getPerson("AWP9", IPersonAttributeDaoFilter.alwaysChoose());
+        var wrongCaseResult = impl.getPerson("AWP9", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(wrongCaseResult);
-        final var correctCaseResult = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose());
+        var correctCaseResult = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(correctCaseResult);
         assertEquals("AWP9", correctCaseResult.getName());
     }
 
     public void testCaseInsensitiveUsernameQuery() {
-        final var impl = newDao(testDataSource);
+        var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
@@ -127,18 +127,18 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         // above was all boilerplate... here's the important stuff...
         impl.setCaseInsensitiveQueryAttributesAsCollection(Util.genList("username"));
 
-        final var wrongCaseResult = impl.getPerson("AWP9", IPersonAttributeDaoFilter.alwaysChoose());
+        var wrongCaseResult = impl.getPerson("AWP9", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(wrongCaseResult);
         assertEquals("AWP9", wrongCaseResult.getName());
         // both casings should work
-        final var correctCaseResult = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose());
+        var correctCaseResult = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(correctCaseResult);
         assertEquals("awp9", correctCaseResult.getName());
 
     }
 
     public void testCaseInsensitiveUsernameQuery_CanonicalizedUsernameResult() {
-        final var impl = newDao(testDataSource);
+        var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
@@ -153,20 +153,20 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         // casing from the value passed in to getPerson(); we're just proving
         // it can be coerced to an arbitrary casing in the mapped result.
         impl.setUsernameCaseCanonicalizationMode(CaseCanonicalizationMode.LOWER);
-        final var wrongCaseResult1 = impl.getPerson("AWP9", IPersonAttributeDaoFilter.alwaysChoose());
+        var wrongCaseResult1 = impl.getPerson("AWP9", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(wrongCaseResult1);
         assertEquals("awp9", wrongCaseResult1.getName());
 
         // and now show we can go the other way too
         impl.setUsernameCaseCanonicalizationMode(CaseCanonicalizationMode.UPPER);
-        final var wrongCaseResult2 = impl.getPerson("AwP9", IPersonAttributeDaoFilter.alwaysChoose());
+        var wrongCaseResult2 = impl.getPerson("AwP9", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(wrongCaseResult2);
         assertEquals("AWP9", wrongCaseResult2.getName());
 
     }
 
     public void testCaseSensitiveNonUsernameAttributeQuery() {
-        final var impl = newDao(testDataSource);
+        var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
@@ -180,14 +180,14 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
 
         final Map<String, Object> wrongCase = new LinkedHashMap<>();
         wrongCase.put("firstName", "ANDREW");
-        final var wrongCaseResult = impl.getPeople(wrongCase, IPersonAttributeDaoFilter.alwaysChoose());
+        var wrongCaseResult = impl.getPeople(wrongCase, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(0, wrongCaseResult.size());
 
         final Map<String, Object> correctCase = new LinkedHashMap<>();
         correctCase.put("firstName", "Andrew");
-        final var correctCaseResult = impl.getPeople(correctCase, IPersonAttributeDaoFilter.alwaysChoose());
+        var correctCaseResult = impl.getPeople(correctCase, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, correctCaseResult.size());
-        final var correctCaseResultIterator = correctCaseResult.iterator();
+        var correctCaseResultIterator = correctCaseResult.iterator();
         var currentResult = correctCaseResultIterator.next();
         assertEquals("awp9", currentResult.getName());
         // make sure it preserved data-layer casing
@@ -199,7 +199,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     }
 
     public void testCaseSensitiveNonUsernameAttributeQuery_CanonicalizedResult() {
-        final var impl = newDao(testDataSource);
+        var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
@@ -214,14 +214,14 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
 
         final Map<String, Object> wrongCase = new LinkedHashMap<>();
         wrongCase.put("firstName", "ANDREW");
-        final var wrongCaseResult = impl.getPeople(wrongCase, IPersonAttributeDaoFilter.alwaysChoose());
+        var wrongCaseResult = impl.getPeople(wrongCase, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(0, wrongCaseResult.size());
 
         final Map<String, Object> correctCase = new LinkedHashMap<>();
         correctCase.put("firstName", "Andrew");
-        final var correctCaseResult = impl.getPeople(correctCase, IPersonAttributeDaoFilter.alwaysChoose());
+        var correctCaseResult = impl.getPeople(correctCase, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, correctCaseResult.size());
-        final var correctCaseResultIterator = correctCaseResult.iterator();
+        var correctCaseResultIterator = correctCaseResult.iterator();
         var currentResult = correctCaseResultIterator.next();
         assertEquals("awp9", currentResult.getName());
         // make sure it overrode data-layer casing
@@ -233,7 +233,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     }
 
     public void testCaseInsensitiveNonUsernameAttributeQuery() {
-        final var impl = newDao(testDataSource);
+        var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
@@ -254,7 +254,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
 
         final Map<String, Object> wrongCase = new LinkedHashMap<>();
         wrongCase.put("firstName", "ANDREW");
-        final var wrongCaseResult = impl.getPeople(wrongCase, IPersonAttributeDaoFilter.alwaysChoose());
+        var wrongCaseResult = impl.getPeople(wrongCase, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, wrongCaseResult.size());
         var resultIterator = wrongCaseResult.iterator();
         var currentResult = resultIterator.next();
@@ -268,7 +268,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
 
         final Map<String, Object> correctCase = new LinkedHashMap<>();
         correctCase.put("firstName", "Andrew");
-        final var correctCaseResult = impl.getPeople(correctCase, IPersonAttributeDaoFilter.alwaysChoose());
+        var correctCaseResult = impl.getPeople(correctCase, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, correctCaseResult.size());
         resultIterator = correctCaseResult.iterator();
         currentResult = resultIterator.next();
@@ -282,7 +282,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     }
 
     public void testCaseInsensitiveNonUsernameAttributeQuery_CanonicalizedResult() {
-        final var impl = newDao(testDataSource);
+        var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
@@ -302,7 +302,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
 
         final Map<String, Object> wrongCase = new LinkedHashMap<>();
         wrongCase.put("firstName", "ANDREW");
-        final var wrongCaseResult = impl.getPeople(wrongCase, IPersonAttributeDaoFilter.alwaysChoose());
+        var wrongCaseResult = impl.getPeople(wrongCase, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, wrongCaseResult.size());
         var resultIterator = wrongCaseResult.iterator();
         var currentResult = resultIterator.next();
@@ -316,7 +316,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
 
         final Map<String, Object> correctCase = new LinkedHashMap<>();
         correctCase.put("firstName", "Andrew");
-        final var correctCaseResult = impl.getPeople(correctCase, IPersonAttributeDaoFilter.alwaysChoose());
+        var correctCaseResult = impl.getPeople(correctCase, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, correctCaseResult.size());
         resultIterator = correctCaseResult.iterator();
         currentResult = resultIterator.next();
@@ -338,7 +338,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
             // between mulitple data attributes for case canonicalization purposes.
             return;
         }
-        final var impl = newDao(testDataSource);
+        var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
         final Map<String, Object> columnsToAttributes = new LinkedHashMap<>();
         columnsToAttributes.put("netid", "username");
@@ -355,14 +355,14 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
 
         final Map<String, Object> wrongCase = new LinkedHashMap<>();
         wrongCase.put("firstName", "ANDREW");
-        final var wrongCaseResult = impl.getPeople(wrongCase, IPersonAttributeDaoFilter.alwaysChoose());
+        var wrongCaseResult = impl.getPeople(wrongCase, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(0, wrongCaseResult.size());
 
         final Map<String, Object> correctCase = new LinkedHashMap<>();
         correctCase.put("firstName", "Andrew");
-        final var correctCaseResult = impl.getPeople(correctCase, IPersonAttributeDaoFilter.alwaysChoose());
+        var correctCaseResult = impl.getPeople(correctCase, IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(2, correctCaseResult.size());
-        final var correctCaseResultIterator = correctCaseResult.iterator();
+        var correctCaseResultIterator = correctCaseResult.iterator();
         var currentResult = correctCaseResultIterator.next();
         assertEquals("awp9", currentResult.getName());
         // make sure it preserved data-layer casing

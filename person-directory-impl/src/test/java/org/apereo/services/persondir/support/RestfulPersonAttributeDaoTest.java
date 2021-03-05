@@ -25,11 +25,11 @@ public class RestfulPersonAttributeDaoTest extends AbstractPersonAttributeDaoTes
         httpServer = HttpServer.create();
         httpServer.bind(new InetSocketAddress("localhost",8080), 0);
         httpServer.createContext("/test", exchange -> {
-            final var json = "{ \n" +
+            var json = "{ \n" +
                     "  \"backgroundcolor\":\"#656667\",\n" +
                     "  \"height\":4\n" +
                     '}';
-            final var response = json.getBytes();
+            var response = json.getBytes();
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
             exchange.getResponseBody().write(response);
             exchange.close();
@@ -40,7 +40,7 @@ public class RestfulPersonAttributeDaoTest extends AbstractPersonAttributeDaoTes
     public void testGetAttributes() {
         this.dao.setUrl("http://localhost:8080/test");
         this.dao.setMethod(HttpMethod.GET.name());
-        final var person = this.dao.getPerson("something", IPersonAttributeDaoFilter.alwaysChoose());
+        var person = this.dao.getPerson("something", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(person.getName(), "something");
         assertEquals(person.getAttributes().size(), 2);
     }

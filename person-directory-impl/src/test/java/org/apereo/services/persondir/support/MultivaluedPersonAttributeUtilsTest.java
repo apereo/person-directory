@@ -52,7 +52,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that an attempt to parse a null Map results in an empty Map.
      */
     public void testParseNullMapping() {
-        final var emptyMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(null);
+        var emptyMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(null);
         assertEquals(Collections.EMPTY_MAP.size(), emptyMap.size());
     }
 
@@ -83,7 +83,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         nullKeyMap.put("A", "B");
         nullKeyMap.put("wombat", null);
 
-        final var attrMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
+        var attrMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
 
         final Map<String, Set<String>> expected = new HashMap<>();
         expected.put("A", Collections.singleton("B"));
@@ -107,7 +107,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
 
         nullKeyMap.put("wombat", badSet);
 
-        final var attributeToAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
+        var attributeToAttributeMapping = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nullKeyMap);
 
         final Map<String, HashSet<String>> expected = new HashMap<>();
         expected.put("A", new HashSet<>(Arrays.asList("B")));
@@ -133,7 +133,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
 
         // test that the returned Map is immutable
 
-        final var returnedMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(simpleMapping);
+        var returnedMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(simpleMapping);
         returnedMap.put("foo", Collections.singleton("bar"));
         assertTrue(MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(simpleMapping).size() !=
                 returnedMap.size());
@@ -290,7 +290,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         final Map<String, List<Object>> testMap = new HashMap<>();
         final Map<String, List<Object>> expectedMap = new HashMap<>();
 
-        final var loginDate = new Date();
+        var loginDate = new Date();
 
         expectedMap.put("loginTimes", Util.list(loginDate));
 
@@ -298,9 +298,9 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
 
         assertEquals(expectedMap, testMap);
 
-        final var anotherLoginDate = new Date();
+        var anotherLoginDate = new Date();
 
-        final var yetAnotherLoginDate = new Date();
+        var yetAnotherLoginDate = new Date();
 
         final List<Object> dateList = new ArrayList<>();
         dateList.add(anotherLoginDate);
@@ -346,8 +346,8 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         listOfStrings.add("bar");
 
         final List<Object> listOfDates = new ArrayList<>();
-        final var date1 = new Date();
-        final var date2 = new Date();
+        var date1 = new Date();
+        var date2 = new Date();
         // ensure that date2 does not equal date1.
         date2.setTime(date1.getTime() + 100);
 
@@ -363,7 +363,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         expectedResult.addAll(listOfStrings);
         expectedResult.addAll(listOfDates);
 
-        final var flattened = MultivaluedPersonAttributeUtils.flattenCollection(setOfSets);
+        var flattened = MultivaluedPersonAttributeUtils.flattenCollection(setOfSets);
         assertTrue(expectedResult.containsAll(flattened));
         assertTrue(flattened.containsAll(expectedResult));
         assertEquals(expectedResult.size(), flattened.size());

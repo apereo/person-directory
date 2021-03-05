@@ -151,7 +151,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         }
 
         //Iterate through the configured IPersonAttributeDaos, querying each.
-        for (final var currentlyConsidering : this.personAttributeDaos) {
+        for (var currentlyConsidering : this.personAttributeDaos) {
             if (filter != null && !filter.choosePersonAttributeDao(currentlyConsidering)) {
                 continue;
             }
@@ -254,7 +254,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     public final Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
         Set<String> attrNames = null;
 
-        for (final var currentDao : this.personAttributeDaos) {
+        for (var currentDao : this.personAttributeDaos) {
 
             if (filter != null && !filter.choosePersonAttributeDao(currentDao)) {
                 continue;
@@ -311,7 +311,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
     public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
         Set<String> queryAttrs = null;
 
-        for (final var currentDao : this.personAttributeDaos) {
+        for (var currentDao : this.personAttributeDaos) {
             if (filter != null && !filter.choosePersonAttributeDao(currentDao)) {
                 continue;
             }

@@ -43,7 +43,7 @@ public class CascadingPersonAttributeDaoTest
 
     @Override
     protected void setUp() {
-        final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider("username");
+        var usernameAttributeProvider = new SimpleUsernameAttributeProvider("username");
 
 
         final Map<String, Map<String, List<Object>>> daoBackingMap1 = new HashMap<>();
@@ -102,11 +102,11 @@ public class CascadingPersonAttributeDaoTest
         targets.add(this.nullSource);
         targets.add(this.sourceTwo);
 
-        final var targetDao = new CascadingPersonAttributeDao();
+        var targetDao = new CascadingPersonAttributeDao();
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final var results = targetDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
+        var results = targetDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("username", Util.list("edalquist"));
@@ -118,7 +118,7 @@ public class CascadingPersonAttributeDaoTest
     }
 
     public void testNoChildren() {
-        final var targetDao = new CascadingPersonAttributeDao();
+        var targetDao = new CascadingPersonAttributeDao();
 
         try {
             targetDao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose());
@@ -134,13 +134,13 @@ public class CascadingPersonAttributeDaoTest
         targets.add(new ThrowingPersonAttributeDao());
         targets.add(this.sourceTwo);
 
-        final var targetDao = new CascadingPersonAttributeDao();
+        var targetDao = new CascadingPersonAttributeDao();
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
 
         targetDao.setRecoverExceptions(true);
-        final var results = targetDao.getPerson("edalquist",
+        var results = targetDao.getPerson("edalquist",
             IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
@@ -167,11 +167,11 @@ public class CascadingPersonAttributeDaoTest
         targets.add(this.sourceOne);
         targets.add(this.sourceTwo);
 
-        final var targetDao = new CascadingPersonAttributeDao();
+        var targetDao = new CascadingPersonAttributeDao();
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final var results = targetDao.getPerson("edalquist",
+        var results = targetDao.getPerson("edalquist",
             IPersonAttributeDaoFilter.alwaysChoose());
 
         final Map<String, List<Object>> expected = new HashMap<>();
@@ -189,12 +189,12 @@ public class CascadingPersonAttributeDaoTest
         targets.add(this.sourceOne);
         targets.add(this.sourceTwo);
 
-        final var targetDao = new CascadingPersonAttributeDao();
+        var targetDao = new CascadingPersonAttributeDao();
         targetDao.setStopIfFirstDaoReturnsNull(true);
         targetDao.setPersonAttributeDaos(targets);
         targetDao.setMerger(new MultivaluedAttributeMerger());
 
-        final var results = targetDao.getPerson("edalquist",
+        var results = targetDao.getPerson("edalquist",
             IPersonAttributeDaoFilter.alwaysChoose());
 
         assertNull(results);
@@ -210,7 +210,7 @@ public class CascadingPersonAttributeDaoTest
         attributeSources.add(this.sourceOne);
         attributeSources.add(this.sourceTwo);
 
-        final var impl = new CascadingPersonAttributeDao();
+        var impl = new CascadingPersonAttributeDao();
         impl.setPersonAttributeDaos(attributeSources);
 
         return impl;

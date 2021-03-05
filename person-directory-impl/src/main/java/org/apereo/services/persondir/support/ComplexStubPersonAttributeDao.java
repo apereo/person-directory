@@ -139,8 +139,8 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     @JsonIgnore
     @Override
     public Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
-        final var usernameAttributeProvider = this.getUsernameAttributeProvider();
-        final var usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
+        var usernameAttributeProvider = this.getUsernameAttributeProvider();
+        var usernameAttribute = usernameAttributeProvider.getUsernameAttribute();
 
         final Set<String> list = new HashSet<>();
         list.add(usernameAttribute);
@@ -161,7 +161,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
         if (this.queryAttributeName != null) {
             keyAttributeName = this.queryAttributeName;
         } else {
-            final var usernameAttributeProvider = this.getUsernameAttributeProvider();
+            var usernameAttributeProvider = this.getUsernameAttributeProvider();
             keyAttributeName = usernameAttributeProvider.getUsernameAttribute();
         }
 
@@ -178,17 +178,17 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(final String seedValue, final String queryUserName) {
         if (seedValue != null && seedValue.contains(IPersonAttributeDao.WILDCARD)) {
-            final var seedPattern = PatternHelper.compilePattern(seedValue);
+            var seedPattern = PatternHelper.compilePattern(seedValue);
 
             final List<IPersonAttributes> results = new LinkedList<>();
 
-            for (final var attributesEntry : this.backingMap.entrySet()) {
-                final var attributesKey = attributesEntry.getKey();
-                final var keyMatcher = seedPattern.matcher(attributesKey);
+            for (var attributesEntry : this.backingMap.entrySet()) {
+                var attributesKey = attributesEntry.getKey();
+                var keyMatcher = seedPattern.matcher(attributesKey);
                 if (keyMatcher.matches()) {
-                    final var attributes = attributesEntry.getValue();
+                    var attributes = attributesEntry.getValue();
                     if (attributes != null) {
-                        final var person = this.createPerson(null, queryUserName, attributes);
+                        var person = this.createPerson(null, queryUserName, attributes);
                         results.add(person);
                     }
                 }
@@ -201,13 +201,13 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
             return results;
         }
 
-        final var attributes = this.backingMap.get(seedValue);
+        var attributes = this.backingMap.get(seedValue);
 
         if (attributes == null) {
             return null;
         }
 
-        final var person = this.createPerson(seedValue, queryUserName, attributes);
+        var person = this.createPerson(seedValue, queryUserName, attributes);
         final List<IPersonAttributes> list = new ArrayList<>();
         list.add(person);
 
@@ -216,7 +216,7 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
 
     private IPersonAttributes createPerson(final String seedValue, final String queryUserName, final Map<String, List<Object>> attributes) {
         final IPersonAttributes person;
-        final var userNameAttribute = this.getConfiguredUserNameAttribute();
+        var userNameAttribute = this.getConfiguredUserNameAttribute();
         if (this.isUserNameAttributeConfigured() && attributes.containsKey(userNameAttribute)) {
             // Option #1:  An attribute is named explicitly in the config, 
             // and that attribute is present in the results from LDAP;  use it
@@ -249,8 +249,8 @@ public class ComplexStubPersonAttributeDao extends AbstractQueryPersonAttributeD
     private void initializePossibleAttributeNames() {
         final Set<String> possibleAttribNames = new LinkedHashSet<>();
 
-        for (final var attributeMapForSomeUser : this.backingMap.values()) {
-            final var keySet = attributeMapForSomeUser.keySet();
+        for (var attributeMapForSomeUser : this.backingMap.values()) {
+            var keySet = attributeMapForSomeUser.keySet();
             possibleAttribNames.addAll(keySet);
         }
 

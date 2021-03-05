@@ -82,13 +82,13 @@ public class DeclaredRulePersonAttributeDaoTest extends AbstractPersonAttributeD
     }
 
     public void testMatches() {
-        final var results = target.getPerson("records-staff", IPersonAttributeDaoFilter.alwaysChoose());
+        var results = target.getPerson("records-staff", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(results.getAttributes());
         assertEquals(Util.list(VALUE), results.getAttributes().get("fax"));
     }
 
     public void testDoesNotMatch() {
-        final var results = target.getPerson("faculty", IPersonAttributeDaoFilter.alwaysChoose());
+        var results = target.getPerson("faculty", IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(results);
     }
 

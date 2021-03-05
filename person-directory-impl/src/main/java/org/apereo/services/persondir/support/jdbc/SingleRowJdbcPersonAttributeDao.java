@@ -98,11 +98,11 @@ public class SingleRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttribute
     protected List<IPersonAttributes> parseAttributeMapFromResults(final List<Map<String, Object>> queryResults, final String queryUserName) {
         final List<IPersonAttributes> peopleAttributes = new ArrayList<>(queryResults.size());
 
-        for (final var queryResult : queryResults) {
-            final var multivaluedQueryResult = MultivaluedPersonAttributeUtils.toMultivaluedMap(queryResult);
+        for (var queryResult : queryResults) {
+            var multivaluedQueryResult = MultivaluedPersonAttributeUtils.toMultivaluedMap(queryResult);
 
             final IPersonAttributes person;
-            final var userNameAttribute = this.getConfiguredUserNameAttribute();
+            var userNameAttribute = this.getConfiguredUserNameAttribute();
             if (this.isUserNameAttributeConfigured() && queryResult.containsKey(userNameAttribute)) {
                 // Option #1:  An attribute is named explicitly in the config, 
                 // and that attribute is present in the results from JDBC;  use it

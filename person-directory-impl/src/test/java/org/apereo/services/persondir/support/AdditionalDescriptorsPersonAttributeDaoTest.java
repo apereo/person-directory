@@ -52,11 +52,11 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends AbstractPersonA
 
     public void testGetPeopleWithMultivaluedAttributes() {
 
-        final var ad = new AdditionalDescriptors();
+        var ad = new AdditionalDescriptors();
         ad.setName(USERNAME);
         ad.setAttributeValues(ATTRIBUTE_NAME, ATTRIBUTE_VALUES);
 
-        final var adpad = new AdditionalDescriptorsPersonAttributeDao();
+        var adpad = new AdditionalDescriptorsPersonAttributeDao();
         adpad.setUsernameAttributeProvider(UAP);
         adpad.setCurrentUserProvider(CUP);
         adpad.setDescriptors(ad);
@@ -78,10 +78,10 @@ public class AdditionalDescriptorsPersonAttributeDaoTest extends AbstractPersonA
 
     @Override
     protected IPersonAttributeDao getPersonAttributeDaoInstance() {
-        final var ad = new AdditionalDescriptors();
+        var ad = new AdditionalDescriptors();
         ad.setName(USERNAME);
 
-        final var adpad = new AdditionalDescriptorsPersonAttributeDao();
+        var adpad = new AdditionalDescriptorsPersonAttributeDao();
         adpad.setUsernameAttributeProvider(UAP);
         adpad.setCurrentUserProvider(CUP);
         adpad.setDescriptors(ad);

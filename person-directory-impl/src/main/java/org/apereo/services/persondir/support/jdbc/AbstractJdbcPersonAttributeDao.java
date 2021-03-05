@@ -145,8 +145,8 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     
     @Override
     protected PartialWhereClause appendAttributeToQuery(PartialWhereClause queryBuilder, String dataAttribute, final List<Object> queryValues) {
-        for (final var queryValue : queryValues) {
-            final var queryString = queryValue != null ? queryValue.toString() : null;
+        for (var queryValue : queryValues) {
+            var queryString = queryValue != null ? queryValue.toString() : null;
             if (StringUtils.isNotBlank(queryString)) {
                 if (queryBuilder == null) {
                     queryBuilder = new PartialWhereClause();
@@ -155,8 +155,8 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
                 }
 
                 //Convert to SQL wildcard
-                final var queryValueMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
-                final var formattedQueryValue = queryValueMatcher.replaceAll("%");
+                var queryValueMatcher = IPersonAttributeDao.WILDCARD_PATTERN.matcher(queryString);
+                var formattedQueryValue = queryValueMatcher.replaceAll("%");
 
                 queryBuilder.arguments.add(formattedQueryValue);
                 if (dataAttribute != null) {
@@ -199,7 +199,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
         if (canonicalizationMode == null) {
             canonicalizationMode = getDefaultCaseCanonicalizationMode();
         }
-        final var mf = this.dataAttributeCaseCanonicalizationFunctions.get(canonicalizationMode);
+        var mf = this.dataAttributeCaseCanonicalizationFunctions.get(canonicalizationMode);
         if (mf == null) {
             return dataAttribute;
         }
@@ -213,14 +213,14 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
     @Override
     protected List<IPersonAttributes> getPeopleForQuery(final PartialWhereClause queryBuilder, final String queryUserName) {
         //Execute the query
-        final var rowMapper = this.getRowMapper();
+        var rowMapper = this.getRowMapper();
 
         final List<R> results;
         if (queryBuilder != null) {
             //Merge the generated SQL with the base query template
-            final var partialSqlWhere = queryBuilder.sql;
-            final var queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
-            final var querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
+            var partialSqlWhere = queryBuilder.sql;
+            var queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
+            var querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
 
             results = this.simpleJdbcTemplate.query(querySQL, rowMapper, queryBuilder.arguments.toArray());
 
@@ -251,7 +251,7 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
             setCaseInsensitiveDataAttributes(null);
         } else {
             final Map<String, CaseCanonicalizationMode> asMap = new HashMap<>();
-            for (final var attrib : caseInsensitiveDataAttributes) {
+            for (var attrib : caseInsensitiveDataAttributes) {
                 asMap.put(attrib, null);
             }
             setCaseInsensitiveDataAttributes(asMap);

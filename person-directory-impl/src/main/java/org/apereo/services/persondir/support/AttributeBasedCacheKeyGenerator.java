@@ -181,12 +181,12 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     @Override
     public Serializable generateKey(final MethodInvocation methodInvocation) {
         //Determine the tareted CachableMethod
-        final var cachableMethod = this.resolveCacheableMethod(methodInvocation);
+        var cachableMethod = this.resolveCacheableMethod(methodInvocation);
 
         //Use the resolved cachableMethod to determine the seed Map and then get the hash of the key elements
-        final var methodArguments = methodInvocation.getArguments();
-        final var seed = this.getSeed(methodArguments, cachableMethod);
-        final var keyHashCode = this.getKeyHash(seed);
+        var methodArguments = methodInvocation.getArguments();
+        var seed = this.getSeed(methodArguments, cachableMethod);
+        var keyHashCode = this.getKeyHash(seed);
 
         //If no code generated return null
         if (keyHashCode == null) {
@@ -197,13 +197,13 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         }
 
         //Calculate the hashCode and checkSum
-        final var hashCodeCalculator = new HashCodeCalculator();
+        var hashCodeCalculator = new HashCodeCalculator();
         hashCodeCalculator.append(keyHashCode);
 
         //Assemble the serializable key object
-        final var checkSum = hashCodeCalculator.getCheckSum();
-        final var hashCode = hashCodeCalculator.getHashCode();
-        final var hashCodeCacheKey = new HashCodeCacheKey(checkSum, hashCode);
+        var checkSum = hashCodeCalculator.getCheckSum();
+        var hashCode = hashCodeCalculator.getHashCode();
+        var hashCodeCacheKey = new HashCodeCacheKey(checkSum, hashCode);
 
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Generated cache key '" + hashCodeCacheKey + "' for MethodInvocation='" + methodInvocation + "'");
@@ -233,7 +233,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
 
             //The single valued attributes with a string needs to be converted to Map<String, List<Object>>
             case PERSON_STR: {
-                final var uid = (String) methodArguments[0];
+                var uid = (String) methodArguments[0];
                 seed = Collections.singletonMap(this.defaultAttributeName, uid);
             }
             break;
@@ -278,9 +278,9 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
 
         //Build the cache key based on the attribute Set
         var cacheKey = new HashMap<String, Object>(cacheAttributes.size());
-        for (final var attr : cacheAttributes) {
+        for (var attr : cacheAttributes) {
             if (seed.containsKey(attr)) {
-                final var value = seed.get(attr);
+                var value = seed.get(attr);
 
                 if (!this.ignoreEmptyAttributes) {
                     putAttributeInCache(cacheKey, attr, value);
@@ -324,17 +324,17 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * @return Cachable method
      */
     protected CachableMethod resolveCacheableMethod(final MethodInvocation methodInvocation) {
-        final var targetMethod = methodInvocation.getMethod();
-        final var targetClass = targetMethod.getDeclaringClass();
+        var targetMethod = methodInvocation.getMethod();
+        var targetClass = targetMethod.getDeclaringClass();
 
-        for (final var cachableMethod : CachableMethod.values()) {
+        for (var cachableMethod : CachableMethod.values()) {
             Method cacheableMethod = null;
             try {
                 cacheableMethod = targetClass.getMethod(cachableMethod.getName(), cachableMethod.getArgs());
             } catch (final SecurityException e) {
                 this.logger.warn("Security exception while attempting to if the target class '" + targetClass + "' implements the cachable method '" + cachableMethod + "'", e);
             } catch (final NoSuchMethodException e) {
-                final var
+                var
                     message = "Taret class '" + targetClass + "' does not implement possible cachable method '" + cachableMethod + "'. Is the advice applied to the correct bean and methods?";
 
                 if (this.logger.isDebugEnabled()) {

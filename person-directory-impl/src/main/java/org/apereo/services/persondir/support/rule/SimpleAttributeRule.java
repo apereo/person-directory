@@ -61,23 +61,23 @@ public final class SimpleAttributeRule implements AttributeRule {
 
         // Assertions.
         if (whenKey == null) {
-            final var msg = "Argument 'whenKey' cannot be null.";
+            var msg = "Argument 'whenKey' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (whenPattern == null) {
-            final var msg = "Argument 'whenPattern' cannot be null.";
+            var msg = "Argument 'whenPattern' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (setKey == null) {
-            final var msg = "Argument 'setKey' cannot be null.";
+            var msg = "Argument 'setKey' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (setUserName == null) {
-            final var msg = "Argument 'setUserName' cannot be null.";
+            var msg = "Argument 'setUserName' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (setValue == null) {
-            final var msg = "Argument 'setValue' cannot be null.";
+            var msg = "Argument 'setValue' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
 
@@ -88,7 +88,7 @@ public final class SimpleAttributeRule implements AttributeRule {
         this.setKey = setKey;
         this.setValue = setValue;
 
-        final Set list = new HashSet();
+        var list = new HashSet();
         list.add(this.setKey);
 
         this.possibleAttributeNames = list;
@@ -99,11 +99,11 @@ public final class SimpleAttributeRule implements AttributeRule {
 
         // Assertions.
         if (userInfo == null) {
-            final var msg = "Argument 'userInfo' cannot be null.";
+            var msg = "Argument 'userInfo' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
 
-        final var value = userInfo.get(whenKey);
+        var value = userInfo.get(whenKey);
         if (value == null) {
             // No problem... but we certainly don't apply in this case.
             return false;
@@ -114,7 +114,7 @@ public final class SimpleAttributeRule implements AttributeRule {
         try {
             compare = value.toArray(new String[value.size()]);
         } catch (final ClassCastException cce) {
-            final var msg = "List values may contain only String instances.";
+            var msg = "List values may contain only String instances.";
             throw new RuntimeException(msg, cce);
         }
 
@@ -135,11 +135,11 @@ public final class SimpleAttributeRule implements AttributeRule {
 
         // Assertions.
         if (userInfo == null) {
-            final var msg = "Argument 'userInfo' cannot be null.";
+            var msg = "Argument 'userInfo' cannot be null.";
             throw new IllegalArgumentException(msg);
         }
         if (!appliesTo(userInfo)) {
-            final var msg = "May not evaluate.  This rule does not apply.";
+            var msg = "May not evaluate.  This rule does not apply.";
             throw new IllegalArgumentException(msg);
         }
 
@@ -148,7 +148,7 @@ public final class SimpleAttributeRule implements AttributeRule {
         value.add(setValue);
         rslt.put(setKey, value);
 
-        final IPersonAttributes person = new NamedPersonImpl(this.setUserName, rslt);
+        var person = new NamedPersonImpl(this.setUserName, rslt);
         return Collections.singleton(person);
     }
 

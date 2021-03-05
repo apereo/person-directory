@@ -111,7 +111,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
      */
     public RegexGatewayPersonAttributeDao(final String attributeName, final String pattern, final IPersonAttributeDao enclosed) {
         // Instance Members.
-        final IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider(attributeName);
+        var usernameAttributeProvider = new SimpleUsernameAttributeProvider(attributeName);
         this.setUsernameAttributeProvider(usernameAttributeProvider);
 
         this.setPatterns(Collections.singletonMap(attributeName, pattern));
@@ -133,9 +133,9 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
 
         final Map<String, String> toReturn = new LinkedHashMap<>(this.patterns.size());
 
-        for (final var patternEntry : this.patterns.entrySet()) {
-            final var attribute = patternEntry.getKey();
-            final var pattern = patternEntry.getValue();
+        for (var patternEntry : this.patterns.entrySet()) {
+            var attribute = patternEntry.getKey();
+            var pattern = patternEntry.getValue();
             toReturn.put(attribute, pattern.pattern());
         }
 
@@ -151,13 +151,13 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
         final Map<String, Pattern> newPatterns = new LinkedHashMap<>(patterns.size());
 
         //Pre-compile patterns for performance
-        for (final var patternEntry : patterns.entrySet()) {
-            final var attribute = patternEntry.getKey();
+        for (var patternEntry : patterns.entrySet()) {
+            var attribute = patternEntry.getKey();
 
-            final var pattern = patternEntry.getValue();
+            var pattern = patternEntry.getValue();
             Validate.notNull(pattern, "pattern can not be null. attribute=" + attribute);
 
-            final var compiledPattern = Pattern.compile(pattern);
+            var compiledPattern = Pattern.compile(pattern);
 
             newPatterns.put(attribute, compiledPattern);
         }
@@ -227,9 +227,9 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
         var matchedPatterns = false;
 
         //Iterate through all attributeName/pattern pairs
-        for (final var patternEntry : this.patterns.entrySet()) {
-            final var attributeName = patternEntry.getKey();
-            final var attributeValues = seed.get(attributeName);
+        for (var patternEntry : this.patterns.entrySet()) {
+            var attributeName = patternEntry.getKey();
+            var attributeValues = seed.get(attributeName);
 
             //Check if the value exists
             if (attributeValues == null) {
@@ -247,7 +247,7 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
             }
 
             //The pattern to test the attribute's value(s) with
-            final var compiledPattern = patternEntry.getValue();
+            var compiledPattern = patternEntry.getValue();
             if (compiledPattern == null) {
                 throw new IllegalStateException("Attribute '" + attributeName + "' has a null pattern");
             }
@@ -256,18 +256,18 @@ public final class RegexGatewayPersonAttributeDao extends AbstractDefaultAttribu
             var matchedValues = false;
 
             //Iterate over the values for the attribute, testing each against the pattern
-            for (final var valueObj : attributeValues) {
+            for (var valueObj : attributeValues) {
                 final String value;
                 try {
                     value = (String) valueObj;
                 } catch (final ClassCastException cce) {
-                    final var iae = new IllegalArgumentException("RegexGatewayPersonAttributeDao can only accept seeds who's values are String or List of String. Attribute '" + attributeName + "' has a non-String value.");
+                    var iae = new IllegalArgumentException("RegexGatewayPersonAttributeDao can only accept seeds who's values are String or List of String. Attribute '" + attributeName + "' has a non-String value.");
                     iae.initCause(cce);
                     throw iae;
                 }
 
                 //Check if the value matches the pattern
-                final var valueMatcher = compiledPattern.matcher(value);
+                var valueMatcher = compiledPattern.matcher(value);
                 matchedValues = valueMatcher.matches();
 
                 //Only one value needs to be matched, this one matched so no need to test the rest, break out of the loop

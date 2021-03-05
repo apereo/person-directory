@@ -141,7 +141,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         if (nameValueColumnMap == null) {
             this.nameValueColumnMappings = null;
         } else {
-            final var mappings = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nameValueColumnMap);
+            var mappings = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(nameValueColumnMap);
 
             if (mappings.containsValue(null)) {
                 throw new IllegalArgumentException("nameValueColumnMap may not have null values");
@@ -165,14 +165,14 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     protected List<IPersonAttributes> parseAttributeMapFromResults(final List<Map<String, Object>> queryResults, final String queryUserName) {
         final Map<String, Map<String, List<Object>>> peopleAttributesBuilder = new MapMaker().makeMap();
 
-        final var userNameAttribute = this.getConfiguredUserNameAttribute();
+        var userNameAttribute = this.getConfiguredUserNameAttribute();
 
-        for (final var queryResult : queryResults) {
+        for (var queryResult : queryResults) {
             final String userName;  // Choose a username from the best available option
             if (this.isUserNameAttributeConfigured() && queryResult.containsKey(userNameAttribute)) {
                 // Option #1:  An attribute is named explicitly in the config, 
                 // and that attribute is present in the results from LDAP;  use it
-                final var userNameValue = queryResult.get(userNameAttribute);
+                var userNameValue = queryResult.get(userNameAttribute);
                 userName = userNameValue.toString();
             } else if (queryUserName != null) {
                 // Option #2:  Use the userName attribute provided in the query 
@@ -184,31 +184,31 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
             } else if (queryResult.containsKey(userNameAttribute)) {
                 // Option #3:  Create the IPersonAttributes useing the default 
                 // userName attribute, which we know to be present
-                final var userNameValue = queryResult.get(userNameAttribute);
+                var userNameValue = queryResult.get(userNameAttribute);
                 userName = userNameValue.toString();
             } else {
                 throw new BadSqlGrammarException("No userName column named '" + userNameAttribute + "' exists in result set and no userName provided in query Map", this.getQueryTemplate(), null);
             }
 
-            final var attributes = peopleAttributesBuilder.computeIfAbsent(userName,
+            var attributes = peopleAttributesBuilder.computeIfAbsent(userName,
                     key -> new LinkedHashMap<String, List<Object>>());
 
             //Iterate over each attribute column mapping to get the data from the row
-            for (final var columnMapping : this.nameValueColumnMappings.entrySet()) {
-                final var keyColumn = columnMapping.getKey();
+            for (var columnMapping : this.nameValueColumnMappings.entrySet()) {
+                var keyColumn = columnMapping.getKey();
 
                 //Get the attribute name for the specified column
-                final var attrNameObj = queryResult.get(keyColumn);
+                var attrNameObj = queryResult.get(keyColumn);
                 if (attrNameObj == null && !queryResult.containsKey(keyColumn)) {
                     throw new BadSqlGrammarException("No attribute key column named '" + keyColumn + "' exists in result set", this.getQueryTemplate(), null);
                 }
-                final var attrName = String.valueOf(attrNameObj);
+                var attrName = String.valueOf(attrNameObj);
 
                 //Get the columns containing the values and add all values to a List
-                final var valueColumns = columnMapping.getValue();
+                var valueColumns = columnMapping.getValue();
                 final List<Object> attrValues = new ArrayList<>(valueColumns.size());
-                for (final var valueColumn : valueColumns) {
-                    final var attrValue = queryResult.get(valueColumn);
+                for (var valueColumn : valueColumns) {
+                    var attrValue = queryResult.get(valueColumn);
                     if (attrValue == null && !queryResult.containsKey(valueColumn)) {
                         throw new BadSqlGrammarException("No attribute value column named '" + valueColumn + "' exists in result set", this.getQueryTemplate(), null);
                     }
@@ -225,11 +225,11 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         //Convert the builder structure into a List of IPersons
         final List<IPersonAttributes> people = new ArrayList<>(peopleAttributesBuilder.size());
 
-        for (final var mappedAttributesEntry : peopleAttributesBuilder.entrySet()) {
-            final var userName = mappedAttributesEntry.getKey();
-            final var attributes = mappedAttributesEntry.getValue();
+        for (var mappedAttributesEntry : peopleAttributesBuilder.entrySet()) {
+            var userName = mappedAttributesEntry.getKey();
+            var attributes = mappedAttributesEntry.getValue();
             // PERSONDIR-89, PERSONDIR-91 Should this be CaseInsensitiveNamedPersonImpl like SingleRowJdbcPersonAttribute?
-            final IPersonAttributes person = new NamedPersonImpl(userName, attributes);
+            var person = new NamedPersonImpl(userName, attributes);
             people.add(person);
         }
 

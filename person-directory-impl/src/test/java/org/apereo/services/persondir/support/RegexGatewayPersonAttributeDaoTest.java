@@ -77,12 +77,12 @@ public class RegexGatewayPersonAttributeDaoTest extends AbstractPersonAttributeD
     }
 
     public void testMatches() {
-        final var results = target.getPerson("monkey@yahoo.com", IPersonAttributeDaoFilter.alwaysChoose());
+        var results = target.getPerson("monkey@yahoo.com", IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(attributes, results.getAttributes());
     }
 
     public void testDoesNotMatch() {
-        final var results = target.getPerson("monkey",
+        var results = target.getPerson("monkey",
             IPersonAttributeDaoFilter.alwaysChoose());
         assertNull(results);
     }
