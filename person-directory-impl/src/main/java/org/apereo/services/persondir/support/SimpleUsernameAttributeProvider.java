@@ -34,7 +34,9 @@ import java.util.Map;
 
  */
 public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvider {
-    private String usernameAttribute = "username";
+    private static final String DEFAULT_USERNAME_ATTRIBUTE = "username";
+
+    private String usernameAttribute = DEFAULT_USERNAME_ATTRIBUTE;
 
     public SimpleUsernameAttributeProvider() {
     }
@@ -66,7 +68,9 @@ public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvid
      */
     @Override
     public String getUsernameFromQuery(final Map<String, List<Object>> query) {
-        var usernameAttributeValues = query.get(this.usernameAttribute);
+        var usernameAttributeValues = query.containsKey(this.usernameAttribute)
+            ? query.get(this.usernameAttribute)
+            : query.get(DEFAULT_USERNAME_ATTRIBUTE);
 
         if (usernameAttributeValues == null || usernameAttributeValues.size() == 0) {
             return null;
