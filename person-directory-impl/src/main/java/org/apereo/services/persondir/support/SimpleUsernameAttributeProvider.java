@@ -21,6 +21,8 @@ package org.apereo.services.persondir.support;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,8 @@ import java.util.Map;
 
  */
 public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvider {
+    private static final Logger logger = LoggerFactory.getLogger(SimpleUsernameAttributeProvider.class);
+
     private static final String DEFAULT_USERNAME_ATTRIBUTE = "username";
 
     private String usernameAttribute = DEFAULT_USERNAME_ATTRIBUTE;
@@ -68,10 +72,9 @@ public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvid
      */
     @Override
     public String getUsernameFromQuery(final Map<String, List<Object>> query) {
-        var usernameAttributeValues = query.containsKey(this.usernameAttribute)
-            ? query.get(this.usernameAttribute)
-            : query.get(DEFAULT_USERNAME_ATTRIBUTE);
-
+        var usernameAttributeValues = getUsernameAttributeValues(query);
+        logger.debug("Username attribute value found from the query map is {}", usernameAttributeValues);
+        
         if (usernameAttributeValues == null || usernameAttributeValues.size() == 0) {
             return null;
         }
@@ -87,5 +90,16 @@ public class SimpleUsernameAttributeProvider implements IUsernameAttributeProvid
         }
 
         return username;
+    }
+
+    private List<Object> getUsernameAttributeValues(final Map<String, List<Object>> query) {
+        if (query.containsKey(this.usernameAttribute)) {
+            List usernameAttributeValues = query.get(this.usernameAttribute);
+            logger.debug("Using {} attribute to get username from the query map", this.usernameAttribute);
+            return usernameAttributeValues;
+        }
+        List usernameAttributeValues = query.get(DEFAULT_USERNAME_ATTRIBUTE);
+        logger.debug("Using {} attribute to get username from the query map", DEFAULT_USERNAME_ATTRIBUTE);
+        return usernameAttributeValues;
     }
 }
