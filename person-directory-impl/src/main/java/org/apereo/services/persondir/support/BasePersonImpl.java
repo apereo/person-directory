@@ -90,7 +90,7 @@ public abstract class BasePersonImpl implements IPersonAttributes {
                         }
                     }
                 }
-                value = CollectionsUtil.safelyWrapAsUnmodifiableList(value);
+//                value = CollectionsUtil.safelyWrapAsUnmodifiableList(value);
             }
             if (logger.isTraceEnabled()) {
                 logger.trace("Collecting attribute {} with value(s) {}", key, value);
