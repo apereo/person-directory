@@ -353,6 +353,8 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
         private String faxNumber;
 
         private String mailNickname;
+        
+        private String onPremisesSamAccountName;
 
         @JsonIgnore
         static String getFieldQuery() {
