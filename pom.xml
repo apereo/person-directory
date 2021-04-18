@@ -69,7 +69,7 @@
         <aopalliance.version>1.0</aopalliance.version>
         <apacheds.version>2.0.0.AM26</apacheds.version>
         <commons-lang.version>3.12.0</commons-lang.version>
-        <easymock.version>4.2</easymock.version>
+        <easymock.version>4.3</easymock.version>
         <hsqldb.version>1.8.0.10</hsqldb.version>
         <postgresql.version>42.2.19</postgresql.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
