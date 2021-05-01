@@ -85,7 +85,7 @@
         <spring-security.version>5.4.6</spring-security.version>
         <spring-modules.version>0.8a</spring-modules.version>
         <groovy.version>3.0.8</groovy.version>
-        <grouper.client.version>2.5.49</grouper.client.version>
+        <grouper.client.version>2.5.50</grouper.client.version>
         <guava.version>30.1.1-jre</guava.version>
         <toml.version>1.0.0</toml.version>
         <xerces.version>2.12.1</xerces.version>
