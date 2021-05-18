@@ -52,7 +52,6 @@ import java.util.Map;
  * @since 4.0.0
  */
 public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<FilterTemplate> implements AutoCloseable {
-
     /**
      * Logger instance.
      **/
@@ -262,6 +261,11 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      * @return Attribute map.
      */
     private Map<String, List<Object>> convertLdapEntryToMap(final LdapEntry entry) {
+
+        if (entry.getAttribute("userAccountControl") != null) {
+            var uac = Integer.parseInt(entry.getAttribute("userAccountControl").getStringValue());
+            
+        }
         final Map<String, List<Object>> attributeMap = new LinkedHashMap<>(entry.size());
         for (var attr : entry.getAttributes()) {
             attributeMap.put(attr.getName(), new ArrayList<>(attr.getStringValues()));
