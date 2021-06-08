@@ -178,6 +178,17 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
             final IPersonAttributes person;
             var userNameAttribute = this.getConfiguredUserNameAttribute();
             var attributes = convertLdapEntryToMap(entry);
+            if (response.getDiagnosticMessage() != null && !response.getDiagnosticMessage().isEmpty()) {
+                var values = new ArrayList<>();
+                values.add(response.getDiagnosticMessage());
+                attributes.put("diagnosticMessage", values);
+            }
+            if (response.getMatchedDN() != null && !response.getMatchedDN().isEmpty()) {
+                var values = new ArrayList<>();
+                values.add(response.getMatchedDN());
+                attributes.put("matchedDN", values);
+            }
+            
             if (attributes.containsKey(userNameAttribute)) {
                 person = new CaseInsensitiveAttributeNamedPersonImpl(userNameAttribute, attributes);
             } else {
@@ -225,7 +236,7 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      * @param filter LDAP search filter.
      * @return ldaptive search request.
      */
-    private SearchRequest createRequest(final FilterTemplate filter) {
+    protected SearchRequest createRequest(final FilterTemplate filter) {
         var request = new SearchRequest();
         request.setBaseDn(this.baseDN);
         request.setFilter(filter);
@@ -260,8 +271,7 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
      * @param entry Ldap entry.
      * @return Attribute map.
      */
-    private Map<String, List<Object>> convertLdapEntryToMap(final LdapEntry entry) {
-
+    protected Map<String, List<Object>> convertLdapEntryToMap(final LdapEntry entry) {
         if (entry.getAttribute("userAccountControl") != null) {
             var uac = Integer.parseInt(entry.getAttribute("userAccountControl").getStringValue());
             
@@ -270,7 +280,7 @@ public class LdaptivePersonAttributeDao extends AbstractQueryPersonAttributeDao<
         for (var attr : entry.getAttributes()) {
             attributeMap.put(attr.getName(), new ArrayList<>(attr.getStringValues()));
         }
-        logger.debug("Converted ldap DN entry [{}] to attribute map {}", entry.getDn(), attributeMap.toString());
+        logger.debug("Converted ldap DN entry [{}] to attribute map {}", entry.getDn(), attributeMap);
         return attributeMap;
     }
 
