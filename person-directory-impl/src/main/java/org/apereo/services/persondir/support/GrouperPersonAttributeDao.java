@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -37,12 +37,12 @@ import java.util.Set;
 /**
  * Class implementing a minimal <code>IPersonAttributeDao</code> API only used by CAS which simply reads all
  * the groups from Grouper repository
- * for a given principal and adopts them to <code>IPersonAttributes</code> instance. 
+ * for a given principal and adopts them to <code>IPersonAttributes</code> instance.
  * All other unimplemented methods throw <code>UnsupportedOperationException</code>
  * <br>
  * This implementation uses Grouper's <i>grouperClient</i> library to query Grouper's back-end repository.
  * <br>
- *
+ * <p>
  * Note: All the Grouper server connection configuration for grouperClient is defined in
  * <i>grouper.client.properties</i> file and must be available
  * in client application's (CAS web application) classpath.
@@ -50,9 +50,9 @@ import java.util.Set;
  * @author Dmitriy Kopylenko
  */
 public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
-    private IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
-
     public static final String DEFAULT_GROUPER_ATTRIBUTES_KEY = "grouperGroups";
+
+    private IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
 
     private Map<String, String> parameters = new LinkedHashMap<>();
 
@@ -60,6 +60,10 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
 
     public IUsernameAttributeProvider getUsernameAttributeProvider() {
         return usernameAttributeProvider;
+    }
+
+    public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
+        this.usernameAttributeProvider = usernameAttributeProvider;
     }
 
     public GrouperSubjectType getSubjectType() {
@@ -78,10 +82,6 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
         this.parameters = parameters;
     }
 
-    public void setUsernameAttributeProvider(final IUsernameAttributeProvider usernameAttributeProvider) {
-        this.usernameAttributeProvider = usernameAttributeProvider;
-    }
-
     @Override
     public IPersonAttributes getPerson(final String subjectId, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
@@ -89,7 +89,7 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
         }
         Objects.requireNonNull(subjectId, "username cannot be null");
 
-        var groupsClient = new GcGetGroups();
+        var groupsClient = getGroupsClient();
         switch (this.subjectType) {
             case SUBJECT_IDENTIFIER:
                 groupsClient.addSubjectIdentifier(subjectId);
@@ -102,20 +102,12 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
                 groupsClient.addSubjectId(subjectId);
                 break;
         }
-        
-        parameters.forEach(groupsClient::addParam);
-        final Map<String, List<Object>> grouperGroupsAsAttributesMap = new HashMap<>(1);
-        final List<Object> groupsList = new ArrayList<>();
-        grouperGroupsAsAttributesMap.put("grouperGroups", groupsList);
-        var personAttributes = new AttributeNamedPersonImpl(grouperGroupsAsAttributesMap);
 
-        //Now retrieve and populate the attributes (groups from Grouper)
-        for (final WsGetGroupsResult groupsResult : groupsClient.execute().getResults()) {
-            for (final WsGroup group : groupsResult.getWsGroups()) {
-                groupsList.add(group.getName());
-            }
-        }
-        return personAttributes;
+        parameters.forEach(groupsClient::addParam);
+        var grouperGroupsAsAttributesMap = new HashMap<String, List<Object>>(1);
+        var groupsList = retrieveAttributesFromGrouper(groupsClient);
+        grouperGroupsAsAttributesMap.put("grouperGroups", groupsList);
+        return new NamedPersonImpl(subjectId, grouperGroupsAsAttributesMap);
     }
 
     @Override
@@ -139,13 +131,27 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
                                                                      final IPersonAttributeDaoFilter filter) {
-        final Set<IPersonAttributes> people = new LinkedHashSet<>();
+        var people = new LinkedHashSet<IPersonAttributes>();
         var username = usernameAttributeProvider.getUsernameFromQuery(query);
         var person = getPerson(username, filter);
         if (person != null) {
             people.add(person);
         }
         return people;
+    }
+
+    protected List<Object> retrieveAttributesFromGrouper(final GcGetGroups groupsClient) {
+        var groupsList = new ArrayList<>();
+        for (final WsGetGroupsResult groupsResult : groupsClient.execute().getResults()) {
+            for (final WsGroup group : groupsResult.getWsGroups()) {
+                groupsList.add(group.getName());
+            }
+        }
+        return groupsList;
+    }
+
+    protected GcGetGroups getGroupsClient() {
+        return new GcGetGroups();
     }
 
     public enum GrouperSubjectType {
