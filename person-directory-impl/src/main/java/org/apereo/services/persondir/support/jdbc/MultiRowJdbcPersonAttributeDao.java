@@ -21,6 +21,7 @@ package org.apereo.services.persondir.support.jdbc;
 import com.google.common.collect.MapMaker;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
+import org.apereo.services.persondir.support.CaseInsensitiveNamedPersonImpl;
 import org.apereo.services.persondir.support.MultivaluedPersonAttributeUtils;
 import org.apereo.services.persondir.support.NamedPersonImpl;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -151,10 +152,6 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         }
     }
 
-
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao#getRowMapper()
-     */
     @Override
     protected RowMapper<Map<String, Object>> getRowMapper() {
         return MAPPER;
@@ -191,7 +188,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
             }
 
             var attributes = peopleAttributesBuilder.computeIfAbsent(userName,
-                    key -> new LinkedHashMap<String, List<Object>>());
+                    key -> new LinkedHashMap<>());
 
             //Iterate over each attribute column mapping to get the data from the row
             for (var columnMapping : this.nameValueColumnMappings.entrySet()) {
@@ -199,6 +196,11 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
 
                 //Get the attribute name for the specified column
                 var attrNameObj = queryResult.get(keyColumn);
+
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Collecting attribute name=" + attrNameObj + " from column=" + keyColumn);
+                }
+
                 if (attrNameObj == null && !queryResult.containsKey(keyColumn)) {
                     throw new BadSqlGrammarException("No attribute key column named '" + keyColumn + "' exists in result set", this.getQueryTemplate(), null);
                 }
@@ -209,6 +211,11 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
                 final List<Object> attrValues = new ArrayList<>(valueColumns.size());
                 for (var valueColumn : valueColumns) {
                     var attrValue = queryResult.get(valueColumn);
+
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Collecting attribute value=" + attrValue + " from column=" + valueColumn);
+                    }
+
                     if (attrValue == null && !queryResult.containsKey(valueColumn)) {
                         throw new BadSqlGrammarException("No attribute value column named '" + valueColumn + "' exists in result set", this.getQueryTemplate(), null);
                     }
@@ -228,8 +235,10 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
         for (var mappedAttributesEntry : peopleAttributesBuilder.entrySet()) {
             var userName = mappedAttributesEntry.getKey();
             var attributes = mappedAttributesEntry.getValue();
-            // PERSONDIR-89, PERSONDIR-91 Should this be CaseInsensitiveNamedPersonImpl like SingleRowJdbcPersonAttribute?
-            var person = new NamedPersonImpl(userName, attributes);
+            var person = new CaseInsensitiveNamedPersonImpl(userName, attributes);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Collecting person=" + person);
+            }
             people.add(person);
         }
 

@@ -222,12 +222,20 @@ public abstract class AbstractJdbcPersonAttributeDao<R> extends AbstractQueryPer
             var queryMatcher = WHERE_PLACEHOLDER.matcher(this.queryTemplate);
             var querySQL = queryMatcher.replaceAll(partialSqlWhere.toString());
 
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Executing '" + this.queryTemplate + "' with arguments " + queryBuilder.arguments);
+            }
+
             results = this.simpleJdbcTemplate.query(querySQL, rowMapper, queryBuilder.arguments.toArray());
 
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Executed '" + this.queryTemplate + "' with arguments " + queryBuilder.arguments + " and got results " + results);
             }
         } else {
+
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Executing '" + this.queryTemplate);
+            }
             results = this.simpleJdbcTemplate.query(this.queryTemplate, rowMapper);
 
             if (this.logger.isDebugEnabled()) {

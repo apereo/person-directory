@@ -44,7 +44,7 @@ public class NoncollidingAttributeAdderTest extends AbstractAttributeMergerTest 
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.putAll(someAttributes);
 
-        var result = this.adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
+        var result = this.adder.mergeAttributes(someAttributes, new HashMap<>());
 
         assertEquals(expected, result);
     }

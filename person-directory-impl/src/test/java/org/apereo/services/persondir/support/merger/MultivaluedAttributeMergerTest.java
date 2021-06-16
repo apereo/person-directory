@@ -64,7 +64,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
         expected.putAll(someAttributes);
 
         var adder = new MultivaluedAttributeMerger();
-        var result = adder.mergeAttributes(someAttributes, new HashMap<String, List<Object>>());
+        var result = adder.mergeAttributes(someAttributes, new HashMap<>());
         assertEquals(expected, result);
     }
 

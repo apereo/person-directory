@@ -298,7 +298,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
 
         @Override
         protected List<IPersonAttributes> getPeopleForQuery(final List<List<Object>> queryBuilder, final String queryUserName) {
-            return new ArrayList<>(storage.getPeopleWithMultivaluedAttributes(new HashMap<String, List<Object>>(),
+            return new ArrayList<>(storage.getPeopleWithMultivaluedAttributes(new HashMap<>(),
                 IPersonAttributeDaoFilter.alwaysChoose()));
         }
 

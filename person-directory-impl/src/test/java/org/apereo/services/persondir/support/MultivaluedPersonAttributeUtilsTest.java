@@ -235,7 +235,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
 
         final Map<String, List<Object>> expectedMap = new HashMap<>();
         expectedMap.put("mail", Util.list("andrew.petro@yale.edu"));
-        expectedMap.put("phone", new ArrayList<Object>(phoneNumbers));
+        expectedMap.put("phone", new ArrayList<>(phoneNumbers));
 
         MultivaluedPersonAttributeUtils.addResult(testMap, "mail", "andrew.petro@yale.edu");
         assertEquals(expectedMap, testMap);
