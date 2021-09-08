@@ -312,7 +312,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     }
 
     private void putAttributeInCache(final Map<String, Object> cacheKey, final String attr, final Object value) {
-        var hexed = new DigestUtils(SHA_512).digestAsHex(value.toString());
+        var hexed = new DigestUtils(SHA_512).digestAsHex(attr);
         cacheKey.put(hexed, value);
     }
 
