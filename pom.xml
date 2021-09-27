@@ -86,7 +86,7 @@
         <spring-modules.version>0.8a</spring-modules.version>
         <groovy.version>3.0.9</groovy.version>
         <grouper.client.version>2.6.0</grouper.client.version>
-        <guava.version>31.0-jre</guava.version>
+        <guava.version>31.0.1-jre</guava.version>
         <toml.version>1.0.0</toml.version>
         <xerces.version>2.12.1</xerces.version>
         <jackson.version>2.12.5</jackson.version>
