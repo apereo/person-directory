@@ -5,11 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -41,6 +38,7 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     private String basicAuthUsername;
     private String basicAuthPassword;
     private String method;
+    private String principalId = "username";
     private Map<String, String> parameters = new LinkedHashMap<>();
     private Map<String, String> headers = new LinkedHashMap<>();
 
@@ -74,6 +72,14 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
 
     public void setCaseInsensitiveUsername(final boolean caseInsensitiveUsername) {
         this.caseInsensitiveUsername = caseInsensitiveUsername;
+    }
+
+    public String getPrincipalId() {
+        return principalId;
+    }
+
+    public void setPrincipalId(String principalId) {
+        this.principalId = principalId;
     }
 
     public String getMethod() {
@@ -126,7 +132,7 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
             var client = builder.build();
 
             var uriBuilder = new URIBuilder(this.url);
-            uriBuilder.addParameter("username", Objects.requireNonNull(uid, "username cannot be null"));
+            uriBuilder.addParameter(principalId, Objects.requireNonNull(uid, principalId + " cannot be null"));
             this.parameters.forEach(uriBuilder::addParameter);
 
             var uri = uriBuilder.build();
