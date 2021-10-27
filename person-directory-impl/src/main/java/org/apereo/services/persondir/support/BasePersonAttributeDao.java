@@ -18,6 +18,7 @@
  */
 package org.apereo.services.persondir.support;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.slf4j.Logger;
@@ -25,7 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 
-
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,9 +37,14 @@ import java.util.Set;
  */
 public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
+
     private int order;
+
     private String[] id = new String[]{getClass().getSimpleName()};
+
     private boolean enabled = true;
+
+    private Map<String, Object> tags = new LinkedHashMap<>();
 
     public BasePersonAttributeDao() {
         super();
@@ -81,6 +88,32 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         this.enabled = enabled;
     }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<String, Object> getTags() {
+        return tags;
+    }
+
+    public void setTags(final Map<String, Object> tags) {
+        this.tags = tags;
+    }
+
+    /**
+     * Put tag into this DAO and override/remove existing tags by name.
+     *
+     * @param name  the name
+     * @param value the value
+     * @return the base person attribute dao
+     */
+    public BasePersonAttributeDao putTag(final String name, final Object value) {
+        this.tags.put(name, value);
+        return this;
+    }
+
     protected IPersonAttributes getSinglePerson(final Set<IPersonAttributes> people) {
         IPersonAttributes person;
         try {
@@ -92,5 +125,4 @@ public abstract class BasePersonAttributeDao implements IPersonAttributeDao {
         }
         return person;
     }
-
 }

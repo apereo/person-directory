@@ -157,4 +157,13 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao>, Or
     default boolean isEnabled() {
         return true;
     }
+
+    /**
+     * Gets properties assigned to this repository.
+     * Properties are arbitrary tags and labels assigned
+     * to a repository for follow-up processing.
+     *
+     * @return the properties
+     */
+    Map<String, Object> getTags();
 }
