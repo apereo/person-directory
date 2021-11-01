@@ -70,7 +70,8 @@ public class MultivaluedAttributeMerger extends BaseAdditiveAttributeMerger {
                     if (o1 instanceof String && o2 instanceof String && o1.toString().equalsIgnoreCase(o2.toString())) {
                         return 0;
                     }
-                    if (o1 instanceof Comparable) {
+                    if (o1 instanceof Comparable && o2 instanceof Comparable
+                        && o1.getClass().isAssignableFrom(o2.getClass())) {
                         return ((Comparable<Object>) o1).compareTo(o2);
                     }
                     return -1;
