@@ -8,7 +8,6 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
@@ -153,49 +152,6 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
         }
     }
 
-    public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter, String body) {
-        try {
-            if (!this.isEnabled()) {
-                return null;
-            }
-            var builder = HttpClientBuilder.create();
-
-            if (StringUtils.isNotBlank(this.basicAuthUsername) && StringUtils.isNotBlank(this.basicAuthPassword)) {
-                var provider = new BasicCredentialsProvider();
-                var credentials = new UsernamePasswordCredentials(this.basicAuthUsername, this.basicAuthPassword);
-                provider.setCredentials(AuthScope.ANY, credentials);
-                builder.setDefaultCredentialsProvider(provider);
-            }
-
-            var client = builder.build();
-
-            var uriBuilder = new URIBuilder(this.url);
-            uriBuilder.addParameter(principalId, Objects.requireNonNull(uid, principalId + " cannot be null"));
-            this.parameters.forEach(uriBuilder::addParameter);
-
-            var uri = uriBuilder.build();
-            var request = new HttpPost(uri);
-            this.headers.forEach(request::addHeader);
-
-            StringEntity entity = new StringEntity(body);
-            request.setEntity(entity);
-            request.setHeader("Accept", "application/json");
-            request.setHeader("Content-type", "application/json");
-
-
-            var response = client.execute(request);
-            var attributes = jacksonObjectMapper.readValue(response.getEntity().getContent(), Map.class);
-
-            if (this.caseInsensitiveUsername) {
-                return new CaseInsensitiveNamedPersonImpl(uid, MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(attributes, filter));
-            }
-            return new NamedPersonImpl(uid, MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(attributes, filter));
-
-        } catch (final Exception e) {
-            throw new IllegalArgumentException(e.getMessage(), e);
-        }
-    }
-
     @Override
     public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
                                             final IPersonAttributeDaoFilter filter) {
@@ -207,9 +163,6 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
                                                                      final IPersonAttributeDaoFilter filter) {
         var people = new LinkedHashSet<IPersonAttributes>();
         var username = usernameAttributeProvider.getUsernameFromQuery(query);
-        if (query.containsKey("auditString")) {
-            var person = getPerson(username, filter, query.get("auditString").toString());
-        }
         var person = getPerson(username, filter);
         if (person != null) {
             people.add(person);
