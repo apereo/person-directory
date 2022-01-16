@@ -75,21 +75,21 @@
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <jaxb-impl.version>3.0.2</jaxb-impl.version>
         <junit.version>4.13.2</junit.version>
-        <log4j.version>2.14.1</log4j.version>
+        <log4j.version>2.17.1</log4j.version>
         <servlet-api.version>4.0.1</servlet-api.version>
         <slf4j.version>1.7.32</slf4j.version>
-        <okhttp3.version>4.9.2</okhttp3.version>
+        <okhttp3.version>4.9.3</okhttp3.version>
         <retrofit.version>2.9.0</retrofit.version>
-        <spring.version>5.3.13</spring.version>
-        <spring-ldap.version>2.3.4.RELEASE</spring-ldap.version>
-        <spring-security.version>5.6.0</spring-security.version>
+        <spring.version>5.3.14</spring.version>
+        <spring-ldap.version>2.3.5.RELEASE</spring-ldap.version>
+        <spring-security.version>5.6.1</spring-security.version>
         <spring-modules.version>0.8a</spring-modules.version>
         <groovy.version>3.0.9</groovy.version>
-        <grouper.client.version>2.6.4</grouper.client.version>
+        <grouper.client.version>2.6.5</grouper.client.version>
         <guava.version>31.0.1-jre</guava.version>
         <toml.version>1.0.0</toml.version>
         <xerces.version>2.12.1</xerces.version>
-        <jackson.version>2.13.0</jackson.version>
+        <jackson.version>2.13.1</jackson.version>
         <commons-io.version>2.11.0</commons-io.version>
         <ldaptive.version>2.1.0</ldaptive.version>
         <apachehttpclient>4.5.13</apachehttpclient>
