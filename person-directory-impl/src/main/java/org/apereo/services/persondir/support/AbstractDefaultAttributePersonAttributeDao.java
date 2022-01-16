@@ -66,10 +66,6 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
         super();
     }
 
-    /**
-     * @see IPersonAttributeDao#getPerson(java.lang.String, IPersonAttributeDaoFilter)
-     * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if more than one matching {@link IPersonAttributes} is found.
-     */
     @Override
     public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
