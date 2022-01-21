@@ -11,7 +11,7 @@
     <groupId>org.apereo.service.persondir</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.12-SNAPSHOT</version>
+    <version>2.0.13-SNAPSHOT</version>
 
     <issueManagement>
         <url>https://github.com/apereo/person-directory/issues</url>
@@ -77,7 +77,7 @@
         <junit.version>4.13.2</junit.version>
         <log4j.version>2.17.1</log4j.version>
         <servlet-api.version>4.0.1</servlet-api.version>
-        <slf4j.version>1.7.32</slf4j.version>
+        <slf4j.version>1.7.33</slf4j.version>
         <okhttp3.version>4.9.3</okhttp3.version>
         <retrofit.version>2.9.0</retrofit.version>
         <spring.version>5.3.15</spring.version>

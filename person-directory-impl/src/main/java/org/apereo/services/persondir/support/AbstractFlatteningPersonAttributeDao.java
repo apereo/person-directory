@@ -39,9 +39,6 @@ public abstract class AbstractFlatteningPersonAttributeDao extends BasePersonAtt
         super();
     }
 
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getPeople(java.util.Map)
-     */
     @Override
     public final Set<IPersonAttributes> getPeople(final Map<String, Object> query,
                                                   final IPersonAttributeDaoFilter filter) {

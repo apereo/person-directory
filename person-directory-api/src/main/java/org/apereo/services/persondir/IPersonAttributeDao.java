@@ -20,6 +20,7 @@ package org.apereo.services.persondir;
 
 import org.springframework.core.Ordered;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -98,8 +99,10 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao>, Or
      * @return A {@link Set} of {@link IPersonAttributes}s that match the query {@link Map}. If no matches are found an empty {@link Set} is returned. If the query could not be run null is returned.
      * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
-    Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(Map<String, List<Object>> query,
-                                                              IPersonAttributeDaoFilter filter);
+    default Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                      final IPersonAttributeDaoFilter filter) {
+        return new LinkedHashSet<>(0);
+    }
 
     default Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
         return getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
@@ -115,7 +118,9 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao>, Or
      * @param filter the filter
      * @return A {@link Set} of possible attribute names for user queries.
      */
-    Set<String> getPossibleUserAttributeNames(IPersonAttributeDaoFilter filter);
+    default Set<String> getPossibleUserAttributeNames(final IPersonAttributeDaoFilter filter) {
+        return new LinkedHashSet<>(0);
+    }
 
     /**
      * Gets a {@link Set} of attribute names that this implementation knows how to use in a query. The names returned
@@ -127,7 +132,9 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao>, Or
      * @param filter the filter
      * @return The set of attributes that can be used to query for user ids in this dao, null if the set is unknown.
      */
-    Set<String> getAvailableQueryAttributes(IPersonAttributeDaoFilter filter);
+    default Set<String> getAvailableQueryAttributes(final IPersonAttributeDaoFilter filter) {
+        return new LinkedHashSet<>(0);
+    }
 
     /**
      * Describes the order by which this DAO may be sorted
