@@ -88,7 +88,7 @@
         <grouper.client.version>2.6.5</grouper.client.version>
         <guava.version>31.0.1-jre</guava.version>
         <toml.version>1.0.0</toml.version>
-        <xerces.version>2.12.1</xerces.version>
+        <xerces.version>2.12.2</xerces.version>
         <jackson.version>2.13.1</jackson.version>
         <commons-io.version>2.11.0</commons-io.version>
         <ldaptive.version>2.1.0</ldaptive.version>
