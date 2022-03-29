@@ -89,7 +89,7 @@
         <guava.version>31.1-jre</guava.version>
         <toml.version>1.0.0</toml.version>
         <xerces.version>2.12.2</xerces.version>
-        <jackson.version>2.13.2.1</jackson.version>
+        <jackson.version>2.13.2.2</jackson.version>
         <commons-io.version>2.11.0</commons-io.version>
         <ldaptive.version>2.1.0</ldaptive.version>
         <apachehttpclient>4.5.13</apachehttpclient>
