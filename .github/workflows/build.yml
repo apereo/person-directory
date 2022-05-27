@@ -4,7 +4,6 @@ env:
   TERM: xterm-256color
   SONATYPE_PWD: ${{ secrets.SONATYPE_PWD }}
   SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
-  GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   JDK_CURRENT: 17
 
@@ -41,6 +40,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ env.JDK_CURRENT }}
+          distribution: 'temurin'
       - name: Build
         run: mvn clean install
 
@@ -56,6 +56,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: ${{ env.JDK_CURRENT }}
+          distribution: 'temurin'
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v3
       - name: Publish SNAPSHOTs
