@@ -66,7 +66,6 @@
         <commons-lang.version>3.12.0</commons-lang.version>
         <easymock.version>4.3</easymock.version>
         <hsqldb.version>1.8.0.10</hsqldb.version>
-        <postgresql.version>42.3.5</postgresql.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <jaxb-impl.version>3.0.2</jaxb-impl.version>
         <junit.version>4.13.2</junit.version>
@@ -83,7 +82,7 @@
         <guava.version>31.1-jre</guava.version>
         <toml.version>1.0.0</toml.version>
         <xerces.version>2.12.2</xerces.version>
-        <jackson.version>2.13.2.2</jackson.version>
+        <jackson.version>2.13.3</jackson.version>
         <commons-io.version>2.11.0</commons-io.version>
         <ldaptive.version>2.1.1</ldaptive.version>
         <apachehttpclient>4.5.13</apachehttpclient>
