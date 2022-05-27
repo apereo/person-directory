@@ -42,27 +42,11 @@
         <connection>scm:git:git://github.com/apereo/person-directory.git</connection>
         <developerConnection>scm:git:git@github.com:apereo/person-directory.git</developerConnection>
         <url>https://github.com/apereo/person-directory</url>
-        <tag>person-directory-parent-1.5.2</tag>
     </scm>
 
     <name>Person Directory Parent</name>
     <description>Parent project for the API and Impl packages.</description>
     <inceptionYear>2005</inceptionYear>
-
-    <mailingLists>
-        <mailingList>
-            <name>Person-Directory Users</name>
-            <subscribe>http://wiki.jasig.org/display/JSG/person-directory-user</subscribe>
-            <unsubscribe>http://wiki.jasig.org/display/JSG/person-directory-user</unsubscribe>
-            <archive>http://wiki.jasig.org/display/JSG/person-directory-user</archive>
-        </mailingList>
-        <mailingList>
-            <name>Person-Directory Developers</name>
-            <subscribe>http://wiki.jasig.org/display/JSG/person-directory-dev</subscribe>
-            <unsubscribe>http://wiki.jasig.org/display/JSG/person-directory-dev</unsubscribe>
-            <archive>http://wiki.jasig.org/display/JSG/person-directory-dev</archive>
-        </mailingList>
-    </mailingLists>
 
     <properties>
         <!-- Project Dependency Versions -->
@@ -76,7 +60,6 @@
         <jaxb-impl.version>3.0.2</jaxb-impl.version>
         <junit.version>4.13.2</junit.version>
         <log4j.version>2.17.2</log4j.version>
-        <servlet-api.version>4.0.1</servlet-api.version>
         <slf4j.version>1.7.36</slf4j.version>
         <okhttp3.version>4.9.3</okhttp3.version>
         <retrofit.version>2.9.0</retrofit.version>
@@ -200,14 +183,10 @@
                 <version>${postgresql.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${servlet-api.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -474,13 +453,13 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.groovy</groupId>
+                <groupId>org.apache.groovy</groupId>
                 <artifactId>groovy</artifactId>
                 <version>${groovy.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.groovy</groupId>
+                <groupId>org.apache.groovy</groupId>
                 <artifactId>groovy-jsr223</artifactId>
                 <version>${groovy.version}</version>
                 <scope>compile</scope>
@@ -545,6 +524,11 @@
                 <groupId>com.rimerosolutions.maven.plugins</groupId>
                 <artifactId>wrapper-maven-plugin</artifactId>
                 <version>0.0.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
             </plugin>
             <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
