@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,10 +19,14 @@
 package org.apereo.services.persondir.support.merger;
 
 import org.apereo.services.persondir.util.Util;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * Testcase for the MultivaluedAttributeMerger.
@@ -31,6 +35,7 @@ import java.util.Map;
  */
 public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest {
 
+    @Test
     public void testAddDistinct() {
         final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("AttValue"));
@@ -55,6 +60,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
     /**
      * Test identity of adding an empty map.
      */
+    @Test
     public void testAddEmpty() {
         final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("attValue"));
@@ -72,6 +78,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
      * Test a simple case of adding one map of attributes to another, with
      * no collisions.
      */
+    @Test
     public void testAddNoncolliding() {
         final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName", Util.list("attValue"));
@@ -93,6 +100,7 @@ public class MultivaluedAttributeMergerTest extends AbstractAttributeMergerTest 
     /**
      * Test that colliding attributes are not added.
      */
+    @Test
     public void testColliding() {
         final Map<String, List<Object>> someAttributes = new HashMap<>();
         someAttributes.put("attName1", Util.list((Object) null));

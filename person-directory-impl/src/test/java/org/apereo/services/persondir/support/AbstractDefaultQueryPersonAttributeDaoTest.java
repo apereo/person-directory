@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,16 +18,18 @@
  */
 package org.apereo.services.persondir.support;
 
-import junit.framework.TestCase;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.Util;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Provides base tests for classes that implement AbstractDefaultAttributePersonAttributeDao.
@@ -46,17 +48,19 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
 
     protected abstract AbstractDefaultAttributePersonAttributeDao getAbstractDefaultQueryPersonAttributeDao();
 
+    @Test
     public void testNullDefaultAttributeName() {
         var dao = getAbstractDefaultQueryPersonAttributeDao();
         try {
             dao.setUsernameAttributeProvider(null);
-            TestCase.fail("Expected Exception on setUsernameAttributeProvider(null)");
+            fail("Expected Exception on setUsernameAttributeProvider(null)");
         } catch (final Exception iae) {
             return;
         }
     }
 
 
+    @Test
     public void testGetAttributesByString() {
         var dao = new SimpleDefaultQueryPersonAttributeDao();
         dao.setUsernameAttributeProvider(new SimpleUsernameAttributeProvider("TestAttrName"));

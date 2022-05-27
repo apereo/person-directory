@@ -11,7 +11,7 @@
     <groupId>org.apereo.service.persondir</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.10-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
 
     <issueManagement>
         <url>https://github.com/apereo/person-directory/issues</url>
@@ -32,6 +32,17 @@
             <url>https://build.shibboleth.net/nexus/content/repositories/releases</url>
         </repository>
         <repository>
+            <id>repository.spring.milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+        <repository>
+            <id>snapshots-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
             <id>vt-middleware</id>
             <name>VT Middleware GitHub Repository</name>
             <url>https://raw.github.com/vt-middleware/maven-repo/master</url>
@@ -42,59 +53,33 @@
         <connection>scm:git:git://github.com/apereo/person-directory.git</connection>
         <developerConnection>scm:git:git@github.com:apereo/person-directory.git</developerConnection>
         <url>https://github.com/apereo/person-directory</url>
-        <tag>person-directory-parent-1.5.2</tag>
     </scm>
 
     <name>Person Directory Parent</name>
     <description>Parent project for the API and Impl packages.</description>
     <inceptionYear>2005</inceptionYear>
 
-    <mailingLists>
-        <mailingList>
-            <name>Person-Directory Users</name>
-            <subscribe>http://wiki.jasig.org/display/JSG/person-directory-user</subscribe>
-            <unsubscribe>http://wiki.jasig.org/display/JSG/person-directory-user</unsubscribe>
-            <archive>http://wiki.jasig.org/display/JSG/person-directory-user</archive>
-        </mailingList>
-        <mailingList>
-            <name>Person-Directory Developers</name>
-            <subscribe>http://wiki.jasig.org/display/JSG/person-directory-dev</subscribe>
-            <unsubscribe>http://wiki.jasig.org/display/JSG/person-directory-dev</unsubscribe>
-            <archive>http://wiki.jasig.org/display/JSG/person-directory-dev</archive>
-        </mailingList>
-    </mailingLists>
-
     <properties>
         <!-- Project Dependency Versions -->
-        <aopalliance.version>1.0</aopalliance.version>
-        <apacheds.version>2.0.0.AM26</apacheds.version>
         <commons-lang.version>3.12.0</commons-lang.version>
         <easymock.version>4.3</easymock.version>
         <hsqldb.version>1.8.0.10</hsqldb.version>
-        <postgresql.version>42.2.24</postgresql.version>
-        <jaxb-api.version>2.3.1</jaxb-api.version>
-        <jaxb-impl.version>3.0.2</jaxb-impl.version>
-        <junit.version>4.13.2</junit.version>
-        <log4j.version>2.14.1</log4j.version>
-        <servlet-api.version>4.0.1</servlet-api.version>
-        <slf4j.version>1.7.32</slf4j.version>
-        <okhttp3.version>4.9.2</okhttp3.version>
+        <postgresql.version>42.3.6</postgresql.version>
+        <junit.version>5.8.1</junit.version>
+        <log4j.version>2.17.2</log4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
+        <okhttp3.version>4.9.3</okhttp3.version>
         <retrofit.version>2.9.0</retrofit.version>
-        <spring.version>5.3.10</spring.version>
-        <spring-ldap.version>2.3.4.RELEASE</spring-ldap.version>
-        <spring-security.version>5.5.2</spring-security.version>
-        <spring-modules.version>0.8a</spring-modules.version>
-        <groovy.version>3.0.9</groovy.version>
-        <grouper.client.version>2.6.0</grouper.client.version>
-        <guava.version>31.0.1-jre</guava.version>
-        <toml.version>1.0.0</toml.version>
-        <xerces.version>2.12.1</xerces.version>
-        <jackson.version>2.13.0</jackson.version>
+        <spring.version>6.0.0-M4</spring.version>
+        <groovy.version>4.0.2</groovy.version>
+        <grouper.client.version>2.6.8</grouper.client.version>
+        <guava.version>31.1-jre</guava.version>
+        <jackson.version>2.13.3</jackson.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <ldaptive.version>2.1.0</ldaptive.version>
+        <ldaptive.version>2.1.1</ldaptive.version>
         <apachehttpclient>4.5.13</apachehttpclient>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -165,21 +150,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>aopalliance</groupId>
-                <artifactId>aopalliance</artifactId>
-                <version>${aopalliance.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>${jaxb-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>${jaxb-impl.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang.version}</version>
@@ -200,14 +170,10 @@
                 <version>${postgresql.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${servlet-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -219,28 +185,6 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>
                 <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.directory.server</groupId>
-                <artifactId>apacheds-core</artifactId>
-                <version>${apacheds.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.directory.server</groupId>
-                <artifactId>apacheds-test-framework</artifactId>
-                <version>${apacheds.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.directory.server</groupId>
-                <artifactId>apacheds-server-jndi</artifactId>
-                <version>${apacheds.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.directory.server</groupId>
-                <artifactId>apacheds-protocol-ldap</artifactId>
-                <version>${apacheds.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.easymock</groupId>
@@ -309,33 +253,6 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
                 <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ldap</groupId>
-                <artifactId>spring-ldap-core</artifactId>
-                <version>${spring-ldap.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-core</artifactId>
-                <version>${spring-security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security.extensions</groupId>
-                <artifactId>spring-security-saml2-core</artifactId>
-                <version>1.0.10.RELEASE</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-collections</groupId>
-                        <artifactId>commons-collections</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -474,21 +391,16 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.groovy</groupId>
+                <groupId>org.apache.groovy</groupId>
                 <artifactId>groovy</artifactId>
                 <version>${groovy.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.groovy</groupId>
+                <groupId>org.apache.groovy</groupId>
                 <artifactId>groovy-jsr223</artifactId>
                 <version>${groovy.version}</version>
                 <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>me.grison</groupId>
-                <artifactId>jtoml</artifactId>
-                <version>${toml.version}</version>
             </dependency>
             <dependency>
                 <groupId>edu.internet2.middleware.grouper</groupId>
@@ -514,12 +426,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <dependency>
-                <groupId>xerces</groupId>
-                <artifactId>xercesImpl</artifactId>
-                <version>${xerces.version}</version>
-                <scope>provided</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -528,23 +434,20 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
                 <configuration>
                     <doclint>none</doclint>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jasig.maven</groupId>
-                <artifactId>maven-notice-plugin</artifactId>
-                <version>1.1.0</version>
-                <configuration>
-                    <generateChildNotices>false</generateChildNotices>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>com.rimerosolutions.maven.plugins</groupId>
                 <artifactId>wrapper-maven-plugin</artifactId>
                 <version>0.0.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
             </plugin>
             <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
@@ -565,9 +468,6 @@
                         <exclude>.idea/**</exclude> <!-- Exclude intelliJ files -->
                         <exclude>overlays/**</exclude> <!-- Exclude intelliJ files -->
                     </excludes>
-                    <mapping>
-                        <toml>SCRIPT_STYLE</toml>
-                    </mapping>
                 </configuration>
             </plugin>
         </plugins>

@@ -26,9 +26,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
+import org.apereo.services.persondir.support.cache.AttributeBasedCacheKeyGenerator;
+import org.apereo.services.persondir.support.cache.CacheKeyGenerator;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.springmodules.cache.key.CacheKeyGenerator;
 
 import java.io.Serializable;
 import java.lang.reflect.AccessibleObject;
@@ -328,7 +329,7 @@ public class CachingPersonAttributeDaoImpl extends AbstractDefaultAttributePerso
 
             if (logger.isDebugEnabled()) {
                 logger.debug("Retrieved query from wrapped IPersonAttributeDao and stored in cache for "
-                    + beanName + ". key='" + cacheKey + "', results='" + queryResults + "'");
+                             + beanName + ". key='" + cacheKey + "', results='" + queryResults + "'");
             }
 
             this.queries++;

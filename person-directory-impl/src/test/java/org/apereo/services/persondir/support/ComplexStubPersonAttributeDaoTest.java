@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,11 +20,15 @@ package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -32,13 +36,14 @@ import java.util.Map;
 
  */
 public class ComplexStubPersonAttributeDaoTest
-        extends AbstractDefaultQueryPersonAttributeDaoTest {
+    extends AbstractDefaultQueryPersonAttributeDaoTest {
 
     private ComplexStubPersonAttributeDao testInstance;
+
     private Map<String, Map<String, List<Object>>> backingMap;
 
 
-    @Override
+    @BeforeEach
     protected void setUp() throws Exception {
         // built the user attributes for awp9
         final Map<String, List<Object>> awp9Map = new HashMap<>();
@@ -60,8 +65,6 @@ public class ComplexStubPersonAttributeDaoTest
         this.backingMap = bMap;
 
         this.testInstance = new ComplexStubPersonAttributeDao(this.backingMap);
-
-        super.setUp();
     }
 
     /**
@@ -69,6 +72,7 @@ public class ComplexStubPersonAttributeDaoTest
      * attribute names and when the map is not set returns null for
      * possible attribute names.
      */
+    @Test
     public void testGetPossibleUserAttributeNames() {
         var expectedAttributeNames = new HashSet<String>();
         expectedAttributeNames.add("shirtColor");
@@ -93,6 +97,7 @@ public class ComplexStubPersonAttributeDaoTest
     /**
      * Test getting user attributes using a Map key.
      */
+    @Test
     public void testGetUserAttributesMap() {
         final Map<String, List<Object>> awp9Key = new HashMap<>();
         awp9Key.put("username", Util.list("awp9"));
@@ -108,6 +113,7 @@ public class ComplexStubPersonAttributeDaoTest
     /**
      * Test getting user attributes using a String key.
      */
+    @Test
     public void testGetUserAttributesString() {
         var result = this.testInstance.getPerson("aam26", IPersonAttributeDaoFilter.alwaysChoose());
         assertNotNull(result);

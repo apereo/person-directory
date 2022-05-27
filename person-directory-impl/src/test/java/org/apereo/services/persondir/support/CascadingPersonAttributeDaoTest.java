@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -23,11 +23,15 @@ import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.apereo.services.persondir.util.Util;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * CascadingPersonAttributeDao testcase.
@@ -35,13 +39,15 @@ import java.util.Map;
 
  */
 public class CascadingPersonAttributeDaoTest
-        extends AbstractAggregatingDefaultQueryPersonAttributeDaoTest {
+    extends AbstractAggregatingDefaultQueryPersonAttributeDaoTest {
 
     private ComplexStubPersonAttributeDao sourceOne;
+
     private ComplexStubPersonAttributeDao sourceTwo;
+
     private StubPersonAttributeDao nullSource;
 
-    @Override
+    @BeforeEach
     protected void setUp() {
         var usernameAttributeProvider = new SimpleUsernameAttributeProvider("username");
 
@@ -96,6 +102,7 @@ public class CascadingPersonAttributeDaoTest
         this.nullSource = new StubPersonAttributeDao();
     }
 
+    @Test
     public void testCascadingQuery() {
         final List<IPersonAttributeDao> targets = new ArrayList<>();
         targets.add(this.sourceOne);
@@ -117,6 +124,7 @@ public class CascadingPersonAttributeDaoTest
         assertEquals(expected, results.getAttributes());
     }
 
+    @Test
     public void testNoChildren() {
         var targetDao = new CascadingPersonAttributeDao();
 
@@ -128,6 +136,7 @@ public class CascadingPersonAttributeDaoTest
         }
     }
 
+    @Test
     public void testThrowingChildDao() {
         final List<IPersonAttributeDao> targets = new ArrayList<>();
         targets.add(this.sourceOne);
@@ -161,6 +170,7 @@ public class CascadingPersonAttributeDaoTest
         }
     }
 
+    @Test
     public void testNullFirstResultNoStop() {
         final List<IPersonAttributeDao> targets = new ArrayList<>();
         targets.add(this.nullSource);
@@ -183,6 +193,7 @@ public class CascadingPersonAttributeDaoTest
         assertEquals(expected, results.getAttributes());
     }
 
+    @Test
     public void testNullFirstResultStop() {
         final List<IPersonAttributeDao> targets = new ArrayList<>();
         targets.add(this.nullSource);
@@ -200,9 +211,6 @@ public class CascadingPersonAttributeDaoTest
         assertNull(results);
     }
 
-    /**
-     * @see AbstractAggregatingDefaultQueryPersonAttributeDaoTest#getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao()
-     */
     @Override
     protected AbstractAggregatingDefaultQueryPersonAttributeDao getConfiguredAbstractAggregatingDefaultQueryPersonAttributeDao() {
         final List<IPersonAttributeDao> attributeSources = new ArrayList<>();

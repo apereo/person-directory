@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,13 +25,15 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test conformance to IPersonAttributeDao interface specified
@@ -40,7 +42,7 @@ import java.util.Map;
  * @version $Revision: 43106 $ $Date: 2008-02-14 11:22:40 -0600 (Thu, 14 Feb 2008) $
  */
 @SuppressWarnings("deprecation")
-public abstract class AbstractPersonAttributeDaoTest extends TestCase {
+public abstract class AbstractPersonAttributeDaoTest {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected final ObjectMapper mapper = new ObjectMapper();
@@ -70,6 +72,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * IllegalArgumentException as specified in IPersonAttributeDao's
      * interface declaration.
      */
+    @Test
     public void testNullSeed() {
         var dao = getPersonAttributeDaoInstance();
         final Map<String, List<Object>> nullMap = null;
@@ -88,6 +91,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * IllegalArgumentException as specified in IPersonAttributeDao's
      * interface declaration.
      */
+    @Test
     public void testMultiNullSeed() {
         var dao = getPersonAttributeDaoInstance();
         final Map<String, Object> nullMap = null;
@@ -106,6 +110,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * IllegalArgumentException as specified in IPersonAttributeDao's
      * interface declaration.
      */
+    @Test
     public void testMultiNullUid() {
         var dao = getPersonAttributeDaoInstance();
         final String nullString = null;
@@ -123,6 +128,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * IllegalArgumentException as specified in IPersonAttributeDao's
      * interface declaration.
      */
+    @Test
     public void testNullUid() {
         var dao = getPersonAttributeDaoInstance();
         final String nullString = null;
@@ -139,6 +145,7 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
      * Test that invocation of getPersonAttributeDaoInstance() is not
      * null and immutable
      */
+    @Test
     public void testPossibleSetConstraints() {
         var dao = getPersonAttributeDaoInstance();
         var possibleNames = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
@@ -175,11 +182,5 @@ public abstract class AbstractPersonAttributeDaoTest extends TestCase {
             throw new RuntimeException(e);
         }
     }
-
-    public void testJson() {
-        var obj = getPersonAttributeDaoInstance();
-        deserializeJson(serializeJson(obj), obj.getClass());
-    }
-
 }
 

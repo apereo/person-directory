@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apereo.services.persondir.support;
+package org.apereo.services.persondir.support.cache;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -27,9 +27,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.springframework.util.CollectionUtils;
-import org.springmodules.cache.key.CacheKeyGenerator;
-import org.springmodules.cache.key.HashCodeCacheKey;
-import org.springmodules.cache.key.HashCodeCalculator;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -40,7 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.apache.commons.codec.digest.MessageDigestAlgorithms.SHA_512;
+import static org.apache.commons.codec.digest.MessageDigestAlgorithms.*;
 
 /**
  * Generates a cache key using a hash of the {@link Method} being called and for
@@ -50,13 +47,13 @@ import static org.apache.commons.codec.digest.MessageDigestAlgorithms.SHA_512;
  * as specified by the <code>cacheKeyAttributes</code> {@link Set}
  *
  * @author Eric Dalquist
-
  */
 public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
 
     private static final Map<String, Object> POSSIBLE_USER_ATTRIBUTE_NAMES_SEED_MAP = Collections.singletonMap("getPossibleUserAttributeNames_seedMap", new Serializable() {
         private static final long serialVersionUID = 1L;
     });
+
     private static final Map<String, Object> AVAILABLE_QUERY_ATTRIBUTES_SEED_MAP = Collections.singletonMap("getAvailableQueryAttributes_seedMap", new Serializable() {
         private static final long serialVersionUID = 1L;
     });
@@ -74,6 +71,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
         AVAILABLE_QUERY_ATTRIBUTES("getAvailableQueryAttributes", IPersonAttributeDaoFilter.class);
 
         private final String name;
+
         private final Class<?>[] args;
 
         CachableMethod(final String name, final Class<?>... args) {
@@ -107,8 +105,11 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     private Set<String> cacheKeyAttributes = null;
 
     private String defaultAttributeName = "username";
+
     private Set<String> defaultAttributeNameSet = Collections.singleton(this.defaultAttributeName);
+
     private boolean useAllAttributes = false;
+
     private boolean ignoreEmptyAttributes = false;
 
     /**
@@ -158,6 +159,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     /**
      * Returns boolean indicating whether seed attributes with empty values (null, empty string or empty list values)
      * should be ignored when generating the cache key
+     *
      * @return True if seed attributes should ignore empty values
      */
     public boolean isIgnoreEmptyAttributes() {
@@ -217,7 +219,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * <code>defaultAttributeName</code>.
      *
      * @param methodArguments The method arguments
-     * @param cachableMethod The targeted cachable method
+     * @param cachableMethod  The targeted cachable method
      * @return The seed Map for the method call
      */
     @SuppressWarnings("unchecked")
@@ -238,13 +240,13 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
             }
             break;
 
-            //The getPossibleUserAttributeNames has a special Map seed that we return to represent calls to it 
+            //The getPossibleUserAttributeNames has a special Map seed that we return to represent calls to it
             case POSSIBLE_USER_ATTRIBUTE_NAMES: {
                 seed = POSSIBLE_USER_ATTRIBUTE_NAMES_SEED_MAP;
             }
             break;
 
-            //The getAvailableQueryAttributes has a special Map seed that we return to represent calls to it 
+            //The getAvailableQueryAttributes has a special Map seed that we return to represent calls to it
             case AVAILABLE_QUERY_ATTRIBUTES: {
                 seed = AVAILABLE_QUERY_ATTRIBUTES_SEED_MAP;
             }
@@ -335,7 +337,8 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
                 this.logger.warn("Security exception while attempting to if the target class '" + targetClass + "' implements the cachable method '" + cachableMethod + "'", e);
             } catch (final NoSuchMethodException e) {
                 var
-                    message = "Taret class '" + targetClass + "' does not implement possible cachable method '" + cachableMethod + "'. Is the advice applied to the correct bean and methods?";
+                    message =
+                    "Taret class '" + targetClass + "' does not implement possible cachable method '" + cachableMethod + "'. Is the advice applied to the correct bean and methods?";
 
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug(message, e);
@@ -349,6 +352,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
             }
         }
 
-        throw new IllegalArgumentException("Do not know how to generate a cache for for '" + targetMethod + "' on class '" + targetClass + "'. Is the advice applied to the correct bean and methods?");
+        throw new IllegalArgumentException(
+            "Do not know how to generate a cache for for '" + targetMethod + "' on class '" + targetClass + "'. Is the advice applied to the correct bean and methods?");
     }
 }

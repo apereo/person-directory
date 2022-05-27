@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,9 +19,10 @@
 package org.apereo.services.persondir.support.jdbc;
 
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
+import org.apereo.services.persondir.support.SimpleUsernameAttributeProvider;
 import org.apereo.services.persondir.util.Util;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -34,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * Test the {@link SingleRowJdbcPersonAttributeDao} against a dummy DataSource.
  *
@@ -42,33 +45,33 @@ import java.util.Set;
 
  */
 public class SingleRowJdbcPersonAttributeDaoTest
-        extends AbstractCaseSensitivityJdbcPersonAttributeDaoTest {
+    extends AbstractCaseSensitivityJdbcPersonAttributeDaoTest {
 
     @Override
     protected void setUpSchema(final DataSource dataSource) throws SQLException {
         var con = dataSource.getConnection();
 
         con.prepareStatement("CREATE TABLE user_table " +
-                "(netid VARCHAR, " +
-                "name VARCHAR, " +
-                "email VARCHAR, " +
-                "shirt_color VARCHAR)").execute();
+                             "(netid VARCHAR, " +
+                             "name VARCHAR, " +
+                             "email VARCHAR, " +
+                             "shirt_color VARCHAR)").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                "(netid, name, email, shirt_color) " +
-                "VALUES ('awp9', 'Andrew', 'andrew.petro@yale.edu', 'blue')").execute();
+                             "(netid, name, email, shirt_color) " +
+                             "VALUES ('awp9', 'Andrew', 'andrew.petro@yale.edu', 'blue')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                "(netid, name, email, shirt_color) " +
-                "VALUES ('edalquist', 'Eric', 'edalquist@unicon.net', 'blue')").execute();
+                             "(netid, name, email, shirt_color) " +
+                             "VALUES ('edalquist', 'Eric', 'edalquist@unicon.net', 'blue')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                "(netid, name, email, shirt_color) " +
-                "VALUES ('atest', 'Andrew', 'andrew.test@test.net', 'red')").execute();
+                             "(netid, name, email, shirt_color) " +
+                             "VALUES ('atest', 'Andrew', 'andrew.test@test.net', 'red')").execute();
 
         con.prepareStatement("INSERT INTO user_table " +
-                "(netid, name, email, shirt_color) " +
-                "VALUES ('susan', 'Susan', 'susan.test@test.net', null)").execute();
+                             "(netid, name, email, shirt_color) " +
+                             "VALUES ('susan', 'Susan', 'susan.test@test.net', null)").execute();
 
         con.close();
     }
@@ -97,6 +100,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         // no-op
     }
 
+    @Test
     public void testNoQueryAttributeMapping() {
         var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE netid = 'awp9'");
         impl.setUseAllQueryAttributes(false);
@@ -113,7 +117,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        var attribs= impl.getPerson("awp9",
+        var attribs = impl.getPerson("awp9",
             IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.getAttributes().get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.getAttributes().get("emailAddress"));
@@ -126,6 +130,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * Test that the implementation properly reports the attribute names it
      * expects to map.
      */
+    @Test
     public void testPossibleUserAttributeNames() {
         var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
@@ -153,6 +158,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     /**
      * Test for a query with a single attribute
      */
+    @Test
     public void testSingleAttrQuery() {
         var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
@@ -180,6 +186,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     /**
      * Test for a query with a single attribute
      */
+    @Test
     public void testNullColumnName() {
         var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email FROM user_table WHERE netid = {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", null));
@@ -200,6 +207,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     /**
      * Test for a query with a single attribute
      */
+    @Test
     public void testSetNullAttributeMapping() {
         var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
@@ -226,6 +234,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     /**
      * Test for a query with a single attribute
      */
+    @Test
     public void testSetNullAttributeName() {
         var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
@@ -244,6 +253,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     /**
      * Test for a query with a null value attribute
      */
+    @Test
     public void testNullAttrQuery() {
         var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT name, email, shirt_color FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("uid", "netid"));
@@ -264,6 +274,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * Test case for a query that needs multiple attributes to complete and
      * more attributes than are needed to complete are passed to it.
      */
+    @Test
     public void testMultiAttrQuery() {
         final Map<String, String> queryAttributeMapping = new LinkedHashMap<>();
         queryAttributeMapping.put("uid", "netid");
@@ -299,6 +310,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
      * A query that needs mulitple attributes to complete but the needed
      * attributes aren't passed to it.
      */
+    @Test
     public void testInsufficientAttrQuery() {
         final Map<String, String> queryAttributeMapping = new LinkedHashMap<>();
         queryAttributeMapping.put("uid", "netid");
@@ -328,6 +340,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
     /**
      * Test for a query with a single attribute
      */
+    @Test
     public void testMultiPersonQuery() {
         var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
         impl.setQueryAttributeMapping(Collections.singletonMap("shirt", "shirt_color"));
@@ -355,6 +368,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         fail("JdbcPersonAttributeDao should have returned multiple people in the set");
     }
 
+    @Test
     public void testProperties() {
         var impl = new SingleRowJdbcPersonAttributeDao(testDataSource, "SELECT netid, name, email FROM user_table WHERE {0}");
 

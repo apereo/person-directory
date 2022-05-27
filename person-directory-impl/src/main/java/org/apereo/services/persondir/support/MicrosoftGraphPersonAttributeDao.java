@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.squareup.moshi.Json;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.springframework.util.ReflectionUtils;
@@ -66,7 +66,7 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
      * NONE,BASIC,HEADERS or BODY.
      */
     private String loggingLevel = "BASIC";
-    
+
     public String getDomain() {
         return domain;
     }
@@ -256,11 +256,11 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
             .build();
         var service = retrofit.create(GraphAuthApiService.class);
         var response = service.getOauth2Token(
-            this.grantType,
-            this.clientId,
-            this.clientSecret,
-            this.scope,
-            this.resource)
+                this.grantType,
+                this.clientId,
+                this.clientSecret,
+                this.scope,
+                this.resource)
             .execute();
         if (response.isSuccessful()) {
             var info = response.body();
@@ -272,18 +272,27 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
 
     private interface GraphApiService {
         @GET("users/{upn}")
-        Call<User> getUserByUserPrincipalName(@Path("upn") String upn, @Query(value = "$select", encoded = true) String selectQuery);
+        Call<User> getUserByUserPrincipalName(
+            @Path("upn")
+            String upn,
+            @Query(value = "$select", encoded = true)
+            String selectQuery);
     }
 
     private interface GraphAuthApiService {
         @FormUrlEncoded
         @POST("oauth2/token")
         Call<OAuthTokenInfo> getOauth2Token(
-            @Field("grant_type") String grantType,
-            @Field("client_id") String clientId,
-            @Field("client_secret") String clientSecret,
-            @Field("scope") String scope,
-            @Field("resource") String resource
+            @Field("grant_type")
+            String grantType,
+            @Field("client_id")
+            String clientId,
+            @Field("client_secret")
+            String clientSecret,
+            @Field("scope")
+            String scope,
+            @Field("resource")
+            String resource
         );
     }
 
@@ -353,7 +362,7 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
         private String faxNumber;
 
         private String mailNickname;
-        
+
         private String onPremisesSamAccountName;
 
         @JsonIgnore
@@ -370,9 +379,9 @@ public class MicrosoftGraphPersonAttributeDao extends BasePersonAttributeDao {
 
         static List<String> getDefaultFieldQuery() {
             return Arrays.asList("businessPhones,displayName,givenName,id,"
-                + "jobTitle,mail,givenName,employeeId,"
-                + "mobilePhone,officeLocation,accountEnabled"
-                + "preferredLanguage,surname,userPrincipalName");
+                                 + "jobTitle,mail,givenName,employeeId,"
+                                 + "mobilePhone,officeLocation,accountEnabled"
+                                 + "preferredLanguage,surname,userPrincipalName");
         }
 
         @JsonIgnore

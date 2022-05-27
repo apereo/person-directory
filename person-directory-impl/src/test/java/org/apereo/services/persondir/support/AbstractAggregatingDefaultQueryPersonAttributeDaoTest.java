@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,12 +18,12 @@
  */
 package org.apereo.services.persondir.support;
 
-import junit.framework.TestCase;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.mock.ThrowingPersonAttributeDao;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.apereo.services.persondir.util.Util;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,12 +33,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+
 /**
  * Provides base tests for classes that implement AbstractAggregatingDefaultQueryPersonAttributeDao.
  *
- *
  * @author Eric Dalquist
-
  */
 public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest extends AbstractDefaultQueryPersonAttributeDaoTest {
     /**
@@ -54,6 +55,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
     protected abstract AbstractAggregatingDefaultQueryPersonAttributeDao getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
 
+    @Test
     public void testGetPossibleNamesWithException() {
         var dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
@@ -79,19 +81,20 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
         //Test exception recovery
         dao.setRecoverExceptions(true);
         var resultNames = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
-        TestCase.assertEquals(expectedNames, resultNames);
+        assertEquals(expectedNames, resultNames);
 
         //Test fail on exception
         dao.setRecoverExceptions(false);
         try {
             dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
-            TestCase.fail("Expected RuntimeException on getPossibleUserAttributeNames() with ThrowingPersonAttributeDao as a child DAO");
+            fail("Expected RuntimeException on getPossibleUserAttributeNames() with ThrowingPersonAttributeDao as a child DAO");
         } catch (final RuntimeException re) {
             //expected
         }
     }
 
 
+    @Test
     public void testStopOnSuccess() {
         var dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
@@ -123,56 +126,58 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
         dao.setStopOnSuccess(true);
 
         var resultNamesWithStop = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
-        TestCase.assertEquals(expectedNamesWithStop, resultNamesWithStop);
+        assertEquals(expectedNamesWithStop, resultNamesWithStop);
 
         var personWithStop = dao.getPerson("test", IPersonAttributeDaoFilter.alwaysChoose());
-        TestCase.assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithStop);
-
+        assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithStop);
 
         dao.setStopOnSuccess(false);
 
         var resultNamesWithoutStop = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
-        TestCase.assertEquals(expectedNamesWithoutStop, resultNamesWithoutStop);
+        assertEquals(expectedNamesWithoutStop, resultNamesWithoutStop);
 
         var personWithoutStop = dao.getPerson("test", IPersonAttributeDaoFilter.alwaysChoose());
-        TestCase.assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithoutStop);
+        assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithoutStop);
 
     }
 
+    @Test
     public void testSetNullMerger() {
         var dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
         try {
             dao.setMerger(null);
-            TestCase.fail("Expected IllegalArgumentException on setMerger(null)");
+            fail("Expected IllegalArgumentException on setMerger(null)");
         } catch (final NullPointerException iae) {
             //expected
         }
     }
 
+    @Test
     public void testSetNullPersonAttributeDaos() {
         var dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
         try {
             dao.setPersonAttributeDaos(null);
-            TestCase.fail("Expected IllegalArgumentException on setPersonAttributeDaos(null)");
+            fail("Expected IllegalArgumentException on setPersonAttributeDaos(null)");
         } catch (final NullPointerException iae) {
             //expected
         }
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testProperties() {
         var dao = this.getEmptyAbstractAggregatingDefaultQueryPersonAttributeDao();
 
         var merger = new MultivaluedAttributeMerger();
         dao.setMerger(merger);
-        TestCase.assertEquals(merger, dao.getMerger());
+        assertEquals(merger, dao.getMerger());
 
         dao.setPersonAttributeDaos(Collections.EMPTY_LIST);
-        TestCase.assertEquals(Collections.EMPTY_LIST, dao.getPersonAttributeDaos());
+        assertEquals(Collections.EMPTY_LIST, dao.getPersonAttributeDaos());
 
         dao.setRecoverExceptions(true);
-        TestCase.assertTrue(dao.isRecoverExceptions());
+        assertTrue(dao.isRecoverExceptions());
     }
 }

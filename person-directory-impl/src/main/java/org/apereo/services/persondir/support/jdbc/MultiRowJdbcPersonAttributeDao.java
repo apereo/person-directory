@@ -23,7 +23,6 @@ import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.CaseInsensitiveNamedPersonImpl;
 import org.apereo.services.persondir.support.MultivaluedPersonAttributeUtils;
-import org.apereo.services.persondir.support.NamedPersonImpl;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.RowMapper;
 

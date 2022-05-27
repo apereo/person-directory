@@ -362,7 +362,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     protected final QB generateQuery(final Map<String, List<Object>> query) {
         QB queryBuilder = null;
 
-        if (this.queryAttributeMapping != null) {
+        if (this.queryAttributeMapping != null && !queryAttributeMapping.isEmpty()) {
             for (var queryAttrEntry : this.queryAttributeMapping.entrySet()) {
                 var queryAttr = queryAttrEntry.getKey();
                 var queryValues = query.get(queryAttr);

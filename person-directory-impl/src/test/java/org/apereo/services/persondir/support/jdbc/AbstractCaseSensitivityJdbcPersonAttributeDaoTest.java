@@ -23,12 +23,17 @@ import org.apereo.services.persondir.support.AbstractDefaultQueryPersonAttribute
 import org.apereo.services.persondir.util.CaseCanonicalizationMode;
 import org.apereo.services.persondir.util.Util;
 import org.hsqldb.jdbcDriver;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Otherwise would be huge amounts of duplicated boilerplate for verifying
@@ -61,9 +66,8 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
      */
     protected abstract boolean supportsPerDataAttributeCaseSensitivity();
 
-    @Override
+    @BeforeEach
     protected void setUp() throws Exception {
-        super.setUp();
         this.testDataSource = setUpDataSource();
         setUpSchema(testDataSource);
     }
@@ -72,13 +76,13 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         return new SimpleDriverDataSource(new jdbcDriver(), "jdbc:hsqldb:mem:adhommemds", "sa", "");
     }
 
-    @Override
+    @AfterEach
     protected void tearDown() throws Exception {
-        super.tearDown();
         tearDownSchema(this.testDataSource);
         this.testDataSource = null;
     }
 
+    @Test
     public void testCaseSensitiveUsernameQuery() {
         var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
@@ -96,6 +100,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         assertEquals("awp9", correctCaseResult.getName());
     }
 
+    @Test
     public void testCaseSensitiveUsernameQuery_CanonicalizedUsernameResult() {
         var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
@@ -115,6 +120,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         assertEquals("AWP9", correctCaseResult.getName());
     }
 
+    @Test
     public void testCaseInsensitiveUsernameQuery() {
         var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
@@ -137,6 +143,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
 
     }
 
+    @Test
     public void testCaseInsensitiveUsernameQuery_CanonicalizedUsernameResult() {
         var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
@@ -165,6 +172,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
 
     }
 
+    @Test
     public void testCaseSensitiveNonUsernameAttributeQuery() {
         var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
@@ -198,6 +206,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         assertEquals("Andrew", currentResult.getAttributeValue("firstName"));
     }
 
+    @Test
     public void testCaseSensitiveNonUsernameAttributeQuery_CanonicalizedResult() {
         var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
@@ -232,6 +241,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         assertEquals("andrew", currentResult.getAttributeValue("firstName"));
     }
 
+    @Test
     public void testCaseInsensitiveNonUsernameAttributeQuery() {
         var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
@@ -281,6 +291,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
         assertEquals("Andrew", currentResult.getAttributeValue("firstName"));
     }
 
+    @Test
     public void testCaseInsensitiveNonUsernameAttributeQuery_CanonicalizedResult() {
         var impl = newDao(testDataSource);
         impl.setUseAllQueryAttributes(false);
@@ -332,6 +343,7 @@ public abstract class AbstractCaseSensitivityJdbcPersonAttributeDaoTest extends 
     // Guards against a bug discovered in the original SSP-1668/PERSONDIR-74
     // patch where setting any caseInsensitiveDataAttributes config would
     // cause all data attributes to be canonicalized
+    @Test
     public void testCaseSensitiveNonUsernameAttributeQuery_OtherCaseInsensitiveDataAttributes() {
         if (!(supportsPerDataAttributeCaseSensitivity())) {
             // Some DAOs, e.g. MultiRowJdbcPersonAttributeDao cannot distinguish

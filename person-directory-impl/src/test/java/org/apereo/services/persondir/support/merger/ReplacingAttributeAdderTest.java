@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,10 +19,13 @@
 package org.apereo.services.persondir.support.merger;
 
 import org.apereo.services.persondir.util.Util;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testcase for ReplacingAttributeAdder.
@@ -37,6 +40,7 @@ public class ReplacingAttributeAdderTest extends AbstractAttributeMergerTest {
      * Test that this implementation replaces colliding attributes with the new 
      * attribute values.
      */
+    @Test
     public void testReplacement() {
         final Map<String, List<Object>> mapOne = new HashMap<>();
         mapOne.put("aaa", Util.list("111"));
