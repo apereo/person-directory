@@ -11,7 +11,7 @@
     <groupId>org.apereo.service.persondir</groupId>
     <artifactId>person-directory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.13-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
 
     <issueManagement>
         <url>https://github.com/apereo/person-directory/issues</url>
@@ -32,6 +32,17 @@
             <url>https://build.shibboleth.net/nexus/content/repositories/releases</url>
         </repository>
         <repository>
+            <id>repository.spring.milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+        <repository>
+            <id>snapshots-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
             <id>vt-middleware</id>
             <name>VT Middleware GitHub Repository</name>
             <url>https://raw.github.com/vt-middleware/maven-repo/master</url>
@@ -42,27 +53,11 @@
         <connection>scm:git:git://github.com/apereo/person-directory.git</connection>
         <developerConnection>scm:git:git@github.com:apereo/person-directory.git</developerConnection>
         <url>https://github.com/apereo/person-directory</url>
-        <tag>person-directory-parent-1.5.2</tag>
     </scm>
 
     <name>Person Directory Parent</name>
     <description>Parent project for the API and Impl packages.</description>
     <inceptionYear>2005</inceptionYear>
-
-    <mailingLists>
-        <mailingList>
-            <name>Person-Directory Users</name>
-            <subscribe>http://wiki.jasig.org/display/JSG/person-directory-user</subscribe>
-            <unsubscribe>http://wiki.jasig.org/display/JSG/person-directory-user</unsubscribe>
-            <archive>http://wiki.jasig.org/display/JSG/person-directory-user</archive>
-        </mailingList>
-        <mailingList>
-            <name>Person-Directory Developers</name>
-            <subscribe>http://wiki.jasig.org/display/JSG/person-directory-dev</subscribe>
-            <unsubscribe>http://wiki.jasig.org/display/JSG/person-directory-dev</unsubscribe>
-            <archive>http://wiki.jasig.org/display/JSG/person-directory-dev</archive>
-        </mailingList>
-    </mailingLists>
 
     <properties>
         <!-- Project Dependency Versions -->
@@ -80,11 +75,10 @@
         <slf4j.version>1.7.36</slf4j.version>
         <okhttp3.version>4.9.3</okhttp3.version>
         <retrofit.version>2.9.0</retrofit.version>
-        <spring.version>5.3.20</spring.version>
-        <spring-ldap.version>2.4.0</spring-ldap.version>
-        <spring-security.version>5.6.3</spring-security.version>
-        <spring-modules.version>0.8a</spring-modules.version>
-        <groovy.version>3.0.10</groovy.version>
+        <spring.version>6.0.0-M4</spring.version>
+        <spring-ldap.version>3.0.0-M2</spring-ldap.version>
+        <spring-security.version>6.0.0-M5</spring-security.version>
+        <groovy.version>4.0.2</groovy.version>
         <grouper.client.version>2.6.8</grouper.client.version>
         <guava.version>31.1-jre</guava.version>
         <toml.version>1.0.0</toml.version>
@@ -93,8 +87,8 @@
         <commons-io.version>2.11.0</commons-io.version>
         <ldaptive.version>2.1.1</ldaptive.version>
         <apachehttpclient>4.5.13</apachehttpclient>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
