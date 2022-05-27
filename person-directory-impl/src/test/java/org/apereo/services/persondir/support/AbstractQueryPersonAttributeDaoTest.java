@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -19,12 +19,15 @@
 package org.apereo.services.persondir.support;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import org.apereo.services.persondir.IPersonAttributeDaoFilter;
-import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
+import org.apereo.services.persondir.IPersonAttributeDaoFilter;
+import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.util.CaseCanonicalizationMode;
 import org.apereo.services.persondir.util.Util;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,29 +40,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Eric Dalquist 
+import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Eric Dalquist
  */
 public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
     private TestQueryPersonAttributeDao testQueryPersonAttributeDao;
 
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
+    @BeforeEach
     protected void setUp() throws Exception {
         this.testQueryPersonAttributeDao = new TestQueryPersonAttributeDao();
     }
 
-    /**
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
+    @AfterEach
     protected void tearDown() throws Exception {
         this.testQueryPersonAttributeDao = null;
     }
 
+    @Test
     public void testDefaultAttributeNameUsage() {
         this.testQueryPersonAttributeDao.getPerson("eric", IPersonAttributeDaoFilter.alwaysChoose());
         var args = this.testQueryPersonAttributeDao.getArgs();
@@ -68,6 +67,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         assertEquals(Collections.singletonList(Collections.singletonList("eric")), args);
     }
 
+    @Test
     public void testNoQueryAttributeMapping() {
         this.testQueryPersonAttributeDao.getPerson("eric", IPersonAttributeDaoFilter.alwaysChoose());
         var args1 = this.testQueryPersonAttributeDao.getArgs();
@@ -79,6 +79,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         assertNull(args2);
     }
 
+    @Test
     public void testInsuffcientSeed() {
         final Map<String, String> queryAttributes = new LinkedHashMap<>();
         queryAttributes.put("userid", null);
@@ -89,6 +90,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         assertNull(args);
     }
 
+    @Test
     public void testCustomAttributes() {
         final Map<String, String> queryAttributes = new LinkedHashMap<>();
         queryAttributes.put("name.first", null);
@@ -106,6 +108,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         assertTrue(Arrays.asList(expectedArgs).containsAll(args));
     }
 
+    @Test
     public void testMapPersonAttributes_AsIs() {
         final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("edalquist"));
@@ -129,6 +132,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         assertEquals(Util.genList("dalquist"), result.getAttributeValues("name.last"));
     }
 
+    @Test
     public void testMapPersonAttributes_Mapped() {
         final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("edalquist"));
@@ -159,6 +163,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         assertEquals(Util.genList("dalquist"), result.getAttributeValues("lname"));
     }
 
+    @Test
     public void testMapPersonAttributes_CaseInsensitive() {
         final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("edalquist"));
@@ -185,6 +190,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         assertEquals(Util.genList("dalquist"), result.getAttributeValues("name.last"));
     }
 
+    @Test
     public void testMapPersonAttributes_MappedCaseInsensitive() {
         final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("edalquist"));
@@ -218,6 +224,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         assertEquals(Util.genList("dalquist"), result.getAttributeValues("lname"));
     }
 
+    @Test
     public void testMapPersonAttributes_CaseInsensitiveDefaultCanonicalization() {
         final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("EDALQUIST"));
@@ -252,6 +259,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
         assertEquals(Util.genList("dalquist"), result.getAttributeValues("name.last"));
     }
 
+    @Test
     public void testMapPersonAttributes_IndependentUsernameCanonicalization() {
         final Map<String, List<Object>> storedAttrs = new HashMap<>();
         storedAttrs.put("username", Util.list("EDALQUIST"));
@@ -290,7 +298,7 @@ public class AbstractQueryPersonAttributeDaoTest extends AbstractPersonAttribute
 
     private static class InMemoryAbstractQueryPersonAttributeDao extends AbstractQueryPersonAttributeDao<List<List<Object>>> {
 
-        private StubPersonAttributeDao storage;
+        private final StubPersonAttributeDao storage;
 
         InMemoryAbstractQueryPersonAttributeDao(final Map<String, List<Object>> backingMap) {
             storage = new StubPersonAttributeDao(backingMap);

@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,11 +24,9 @@ import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributeScriptDao;
 import org.apereo.services.persondir.IPersonAttributes;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -37,15 +35,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RunWith(JUnit4.class)
+import static org.junit.jupiter.api.Assertions.*;
+
 public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest {
 
     private GroovyPersonAttributeDao dao;
+
     private GroovyClassLoader loader;
+
     private Map<String, List<Object>> items;
 
-    @Override
-    @Before
+    @BeforeEach
     public void setUp() {
         var parent = getClass().getClassLoader();
         loader = new GroovyClassLoader(parent);
@@ -74,11 +74,12 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
         return null;
     }
 
-    @Override
-    @After
+    @AfterEach
     public void tearDown() {
         try {
-            if (loader != null) loader.close();
+            if (loader != null) {
+                loader.close();
+            }
         } catch (IOException e) {
             logger.debug("Error closing groovy classloader");
         }
@@ -95,8 +96,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
     @Test
     public void testGetPeopleWithMultivaluedAttributes() {
         var results = dao.getPeopleWithMultivaluedAttributes(items, IPersonAttributeDaoFilter.alwaysChoose());
-        assertEquals("script did not add one attribute to passed-in attribute list",
-            items.size() + 1, results.iterator().next().getAttributes().size());
+        assertEquals(items.size() + 1, results.iterator().next().getAttributes().size());
     }
 
     @Test

@@ -26,6 +26,7 @@ import org.apereo.services.persondir.IPersonAttributes;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -141,7 +142,7 @@ public class GroovyPersonAttributeDao extends AbstractDefaultAttributePersonAttr
 
         logger.debug("Executing groovy script's getAttributesForUser method");
 
-        var personAttributesMap = groovyObject.getAttributesForUser(uid);
+        var personAttributesMap = groovyObject.getAttributesForUser(Objects.requireNonNull(uid));
         if (personAttributesMap != null) {
             logger.debug("Creating person attributes with the username {} and attributes {}", uid, personAttributesMap);
             var personAttributes = MultivaluedPersonAttributeUtils.toMultivaluedMap(personAttributesMap);

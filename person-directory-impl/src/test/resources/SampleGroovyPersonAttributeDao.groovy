@@ -40,6 +40,8 @@ class SampleGroovyPersonAttributeDao extends BaseGroovyScriptDaoImpl {
 
     @Override
     Map<String, Object> getAttributesForUser(String uid) {
+        if (uid == null)
+            throw new IllegalArgumentException()
         return[name:[uid], likes:["cheese", "food"], id:[1234,2,3,4,5], another:"attribute"]
     }
 

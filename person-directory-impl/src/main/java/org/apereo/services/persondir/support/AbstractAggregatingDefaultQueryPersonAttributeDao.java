@@ -26,7 +26,7 @@ import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.merger.IAttributeMerger;
 import org.apereo.services.persondir.support.merger.MultivaluedAttributeMerger;
 import org.apereo.services.persondir.util.CollectionsUtil;
-import org.springframework.beans.factory.annotation.Required;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -164,8 +164,8 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
 
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Retrieved attributes='" + currentPeople + "' for query='"
-                        + query + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='"
-                        + currentlyConsidering + "', resultAttributes='" + resultPeople + "'");
+                                      + query + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='"
+                                      + currentlyConsidering + "', resultAttributes='" + resultPeople + "'");
                 }
             } catch (final RuntimeException rte) {
                 handledException |= handleRuntimeException(currentlyConsidering, rte);
@@ -181,8 +181,8 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
                 }
             } else if (this.requireAll) {
                 this.logger.debug("Attribute repository dao {} did not resolve a person "
-                        + "and configuration requires all sources to produce valid results. "
-                        + "Short-circuiting the execution and returning null instead",
+                                  + "and configuration requires all sources to produce valid results. "
+                                  + "Short-circuiting the execution and returning null instead",
                     currentlyConsidering);
                 return null;
             }
@@ -392,7 +392,6 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
      * @param daos The personAttributeDaos to set.
      * @throws IllegalArgumentException If daos is <code>null</code>.
      */
-    @Required
     public final void setPersonAttributeDaos(final List<IPersonAttributeDao> daos) {
         Validate.notNull(daos, "The IPersonAttributeDao List cannot be null");
         this.personAttributeDaos = CollectionsUtil.safelyWrapAsUnmodifiableList(daos);

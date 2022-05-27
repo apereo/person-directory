@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,15 +18,18 @@
  */
 package org.apereo.services.persondir.support;
 
-import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
+import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -41,7 +44,7 @@ public abstract class AbstractFlatteningPersonAttributeDaoTest extends AbstractP
 
     protected abstract AbstractFlatteningPersonAttributeDao getAbstractFlatteningPersonAttributeDao();
 
-
+    @Test
     public void testFlattenMap() throws Exception {
         final Map<String, List<Object>> backingMap = new HashMap<>();
         backingMap.put("name", Util.list("edalquist"));

@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,9 +18,9 @@
  */
 package org.apereo.services.persondir.support;
 
-import junit.framework.TestCase;
 import org.apereo.services.persondir.util.CollectionsUtil;
 import org.apereo.services.persondir.util.Util;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,25 +32,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * JUnit testcase for MultivaluedPersonAttributeUtils.
 
  */
-public class MultivaluedPersonAttributeUtilsTest extends TestCase {
+public class MultivaluedPersonAttributeUtilsTest {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
 
     /**
      * Test that an attempt to parse a null Map results in an empty Map.
      */
+    @Test
     public void testParseNullMapping() {
         var emptyMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(null);
         assertEquals(Collections.EMPTY_MAP.size(), emptyMap.size());
@@ -60,6 +54,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that an attempt to parse a Map with a null key results in
      * IllegalArgumentException.
      */
+    @Test
     public void testNullKeyMapping() {
         final Map<String, String> nullKeyMap = new HashMap<>();
         nullKeyMap.put("A", "B");
@@ -78,6 +73,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that an attempt to parse a Map with a null value results in
      * IllegalArgumentException.
      */
+    @Test
     public void testNullValueMapping() {
         final Map<String, String> nullKeyMap = new HashMap<>();
         nullKeyMap.put("A", "B");
@@ -96,6 +92,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that an attempt to parse a Map containing as a value a Set containing
      * something other than a String fails with an IllegalArgumentException.
      */
+    @Test
     public void testNonStringContentsInValueSet() {
         final Map<String, Object> nullKeyMap = new HashMap<>();
         nullKeyMap.put("A", "B");
@@ -118,6 +115,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     /**
      * Test a mapping for which no change is required.
      */
+    @Test
     public void testSimpleMapping() {
         final Map<String, Object> simpleMapping = new HashMap<>();
         simpleMapping.put("displayName", Collections.singleton("display_name"));
@@ -136,13 +134,14 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
         var returnedMap = MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(simpleMapping);
         returnedMap.put("foo", Collections.singleton("bar"));
         assertTrue(MultivaluedPersonAttributeUtils.parseAttributeToAttributeMapping(simpleMapping).size() !=
-                returnedMap.size());
+                   returnedMap.size());
 
     }
 
     /**
      * Test parsing a more complex mapping in which Sets need to be created.
      */
+    @Test
     public void testComplexMapping() {
         final Map<String, Object> testMap = new HashMap<>();
         final Map<String, Set<String>> expectedResult = new HashMap<>();
@@ -172,6 +171,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     /**
      * Test that attempting to add a result to a null map yields IllegalArgumentException.
      */
+    @Test
     public void testAddResultToNullMap() {
         try {
             MultivaluedPersonAttributeUtils.addResult(null, "key", "value");
@@ -185,6 +185,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     /**
      * Test that attempting to add a result with a null key yields IllegalArgumentException.
      */
+    @Test
     public void testAddResultNullKey() {
         try {
             MultivaluedPersonAttributeUtils.addResult(new HashMap<String, List<String>>(), null, "value");
@@ -198,6 +199,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     /**
      * Test that attempting to add a result with a null value yields no change.
      */
+    @Test
     public void testAddResultNullValue() {
         final Map<String, List<String>> immutableMap = CollectionsUtil.safelyWrapAsUnmodifiableMap(new HashMap<>());
         MultivaluedPersonAttributeUtils.addResult(immutableMap, "key", null);
@@ -206,6 +208,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     /**
      * Test a simple non-colliding add.
      */
+    @Test
     public void testSimpleAdd() {
         final Map<String, List<String>> testMap = new HashMap<>();
         final Map<String, List<String>> expectedResult = new HashMap<>();
@@ -221,6 +224,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that adding a second value for a given attribute converts that
      * attribute value to a List.
      */
+    @Test
     public void testCollidingAdd() {
         final Map<String, List<String>> testMap = new HashMap<>();
 
@@ -260,6 +264,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     /**
      * Test adding a List where the current attribute value is not a List.
      */
+    @Test
     public void testAddListToNonList() {
 
         final Map<String, List<Object>> testMap = new HashMap<>();
@@ -286,6 +291,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
     /**
      * Test adding a non-List to an attribute that is currently a List.
      */
+    @Test
     public void testAddStringToList() {
         final Map<String, List<Object>> testMap = new HashMap<>();
         final Map<String, List<Object>> expectedMap = new HashMap<>();
@@ -322,6 +328,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test that attempting to flatten a null Collection yields
      * IllegalArgumentException.
      */
+    @Test
     public void testFlattenNullCollection() {
         try {
             MultivaluedPersonAttributeUtils.flattenCollection(null);
@@ -336,6 +343,7 @@ public class MultivaluedPersonAttributeUtilsTest extends TestCase {
      * Test flattening a Collection containing collections (and collections of collections).
      *
      */
+    @Test
     public void testFlattenCollection() {
         final Set<Object> setOfSets = new HashSet<>();
         final Set<Object> setOfLists = new HashSet<>();

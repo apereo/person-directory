@@ -6,9 +6,9 @@
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,13 +18,17 @@
  */
 package org.apereo.services.persondir.util;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * @author Eric Dalquist
 
  */
-public class PatternHelperTest extends TestCase {
+public class PatternHelperTest {
+    @Test
     public void testCompilePattern() {
         var pattern1 = PatternHelper.compilePattern("*f.oo*ba.r*");
         assertEquals(".*\\Qf.oo\\E.*\\Qba.r\\E.*", pattern1.pattern());

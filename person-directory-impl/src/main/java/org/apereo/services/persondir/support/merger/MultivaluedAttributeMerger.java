@@ -21,14 +21,11 @@ package org.apereo.services.persondir.support.merger;
 import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 
 /**
