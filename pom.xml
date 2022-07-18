@@ -59,6 +59,7 @@
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <jaxb-impl.version>3.0.2</jaxb-impl.version>
         <junit.version>4.13.2</junit.version>
+        <servlet-api.version>4.0.1</servlet-api.version>
         <log4j.version>2.17.2</log4j.version>
         <slf4j.version>1.7.36</slf4j.version>
         <okhttp3.version>4.9.3</okhttp3.version>
@@ -181,6 +182,11 @@
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -453,13 +459,13 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.apache.groovy</groupId>
+                <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy</artifactId>
                 <version>${groovy.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.apache.groovy</groupId>
+                <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-jsr223</artifactId>
                 <version>${groovy.version}</version>
                 <scope>compile</scope>

@@ -96,9 +96,9 @@ public class ScriptEnginePersonAttributeDaoTest extends AbstractPersonAttributeD
         // test with classpath resource
         var scriptEngineName = ScriptEnginePersonAttributeDao.getScriptEngineName("SampleScriptedJavascriptPersonAttributeDao.js");
         
-        assertTrue(scriptEngineName.equalsIgnoreCase("nashorn") || scriptEngineName.equalsIgnoreCase("Graal.js"));
+        assertTrue("Script Engine: " + scriptEngineName, scriptEngineName.equalsIgnoreCase("nashorn") || scriptEngineName.equalsIgnoreCase("Graal.js") || scriptEngineName.equalsIgnoreCase("js"));
         var engineName2 = ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedJavascriptPersonAttributeDao.js");
-        assertTrue(engineName2.equalsIgnoreCase("nashorn") || scriptEngineName.equalsIgnoreCase("Graal.js"));
+        assertTrue("Script Engine: " + engineName2, engineName2.equalsIgnoreCase("nashorn") || engineName2.equalsIgnoreCase("Graal.js") || engineName2.equalsIgnoreCase("js"));
         assertEquals("groovy", ScriptEnginePersonAttributeDao.getScriptEngineName("src/test/resources/SampleScriptedGroovyPersonAttributeDao.groovy"));
         // note jython not in classpath so null is expected return value, also test.py file doesn't exist
         assertNull(ScriptEnginePersonAttributeDao.getScriptEngineName("test.py") );
