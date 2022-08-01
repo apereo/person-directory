@@ -22,6 +22,7 @@ import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributeScriptDao;
 import org.apereo.services.persondir.IPersonAttributes;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -158,6 +159,11 @@ public class GroovyPersonAttributeDao extends AbstractDefaultAttributePersonAttr
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> attributes,
                                                                      final IPersonAttributeDaoFilter filter) {
+        if (filter != null && !filter.choosePersonAttributeDao(this)) {
+            logger.debug("Filtering out groovy dao with id: {}", StringUtils.arrayToCommaDelimitedString(getId()));
+            return null;
+        }
+
         logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters {}",
                 attributes);
 
