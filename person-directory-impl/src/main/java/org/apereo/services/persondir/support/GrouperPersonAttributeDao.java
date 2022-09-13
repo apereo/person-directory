@@ -58,6 +58,16 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
 
     private GrouperSubjectType subjectType = GrouperSubjectType.SUBJECT_ID;
 
+    private GroupAttributeValueType groupAttributeValueType = GroupAttributeValueType.NAME;
+
+    public GroupAttributeValueType getGroupAttributeValueType() {
+        return groupAttributeValueType;
+    }
+
+    public void setGroupAttributeValueType(final GroupAttributeValueType groupAttributeValueType) {
+        this.groupAttributeValueType = groupAttributeValueType;
+    }
+
     public IUsernameAttributeProvider getUsernameAttributeProvider() {
         return usernameAttributeProvider;
     }
@@ -142,10 +152,37 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
 
     protected List<Object> retrieveAttributesFromGrouper(final GcGetGroups groupsClient) {
         var groupsList = new ArrayList<>();
-        for (final WsGetGroupsResult groupsResult : groupsClient.execute().getResults()) {
-            for (final WsGroup group : groupsResult.getWsGroups()) {
-                groupsList.add(group.getName());
+        try {
+            for (final WsGetGroupsResult groupsResult : groupsClient.execute().getResults()) {
+                var wsGroups = groupsResult.getWsGroups();
+                if (wsGroups != null) {
+                    for (final WsGroup group : wsGroups) {
+                        switch (groupAttributeValueType) {
+                            case NAME:
+                                groupsList.add(group.getName());
+                                break;
+                            case EXTENSION:
+                                groupsList.add(group.getExtension());
+                                break;
+                            case DISPLAY_EXTENSION:
+                                groupsList.add(group.getDisplayExtension());
+                                break;
+                            case DISPLAY_NAME:
+                                groupsList.add(group.getDisplayName());
+                                break;
+                            case UUID:
+                                groupsList.add(group.getUuid());
+                                break;
+                            case ALTERNATE_NAME:
+                                groupsList.add(group.getAlternateName());
+                                break;
+                        }
+                    }
+                }
             }
+            return groupsList;
+        } catch (final Exception e) {
+            logger.error(e.getMessage(), e);
         }
         return groupsList;
     }
@@ -154,6 +191,14 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
         return new GcGetGroups();
     }
 
+    public enum GroupAttributeValueType {
+        DISPLAY_EXTENSION,
+        DISPLAY_NAME,
+        UUID,
+        ALTERNATE_NAME,
+        NAME,
+        EXTENSION,
+    }
     public enum GrouperSubjectType {
         SUBJECT_ID,
         SUBJECT_IDENTIFIER,
