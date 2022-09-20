@@ -65,7 +65,7 @@
         <easymock.version>4.3</easymock.version>
         <hsqldb.version>1.8.0.10</hsqldb.version>
         <postgresql.version>42.5.0</postgresql.version>
-        <junit.version>5.9.0</junit.version>
+        <junit.version>5.9.1</junit.version>
         <log4j.version>2.19.0</log4j.version>
         <slf4j.version>2.0.1</slf4j.version>
         <okhttp3.version>4.10.0</okhttp3.version>
