@@ -62,7 +62,7 @@
     <properties>
         <!-- Project Dependency Versions -->
         <commons-lang.version>3.12.0</commons-lang.version>
-        <easymock.version>5.0.0</easymock.version>
+        <easymock.version>5.0.1</easymock.version>
         <hsqldb.version>1.8.0.10</hsqldb.version>
         <postgresql.version>42.5.0</postgresql.version>
         <junit.version>5.9.1</junit.version>
