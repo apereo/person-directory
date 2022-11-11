@@ -214,7 +214,7 @@ public final class MultivaluedPersonAttributeUtils {
 
         for (final Map.Entry<String, ?> stringObjectEntry : personAttributesMap.entrySet()) {
             var value = stringObjectEntry.getValue();
-            if (value instanceof List) {
+            if (value instanceof List list && !list.isEmpty()) {
                 personAttributes.put(stringObjectEntry.getKey(), (List<Object>) value);
             } else {
                 personAttributes.put(stringObjectEntry.getKey(), new ArrayList<>(Arrays.asList(value)));
