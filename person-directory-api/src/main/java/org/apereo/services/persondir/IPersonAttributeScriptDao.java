@@ -20,6 +20,7 @@ package org.apereo.services.persondir;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Simplified DAO interface for use by Groovy scripts that provide user attributes.
@@ -37,8 +38,11 @@ public interface IPersonAttributeScriptDao {
 
     /**
      * Given a set of attributes, return additional attributes to add to the user's attributes.
-     * @param attributes Map of attributes to query on
+     *
+     * @param attributes   Map of attributes to query on
+     * @param resultPeople the result people
      * @return A {@link Map} of attributes that match the query {@link Map}. If no matches are found an empty {@link Map} is returned. If the query could not be run null is returned.
      */
-    Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes);
+    Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes,
+                                                                           Set<IPersonAttributes> resultPeople);
 }

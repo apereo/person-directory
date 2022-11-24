@@ -141,7 +141,6 @@ public class GroovyPersonAttributeDao extends AbstractDefaultAttributePersonAttr
         }
 
         logger.debug("Executing groovy script's getAttributesForUser method");
-
         var personAttributesMap = groovyObject.getAttributesForUser(Objects.requireNonNull(uid));
         if (personAttributesMap != null) {
             logger.debug("Creating person attributes with the username {} and attributes {}", uid, personAttributesMap);
@@ -160,11 +159,8 @@ public class GroovyPersonAttributeDao extends AbstractDefaultAttributePersonAttr
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> attributes,
                                                                      final IPersonAttributeDaoFilter filter,
                                                                      final Set<IPersonAttributes> resultPeople) {
-        logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters {}",
-                attributes);
-
-        var personAttributesMap =
-                groovyObject.getPersonAttributesFromMultivaluedAttributes(attributes);
+        logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters {}", attributes);
+        var personAttributesMap = groovyObject.getPersonAttributesFromMultivaluedAttributes(attributes, resultPeople);
 
         if (personAttributesMap != null) {
             logger.debug("Creating person attributes: {}", personAttributesMap);

@@ -19,9 +19,11 @@
 package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.IPersonAttributeScriptDao;
+import org.apereo.services.persondir.IPersonAttributes;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Base implementation that allows Groovy script implementations to extend this class and only implement the methods
@@ -40,7 +42,8 @@ public abstract class BaseGroovyScriptDaoImpl implements IPersonAttributeScriptD
 
     /* Javadoc inherited. See interface. */
     @Override
-    public Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(final Map<String, List<Object>> attributes) {
+    public Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(final Map<String, List<Object>> attributes,
+                                                                                  final Set<IPersonAttributes> resultPeople) {
         throw new UnsupportedOperationException();
     }
 }
