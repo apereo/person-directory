@@ -21,6 +21,7 @@ package org.apereo.services.persondir.support;
 import org.apereo.services.persondir.IPersonAttributeScriptDao;
 import org.apereo.services.persondir.IPersonAttributes;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +45,10 @@ public abstract class BaseGroovyScriptDaoImpl implements IPersonAttributeScriptD
     @Override
     public Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(final Map<String, List<Object>> attributes,
                                                                                   final Set<IPersonAttributes> resultPeople) {
-        throw new UnsupportedOperationException();
+        return new HashMap<>();
+    }
+
+    public Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(final Map<String, List<Object>> attributes) {
+        return getPersonAttributesFromMultivaluedAttributes(attributes, Set.of());
     }
 }

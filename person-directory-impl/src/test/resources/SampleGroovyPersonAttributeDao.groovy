@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.apereo.services.persondir.IPersonAttributes
 import org.apereo.services.persondir.support.BaseGroovyScriptDaoImpl
 
 /**
@@ -46,7 +48,8 @@ class SampleGroovyPersonAttributeDao extends BaseGroovyScriptDaoImpl {
     }
 
     @Override
-    Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes) {
+    Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes,
+                                                                           Set<IPersonAttributes> resultPeople) {
         Map<String, List<Object>> newMap = new HashMap<>(attributes)
         newMap.put("foo", Arrays.asList(["value1", "value2"]))
         return newMap

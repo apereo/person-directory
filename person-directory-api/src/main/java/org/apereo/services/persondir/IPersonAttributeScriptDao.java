@@ -45,4 +45,8 @@ public interface IPersonAttributeScriptDao {
      */
     Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes,
                                                                            Set<IPersonAttributes> resultPeople);
+
+    default Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes) {
+        return getPersonAttributesFromMultivaluedAttributes(attributes, Set.of());
+    }
 }

@@ -17,6 +17,7 @@
  * under the License.
  */
 import org.apereo.services.persondir.IPersonAttributeScriptDao
+import org.apereo.services.persondir.IPersonAttributes
 
 /**
  * Licensed to Jasig under one or more contributor license
@@ -44,7 +45,8 @@ class SampleGroovyPersonAttributeDaoForTestingUpdates implements IPersonAttribut
     }
 
     @Override
-    Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes) {
+    Map<String, List<Object>> getPersonAttributesFromMultivaluedAttributes(Map<String, List<Object>> attributes,
+                                                                           Set<IPersonAttributes> resultPeople) {
         return null
     }
 
