@@ -4,12 +4,12 @@
     <parent>
         <groupId>org.apereo.service.persondir</groupId>
         <artifactId>person-directory-parent</artifactId>
-        <version>3.0.1</version>
+        <version>3.0.2-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>person-directory-api</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Person Directory API</name>
