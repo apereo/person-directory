@@ -117,8 +117,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        var attribs = impl.getPerson("awp9",
-            IPersonAttributeDaoFilter.alwaysChoose());
+        var attribs = impl.getPerson("awp9");
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.getAttributes().get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.getAttributes().get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.getAttributes().get("dressShirtColor"));
@@ -175,7 +174,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("awp9").getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -199,7 +198,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("email", "emailAddress");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("awp9").getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("Andrew"), attribs.get("firstName"));
     }
@@ -224,7 +223,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("shirt_color", null);
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("awp9").getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.get("shirt_color"));
@@ -265,7 +264,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         columnsToAttributes.put("shirt_color", "dressShirtColor");
         impl.setResultAttributeMapping(columnsToAttributes);
 
-        var attribs = impl.getPerson("susan", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("susan").getAttributes();
         assertNull(attribs.get("dressShirtColor"));
         assertEquals(Util.list("Susan"), attribs.get("firstName"));
     }
@@ -298,7 +297,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         queryMap.put("shirtColor", Util.list("blue"));
         queryMap.put("Name", Util.list("John"));
 
-        var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap);
         assertNotNull(attribsSet);
         var attribs = attribsSet.iterator().next();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.getAttributes().get("email"));
@@ -333,7 +332,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("Name", Util.list("John"));
 
-        var attribs = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var attribs = impl.getPeopleWithMultivaluedAttributes(queryMap);
         assertNull(attribs);
     }
 
@@ -360,7 +359,7 @@ public class SingleRowJdbcPersonAttributeDaoTest
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put("shirt", Util.list("blue"));
 
-        var results = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var results = impl.getPeopleWithMultivaluedAttributes(queryMap);
         if (results.size() > 1) {
             return;
         }

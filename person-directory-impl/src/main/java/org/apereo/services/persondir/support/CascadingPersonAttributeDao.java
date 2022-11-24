@@ -96,9 +96,12 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
      * @see AbstractAggregatingDefaultQueryPersonAttributeDao#getAttributesFromDao(java.util.Map, boolean, IPersonAttributeDao, java.util.Set, IPersonAttributeDaoFilter)
      */
     @Override
-    protected Set<IPersonAttributes> getAttributesFromDao(final Map<String, List<Object>> seed, final boolean isFirstQuery, final IPersonAttributeDao currentlyConsidering, final Set<IPersonAttributes> resultPeople, final IPersonAttributeDaoFilter filter) {
+    protected Set<IPersonAttributes> getAttributesFromDao(final Map<String, List<Object>> seed, final boolean isFirstQuery,
+                                                          final IPersonAttributeDao currentlyConsidering,
+                                                          final Set<IPersonAttributes> resultPeople,
+                                                          final IPersonAttributeDaoFilter filter) {
         if (isFirstQuery || (!stopIfFirstDaoReturnsNull && (resultPeople == null || resultPeople.size() == 0))) {
-            return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed, filter);
+            return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed, filter, resultPeople);
         } else if (stopIfFirstDaoReturnsNull && !isFirstQuery && (resultPeople == null || resultPeople.size() == 0)) {
             return null;
         }
@@ -122,7 +125,7 @@ public class CascadingPersonAttributeDao extends AbstractAggregatingDefaultQuery
                 queryAttributes.putAll(seed);
             }
             
-            var newResults = currentlyConsidering.getPeopleWithMultivaluedAttributes(queryAttributes, filter);
+            var newResults = currentlyConsidering.getPeopleWithMultivaluedAttributes(queryAttributes, filter, resultPeople);
             if (newResults != null) {
                 if (mergedPeopleResults == null) {
                     //If this is the first valid result set just use it.

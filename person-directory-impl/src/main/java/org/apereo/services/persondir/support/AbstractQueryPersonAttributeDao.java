@@ -226,13 +226,11 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
     public void setUnmappedUsernameAttribute(final String userNameAttribute) {
         this.unmappedUsernameAttribute = userNameAttribute;
     }
-
-    /* (non-Javadoc)
-     * @see org.jasig.services.persondir.IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map)
-     */
+    
     @Override
     public final Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
-                                                                           final IPersonAttributeDaoFilter filter) {
+                                                                           final IPersonAttributeDaoFilter filter,
+                                                                           final Set<IPersonAttributes> resultPeople) {
         Validate.notNull(query, "query may not be null.");
 
         //Generate the query to pass to the subclass

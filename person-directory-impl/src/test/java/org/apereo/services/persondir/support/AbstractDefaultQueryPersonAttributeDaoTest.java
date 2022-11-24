@@ -67,7 +67,7 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
         final Map<String, List<Object>> expected = new HashMap<>();
         expected.put("TestAttrName", Util.list("edalquist"));
 
-        assertEquals(expected, dao.getPerson("edalquist", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes());
+        assertEquals(expected, dao.getPerson("edalquist").getAttributes());
     }
 
     private static class SimpleDefaultQueryPersonAttributeDao extends AbstractDefaultAttributePersonAttributeDao {
@@ -92,8 +92,9 @@ public abstract class AbstractDefaultQueryPersonAttributeDaoTest extends Abstrac
          */
         @Override
         public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
-                                                                         final IPersonAttributeDaoFilter filter) {
-            return Collections.singleton((IPersonAttributes) new AttributeNamedPersonImpl(query));
+                                                                         final IPersonAttributeDaoFilter filter,
+                                                                         final Set<IPersonAttributes> resultPeople) {
+            return Collections.singleton(new AttributeNamedPersonImpl(query));
         }
     }
 }

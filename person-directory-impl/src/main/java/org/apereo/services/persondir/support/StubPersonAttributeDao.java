@@ -84,7 +84,8 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
 
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
-                                                                     final IPersonAttributeDaoFilter filter) {
+                                                                     final IPersonAttributeDaoFilter filter,
+                                                                     final Set<IPersonAttributes> resultPeople) {
         if (query == null) {
             throw new IllegalArgumentException("Illegal to invoke getPeople(Map) with a null argument.");
         }
@@ -100,6 +101,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
      */
     @Override
     public IPersonAttributes getPerson(final String uid,
+                                       final Set<IPersonAttributes> resultPeople,
                                        final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;

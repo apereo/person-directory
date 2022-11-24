@@ -137,7 +137,7 @@ public class MergingPersonAttributeDaoImplTest
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
 
-        var result = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var result = impl.getPeopleWithMultivaluedAttributes(queryMap);
         assertEquals(this.oneAndTwo, result.iterator().next().getAttributes());
     }
 
@@ -177,7 +177,7 @@ public class MergingPersonAttributeDaoImplTest
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
 
-        var result = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var result = impl.getPeopleWithMultivaluedAttributes(queryMap);
         assertEquals(this.oneAndTwoAndThree, result.iterator().next().getAttributes());
     }
 
@@ -228,7 +228,7 @@ public class MergingPersonAttributeDaoImplTest
             final Map<String, List<Object>> queryMap = new HashMap<>();
             queryMap.put(queryAttr, Util.list("awp9"));
 
-            impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+            impl.getPeopleWithMultivaluedAttributes(queryMap);
         } catch (final RuntimeException rte) {
             // good, was propogated
             return;
@@ -254,7 +254,7 @@ public class MergingPersonAttributeDaoImplTest
         final Map<String, List<Object>> queryMap = new HashMap<>();
         queryMap.put(queryAttr, Util.list("awp9"));
 
-        var result = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var result = impl.getPeopleWithMultivaluedAttributes(queryMap);
         assertEquals(this.oneAndTwo, result.iterator().next().getAttributes());
     }
 
@@ -265,7 +265,7 @@ public class MergingPersonAttributeDaoImplTest
         queryMap.put(queryAttr, Util.list("awp9"));
 
         try {
-            impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+            impl.getPeopleWithMultivaluedAttributes(queryMap);
             fail("IllegalStateException should have been thrown");
         } catch (final IllegalStateException ise) {
         }
@@ -320,7 +320,7 @@ public class MergingPersonAttributeDaoImplTest
         var impl = new MergingPersonAttributeDaoImpl();
         impl.setPersonAttributeDaos(attributeSources);
 
-        var layoutOwners = impl.getPeople(Collections.singletonMap("username", (Object) "lo-*"), IPersonAttributeDaoFilter.alwaysChoose());
+        var layoutOwners = impl.getPeople(Collections.singletonMap("username", (Object) "lo-*"));
 
         final Set<IPersonAttributes> excepectedLayoutOwners = new HashSet<>();
         excepectedLayoutOwners.add(new NamedPersonImpl("lo-welcome", loWelcomeAttrs));
@@ -329,7 +329,7 @@ public class MergingPersonAttributeDaoImplTest
         assertEquals(excepectedLayoutOwners, layoutOwners);
 
 
-        var homeUsers = impl.getPeople(Collections.singletonMap("username", (Object) "*home"), IPersonAttributeDaoFilter.alwaysChoose());
+        var homeUsers = impl.getPeople(Collections.singletonMap("username", (Object) "*home"));
 
         final Set<IPersonAttributes> excepectedHomeUsers = new HashSet<>();
         excepectedHomeUsers.add(new NamedPersonImpl("jshome", jshomeAttrs));

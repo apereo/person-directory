@@ -19,46 +19,15 @@
 package org.apereo.services.persondir.support;
 
 import org.apache.commons.lang3.Validate;
-import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
-/**
- * Abstract class implementing the IPersonAttributeDao method  {@link IPersonAttributeDao#getPerson(String, IPersonAttributeDaoFilter)}
- * by delegation to {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map, IPersonAttributeDaoFilter)} using a configurable
- * default attribute name. If {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map, IPersonAttributeDaoFilter)} returnes
- * more than one {@link IPersonAttributes} is returned {@link org.springframework.dao.IncorrectResultSizeDataAccessException} is thrown.
- *
- * <br>
- * <br>
- * Configuration:
- * <table border="1">
- *     <tr>
- *         <th>Property</th>
- *         <th>Description</th>
- *         <th>Required</th>
- *         <th>Default</th>
- *     </tr>
- *     <tr>
- *         <td  valign="top">usernameAttributeProvider</td>
- *         <td>
- *             The provider used to determine the username attribute to use when no attribute is specified in the query. This
- *             is primarily used for calls to {@link #getPerson(String, IPersonAttributeDaoFilter)}.
- *         </td>
- *         <td valign="top">No</td>
- *         <td valign="top">{@link SimpleUsernameAttributeProvider}</td>
- *     </tr>
- * </table>
- *
- * @author Eric Dalquist
-
- * @since uPortal 2.5
- */
 public abstract class AbstractDefaultAttributePersonAttributeDao extends AbstractFlatteningPersonAttributeDao {
     private IUsernameAttributeProvider usernameAttributeProvider = new SimpleUsernameAttributeProvider();
 
@@ -67,7 +36,7 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
     }
 
     @Override
-    public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
+    public IPersonAttributes getPerson(final String uid, final Set<IPersonAttributes> resultPeople, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;
         }
@@ -77,7 +46,7 @@ public abstract class AbstractDefaultAttributePersonAttributeDao extends Abstrac
         var seed = this.toSeedMap(uid);
 
         //Run the query using the seed
-        var people = this.getPeopleWithMultivaluedAttributes(seed, filter);
+        var people = this.getPeopleWithMultivaluedAttributes(seed, filter, resultPeople);
 
         //Ensure a single result is returned
         var person = getSinglePerson(people);

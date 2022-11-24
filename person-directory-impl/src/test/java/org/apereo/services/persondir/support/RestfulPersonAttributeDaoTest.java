@@ -3,7 +3,6 @@ package org.apereo.services.persondir.support;
 import com.sun.net.httpserver.HttpServer;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
-import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +43,7 @@ public class RestfulPersonAttributeDaoTest extends AbstractPersonAttributeDaoTes
     public void testGetAttributes() {
         this.dao.setUrl("http://localhost:8080/test");
         this.dao.setMethod(HttpMethod.GET.name());
-        var person = this.dao.getPerson("something", IPersonAttributeDaoFilter.alwaysChoose());
+        var person = this.dao.getPerson("something");
         assertEquals(person.getName(), "something");
         assertEquals(person.getAttributes().size(), 2);
     }

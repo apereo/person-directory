@@ -54,16 +54,30 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao>, Or
      * <li>If an error occurs while find the person an appropriate exception will be thrown.</li>
      * </ul>
      *
-     * @param uid    The userName of the person to find.
-     * @param filter the filter
+     * @param uid          The userName of the person to find.
+     * @param resultPeople the result people
+     * @param filter       the filter
      * @return The populated {@link IPersonAttributes} for the specified uid, null if no person could be found for the uid.
      * @throws IllegalArgumentException If <code>uid</code> is <code>null.</code>
      */
     IPersonAttributes getPerson(String uid,
+                                Set<IPersonAttributes> resultPeople,
                                 IPersonAttributeDaoFilter filter);
 
     default IPersonAttributes getPerson(final String uid) {
-        return getPerson(uid, IPersonAttributeDaoFilter.alwaysChoose());
+        return getPerson(uid, Set.of(), IPersonAttributeDaoFilter.alwaysChoose());
+    }
+
+    /**
+     * Gets person.
+     *
+     * @param uid          the uid
+     * @param resultPeople the result people
+     * @return the person
+     */
+    default IPersonAttributes getPerson(final String uid,
+                                        final Set<IPersonAttributes> resultPeople) {
+        return getPerson(uid, resultPeople, IPersonAttributeDaoFilter.alwaysChoose());
     }
 
     /**
@@ -74,16 +88,27 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao>, Or
      * If the implementation can not execute its query for an expected reason such as not enough information in the
      * query {@link Map} null should be returned. For unexpected problems throw an exception.
      *
-     * @param query  A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
-     * @param filter the filter
+     * @param query        A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
+     * @param filter       the filter
+     * @param resultPeople the result people
      * @return A {@link Set} of {@link IPersonAttributes}s that match the query {@link Map}. If no matches are found an empty {@link Set} is returned. If the query could not be run null is returned.
      * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
     Set<IPersonAttributes> getPeople(Map<String, Object> query,
-                                     IPersonAttributeDaoFilter filter);
+                                     IPersonAttributeDaoFilter filter,
+                                     Set<IPersonAttributes> resultPeople);
 
     default Set<IPersonAttributes> getPeople(final Map<String, Object> query) {
-        return getPeople(query, IPersonAttributeDaoFilter.alwaysChoose());
+        return getPeople(query, IPersonAttributeDaoFilter.alwaysChoose(), Set.of());
+    }
+
+    default Set<IPersonAttributes> getPeople(final Map<String, Object> query, final IPersonAttributeDaoFilter filter) {
+        return getPeople(query, filter, Set.of());
+    }
+
+    default Set<IPersonAttributes> getPeople(final Map<String, Object> query,
+                                             final Set<IPersonAttributes> resultPeople) {
+        return getPeople(query, IPersonAttributeDaoFilter.alwaysChoose(), resultPeople);
     }
 
     /**
@@ -94,18 +119,30 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao>, Or
      * If the implementation can not execute its query for an expected reason such as not enough information in the
      * query {@link Map} null should be returned. For unexpected problems throw an exception.
      *
-     * @param query  A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
-     * @param filter the filter
+     * @param query        A {@link Map} of name/value pair attributes to use in searching for {@link IPersonAttributes}s
+     * @param filter       the filter
+     * @param resultPeople the result people from previous attempts, if any.
      * @return A {@link Set} of {@link IPersonAttributes}s that match the query {@link Map}. If no matches are found an empty {@link Set} is returned. If the query could not be run null is returned.
      * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
     default Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
-                                                                      final IPersonAttributeDaoFilter filter) {
+                                                                      final IPersonAttributeDaoFilter filter,
+                                                                      final Set<IPersonAttributes> resultPeople) {
         return new LinkedHashSet<>(0);
     }
 
+    default Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                      final IPersonAttributeDaoFilter filter) {
+        return getPeopleWithMultivaluedAttributes(query, filter, Set.of());
+    }
+
     default Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query) {
-        return getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose());
+        return getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose(), Set.of());
+    }
+
+    default Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+                                                                      final Set<IPersonAttributes> resultPeople) {
+        return getPeopleWithMultivaluedAttributes(query, IPersonAttributeDaoFilter.alwaysChoose(), resultPeople);
     }
 
     /**

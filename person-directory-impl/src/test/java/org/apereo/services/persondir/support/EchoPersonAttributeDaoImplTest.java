@@ -20,7 +20,6 @@ package org.apereo.services.persondir.support;
 
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
-import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.util.Util;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +50,7 @@ public class EchoPersonAttributeDaoImplTest extends AbstractPersonAttributeDaoTe
 
         final Map<String, Object> goalMap = new HashMap<>(testMap);
 
-        var resultSet = dao.getPeopleWithMultivaluedAttributes(testMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var resultSet = dao.getPeopleWithMultivaluedAttributes(testMap);
 
         assertEquals(goalMap, resultSet.iterator().next().getAttributes());
     }

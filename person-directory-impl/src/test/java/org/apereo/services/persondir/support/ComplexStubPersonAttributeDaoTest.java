@@ -101,13 +101,13 @@ public class ComplexStubPersonAttributeDaoTest
     public void testGetUserAttributesMap() {
         final Map<String, List<Object>> awp9Key = new HashMap<>();
         awp9Key.put("username", Util.list("awp9"));
-        var resultSet = this.testInstance.getPeopleWithMultivaluedAttributes(awp9Key, IPersonAttributeDaoFilter.alwaysChoose());
+        var resultSet = this.testInstance.getPeopleWithMultivaluedAttributes(awp9Key);
         assertEquals(this.backingMap.get("awp9"), resultSet.iterator().next().getAttributes());
 
         final Map<String, List<Object>> unknownUserKey = new HashMap<>();
         unknownUserKey.put("uid", Util.list("unknownUser"));
 
-        assertNull(this.testInstance.getPeopleWithMultivaluedAttributes(unknownUserKey, IPersonAttributeDaoFilter.alwaysChoose()));
+        assertNull(this.testInstance.getPeopleWithMultivaluedAttributes(unknownUserKey));
     }
 
     /**
@@ -115,11 +115,11 @@ public class ComplexStubPersonAttributeDaoTest
      */
     @Test
     public void testGetUserAttributesString() {
-        var result = this.testInstance.getPerson("aam26", IPersonAttributeDaoFilter.alwaysChoose());
+        var result = this.testInstance.getPerson("aam26");
         assertNotNull(result);
         assertEquals(this.backingMap.get("aam26"), result.getAttributes());
 
-        assertNull(this.testInstance.getPerson("unknownUser", IPersonAttributeDaoFilter.alwaysChoose()));
+        assertNull(this.testInstance.getPerson("unknownUser"));
     }
 
     @Override

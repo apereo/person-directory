@@ -21,7 +21,6 @@ package org.apereo.services.persondir.support;
 import groovy.lang.GroovyClassLoader;
 import org.apereo.services.persondir.AbstractPersonAttributeDaoTest;
 import org.apereo.services.persondir.IPersonAttributeDao;
-import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributeScriptDao;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.junit.jupiter.api.AfterEach;
@@ -60,7 +59,6 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
         try {
             var scriptFile = new ClassPathResource(filename);
             final Class<?> groovyClass = loader.parseClass(scriptFile.getFile());
-
             var groovyObject = (IPersonAttributeScriptDao) groovyClass.newInstance();
             return groovyObject;
         } catch (IOException e) {
@@ -87,7 +85,7 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
 
     @Test
     public void testGetPerson() {
-        var attrs = dao.getPerson("userid", IPersonAttributeDaoFilter.alwaysChoose());
+        var attrs = dao.getPerson("userid");
         assertFalse(attrs.getAttributes().isEmpty());
         assertEquals(getAttributeAsSingleValue(attrs, "name"), "userid");
         assertEquals(getAttributeAsList(attrs, "likes").size(), 2);
@@ -95,21 +93,21 @@ public class GroovyPersonAttributeDaoTest extends AbstractPersonAttributeDaoTest
 
     @Test
     public void testGetPeopleWithMultivaluedAttributes() {
-        var results = dao.getPeopleWithMultivaluedAttributes(items, IPersonAttributeDaoFilter.alwaysChoose());
+        var results = dao.getPeopleWithMultivaluedAttributes(items);
         assertEquals(items.size() + 1, results.iterator().next().getAttributes().size());
     }
 
     @Test
     public void testGetPersonNullResult() {
         var nullResponseDao = new GroovyPersonAttributeDao(loadGroovyClass("SampleGroovyPersonAttributeDaoForTestingUpdates.groovy"));
-        var attrs = nullResponseDao.getPerson("userid", IPersonAttributeDaoFilter.alwaysChoose());
+        var attrs = nullResponseDao.getPerson("userid");
         assertNull(attrs);
     }
 
     @Test
     public void testGetPeopleWithMultivaluedAttributesNullResult() {
         var nullResponseDao = new GroovyPersonAttributeDao(loadGroovyClass("SampleGroovyPersonAttributeDaoForTestingUpdates.groovy"));
-        var results = nullResponseDao.getPeopleWithMultivaluedAttributes(items, IPersonAttributeDaoFilter.alwaysChoose());
+        var results = nullResponseDao.getPeopleWithMultivaluedAttributes(items);
         assertNull(results);
     }
 

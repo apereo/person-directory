@@ -39,15 +39,6 @@ import java.util.Set;
 
 import static org.apache.commons.codec.digest.MessageDigestAlgorithms.*;
 
-/**
- * Generates a cache key using a hash of the {@link Method} being called and for
- * {@link IPersonAttributeDao#getPerson(String, org.apereo.services.persondir.IPersonAttributeDaoFilter)} and
- * {@link IPersonAttributeDao#getPeople(Map, IPersonAttributeDaoFilter)} (Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)} and
- * {@link IPersonAttributeDao#getPeopleWithMultivaluedAttributes(Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)} attributes from the seed {@link Map}
- * as specified by the <code>cacheKeyAttributes</code> {@link Set}
- *
- * @author Eric Dalquist
- */
 public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
 
     private static final Map<String, Object> POSSIBLE_USER_ATTRIBUTE_NAMES_SEED_MAP = Collections.singletonMap("getPossibleUserAttributeNames_seedMap", new Serializable() {
@@ -64,9 +55,9 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
      * Methods on {@link IPersonAttributeDao} that are cachable
      */
     public enum CachableMethod {
-        PERSON_STR("getPerson", String.class, IPersonAttributeDaoFilter.class),
+        PERSON_STR("getPerson", String.class),
         PEOPLE_MAP("getPeople", Map.class, IPersonAttributeDaoFilter.class),
-        PEOPLE_MULTIVALUED_MAP("getPeopleWithMultivaluedAttributes", Map.class, IPersonAttributeDaoFilter.class),
+        PEOPLE_MULTIVALUED_MAP("getPeopleWithMultivaluedAttributes", Map.class),
         POSSIBLE_USER_ATTRIBUTE_NAMES("getPossibleUserAttributeNames", IPersonAttributeDaoFilter.class),
         AVAILABLE_QUERY_ATTRIBUTES("getAvailableQueryAttributes", IPersonAttributeDaoFilter.class);
 

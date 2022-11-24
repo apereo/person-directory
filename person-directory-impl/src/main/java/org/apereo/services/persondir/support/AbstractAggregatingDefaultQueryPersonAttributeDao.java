@@ -128,20 +128,14 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
         return ids.toArray(new String[]{});
     }
 
-    /**
-     * Iterates through the configured {@link java.util.List} of {@link IPersonAttributeDao}
-     * instances. The results from each DAO are merged into the result {@link Map}
-     * by the configured {@link IAttributeMerger}.
-     *
-     * @see IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map, IPersonAttributeDaoFilter)
-     */
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
-                                                                     final IPersonAttributeDaoFilter filter) {
+                                                                     final IPersonAttributeDaoFilter filter,
+                                                                     final Set<IPersonAttributes> resultPeople) {
         Validate.notNull(query, "query may not be null.");
 
         //Initialize null, so that if none of the sub-DAOs find any people null is returned appropriately
-        Set<IPersonAttributes> resultPeople = null;
+        Set<IPersonAttributes> results = null;
 
         //Denotes that this is the first time we are running a query and the original seed should be used
         var isFirstQuery = true;
@@ -159,25 +153,25 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             var handledException = false;
             Set<IPersonAttributes> currentPeople = null;
             try {
-                currentPeople = this.getAttributesFromDao(query, isFirstQuery, currentlyConsidering, resultPeople, filter);
+                currentPeople = this.getAttributesFromDao(query, isFirstQuery, currentlyConsidering, results, filter);
                 isFirstQuery = false;
 
                 if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Retrieved attributes='" + currentPeople + "' for query='"
                                       + query + "', isFirstQuery=" + isFirstQuery + ", currentlyConsidering='"
-                                      + currentlyConsidering + "', resultAttributes='" + resultPeople + "'");
+                                      + currentlyConsidering + "', resultAttributes='" + results + "'");
                 }
             } catch (final RuntimeException rte) {
                 handledException |= handleRuntimeException(currentlyConsidering, rte);
             }
 
             if (currentPeople != null) {
-                if (resultPeople == null) {
+                if (results == null) {
                     //If this is the first valid result set just use it.
-                    resultPeople = new LinkedHashSet<>(currentPeople);
+                    results = new LinkedHashSet<>(currentPeople);
                 } else {
                     //Merge the Sets of IPersons
-                    resultPeople = this.attrMerger.mergeResults(resultPeople, currentPeople);
+                    results = this.attrMerger.mergeResults(results, currentPeople);
                 }
             } else if (this.requireAll) {
                 this.logger.debug("Attribute repository dao {} did not resolve a person "
@@ -196,15 +190,15 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDao extends 
             }
         }
 
-        if (resultPeople == null) {
+        if (results == null) {
             return null;
         }
 
         if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Aggregated search results '" + resultPeople + "' for query='" + query + "'");
+            this.logger.debug("Aggregated search results '" + results + "' for query='" + query + "'");
         }
 
-        return CollectionsUtil.safelyWrapAsUnmodifiableSet(resultPeople);
+        return CollectionsUtil.safelyWrapAsUnmodifiableSet(results);
     }
 
     /**

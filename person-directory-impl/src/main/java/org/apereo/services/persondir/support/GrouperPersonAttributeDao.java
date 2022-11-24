@@ -93,7 +93,7 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public IPersonAttributes getPerson(final String subjectId, final IPersonAttributeDaoFilter filter) {
+    public IPersonAttributes getPerson(final String subjectId, final Set<IPersonAttributes> resultPeople, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;
         }
@@ -101,16 +101,9 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
 
         var groupsClient = getGroupsClient();
         switch (this.subjectType) {
-            case SUBJECT_IDENTIFIER:
-                groupsClient.addSubjectIdentifier(subjectId);
-                break;
-            case SUBJECT_ATTRIBUTE_NAME:
-                groupsClient.addSubjectAttributeName(subjectId);
-                break;
-            case SUBJECT_ID:
-            default:
-                groupsClient.addSubjectId(subjectId);
-                break;
+            case SUBJECT_IDENTIFIER -> groupsClient.addSubjectIdentifier(subjectId);
+            case SUBJECT_ATTRIBUTE_NAME -> groupsClient.addSubjectAttributeName(subjectId);
+            case SUBJECT_ID -> groupsClient.addSubjectId(subjectId);
         }
 
         parameters.forEach(groupsClient::addParam);
@@ -134,16 +127,18 @@ public class GrouperPersonAttributeDao extends BasePersonAttributeDao {
 
     @Override
     public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
-                                            final IPersonAttributeDaoFilter filter) {
-        return getPeopleWithMultivaluedAttributes(MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(query, filter), filter);
+                                            final IPersonAttributeDaoFilter filter,
+                                            final Set<IPersonAttributes> resultPeople) {
+        return getPeopleWithMultivaluedAttributes(MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(query, filter), filter, resultPeople);
     }
 
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
-                                                                     final IPersonAttributeDaoFilter filter) {
+                                                                     final IPersonAttributeDaoFilter filter,
+                                                                     final Set<IPersonAttributes> resultPeople) {
         var people = new LinkedHashSet<IPersonAttributes>();
         var username = usernameAttributeProvider.getUsernameFromQuery(query);
-        var person = getPerson(username, filter);
+        var person = getPerson(username, resultPeople, filter);
         if (person != null) {
             people.add(person);
         }

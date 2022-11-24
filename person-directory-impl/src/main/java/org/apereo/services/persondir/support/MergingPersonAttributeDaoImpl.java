@@ -53,6 +53,6 @@ public class MergingPersonAttributeDaoImpl extends AbstractAggregatingDefaultQue
                                                           final IPersonAttributeDao currentlyConsidering,
                                                           final Set<IPersonAttributes> resultPeople,
                                                           final IPersonAttributeDaoFilter filter) {
-        return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed, filter);
+        return currentlyConsidering.getPeopleWithMultivaluedAttributes(seed, filter, resultPeople);
     }
 }

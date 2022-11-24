@@ -135,7 +135,7 @@ public class GroovyPersonAttributeDao extends AbstractDefaultAttributePersonAttr
     }
 
     @Override
-    public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
+    public IPersonAttributes getPerson(final String uid, final Set<IPersonAttributes> resultPeople, final IPersonAttributeDaoFilter filter) {
         if (!this.isEnabled()) {
             return null;
         }
@@ -158,7 +158,8 @@ public class GroovyPersonAttributeDao extends AbstractDefaultAttributePersonAttr
 
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> attributes,
-                                                                     final IPersonAttributeDaoFilter filter) {
+                                                                     final IPersonAttributeDaoFilter filter,
+                                                                     final Set<IPersonAttributes> resultPeople) {
         logger.debug("Executing groovy script's getPersonAttributesFromMultivaluedAttributes method, with parameters {}",
                 attributes);
 

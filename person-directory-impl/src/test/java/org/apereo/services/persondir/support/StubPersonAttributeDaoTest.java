@@ -80,8 +80,7 @@ public class StubPersonAttributeDaoTest
      */
     @Test
     public void testGetUserAttributesMap() {
-        var resultsSet = this.testInstance.getPeopleWithMultivaluedAttributes(new HashMap<>(),
-            IPersonAttributeDaoFilter.alwaysChoose());
+        var resultsSet = this.testInstance.getPeopleWithMultivaluedAttributes(new HashMap<>());
         assertEquals(this.backingMap, resultsSet.iterator().next().getAttributes());
 
     }
@@ -91,7 +90,7 @@ public class StubPersonAttributeDaoTest
      */
     @Test
     public void testGetUserAttributesString() {
-        assertEquals(this.backingMap, this.testInstance.getPerson("wombat", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes());
+        assertEquals(this.backingMap, this.testInstance.getPerson("wombat").getAttributes());
     }
 
     @Override

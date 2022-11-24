@@ -198,7 +198,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
 
-        var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("awp9").getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -259,7 +259,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
 
-        var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("awp9").getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.get("dressShirtColor"));
@@ -287,7 +287,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_nam", "attr_val"));
 
         try {
-            impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose());
+            impl.getPerson("awp9");
             fail("BadSqlGrammarException expected with invalid attribute mapping key");
         } catch (final BadSqlGrammarException bsge) {
             //expected
@@ -297,7 +297,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_va"));
 
         try {
-            impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose());
+            impl.getPerson("awp9");
             fail("BadSqlGrammarException expected with invalid attribute mapping key");
         } catch (final BadSqlGrammarException bsge) {
             //expected
@@ -327,7 +327,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-        var attribs = impl.getPerson("awp9", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("awp9").getAttributes();
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("email"));
         assertEquals(Util.list("andrew.petro@yale.edu"), attribs.get("emailAddress"));
         assertEquals(Util.list("blue"), attribs.get("shirt_color"));
@@ -374,7 +374,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
 
         impl.setNameValueColumnMappings(Collections.singletonMap("attr_name", "attr_val"));
 
-        var attribs = impl.getPerson("susan", IPersonAttributeDaoFilter.alwaysChoose()).getAttributes();
+        var attribs = impl.getPerson("susan").getAttributes();
         assertEquals(Collections.singletonList(null), attribs.get("dressShirtColor"));
         assertEquals(Util.list("Susan"), attribs.get("firstName"));
     }
@@ -406,7 +406,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         queryMap.put("shirtColor", Util.list("blue"));
         queryMap.put("Name", Util.list("John"));
 
-        var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap);
         assertEquals(Util.list("blue"), attribsSet.iterator().next().getAttributes().get("color"));
     }
 
@@ -442,7 +442,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
         queryMap.put("uid", Util.list("awp9"));
         queryMap.put("Name", Util.list("John"));
 
-        var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap, IPersonAttributeDaoFilter.alwaysChoose());
+        var attribsSet = impl.getPeopleWithMultivaluedAttributes(queryMap);
         assertNull(attribsSet);
     }
 

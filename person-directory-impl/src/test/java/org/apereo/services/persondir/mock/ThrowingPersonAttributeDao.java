@@ -39,20 +39,23 @@ public class ThrowingPersonAttributeDao extends BasePersonAttributeDao {
     
     @Override
     public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
-                                            final IPersonAttributeDaoFilter filter) {
+                                            final IPersonAttributeDaoFilter filter,
+                                            final Set<IPersonAttributes> resultPeople) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
 
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
-                                                                     final IPersonAttributeDaoFilter filter) {
+                                                                     final IPersonAttributeDaoFilter filter,
+                                                                     final Set<IPersonAttributes> resultPeople) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }
 
 
     @Override
     public IPersonAttributes getPerson(final String uid,
+                                       final Set<IPersonAttributes> resultPeople,
                                        final IPersonAttributeDaoFilter filter) {
         throw new RuntimeException("ThrowingPersonAttributeDao always throws");
     }

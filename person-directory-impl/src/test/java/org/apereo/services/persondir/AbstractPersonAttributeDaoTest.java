@@ -77,7 +77,7 @@ public abstract class AbstractPersonAttributeDaoTest {
         var dao = getPersonAttributeDaoInstance();
         final Map<String, List<Object>> nullMap = null;
         try {
-            dao.getPeopleWithMultivaluedAttributes(nullMap, IPersonAttributeDaoFilter.alwaysChoose());
+            dao.getPeopleWithMultivaluedAttributes(nullMap);
         } catch (final RuntimeException iae) {
             // good, as expected
             return;
@@ -115,7 +115,7 @@ public abstract class AbstractPersonAttributeDaoTest {
         var dao = getPersonAttributeDaoInstance();
         final String nullString = null;
         try {
-            dao.getPerson(nullString, IPersonAttributeDaoFilter.alwaysChoose());
+            dao.getPerson(nullString);
         } catch (final RuntimeException iae) {
             // good, as expected
             return;
@@ -133,7 +133,7 @@ public abstract class AbstractPersonAttributeDaoTest {
         var dao = getPersonAttributeDaoInstance();
         final String nullString = null;
         try {
-            dao.getPerson(nullString, IPersonAttributeDaoFilter.alwaysChoose());
+            dao.getPerson(nullString);
         } catch (final RuntimeException iae) {
             // good, as expected
             return;

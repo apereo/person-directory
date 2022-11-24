@@ -127,7 +127,8 @@ public class NamedParameterJdbcPersonAttributeDao extends AbstractDefaultAttribu
 
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> queryParameters,
-                                                                     final IPersonAttributeDaoFilter filter) {
+                                                                     final IPersonAttributeDaoFilter filter,
+                                                                     final Set<IPersonAttributes> resultPeople) {
         var username = usernameAttributeProvider.getUsernameFromQuery(queryParameters);
         var rslt = new RowCallbackHandlerImpl(username);
         jdbcTemplate.query(sql, new SqlParameterSourceImpl(queryParameters), rslt);

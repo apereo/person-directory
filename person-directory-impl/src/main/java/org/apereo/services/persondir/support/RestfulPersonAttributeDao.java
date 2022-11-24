@@ -115,7 +115,7 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
     }
 
     @Override
-    public IPersonAttributes getPerson(final String uid, final IPersonAttributeDaoFilter filter) {
+    public IPersonAttributes getPerson(final String uid, final Set<IPersonAttributes> resultPeople, final IPersonAttributeDaoFilter filter) {
         try {
             if (!this.isEnabled()) {
                 return null;
@@ -154,16 +154,18 @@ public class RestfulPersonAttributeDao extends BasePersonAttributeDao {
 
     @Override
     public Set<IPersonAttributes> getPeople(final Map<String, Object> query,
-                                            final IPersonAttributeDaoFilter filter) {
-        return getPeopleWithMultivaluedAttributes(MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(query, filter), filter);
+                                            final IPersonAttributeDaoFilter filter,
+                                            final Set<IPersonAttributes> resultPeople) {
+        return getPeopleWithMultivaluedAttributes(MultivaluedPersonAttributeUtils.stuffAttributesIntoListValues(query, filter), filter, resultPeople);
     }
 
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
-                                                                     final IPersonAttributeDaoFilter filter) {
+                                                                     final IPersonAttributeDaoFilter filter,
+                                                                     final Set<IPersonAttributes> resultPeople) {
         var people = new LinkedHashSet<IPersonAttributes>();
         var username = usernameAttributeProvider.getUsernameFromQuery(query);
-        var person = getPerson(username, filter);
+        var person = getPerson(username, resultPeople, filter);
         if (person != null) {
             people.add(person);
         }

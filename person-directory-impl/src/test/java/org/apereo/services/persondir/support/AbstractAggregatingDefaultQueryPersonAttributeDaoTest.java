@@ -128,7 +128,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
         var resultNamesWithStop = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expectedNamesWithStop, resultNamesWithStop);
 
-        var personWithStop = dao.getPerson("test", IPersonAttributeDaoFilter.alwaysChoose());
+        var personWithStop = dao.getPerson("test");
         assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithStop);
 
         dao.setStopOnSuccess(false);
@@ -136,7 +136,7 @@ public abstract class AbstractAggregatingDefaultQueryPersonAttributeDaoTest exte
         var resultNamesWithoutStop = dao.getPossibleUserAttributeNames(IPersonAttributeDaoFilter.alwaysChoose());
         assertEquals(expectedNamesWithoutStop, resultNamesWithoutStop);
 
-        var personWithoutStop = dao.getPerson("test", IPersonAttributeDaoFilter.alwaysChoose());
+        var personWithoutStop = dao.getPerson("test");
         assertEquals(new AttributeNamedPersonImpl(attrMap1), personWithoutStop);
 
     }

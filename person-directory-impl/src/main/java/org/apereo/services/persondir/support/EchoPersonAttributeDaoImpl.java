@@ -37,14 +37,10 @@ import java.util.Set;
  */
 public class EchoPersonAttributeDaoImpl extends AbstractDefaultAttributePersonAttributeDao {
 
-    /**
-     * Returns a duplicate of the seed it is passed.
-     * @return a Map equal to but not the same reference as the seed.
-     * @see IPersonAttributeDao#getPeopleWithMultivaluedAttributes(java.util.Map, org.apereo.services.persondir.IPersonAttributeDaoFilter)
-     */
     @Override
     public Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
-                                                                     final IPersonAttributeDaoFilter filter) {
+                                                                     final IPersonAttributeDaoFilter filter,
+                                                                     final Set<IPersonAttributes> resultPeople) {
         if (query == null) {
             throw new IllegalArgumentException("seed may not be null");
         }
