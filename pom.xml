@@ -77,7 +77,7 @@
         <jackson.version>2.14.1</jackson.version>
         <commons-io.version>2.11.0</commons-io.version>
         <ldaptive.version>2.1.1</ldaptive.version>
-        <apachehttpclient>4.5.13</apachehttpclient>
+        <apachehttpclient>4.5.14</apachehttpclient>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
