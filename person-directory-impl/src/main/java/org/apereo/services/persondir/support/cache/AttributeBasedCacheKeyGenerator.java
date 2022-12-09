@@ -168,9 +168,6 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     }
 
 
-    /* (non-Javadoc)
-     * @see org.springmodules.cache.key.CacheKeyGenerator#generateKey(org.aopalliance.intercept.MethodInvocation)
-     */
     @Override
     public Serializable generateKey(final MethodInvocation methodInvocation) {
         //Determine the tareted CachableMethod
