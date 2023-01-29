@@ -74,7 +74,7 @@
         <groovy.version>4.0.8</groovy.version>
         <grouper.client.version>2.6.19</grouper.client.version>
         <guava.version>31.1-jre</guava.version>
-        <jackson.version>2.14.1</jackson.version>
+        <jackson.version>2.14.2</jackson.version>
         <commons-io.version>2.11.0</commons-io.version>
         <ldaptive.version>2.1.1</ldaptive.version>
         <apachehttpclient>4.5.14</apachehttpclient>
