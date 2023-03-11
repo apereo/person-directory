@@ -72,7 +72,7 @@
         <retrofit.version>2.9.0</retrofit.version>
         <spring.version>6.0.6</spring.version>
         <groovy.version>4.0.9</groovy.version>
-        <grouper.client.version>4.0.2</grouper.client.version>
+        <grouper.client.version>4.0.3</grouper.client.version>
         <guava.version>31.1-jre</guava.version>
         <jackson.version>2.14.2</jackson.version>
         <commons-io.version>2.11.0</commons-io.version>
