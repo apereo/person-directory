@@ -73,7 +73,7 @@
         <spring.version>6.0.9</spring.version>
         <groovy.version>4.0.12</groovy.version>
         <grouper.client.version>5.0.3</grouper.client.version>
-        <guava.version>32.0.0-jre</guava.version>
+        <guava.version>32.0.1-jre</guava.version>
         <jackson.version>2.15.2</jackson.version>
         <commons-io.version>2.13.0</commons-io.version>
         <ldaptive.version>2.1.2</ldaptive.version>
