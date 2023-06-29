@@ -71,7 +71,7 @@
         <okhttp3.version>4.11.0</okhttp3.version>
         <retrofit.version>2.9.0</retrofit.version>
         <spring.version>6.0.10</spring.version>
-        <groovy.version>4.0.12</groovy.version>
+        <groovy.version>4.0.13</groovy.version>
         <grouper.client.version>5.1.0</grouper.client.version>
         <guava.version>32.0.1-jre</guava.version>
         <jackson.version>2.15.2</jackson.version>
