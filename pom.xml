@@ -75,7 +75,6 @@
         <grouper.client.version>5.3.0</grouper.client.version>
         <guava.version>32.1.1-jre</guava.version>
         <jackson.version>2.15.2</jackson.version>
-        <commons-io.version>2.13.0</commons-io.version>
         <ldaptive.version>2.1.2</ldaptive.version>
         <apachehttpclient>4.5.14</apachehttpclient>
         <maven.compiler.source>17</maven.compiler.source>
@@ -153,11 +152,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>hsqldb</groupId>
