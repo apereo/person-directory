@@ -18,7 +18,6 @@
  */
 package org.apereo.services.persondir.support.jdbc;
 
-import com.google.common.collect.MapMaker;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.CaseInsensitiveNamedPersonImpl;
@@ -33,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * An {@link IPersonAttributeDao}
@@ -159,7 +159,7 @@ public class MultiRowJdbcPersonAttributeDao extends AbstractJdbcPersonAttributeD
     @Override
     @SuppressWarnings("unchecked")
     protected List<IPersonAttributes> parseAttributeMapFromResults(final List<Map<String, Object>> queryResults, final String queryUserName) {
-        final Map<String, Map<String, List<Object>>> peopleAttributesBuilder = new MapMaker().makeMap();
+        final Map<String, Map<String, List<Object>>> peopleAttributesBuilder = new ConcurrentHashMap<>();
 
         var userNameAttribute = this.getConfiguredUserNameAttribute();
 
