@@ -18,8 +18,8 @@
  */
 package org.apereo.services.persondir.support.cache;
 
+import okio.ByteString;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.logging.Log;
@@ -36,8 +36,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import static org.apache.commons.codec.digest.MessageDigestAlgorithms.*;
 
 public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
 
@@ -302,7 +300,7 @@ public class AttributeBasedCacheKeyGenerator implements CacheKeyGenerator {
     }
 
     private void putAttributeInCache(final Map<String, Object> cacheKey, final String attr, final Object value) {
-        var hexed = new DigestUtils(SHA_512).digestAsHex(value.toString());
+        var hexed = ByteString.encodeUtf8(value.toString()).sha512().hex();
         cacheKey.put(hexed, value);
     }
 
