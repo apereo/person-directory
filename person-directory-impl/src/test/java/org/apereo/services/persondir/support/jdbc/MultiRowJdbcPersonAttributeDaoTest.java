@@ -18,7 +18,6 @@
  */
 package org.apereo.services.persondir.support.jdbc;
 
-import com.google.common.collect.ImmutableMap;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.support.AbstractDefaultAttributePersonAttributeDao;
 import org.apereo.services.persondir.support.SimpleUsernameAttributeProvider;
@@ -113,7 +112,7 @@ public class MultiRowJdbcPersonAttributeDaoTest
     @Override
     protected AbstractJdbcPersonAttributeDao<Map<String, Object>> newDao(final DataSource dataSource) {
         var dao = new MultiRowJdbcPersonAttributeDao(dataSource, "SELECT netid, attr_name, attr_val FROM user_table WHERE {0}");
-        dao.setNameValueColumnMappings(ImmutableMap.of("attr_name", "attr_val"));
+        dao.setNameValueColumnMappings(Map.of("attr_name", "attr_val"));
         return dao;
     }
 

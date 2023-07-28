@@ -19,7 +19,6 @@
 package org.apereo.services.persondir.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.ImmutableSet;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.IPersonAttributes;
 
@@ -74,7 +73,7 @@ public class StubPersonAttributeDao extends AbstractFlatteningPersonAttributeDao
             return new HashSet<>();
         }
 
-        return ImmutableSet.copyOf(this.backingPerson.getAttributes().keySet());
+        return Set.copyOf(this.backingPerson.getAttributes().keySet());
     }
 
     @Override

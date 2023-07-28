@@ -19,7 +19,6 @@
 package org.apereo.services.persondir.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.Validate;
 import org.apereo.services.persondir.IPersonAttributeDaoFilter;
 import org.apereo.services.persondir.support.jdbc.AbstractJdbcPersonAttributeDao;
@@ -427,7 +426,7 @@ public abstract class AbstractQueryPersonAttributeDao<QB> extends AbstractDefaul
 
                 //If dataKey has no mapped resultKeys just use the dataKey
                 if (resultKeys == null) {
-                    resultKeys = ImmutableSet.of(dataKey);
+                    resultKeys = Set.of(dataKey);
                 }
                 if (resultKeys.size() == 1 && resultKeys.stream().allMatch(s -> s.endsWith(";"))) {
                     var allKeys = personAttributes.keySet().stream().filter(name -> name.startsWith(dataKey + ";")).collect(Collectors.toList());
