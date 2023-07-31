@@ -40,9 +40,18 @@ public class RestfulPersonAttributeDaoTest extends AbstractPersonAttributeDaoTes
     }
 
     @Test
-    public void testGetAttributes() {
+    public void testGetAttributes_get() {
         this.dao.setUrl("http://localhost:8080/test");
         this.dao.setMethod(HttpMethod.GET.name());
+        var person = this.dao.getPerson("something");
+        assertEquals(person.getName(), "something");
+        assertEquals(person.getAttributes().size(), 2);
+    }
+
+    @Test
+    public void testGetAttributes_post() {
+        this.dao.setUrl("http://localhost:8080/test");
+        this.dao.setMethod(HttpMethod.POST.name());
         var person = this.dao.getPerson("something");
         assertEquals(person.getName(), "something");
         assertEquals(person.getAttributes().size(), 2);
