@@ -125,11 +125,9 @@ public interface IPersonAttributeDao extends Comparable<IPersonAttributeDao>, Or
      * @return A {@link Set} of {@link IPersonAttributes}s that match the query {@link Map}. If no matches are found an empty {@link Set} is returned. If the query could not be run null is returned.
      * @throws IllegalArgumentException If <code>query</code> is <code>null.</code>
      */
-    default Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
+    Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
                                                                       final IPersonAttributeDaoFilter filter,
-                                                                      final Set<IPersonAttributes> resultPeople) {
-        return new LinkedHashSet<>(0);
-    }
+                                                                      final Set<IPersonAttributes> resultPeople);
 
     default Set<IPersonAttributes> getPeopleWithMultivaluedAttributes(final Map<String, List<Object>> query,
                                                                       final IPersonAttributeDaoFilter filter) {
