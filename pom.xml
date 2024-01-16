@@ -76,7 +76,7 @@
         <guava.version>33.0.0-jre</guava.version>
         <jackson.version>2.16.1</jackson.version>
         <commons-io.version>2.15.1</commons-io.version>
-        <ldaptive.version>2.2.0</ldaptive.version>
+        <ldaptive.version>2.3.0</ldaptive.version>
         <apachehttpclient>4.5.14</apachehttpclient>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
