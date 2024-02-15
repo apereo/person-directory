@@ -70,7 +70,7 @@
         <slf4j.version>2.0.12</slf4j.version>
         <okhttp3.version>4.12.0</okhttp3.version>
         <retrofit.version>2.9.0</retrofit.version>
-        <spring.version>6.1.3</spring.version>
+        <spring.version>6.1.4</spring.version>
         <groovy.version>4.0.18</groovy.version>
         <grouper.client.version>5.7.1</grouper.client.version>
         <guava.version>33.0.0-jre</guava.version>
